@@ -1,6 +1,4 @@
-import request from '@/utils/request'
+const http = uni.$u.http;
 
 // 用户登录(账号+密码+验证码)
-export function login(data) {
-  return request.post('/login', data)
-}
+export const login = (params, config = {}) => http.post('/login', params, config)

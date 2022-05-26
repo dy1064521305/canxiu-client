@@ -1,6 +1,4 @@
-import request from '@/utils/request'
+const http = uni.$u.http;
 
-// 图形验证码
-export function image() {
-  return request.get('/captchaImage', {}, { load: false })
-}
+// 用户登录(账号+密码+验证码)
+export const image = (params, config = {}) => http.get('/captchaImage', params, config)

@@ -36,13 +36,11 @@ const user = {
     // 用户登录(普通登录: 输入账号、密码和验证码)
     Login({ commit }, data) {
       return new Promise((resolve, reject) => {
-        LoginApi.login(data)
-          .then(response => {
+        LoginApi.login(data, { custom: { catch: true } }).then(response => {
             const result = response;
             loginSuccess(commit, result)
             resolve(response)
-          })
-          .catch(reject)
+          }).catch(reject)
       })
     },
 
