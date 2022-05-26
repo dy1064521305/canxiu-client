@@ -83,9 +83,9 @@ export default {
 		},
 		// 确认登录
 		login() {
-			let valid = this.validItem();
+      const app = this
+			let valid = app.validItem();
 			if (valid) {
-				const app = this
 				app.isLoading = true
 				app.$store.dispatch('Login', {
 				  username: app.username,

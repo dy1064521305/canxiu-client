@@ -48,15 +48,17 @@ const user = {
     Logout({ commit }, data) {
       const store = this
       return new Promise((resolve, reject) => {
-        if (store.getters.userId > 0) {
-          // 删除缓存中的tokne和userId
-          storage.remove(USER_ID)
-          storage.remove(ACCESS_TOKEN)
-          // 记录到store全局变量
-          commit('SET_TOKEN', '')
-          commit('SET_USER_ID', null)
-          resolve()
-        }
+        LoginApi.logout(data, { custom: { catch: true } }).then(response => {
+          if (store.getters.userId > 0) {
+            // 删除缓存中的tokne和userId
+            storage.remove(USER_ID)
+            storage.remove(ACCESS_TOKEN)
+            // 记录到store全局变量
+            commit('SET_TOKEN', '')
+            commit('SET_USER_ID', null)
+          }
+          resolve(response)
+        }).catch(reject)
       })
     }
 
