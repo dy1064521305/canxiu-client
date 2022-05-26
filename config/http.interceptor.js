@@ -1,4 +1,6 @@
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 import environment from './environment.js';
+import storage from '@/utils/storage';
 
 // 此vm参数为页面的实例，可以通过它引用vuex中的变量
 module.exports = (vm) => {
@@ -14,10 +16,10 @@ module.exports = (vm) => {
 	    // 初始化请求拦截器时，会执行此方法，此时data为undefined，赋予默认{}
 	    config.data = config.data || {}
 		// 根据custom参数中配置的是否需要token，添加对应的请求头
-		if(config?.custom?.auth) {
+		// if(config?.custom?.auth) {
 			// 可以在此通过vm引用vuex中的变量，具体值在vm.$store.state中
-			config.header.token = vm.$store.state.userInfo.token
-		}
+			config.header.Authorization = 'Bearer ' + storage.get(ACCESS_TOKEN)
+		// }
 	    return config 
 	}, config => { // 可使用async await 做异步操作
 	    return Promise.reject(config)
