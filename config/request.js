@@ -1,5 +1,10 @@
 const http = uni.$u.http;
 
+/**
+ * 混入默认个性化配置
+ * @param {*} config 
+ * @returns 
+ */
 function mixinCustom (config) {
   config.custom = Object.assign({
     auth: true,
@@ -10,7 +15,7 @@ function mixinCustom (config) {
 }
 
 const request = {
-  
+  // post提交
   post (url, params, config = {}) {
     config = mixinCustom(config)
     return http.post(url, params, config);
@@ -18,7 +23,6 @@ const request = {
 
   get (url, config = {}) {
     config = mixinCustom(config)
-    console.log(config)
     return http.get(url, config);
   },
 

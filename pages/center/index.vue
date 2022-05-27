@@ -1,13 +1,13 @@
 <template>
-	<view class="">
-    <view style="background-color: #f3f4f6;">
-      <view style="padding: 40rpx; height: 180rpx; line-height: 180rpx;">
-        <view style="display: inline-block; width: calc(100% - 162rpx)">
-          <view style="height: 30px; line-height: 30px; font-size: 50rpx; font-weight: bold; width: 100%;">{{ user.nickName }}</view>
-          <text style="height: 30px; line-height: 30px;">{{ user.email }}</text>
+	<view>
+    <view class="profile-top">
+      <view class="user-info">
+        <view>
+          <view class="user-info--name">{{ user.nickName }}</view>
+          <text class="user-info--account">{{ user.email || user.phonenumber || user.userName }}</text>
         </view>
-        <view style="display: inline-block; float: right;">
-          <u-image src="https://cdn.uviewui.com/uview/album/1.jpg" shape="circle" width="160rpx" height="160rpx"></u-image>
+        <view>
+          <u-avatar src="/static/img/avatar.png" size="120rpx"></u-avatar>
         </view>
       </view>
       <view style="padding: 40rpx 40rpx 0 40rpx;">
@@ -17,7 +17,7 @@
               <view style="color: white; font-size: 20px;">研发中心</view>
             </u-col>
             <u-col span="4">
-              <u-button icon="question-circle" text="问题反馈" @click="logout" style="height: 36px;"></u-button>
+              <u-button icon="question-circle" text="问题反馈" style="height: 36px;"></u-button>
             </u-col>
           </u-row>
         </view>
@@ -43,7 +43,7 @@
     <view style="padding: 40rpx; margin-top: 300rpx;">
       <u-row gutter="32">
         <u-col span="6">
-          <u-button icon="phone" text="联系我们" @click="logout" plain></u-button>
+          <u-button icon="phone" text="联系我们" plain></u-button>
         </u-col>
         <u-col span="6">
 		      <u-button icon="reload" text="退出" type="error" @click="logout"></u-button>
@@ -85,6 +85,11 @@ export default {
 </script>
 
 <style lang="scss">
+.profile-top {
+  background-color: #f3f4f6;
+  padding-top: 50rpx;
+}
+
 .profile-rule {
   height: 140rpx;
   line-height: 140rpx;
@@ -96,5 +101,25 @@ export default {
 .btn-text {
   font-size: 28rpx;
   color: #606266;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 40rpx;
+  max-width: 100%;
+  color: #303133;
+
+  &--name {
+    font-size: 56rpx;
+    font-weight: bold;
+    width: 100%
+  }
+
+  &--account {
+    font-size: 26rpx;
+    color: #909399;
+  }
+
 }
 </style>

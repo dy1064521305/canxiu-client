@@ -4,4 +4,4 @@ import request from '@/config/request.js';
 export const login = (params) => request.post('/login', params, { custom: { auth: false } })
 
 // 用户退出
-export const logout = () => request.get('/logout', null)
+export const logout = () => request.get('/logout')
