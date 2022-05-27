@@ -14,7 +14,7 @@
         <view class="profile-rule">
           <u-row>
             <u-col span="8">
-              <view style="color: white; font-size: 20px;">研发中心</view>
+              <view style="color: white; font-size: 20px;">{{ user.dept ? user.dept.deptName : '未知部门' }}</view>
             </u-col>
             <u-col span="4">
               <u-button icon="question-circle" text="问题反馈" style="height: 36px;"></u-button>

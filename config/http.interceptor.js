@@ -10,7 +10,7 @@ module.exports = (vm) => {
       config.baseURL = environment.baseURL; /* 根域名 */
       return config
   })
-	
+
 	// 请求拦截
 	uni.$u.http.interceptors.request.use((config) => { // 可使用async await 做异步操作
 	    // 初始化请求拦截器时，会执行此方法，此时data为undefined，赋予默认{}
@@ -20,6 +20,12 @@ module.exports = (vm) => {
         // 可以在此通过vm引用vuex中的变量，具体值在vm.$store.state中
         config.header.Authorization = 'Bearer ' + storage.get(ACCESS_TOKEN)
       }
+      if (config?.custom?.loading) {
+        uni.showLoading({
+          title: 'loading...',
+          mask: true
+        })
+      }
 	    return config 
 	}, config => { // 可使用async await 做异步操作
 	    return Promise.reject(config)
@@ -27,7 +33,10 @@ module.exports = (vm) => {
 	
 	// 响应拦截
 	uni.$u.http.interceptors.response.use((response) => { /* 对响应成功做点什么 可使用async await 做异步操作*/
-		const data = response.data
+		
+    uni.hideLoading();
+
+    const data = response.data
 
 		// 自定义参数
 		const custom = response.config?.custom

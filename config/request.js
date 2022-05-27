@@ -9,7 +9,8 @@ function mixinCustom (config) {
   config.custom = Object.assign({
     auth: true,
     toast: true,
-    catch: true
+    catch: true,
+    loading: true
   }, config.custom || {});
   return config;
 }
