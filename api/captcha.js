@@ -1,4 +1,4 @@
-const http = uni.$u.http;
+import request from '@/config/request.js';
 
-// 用户登录(账号+密码+验证码)
-export const image = (params, config = {}) => http.get('/captchaImage', params, config)
+// 获取验证码
+export const image = () => request.get('/captchaImage')

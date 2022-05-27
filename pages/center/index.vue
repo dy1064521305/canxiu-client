@@ -1,10 +1,10 @@
 <template>
 	<view class="">
     <view style="background-color: #f3f4f6;">
-      <view style="padding: 40rpx;">
-        <view style="display: inline-block; height: 180rpx; line-height: 180rpx;">
-          <view style="height: 30px; font-size: 50rpx; font-weight: bold;">{{ user.nickName }}</view>
-          <view style="height: 30px;">{{ user.email }}</view>
+      <view style="padding: 40rpx; height: 180rpx; line-height: 180rpx;">
+        <view style="display: inline-block; width: calc(100% - 162rpx)">
+          <view style="height: 30px; line-height: 30px; font-size: 50rpx; font-weight: bold; width: 100%;">{{ user.nickName }}</view>
+          <text style="height: 30px; line-height: 30px;">{{ user.email }}</text>
         </view>
         <view style="display: inline-block; float: right;">
           <u-image src="https://cdn.uviewui.com/uview/album/1.jpg" shape="circle" width="160rpx" height="160rpx"></u-image>
@@ -43,7 +43,7 @@
     <view style="padding: 40rpx; margin-top: 300rpx;">
       <u-row gutter="32">
         <u-col span="6">
-          <u-button icon="phone" text="联系管理员" @click="logout" plain></u-button>
+          <u-button icon="phone" text="联系我们" @click="logout" plain></u-button>
         </u-col>
         <u-col span="6">
 		      <u-button icon="reload" text="退出" type="error" @click="logout"></u-button>
