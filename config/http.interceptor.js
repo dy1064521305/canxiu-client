@@ -20,6 +20,7 @@ module.exports = (vm) => {
         // 可以在此通过vm引用vuex中的变量，具体值在vm.$store.state中
         config.header.Authorization = 'Bearer ' + storage.get(ACCESS_TOKEN)
       }
+      // 根据custom参数中配置的是否需要显示loading
       if (config?.custom?.loading) {
         uni.showLoading({
           title: 'loading...',
@@ -33,10 +34,10 @@ module.exports = (vm) => {
 	
 	// 响应拦截
 	uni.$u.http.interceptors.response.use((response) => { /* 对响应成功做点什么 可使用async await 做异步操作*/
-		
-    uni.hideLoading();
-
     const data = response.data
+    
+    // 关闭loading
+    uni.hideLoading();
 
 		// 自定义参数
 		const custom = response.config?.custom
@@ -46,6 +47,7 @@ module.exports = (vm) => {
 				uni.$u.toast(data.msg)
 			}
 
+      // 判断状态码
       switch (data.code) {
         case 401: {
           uni.reLaunch({ url: '/' })
