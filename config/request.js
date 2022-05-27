@@ -1,13 +1,11 @@
 const http = uni.$u.http;
 
-const custom = {
-  auth: true,
-  toast: true,
-  catch: true
-};
-
 function mixinCustom (config) {
-  config.custom = Object.assign(custom, config.custom || {});
+  config.custom = Object.assign({
+    auth: true,
+    toast: true,
+    catch: true
+  }, config.custom || {});
   return config;
 }
 

@@ -38,6 +38,13 @@ module.exports = (vm) => {
 				uni.$u.toast(data.msg)
 			}
 
+      switch (data.code) {
+        case 401: {
+          uni.reLaunch({ url: '/' })
+          return;
+        }
+      }
+
 			// 如果需要catch返回，则进行reject
 			if (custom?.catch) {
 				return Promise.reject(data)
