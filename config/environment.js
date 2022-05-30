@@ -5,7 +5,8 @@ const environment = {
 	},
 	// 生产环境配置
 	production: {
-		bUrl: 'https://fastbuild.run:443',
+		baseURL: 'http://vue.ruoyi.vip/prod-api'
+		// baseURL: 'https://fastbuild.run:443',
 	}
 }
 export default environment[process.env.NODE_ENV];
