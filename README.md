@@ -1,9 +1,9 @@
 # RuoYi-Mobile
 
-#### 介绍
+## 介绍
 适配若依移动端版本，基于uniapp开发，集成uView2.0。后端使用若依分离版。
 
-#### 前后端源码打包下载
+## 前后端源码打包下载
 > http://fastbuild.run
 
 #### 扫码预览
@@ -12,10 +12,10 @@
 #### 系统截图
 <table>
     <tr>
-        <td><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/login.jpg"/></td>
-        <td><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/index.jpg"/></td>
-        <td><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/work.jpg"/></td>
-        <td><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/my.jpg"/></td>
+        <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/login.jpg"/></td>
+        <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/index.jpg"/></td>
+        <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/work.jpg"/></td>
+        <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/my.jpg"/></td>
     </tr>
 </table>
 
