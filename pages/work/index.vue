@@ -43,6 +43,7 @@
       <u-tabs
         lineHeight="5"
         :activeStyle="{
+          color: '#303133',
           fontSize: '40rpx',
           fontWeight: 'bold',
           transform: 'scale(1.05)'
