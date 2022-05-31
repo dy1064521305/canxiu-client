@@ -25,7 +25,7 @@
     </view>
     <view style="padding: 40rpx; background-color: #fff;">
       <u-grid>
-        <u-grid-item>
+        <u-grid-item @click="navigateTo('/pages/center/profile')">
           <u-icon name="account-fill" color="#2979ff" size="60rpx"></u-icon>
           <text class="btn-text">个人资料</text>
         </u-grid-item>
@@ -71,6 +71,9 @@ export default {
       UserApi.getInfo().then(res => {
         app.user = res.user;
       })
+    },
+    navigateTo (url) {
+      uni.navigateTo({ url: url })
     },
     logout () {
       const app = this
