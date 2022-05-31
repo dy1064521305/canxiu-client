@@ -6,6 +6,8 @@
 ## 前后端源码打包下载
 > http://fastbuild.run
 
+#### 如果喜欢本项目，一定记得 :star: Star一下啊！~
+
 #### 扫码预览
 ![H5预览](https://images.gitee.com/uploads/images/2022/0526/091635_6bfffb01_1203341.png "ruoyi-mobile-qr.png")
 
