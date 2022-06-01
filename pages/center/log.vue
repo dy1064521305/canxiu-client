@@ -1,14 +1,16 @@
 <template>
   <view style="padding: 40rpx;">
-    <u-subsection :list="list" :current="current"></u-subsection>
     <view>
-      <u-list @scrolltolower="loadData">
+      <u-search placeholder="请输入查询内容" v-model="searchText" height="60rpx"></u-search>
+    </view>
+    <view>
+      <u-list @scrolltolower="scrolltolower">
         <u-list-item v-for="(item, index) in logList" :key="index" class="log-item">
-          <view>操作内容: {{item.title}}</view>
-          <view>请求地址: {{item.operUrl}}</view>
-          <view>请求参数： {{item.params}}</view>
-          <view>操作地址: {{item.operLocation}}</view>
-          <view>操作时间: {{item.operTime}}</view>
+          <view><text style="color: #606266;">操作内容：</text><text>{{item.title}}</text></view>
+          <view><text style="color: #606266;">请求地址：</text><text>{{item.operUrl}}</text></view>
+          <view><text style="color: #606266;">请求参数：</text><text>{{item.params}}</text></view>
+          <view><text style="color: #606266;">操作地址：</text><text>{{item.operLocation}}</text></view>
+          <view><text style="color: #606266;">操作时间：</text><text>{{item.operTime}}</text></view>
         </u-list-item>
       </u-list>
     </view>
@@ -21,8 +23,7 @@ import * as LogApi from '@/api/center/log'
 export default {
   data () {
     return {
-      list: [{ name: '今日' }, { name: '近7日' }, { name: '全部' }],
-      current: 0,
+      searchText: '',
       logList: []
     }
   },
@@ -35,6 +36,9 @@ export default {
       LogApi.operLog().then(res => {
         app.logList = app.logList.concat(res.rows);
       })
+    },
+    scrolltolower () {
+      this.loadData();
     }
   }
 }
