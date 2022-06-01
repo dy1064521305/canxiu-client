@@ -34,6 +34,13 @@
 				"navigationBarTitleText": "个人资料",
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/center/log",
+			"style": {
+				"navigationBarTitleText": "操作日志",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"tabBar": {

@@ -33,7 +33,7 @@
           <u-icon name="lock-fill" color="#2979ff" size="60rpx"></u-icon>
           <text class="btn-text">修改密码</text>
         </u-grid-item>
-        <u-grid-item>
+        <u-grid-item @click="navigateTo('/pages/center/log')">
           <u-icon name="coupon-fill" color="#2979ff" size="60rpx"></u-icon>
           <text class="btn-text">操作日志</text>
         </u-grid-item>
