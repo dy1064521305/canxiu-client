@@ -29,7 +29,7 @@
           <u-icon name="account-fill" color="#2979ff" size="60rpx"></u-icon>
           <text class="btn-text">个人资料</text>
         </u-grid-item>
-        <u-grid-item>
+        <u-grid-item @click="resetPassword = true">
           <u-icon name="lock-fill" color="#2979ff" size="60rpx"></u-icon>
           <text class="btn-text">修改密码</text>
         </u-grid-item>
@@ -50,16 +50,23 @@
         </u-col>
       </u-row>
     </view>
+
+    <Password :show="resetPassword" @close="resetPassword = false"></Password>
 	</view>
 </template>
 
 <script>
 import * as UserApi from '@/api/user'
+import Password from './password.vue'
 
 export default {
+  components: {
+    Password
+  },
   data () {
     return {
-      user: {}
+      user: {},
+      resetPassword: false
     }
   },
   created () {
