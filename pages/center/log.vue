@@ -8,7 +8,6 @@
         <u-list-item v-for="(item, index) in logList" :key="index" class="log-item">
           <view><text style="color: #606266;">操作内容：</text><text>{{item.title}}</text></view>
           <view><text style="color: #606266;">请求地址：</text><text>{{item.operUrl}}</text></view>
-          <view><text style="color: #606266;">请求参数：</text><text>{{item.params}}</text></view>
           <view><text style="color: #606266;">操作地址：</text><text>{{item.operLocation}}</text></view>
           <view><text style="color: #606266;">操作时间：</text><text>{{item.operTime}}</text></view>
         </u-list-item>
@@ -24,6 +23,10 @@ export default {
   data () {
     return {
       searchText: '',
+      params: {
+        pageNum: 1,
+        pageSize: 10
+      },
       logList: []
     }
   },
@@ -33,7 +36,7 @@ export default {
   methods: {
     loadData () {
       const app = this
-      LogApi.operLog().then(res => {
+      LogApi.operLog(app.params).then(res => {
         app.logList = app.logList.concat(res.rows);
       })
     },

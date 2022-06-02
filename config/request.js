@@ -15,6 +15,17 @@ function mixinCustom (config) {
   return config;
 }
 
+function urlFormater (url, params) {
+  if (params) {
+    let paramList = [];
+    for (let key in params) {
+      paramList.push(key + '=' + params[key])
+    }
+    return url.indexOf('?') > -1 ? (url + '&' + paramList.join('&')) : (url + '?' + paramList.join('&'))
+  }
+  return url;
+}
+
 const request = {
   // post提交
   post (url, params, config = {}) {
@@ -22,9 +33,10 @@ const request = {
     return http.post(url, params, config);
   },
 
-  get (url, config = {}) {
+  get (url, params, config = {}) {
     config = mixinCustom(config)
-    return http.get(url, config);
+    let path = urlFormater(url, params)
+    return http.get(path, config);
   },
 
 };

@@ -39,7 +39,6 @@ const user = {
 
     // 退出登录
     Logout({ commit }, data) {
-      const store = this
       return new Promise((resolve, reject) => {
         LoginApi.logout(data, { custom: { catch: true } }).then(response => {
           storage.remove(ACCESS_TOKEN)
