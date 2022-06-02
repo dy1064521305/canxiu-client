@@ -10,21 +10,21 @@
 		<form class="cl">
 			<!-- 登录账号 -->
 			<view>
-				<u-input v-model="username" placeholder="请输入登录用户名" maxlength="30" class="t-form-input">
+				<u--input v-model="username" placeholder="请输入登录用户名" maxlength="30" class="t-form-input">
 					<u-icon slot="prefix" name="account" size="35px"></u-icon>
-				</u-input>
+				</u--input>
 			</view>
 			<!-- 登录密码 -->
 			<view>
-				<u-input v-model="password" type="password" placeholder="请输入登录密码" maxlength="16" class="t-form-input">
+				<u--input v-model="password" type="password" placeholder="请输入登录密码" maxlength="16" class="t-form-input">
 					<u-icon slot="prefix" name="lock" size="35px"></u-icon>
-				</u-input>
+				</u--input>
 			</view>
 			<!-- 图形验证码 -->
 			<view>
-				<u-input v-model="captchaCode" type="number" placeholder="请输入验证码" maxlength="4" class="t-form-input t-captcha">
+				<u--input v-model="captchaCode" type="number" placeholder="请输入验证码" maxlength="4" class="t-form-input t-captcha">
 					<u-icon slot="prefix" name="fingerprint" size="35px"></u-icon>
-				</u-input>
+				</u--input>
 				<image :src="captcha" @click="getCaptcha" class="t-captcha-img"></image>
 			</view>
 			<button @tap="login()">登 录</button>

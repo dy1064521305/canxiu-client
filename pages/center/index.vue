@@ -85,7 +85,7 @@ export default {
       const app = this
       app.$store.dispatch('Logout').then(res => {
         uni.reLaunch({
-          url: '/'
+          url: '/pages/login/index'
         })
       })
     }

@@ -4,7 +4,7 @@
       <u-search placeholder="请输入查询内容" v-model="params.title" height="60rpx" @search="searchData" @custom="searchData"></u-search>
     </view>
     <view>
-      <u-list @scrolltolower="scrolltolower">
+      <u-list v-if="logList.length > 0" @scrolltolower="scrolltolower">
         <u-list-item v-for="(item, index) in logList" :key="index" class="log-item">
           <view><text style="color: #606266;">操作内容：</text><text>{{item.title}}</text></view>
           <view><text style="color: #606266;">请求地址：</text><text>{{item.operUrl}}</text></view>
@@ -12,6 +12,7 @@
           <view><text style="color: #606266;">操作时间：</text><text>{{item.operTime}}</text></view>
         </u-list-item>
       </u-list>
+      <u-empty v-else></u-empty>
     </view>
   </view>
 </template>
