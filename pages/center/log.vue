@@ -1,7 +1,7 @@
 <template>
   <view style="padding: 40rpx;">
     <view>
-      <u-search placeholder="请输入查询内容" v-model="searchText" height="60rpx"></u-search>
+      <u-search placeholder="请输入查询内容" v-model="params.title" height="60rpx" @search="searchData" @custom="searchData"></u-search>
     </view>
     <view>
       <u-list @scrolltolower="scrolltolower">
@@ -22,10 +22,10 @@ import * as LogApi from '@/api/center/log'
 export default {
   data () {
     return {
-      searchText: '',
       params: {
-        pageNum: 1,
-        pageSize: 10
+        pageNum: 0,
+        pageSize: 10,
+        title: ''
       },
       logList: []
     }
@@ -36,9 +36,20 @@ export default {
   methods: {
     loadData () {
       const app = this
-      LogApi.operLog(app.params).then(res => {
-        app.logList = app.logList.concat(res.rows);
+      app.$store.dispatch('Info').then(res => {
+        app.params.pageNum = app.params.pageNum + 1
+        if (res.user) {
+          app.params.operName = res.user.userName
+        }
+        LogApi.operLog(app.params).then(res => {
+          app.logList = app.logList.concat(res.rows);
+        })
       })
+    },
+    searchData () {
+      this.params.pageNum = 0
+      this.logList = []
+      this.loadData();
     },
     scrolltolower () {
       this.loadData();

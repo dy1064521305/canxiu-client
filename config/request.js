@@ -15,6 +15,12 @@ function mixinCustom (config) {
   return config;
 }
 
+/**
+ * 格式化get请求url参数，将对象解析为字符串
+ * @param {*} url 
+ * @param {*} params 
+ * @returns 
+ */
 function urlFormater (url, params) {
   if (params) {
     let paramList = [];
@@ -32,7 +38,7 @@ const request = {
     config = mixinCustom(config)
     return http.post(url, params, config);
   },
-
+  // get提交
   get (url, params, config = {}) {
     config = mixinCustom(config)
     let path = urlFormater(url, params)

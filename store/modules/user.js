@@ -1,6 +1,7 @@
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import storage from '@/utils/storage'
 import * as LoginApi from '@/api/login'
+import * as UserApi from '@/api/user'
 
 // 登陆成功后执行
 const loginSuccess = (commit, { token }) => {
@@ -16,11 +17,15 @@ const user = {
   state: {
     // 用户认证token
     token: '',
+    userInfo: null
   },
 
   mutations: {
     SET_TOKEN: (state, value) => {
       state.token = value
+    },
+    SET_USER: (state, value) => {
+      state.userInfo = value
     },
   },
 
@@ -34,6 +39,20 @@ const user = {
             loginSuccess(commit, result)
             resolve(response)
           }).catch(reject)
+      })
+    },
+
+    // 用户信息
+    Info({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        if (state.userInfo) {
+          return resolve(state.userInfo)
+        }
+        UserApi.getInfo().then(response => {
+          const result = response;
+          commit('SET_USER', result)
+          resolve(response)
+        }).catch(reject)
       })
     },
 

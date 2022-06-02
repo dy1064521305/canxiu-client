@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import * as UserApi from '@/api/user'
 import Password from './password.vue'
 
 export default {
@@ -75,8 +74,8 @@ export default {
   methods: {
     getInfo () {
       const app = this
-      UserApi.getInfo().then(res => {
-        app.user = res.user;
+      app.$store.dispatch('Info').then(res => {
+        app.user = res.user
       })
     },
     navigateTo (url) {
