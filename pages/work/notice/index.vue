@@ -1,17 +1,16 @@
 <template>
   <view style="padding: 40rpx;">
-    <u-list v-if="list.length > 0" @scrolltolower="scrolltolower">
-      <u-list-item v-for="(item, index) in list" :key="index">
-        <u-cell :isLink="true" :border="true">
-          <u-avatar slot="icon" :bg-color="item.noticeType == 2 ? '#2979ff' : '#19be6b'" :text="item.noticeType == 2 ? '公' : '通'" size="80rpx" fontSize="50" shape="square"></u-avatar>
-          <view slot="title" style="font-size: 36rpx; font-weight: bold;">{{item.noticeTitle}}</view>
-          <view slot="label" style="display: flex;">
-            <u-icon name="clock"></u-icon>
-            <text>{{item.createTime}}</text>
-          </view>
-        </u-cell>
-      </u-list-item>
-    </u-list>
+    <view v-if="list.length > 0">
+      <u-cell v-for="(item, index) in list" :key="index" :isLink="true" :border="true" @click="toDetail(item.noticeId)">
+        <u-avatar slot="icon" :bg-color="item.noticeType == 2 ? '#2979ff' : '#19be6b'" :text="item.noticeType == 2 ? '公' : '通'" size="80rpx" fontSize="50" shape="square"></u-avatar>
+        <view slot="title" style="font-size: 36rpx; font-weight: bold;">{{item.noticeTitle}}</view>
+        <view slot="label" style="display: flex;">
+          <u-icon name="clock"></u-icon>
+          <text>{{item.createTime}}</text>
+        </view>
+      </u-cell>
+    </view>
+    <u-empty v-else></u-empty>
   </view>
 </template>
 
@@ -45,6 +44,9 @@ export default {
     // 滚动分页加载数据
     scrolltolower () {
       this.loadData();
+    },
+    toDetail (noticeId) {
+      uni.navigateTo({ url: '/pages/work/notice/detail?id=' + noticeId })
     }
   }
 }
