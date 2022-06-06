@@ -22,6 +22,13 @@
 			}
 		},
 		{
+			"path": "pages/work/notice/index",
+			"style": {
+				"navigationBarTitleText": "通知公告",
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/center/index",
 			"style": {
 				"navigationBarTitleText": "我的",

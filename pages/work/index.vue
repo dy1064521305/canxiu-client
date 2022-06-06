@@ -6,7 +6,7 @@
     <view style="padding: 40rpx; background-color: #fff; margin-top: 20rpx;">
       <view style="font-size: 40rpx; font-weight: bold; padding: 0 0 40rpx 0;">待处理</view>
       <u-grid col="3">
-        <u-grid-item>
+        <u-grid-item @click="navigateTo('/pages/work/notice/index')">
           <view style="position: relative;">
             <u-icon name="chat" color="#2979ff" size="60rpx"></u-icon>
             <u-badge style="position: absolute; top: -5rpx; right: -10rpx;" type="error" numberType="overflow" max="99" :value="3"></u-badge>
@@ -107,6 +107,9 @@ export default {
   methods: {
     tabChange (item) {
       this.activeKey = item.key;
+    },
+    navigateTo (url) {
+      uni.navigateTo({ url: url })
     }
   }
 }

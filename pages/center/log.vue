@@ -35,11 +35,14 @@ export default {
     this.loadData();
   },
   methods: {
+    // 加载日志列表数据
     loadData () {
       const app = this
+      // 首先获取当前登录账号信息
       app.$store.dispatch('Info').then(res => {
-        app.params.pageNum = app.params.pageNum + 1
+        app.params.pageNum += 1
         if (res.user) {
+          // 只查询当前用户的操作日志
           app.params.operName = res.user.userName
         }
         LogApi.operLog(app.params).then(res => {
@@ -47,11 +50,13 @@ export default {
         })
       })
     },
+    // 查询按钮动作
     searchData () {
       this.params.pageNum = 0
       this.logList = []
       this.loadData();
     },
+    // 滚动分页加载数据
     scrolltolower () {
       this.loadData();
     }
