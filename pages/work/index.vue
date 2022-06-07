@@ -1,5 +1,5 @@
 <template>
-	<view style="background-color: #f3f4f6; min-height: 100vh;">
+	<view class="mobile-page">
 		<!-- <view>
       <u-notice-bar text="text1"></u-notice-bar>
     </view> -->
@@ -9,19 +9,22 @@
         <u-grid-item @click="navigateTo('/pages/work/notice/index')">
           <view style="position: relative;">
             <u-icon name="chat" color="#2979ff" size="60rpx"></u-icon>
-            <u-badge style="position: absolute; top: -5rpx; right: -10rpx;" type="error" numberType="overflow" max="99" :value="3"></u-badge>
+            <u-badge style="position: absolute; top: -5rpx; right: -10rpx;" type="error" numberType="overflow" max="99" v-model="todo.notice"></u-badge>
           </view>
           <text class="btn-text">通知公告</text>
         </u-grid-item>
         <u-grid-item>
           <view style="position: relative;">
             <u-icon name="list-dot" color="#2979ff" size="60rpx"></u-icon>
-            <u-badge style="position: absolute; top: -5rpx; right: -10rpx;" type="error" numberType="overflow" max="99" :value="8"></u-badge>
+            <u-badge style="position: absolute; top: -5rpx; right: -10rpx;" type="error" numberType="overflow" max="99" v-model="todo.task"></u-badge>
           </view>
           <text class="btn-text">待办任务</text>
         </u-grid-item>
         <u-grid-item>
-          <u-icon name="warning" color="#2979ff" size="60rpx"></u-icon>
+          <view style="position: relative;">
+            <u-icon name="warning" color="#2979ff" size="60rpx"></u-icon>
+            <u-badge style="position: absolute; top: -5rpx; right: -10rpx;" type="error" numberType="overflow" max="99" v-model="todo.error"></u-badge>
+          </view>
           <text class="btn-text">异常信息</text>
         </u-grid-item>
       </u-grid>
@@ -101,7 +104,12 @@ export default {
       }, {
         name: '插件',
         key: 'plugin'
-      }]
+      }],
+      todo: {
+        notice: 2,
+        task: 5,
+        error: 1
+      }
     }
   },
   methods: {

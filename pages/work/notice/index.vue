@@ -1,11 +1,11 @@
 <template>
-  <view style="padding: 40rpx;">
+  <view class="page-container">
     <view v-if="list.length > 0">
       <u-cell v-for="(item, index) in list" :key="index" :isLink="true" :border="true" @click="toDetail(item.noticeId)">
         <u-avatar slot="icon" :bg-color="item.noticeType == 2 ? '#2979ff' : '#19be6b'" :text="item.noticeType == 2 ? '公' : '通'" size="80rpx" fontSize="50" shape="square"></u-avatar>
-        <view slot="title" style="font-size: 36rpx; font-weight: bold;">{{item.noticeTitle}}</view>
-        <view slot="label" style="display: flex;">
-          <u-icon name="clock"></u-icon>
+        <view slot="title" style="font-size: 30rpx; font-weight: bold;">{{item.noticeTitle}}</view>
+        <view slot="label" style="display: flex; font-size: 12px; color: #909399;">
+          <u-icon name="clock" size="12"></u-icon>
           <text>{{item.createTime}}</text>
         </view>
       </u-cell>

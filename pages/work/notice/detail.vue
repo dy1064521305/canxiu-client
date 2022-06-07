@@ -1,10 +1,10 @@
 <template>
-  <view style="padding: 40rpx;">
-    <view style="font-size: 60rpx; font-weight: bold;">{{notice.noticeTitle}}</view>
-    <view style="display: flex;">
-      <u-icon name="clock"></u-icon>
+  <view class="mobile-container">
+    <view style="font-size: 40rpx; font-weight: bold;">{{notice.noticeTitle}}</view>
+    <view style="display: flex; font-size: 12px; color: #909399;">
+      <u-icon name="clock" size="12"></u-icon>
       <text>{{notice.createTime}}</text>
-      <u-icon name="account"></u-icon>
+      <u-icon name="account" size="12"></u-icon>
       <text>{{notice.remark}}</text>
     </view>
     <view style="margin-top: 40rpx;">
