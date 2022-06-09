@@ -7,17 +7,17 @@ module.exports = (vm) => {
   // 初始化请求配置
   uni.$u.http.setConfig((config) => {
     /* config 为默认全局配置，请求地址判断*/
-	  // #ifdef H5
+	  /* #ifdef H5 */
 	  if (process.env.NODE_ENV === 'production') {
 		  config.baseURL = environment.baseURL; /* 根域名 */
 	  } else {
       // 开发模式则使用代理方式，见vue.config.js配置
 		  config.baseURL = '/'; /* 根域名 */
 	  }
-	  // #endif
-	  // #ifndef H5
+	  /* #endif */
+	  /* #ifndef H5 */
 	  config.baseURL = environment.baseURL; /* 根域名 */
-	  // #endif
+	  /* #endif */
     return config
   })
 
