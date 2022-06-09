@@ -5,8 +5,8 @@
 	color: #000;
 }
 
-.t-form-input {
-	padding: 0 10px 0 62px;
+/deep/ .login-form-item .u-input {
+  padding: 0 10px 0 62px;
 	height: 32px;
 	line-height: 32px;
 	margin-bottom: 26px;
@@ -15,14 +15,16 @@
 	font-size: 14px;
 	border-radius: 26px;
 }
+
 .t-captcha {
-	width: calc(100% - 140px);
-	display: inline-block;
+	display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 .t-captcha-img {
+  margin-left: 16px;
 	width: 102px;
 	height: 44px;
-	float: right;
 }
 .img-a {
 	position: absolute;
@@ -38,7 +40,6 @@
 	left: -50rpx;
 	z-index: -999;
 }
-
 
 .t-login button {
 	font-size: 28rpx;
@@ -66,16 +67,4 @@
 
 .t-login .uni-input-placeholder {
 	color: #000 !important;
-}
-
-.cl {
-	zoom: 1;
-}
-
-.cl:after {
-	clear: both;
-	display: block;
-	visibility: hidden;
-	height: 0;
-	content: '\20';
 }
