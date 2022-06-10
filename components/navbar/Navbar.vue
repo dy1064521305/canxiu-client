@@ -4,18 +4,11 @@
       <view class="u-navbar__placeholder" :style="{ height: barHeight}">
         <view :class="[fixed && 'u-navbar--fixed']">
           <u-status-bar v-if="safeAreaInsetTop" :bgColor="bgColor"></u-status-bar>
-          <view class="u-navbar__content" :class="[border && 'u-border-bottom']"
-          :style="{
-            height: contentHeight,
-            backgroundColor: bgColor,
-          }">
-            <view
-              class="u-navbar__content__left"
-              hover-class="u-navbar__content__left--hover"
-              hover-start-time="150">
-              <text class="u-line-1 u-navbar__content__title"
-                :style="[{ width: $u.addUnit(titleWidth)}, { height: contentHeight, lineHeight: contentHeight, margin: '0 auto' }, $u.addStyle(titleStyle)]"
-              >{{ title }}</text>
+          <view class="u-navbar__content" :class="[border && 'u-border-bottom']" :style="{ height: contentHeight, backgroundColor: bgColor }">
+            <view class="u-navbar__content__left" hover-class="u-navbar__content__left--hover" hover-start-time="150">
+              <text class="u-line-1 u-navbar__content__title" :style="[{ width: $u.addUnit(titleWidth)}, { height: contentHeight, lineHeight: contentHeight, margin: '0 auto' }, $u.addStyle(titleStyle)]">
+                {{ title }}
+              </text>
             </view>
           </view>
         </view>
