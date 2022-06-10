@@ -1,15 +1,20 @@
 <template>
   <block v-if="isShow()">
     <view v-if="hideBtn" class="u-navbar" :style="{ backgroundColor: bgColor, textAlign: 'center' }">
-      <view class="u-navbar__placeholder" :style="{ height: barHeight}">
-        <view :class="[fixed && 'u-navbar--fixed']">
-          <u-status-bar v-if="safeAreaInsetTop" :bgColor="bgColor"></u-status-bar>
-          <view class="u-navbar__content" :class="[border && 'u-border-bottom']" :style="{ height: contentHeight, backgroundColor: bgColor }">
-            <view class="u-navbar__content__left" hover-class="u-navbar__content__left--hover" hover-start-time="150">
-              <text class="u-line-1 u-navbar__content__title" :style="[{ width: $u.addUnit(titleWidth)}, { height: contentHeight, lineHeight: contentHeight, margin: '0 auto' }, $u.addStyle(titleStyle)]">
-                {{ title }}
-              </text>
-            </view>
+      <view
+        class="u-navbar__placeholder"
+        v-if="fixed"
+        :style="{
+          height: $u.addUnit($u.getPx(height) + $u.sys().statusBarHeight,'px'),
+        }"
+      ></view>
+      <view :class="[fixed && 'u-navbar--fixed']">
+        <u-status-bar v-if="safeAreaInsetTop" :bgColor="bgColor"></u-status-bar>
+        <view class="u-navbar__content" :class="[border && 'u-border-bottom']" :style="{ height: contentHeight, backgroundColor: bgColor }">
+          <view class="u-navbar__content__left" hover-class="u-navbar__content__left--hover" hover-start-time="150" style="position: relative;">
+            <text class="u-line-1 u-navbar__content__title" :style="[{ height: contentHeight, lineHeight: contentHeight, margin: '0 auto' }, $u.addStyle(titleStyle)]">
+              {{ title }}
+            </text>
           </view>
         </view>
       </view>
@@ -50,6 +55,8 @@ export default {
   props: {
     h5Show: Boolean,
     hideBtn: Boolean,
+    back: Boolean,
+    home: Boolean
   },
   data () {
     return {
@@ -68,3 +75,63 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+	.u-navbar {
+
+		&--fixed {
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			z-index: 11;
+		}
+
+		&__content {
+			@include flex(row);
+			align-items: center;
+			height: 44px;
+			background-color: #9acafc;
+			position: relative;
+			justify-content: center;
+
+			&__left,
+			&__right {
+				padding: 0 13px;
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				@include flex(row);
+				align-items: center;
+			}
+
+			&__left {
+				left: 0;
+				
+				&--hover {
+					opacity: 0.7;
+				}
+
+				&__text {
+					font-size: 15px;
+					margin-left: 3px;
+				}
+			}
+
+			&__title {
+				text-align: center;
+				font-size: 16px;
+				color: $u-main-color;
+			}
+
+			&__right {
+				right: 0;
+
+				&__text {
+					font-size: 15px;
+					margin-left: 3px;
+				}
+			}
+		}
+	}
+</style>
