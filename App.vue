@@ -1,10 +1,12 @@
 <script>
 	export default {
-		onLaunch: function() {
+		onLaunch () {
+      // 加载系统信息
+      this.$store.dispatch('SystemInfo')
 		},
-		onShow: function() {
+		onShow () {
 		},
-		onHide: function() {
+		onHide () {
 		}
 	}
 </script>
