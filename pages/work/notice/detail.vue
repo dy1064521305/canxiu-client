@@ -1,5 +1,5 @@
 <template>
-  <view class="mobile-container">
+  <view class="mobile-item-container">
     <view style="font-size: 40rpx; font-weight: bold;">{{notice.noticeTitle}}</view>
     <view style="display: flex; font-size: 12px; color: #909399;">
       <u-icon name="clock" size="12"></u-icon>
@@ -23,7 +23,7 @@ export default {
       notice: {}
     }
   },
-  created () {
+  onShow () {
     this.noticeId = this.$route.query.id
     this.loadData()
   },

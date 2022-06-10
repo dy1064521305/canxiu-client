@@ -1,7 +1,7 @@
 <template>
-	<view class="mobile-page">
+	<view>
     <Navbar title="工作台" bgColor="#fff" :hideBtn="true" :h5Show="false"></Navbar>
-    <view style="padding: 40rpx; background-color: #fff; margin-top: 20rpx;">
+    <view class="mobile-item-container">
       <view style="font-size: 40rpx; font-weight: bold; padding: 0 0 40rpx 0;">待处理</view>
       <u-grid col="3">
         <u-grid-item @click="navigateTo('/pages/work/notice/index')">
@@ -27,7 +27,8 @@
         </u-grid-item>
       </u-grid>
     </view>
-    <view style="padding: 40rpx; background-color: #fff; margin-top: 40rpx;">
+    <Gap />
+    <view class="mobile-item-container">
       <view style="font-size: 40rpx; font-weight: bold; padding: 0 0 40rpx 0;">统计报表</view>
       <u-grid col="3">
         <u-grid-item>
@@ -40,6 +41,7 @@
         </u-grid-item>
       </u-grid>
     </view>
+    <Gap />
     <view style="padding: 40rpx; background-color: #fff; margin-top: 40rpx; min-height: 600rpx;">
       <u-tabs
         lineHeight="5"
@@ -93,9 +95,11 @@
 
 <script>
 import Navbar from '@/components/navbar/Navbar'
+import Gap from '@/components/gap/Gap'
 
 export default {
   components: {
+    Gap,
     Navbar,
   },
   data () {

@@ -1,6 +1,6 @@
 <template>
 	<view class="index-content">
-    <Navbar :hideBtn="true" title="首页" bgColor="#fff"></Navbar>
+    <Navbar :hideBtn="true" title="首页" bgColor="#fff" :h5Show="false" :fixed="false"></Navbar>
 		<view class="index-block">
       <view class="index-block-title">运行统计</view>
       <u-row gutter="16">
