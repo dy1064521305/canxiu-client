@@ -1,8 +1,6 @@
 <template>
 	<view class="mobile-page">
-		<!-- <view>
-      <u-notice-bar text="text1"></u-notice-bar>
-    </view> -->
+    <Navbar title="工作台" bgColor="#fff" :hideBtn="true" :h5Show="false"></Navbar>
     <view style="padding: 40rpx; background-color: #fff; margin-top: 20rpx;">
       <view style="font-size: 40rpx; font-weight: bold; padding: 0 0 40rpx 0;">待处理</view>
       <u-grid col="3">
@@ -94,7 +92,12 @@
 </template>
 
 <script>
+import Navbar from '@/components/navbar/Navbar'
+
 export default {
+  components: {
+    Navbar,
+  },
   data () {
     return {
       activeKey: 'work',

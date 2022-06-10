@@ -1,5 +1,6 @@
 <template>
 	<view>
+    <Navbar :hideBtn="true" bgColor="#f3f4f6"></Navbar>
     <view class="profile-top">
       <view class="user-info">
         <view>
@@ -56,11 +57,13 @@
 </template>
 
 <script>
+import Navbar from '@/components/navbar/Navbar'
 import Password from './password.vue'
 
 export default {
   components: {
-    Password
+    Navbar,
+    Password,
   },
   data () {
     return {

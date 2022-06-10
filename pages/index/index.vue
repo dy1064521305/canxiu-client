@@ -1,6 +1,7 @@
 <template>
 	<view class="index-content">
-		<view class="index-block" style="margin-top: 20rpx;">
+    <Navbar :hideBtn="true" title="首页" bgColor="#fff"></Navbar>
+		<view class="index-block">
       <view class="index-block-title">运行统计</view>
       <u-row gutter="16">
         <u-col span="4">
@@ -11,7 +12,7 @@
                 <text>在线人数</text>
               </view>
               <view style="position: absolute; bottom: 48rpx; right: 16rpx;">
-                <u-count-to :startVal="0" :endVal="149" :duration="1500" fontSize="40" color="#fff" separator=","></u-count-to>
+                <u-count-to :startVal="0" :endVal="149" :duration="1500" color="#fff" separator=","></u-count-to>
               </view>
             </view>
           </view>
@@ -24,7 +25,7 @@
                 <text>今日新增</text>
               </view>
               <view style="position: absolute; bottom: 48rpx; right: 16rpx;">
-                <u-count-to :startVal="1" :endVal="2349" :duration="1500" fontSize="40" color="#fff" separator=","></u-count-to>
+                <u-count-to :startVal="1" :endVal="2349" :duration="1500" color="#fff" separator=","></u-count-to>
               </view>
             </view>
           </view>
@@ -37,7 +38,7 @@
                 <text>总人数</text>
               </view>
               <view style="position: absolute; bottom: 48rpx; right: 16rpx;">
-                <u-count-to :startVal="1" :endVal="1249350" :duration="1500" fontSize="40" color="#fff" separator=","></u-count-to>
+                <u-count-to :startVal="1" :endVal="1249350" :duration="1500" color="#fff" separator=","></u-count-to>
               </view>
             </view>
           </view>
@@ -78,6 +79,8 @@
 </template>
 
 <script>
+import Navbar from '@/components/navbar/Navbar'
+
 let _now = new Date();
 let now_time = {};
 now_time.year = _now.getFullYear()
@@ -85,6 +88,9 @@ now_time.month = _now.getMonth() + 1
 now_time.day = _now.getDay()
 
 export default {
+  components: {
+    Navbar,
+  },
   data () {
     return {
       isCanvas2d: true,
@@ -137,7 +143,6 @@ export default {
 .index-block {
   padding: 40rpx;
   background-color: #fff;
-  margin-top: 40rpx;
 }
 .index-block-title {
   font-size: 40rpx;
