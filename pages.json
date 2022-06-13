@@ -22,7 +22,7 @@
 			}
 		},
 		{
-			"path": "pages/work/notice/index",
+			"path": "pages/work/notice/list",
 			"style": {
 				"navigationBarTitleText": "通知公告",
 				"navigationStyle": "custom"
