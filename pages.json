@@ -29,7 +29,21 @@
 			}
 		},
 		{
+			"path": "pages/work/notice/manage",
+			"style": {
+				"navigationBarTitleText": "公告管理",
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/work/notice/detail",
+			"style": {
+				"navigationBarTitleText": "公告详情",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/work/notice/edit",
 			"style": {
 				"navigationBarTitleText": "公告详情",
 				"navigationStyle": "custom"
@@ -83,7 +97,10 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+    "app-plus": {
+      "softinputMode": "adjustResize"
+    }
 	},
 	"easycom": {
 		"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"

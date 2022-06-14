@@ -1,28 +1,34 @@
 <template>
   <view class="mobile-item-container">
-    <u-navbar leftText="通知公告" :placeholder="true" :autoBack="true"></u-navbar>
-    <view v-if="list.length > 0">
-      <u-cell v-for="(item, index) in list" :key="index" :isLink="true" :border="true" @click="toDetail(item.noticeId)">
-        <u-avatar slot="icon" :bg-color="item.noticeType == 2 ? '#2979ff' : '#19be6b'" :text="item.noticeType == 2 ? '公' : '通'" shape="square"></u-avatar>
-        <view slot="title" style="font-size: 30rpx; font-weight: bold;">{{item.noticeTitle}}</view>
-        <view slot="label" style="display: flex; font-size: 12px; color: #909399;">
-          <u-icon name="clock" size="12"></u-icon>
-          <text>{{item.createTime}}</text>
-        </view>
-      </u-cell>
-    </view>
-    <u-empty v-else></u-empty>
+    <Navbar title="公告管理" bgColor="#fff" :h5Show="false"></Navbar>
+    <Tabs :tabs="tabs" @change="tabChange"></Tabs>
+    <Record v-if="activeKey == 'draft'" :list="list" @click="toDetail"></Record>
+    <Record v-if="activeKey == 'published'" :list="list" @click="toDetail"></Record>
   </view>
 </template>
 
 <script>
 import * as NoticeApi from '@/api/work/notice'
-import uIcon from '@/uni_modules/uview-ui/components/u-icon/u-icon.vue'
+import Navbar from '@/components/navbar/Navbar'
+import Tabs from '@/components/tabs/Tabs'
+import Record from './record'
 
 export default {
-  components: { uIcon },
+  components: {
+    Navbar,
+    Tabs,
+    Record,
+  },
   data () {
     return {
+      activeKey: 'draft',
+      tabs: [{
+        name: '草稿',
+        key: 'draft',
+      }, {
+        name: '已发布',
+        key: 'published'
+      }],
       params: {
         pageNum: 0,
         pageSize: 10
@@ -46,8 +52,13 @@ export default {
     scrolltolower () {
       this.loadData();
     },
-    toDetail (noticeId) {
-      uni.navigateTo({ url: '/pages/work/notice/detail?id=' + noticeId })
+    tabChange (tab) {
+      this.activeKey = tab.key;
+      this.params.pageNum = 0;
+      this.loadData();
+    },
+    toDetail (notice) {
+      uni.navigateTo({ url: '/pages/work/notice/edit?id=' + notice.noticeId })
     }
   }
 }

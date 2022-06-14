@@ -1,17 +1,7 @@
 <template>
   <view class="mobile-item-container">
     <Navbar title="通知公告" bgColor="#fff" :h5Show="false"></Navbar>
-    <u-tabs
-      lineHeight="5"
-      :activeStyle="{
-        color: '#303133',
-        fontSize: '20px',
-        fontWeight: 'bold',
-        transform: 'scale(1.05)'
-      }"
-      :list="tabs"
-      @change="tabChange">
-    </u-tabs>
+    <u-tabs :activeStyle="activeStyle" :list="tabs" @change="tabChange"></u-tabs>
     <!-- 未读 -->
     <view v-if="activeKey == 'unread'">
       <view style="padding: 16px 0 10px;">
@@ -72,7 +62,13 @@ export default {
         pageNum: 0,
         pageSize: 10
       },
-      list: []
+      list: [],
+      activeStyle: {
+        color: '#303133',
+        fontSize: '20px',
+        fontWeight: 'bold',
+        transform: 'scale(1.05)'
+      }
     }
   },
   created () {

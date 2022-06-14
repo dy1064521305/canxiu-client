@@ -44,7 +44,6 @@
     <Gap />
     <view style="padding: 40rpx; background-color: #fff; margin-top: 40rpx; min-height: 600rpx;">
       <u-tabs
-        lineHeight="5"
         :activeStyle="{
           color: '#303133',
           fontSize: '40rpx',
@@ -61,7 +60,7 @@
       </u-tabs>
       <view v-if="activeKey == 'work'" style="padding: 40rpx 0;">
         <u-grid col="3">
-          <u-grid-item>
+          <u-grid-item @click="navigateTo('/pages/work/notice/manage')">
             <u-icon name="edit-pen" color="#2979ff" size="60rpx"></u-icon>
             <text class="btn-text">公告管理</text>
           </u-grid-item>
