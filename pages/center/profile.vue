@@ -1,5 +1,6 @@
 <template>
   <view>
+    <Navbar :hideBtn="false" bgColor="#f3f4f6"></Navbar>
     <view style="background-color: #2b85e4; padding: 40rpx;">
       <view style="width: 140rpx; height: 140rpx; border: 1px solid #fff; border-radius: 50%; margin: 0 auto;">
         <u-avatar src="/static/img/avatar.png" size="120rpx" style="margin: 10rpx;"></u-avatar>
@@ -50,7 +51,12 @@
 </template>
 
 <script>
+import Navbar from '@/components/navbar/Navbar'
+
 export default {
+  components: {
+    Navbar,
+  },
   data () {
     return {
       userInfo: {
