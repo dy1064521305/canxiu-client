@@ -45,6 +45,18 @@ const request = {
     return http.get(path, config);
   },
 
+  // put提交
+  put (url, params, config = {}) {
+    config = mixinCustom(config)
+    return http.put(url, params, config);
+  },
+
+  // delete提交
+  delete (url, config = {}) {
+    config = mixinCustom(config)
+    return http.delete(url, config);
+  },
+
 };
 
 export default request;
