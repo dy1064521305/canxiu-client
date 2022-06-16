@@ -2,20 +2,23 @@
   <view class="mobile-item-container">
     <Navbar title="公告管理" bgColor="#fff" :h5Show="false"></Navbar>
     <Tabs :tabs="tabs" @change="tabChange"></Tabs>
-    <Record v-if="activeKey == 'draft'" :list="list" @click="toDetail"></Record>
-    <Record v-if="activeKey == 'published'" :list="list" @click="toDetail"></Record>
+    <Record v-if="activeKey == 'draft'" :list="list" @click="navigateTo"></Record>
+    <Record v-if="activeKey == 'published'" :list="list" @click="navigateTo"></Record>
+    <FloatButton type="primary" icon="plus" @click="navigateTo"></FloatButton>
   </view>
 </template>
 
 <script>
 import * as NoticeApi from '@/api/work/notice'
 import Navbar from '@/components/navbar/Navbar'
+import FloatButton from '@/components/button/FloatButton'
 import Tabs from '@/components/tabs/Tabs'
 import Record from './record'
 
 export default {
   components: {
     Navbar,
+    FloatButton,
     Tabs,
     Record,
   },
@@ -57,8 +60,12 @@ export default {
       this.params.pageNum = 0;
       this.loadData();
     },
-    toDetail (notice) {
-      uni.navigateTo({ url: '/pages/work/notice/edit?id=' + notice.noticeId })
+    navigateTo (notice) {
+      if (notice) {
+        uni.navigateTo({ url: '/pages/work/notice/edit?id=' + notice.noticeId })
+      } else {
+        uni.navigateTo({ url: '/pages/work/notice/edit' })
+      }
     }
   }
 }

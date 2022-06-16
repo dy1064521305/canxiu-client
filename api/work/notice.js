@@ -6,6 +6,9 @@ export const noticeList = (params) => request.get('/system/notice/list', params)
 // 获取通知公告详情信息
 export const noticeById = (id) => request.get('/system/notice/' + id)
 
+// 新增通知公告详情信息
+export const noticeAdd = (params) => request.post('/system/notice', params)
+
 // 修改通知公告详情信息
 export const noticeModify = (params) => request.put('/system/notice', params)
 
