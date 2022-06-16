@@ -1,7 +1,7 @@
 <template>
   <view class="mobile-item-container">
     <Navbar title="公告管理" bgColor="#fff" :h5Show="false"></Navbar>
-    <Tabs :tabs="tabs" @change="tabChange"></Tabs>
+    <Tabs :tabs="tabs" @change="tabChange" style="margin-bottom: 16px;"></Tabs>
     <Record v-if="activeKey == 'draft'" :list="list" @click="navigateTo"></Record>
     <Record v-if="activeKey == 'published'" :list="list" @click="navigateTo"></Record>
     <FloatButton type="primary" icon="plus" @click="navigateTo"></FloatButton>

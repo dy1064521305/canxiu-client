@@ -1,5 +1,6 @@
 <template>
   <view class="mobile-item-container">
+    <Navbar :title="noticeId ? '修改公告' : '新增公告'" bgColor="#fff" :h5Show="false"></Navbar>
     <u--form ref="noticeForm" :model="notice" :rules="rules" labelPosition="left">
       <u-form-item label="标题" prop="noticeTitle" borderBottom>
         <u--textarea v-model="notice.noticeTitle" placeholder="请输入标题" :count="false" :maxlength="30" :autoHeight="true" confirmType="done"></u--textarea>
@@ -21,7 +22,7 @@
     <u-action-sheet :actions="actions" :title="actionTitle" :show="actionShow" @close="actionShow = false" @select="actionSelect"></u-action-sheet>
     <u-row :gutter="16" style="margin-top: 36px;">
       <u-col :span="6">
-        <u-button v-if="this.noticeId" type="error" text="删除" @click="del"></u-button>
+        <u-button v-if="noticeId" type="error" text="删除" @click="del"></u-button>
         <u-button v-else icon="arrow-left" text="返回" plain @click="goBack()"></u-button>
       </u-col>
       <u-col :span="6">
@@ -33,8 +34,12 @@
 
 <script>
 import * as NoticeApi from '@/api/work/notice'
+import Navbar from '@/components/navbar/Navbar'
 
 export default {
+  components: {
+    Navbar,
+  },
   data () {
     return {
       noticeId: undefined,
@@ -61,8 +66,8 @@ export default {
       }
     }
   },
-  onShow () {
-    this.noticeId = this.$route.query.id
+  onLoad (params) {
+    this.noticeId = params.id
     this.loadData()
   },
   methods: {
