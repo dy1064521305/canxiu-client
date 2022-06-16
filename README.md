@@ -15,7 +15,7 @@
 ***注：目前移动端支持若依管理平台全系列（单应用、微服务、MySQL版、Oracle版、SqlServer版、Antd版等）***
 <br><br>
 
-###  :strawberry: 项目预览
+###  :strawberry: 扫码预览
 <table>
     <tr>
         <td valign="top" width="180"><img src="https://images.gitee.com/uploads/images/2022/0526/091635_6bfffb01_1203341.png"/></td>
@@ -39,7 +39,7 @@
 | qiun-data-charts | 2.4.3-20220505 |
 <br><br>
 
-###    :lemon:   项目预览
+###    :lemon:   系统截图
 <table>
     <tr>
         <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/login.jpg"/></td>
