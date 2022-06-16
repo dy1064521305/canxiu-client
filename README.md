@@ -19,6 +19,12 @@
         <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/work.jpg"/></td>
         <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/my.jpg"/></td>
     </tr>
+    <tr>
+        <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/notice-m.jpg"/></td>
+        <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/notice-e.jpg"/></td>
+        <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/prefile.jpg"/></td>
+        <td valign="top"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/pwd-reset.jpg"/></td>
+    </tr>
 </table>
 
 #### 为了方便交流，创建了QQ群：860974500
