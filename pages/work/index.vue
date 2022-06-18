@@ -64,7 +64,7 @@
             <u-icon name="edit-pen" color="#2979ff" size="60rpx"></u-icon>
             <text class="btn-text">公告管理</text>
           </u-grid-item>
-          <u-grid-item>
+          <u-grid-item @click="navigateTo('/pages/work/user/list')">
             <u-icon name="plus-people-fill" color="#2979ff" size="60rpx"></u-icon>
             <text class="btn-text">用户管理</text>
           </u-grid-item>

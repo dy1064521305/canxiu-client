@@ -22,6 +22,13 @@
 			}
 		},
 		{
+			"path": "pages/work/user/list",
+			"style": {
+				"navigationBarTitleText": "用户管理",
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/work/notice/list",
 			"style": {
 				"navigationBarTitleText": "通知公告",
