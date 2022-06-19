@@ -69,6 +69,7 @@
         "enable" : false
     },
     "vueVersion" : "2",
+    /* h5不能配置devServer属性,需要配置可修改vue.config.js文件 */
     "h5" : {
         "template" : "template.h5.html"
     }
