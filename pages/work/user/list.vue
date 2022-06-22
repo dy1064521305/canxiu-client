@@ -5,7 +5,7 @@
       <u-search :show-action="true" actionText="搜索" :animation="true" height="40px"></u-search>
     </view>
     <view v-if="list && list.length > 0">
-      <u-cell v-for="(item, index) in list" :key="index" :isLink="true" :border="true" @click="$emit('click', item)">
+      <u-cell v-for="(item, index) in list" :key="index" :isLink="true" :border="true" @click="navigateTo(item)">
         <u-avatar slot="icon" v-if="item.avatar" :src="item.avatar"></u-avatar>
         <u-avatar slot="icon" v-else :text="item.remark.substring(0, 1)" randomBgColor></u-avatar>
         <view slot="title">
@@ -27,16 +27,19 @@
       <!-- <u-loadmore :status="status" /> -->
     </view>
     <u-empty v-else></u-empty>
+    <FloatButton type="primary" icon="plus" @click="navigateTo"></FloatButton>
   </view>
 </template>
 
 <script>
 import * as UserManageApi from '@/api/work/userManage'
 import Navbar from '@/components/navbar/Navbar'
+import FloatButton from '@/components/button/FloatButton'
 
 export default {
   components: {
-    Navbar
+    Navbar,
+    FloatButton
   },
   data () {
     return {
@@ -59,6 +62,13 @@ export default {
         app.list = res.rows;
       })
     },
+    navigateTo (user) {
+      if (user) {
+        uni.navigateTo({ url: '/pages/work/user/edit?id=' + user.userId })
+      } else {
+        uni.navigateTo({ url: '/pages/work/user/edit' })
+      }
+    }
   }
 }
 </script>
