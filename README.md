@@ -37,6 +37,7 @@
 |----------|--------|
 | uview-ui | 2.0.31 |
 | qiun-data-charts | 2.4.3-20220505 |
+
 <br><br>
 
 ###   :tw-1f348:   系统配置
@@ -115,4 +116,19 @@ QQ群：860974500
 
 <br><br>
 #### 如果觉得项目还不错，一定记得 :star: 一下
+#### 如果觉得项目还不错，一定记得 :star: 一下
+#### 如果觉得项目还不错，一定记得 :star: 一下
 <br><br>
+
+###  :poultry_leg:  给作者加个鸡腿
+如果对您的工作或学习产生些许帮助，可以给作者的午餐加一个鸡腿 :poultry_leg:  :poultry_leg:  :poultry_leg: ！~~
+<table>
+    <tr>
+        <td valign="top" width="180"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/wechat_pay.jpg"/></td>
+        <td valign="top" width="180"><img src="https://gitee.com/yinm/RuoYi-Mobile/raw/master/static/preview/ali_pay.jpg"/></td>
+    </tr>
+    <tr>
+        <td valign="top" align="center">微信捐助</td>
+        <td valign="top" align="center">支付宝捐助</td>
+    </tr>
+</table>
