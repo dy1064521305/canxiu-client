@@ -52,9 +52,9 @@ const request = {
   },
 
   // delete提交
-  delete (url, config = {}) {
+  delete (url, params, config = {}) {
     config = mixinCustom(config)
-    return http.delete(url, config);
+    return http.delete(url, params, config);
   },
 
 };
