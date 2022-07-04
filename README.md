@@ -12,7 +12,7 @@
 
 ### :pear: 后端下载
 下载地址：<a href="http://fastbuild.run" target="_blank">传送门</a><br>
-***注：目前移动端支持若依管理平台全系列（单应用、微服务、MySQL版、Oracle版、SqlServer版、Antd版等）***
+***注：目前移动端支持若依管理平台全系列（单应用、微服务、MySQL版、Oracle版、SqlServer版、Antd版等），需要适配其他版本的请到上面地址下载移动端源码。***
 <br><br>
 
 ###  :strawberry: 扫码预览
