@@ -67,7 +67,9 @@ module.exports = {
 }
 ```
 2. H5启动端口配置：
-*** 注意：不要在manifest.json中配置h5启动信息，可能会引发后端接口访问异常 ***
+
+***注意：不要在manifest.json中配置h5启动信息，可能会引发后端接口访问异常***
+
 ```
 # 配置文件路径：/vue.config.js
 # 修改port属性
