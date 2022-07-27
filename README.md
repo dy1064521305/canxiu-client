@@ -5,6 +5,10 @@
 [![gitee fork](https://gitee.com/yinm/RuoYi-Mobile/badge/fork.svg?theme=dark)]('https://gitee.com/yinm/RuoYi-Mobile/members')
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
+# 非常抱歉！最近公司项目较忙，项目疏于维护，预计8月中下旬回归！
+# 在此期间欢迎大家PR，增加完善功能，我会定期合并。
+# 另外，有技术过硬的，有意愿做私活的小伙伴，可将做过的项目、开源的地址、居住城市、擅长方向、可接受工作时段等等信息，发送邮件至fastbuild@163.com。
+
 ### :peach: 项目简介
 企事业单位信息化加速，移动端办工逐渐成为趋势，H5或小程序比起APP来说更简单方便。因此一款好的移动端基础平台十分有必要。<br>
 项目采用当下流行的UniApp + uView2 框架开发，完成常见的日常工作功能与移动端特有功能组件。
