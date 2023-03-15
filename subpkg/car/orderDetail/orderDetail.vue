@@ -480,24 +480,20 @@
 			},
 			//取消
 			cancelReason(e){
-				console.log(e.value[0]);
-				this.show=false
+				console.log(e.value[0])
+				order.cancelOrder({
+					cancelReason:e.value[0],
+					orderId:this.info.orderId
+				}).then(res=>{
+					uni.showToast({
+						title: '取消成功',
+						duration: 2000
+					});
 					this.getList()
-				this.dateDiff = 0
-				this.pipeiStatus = true
-				// order.cancelOrder({
-				// 	cancelReason:e.value[0],
-				// 	orderId:this.info.orderId
-				// }).then(res=>{
-				// 	uni.showToast({
-				// 		title: '取消成功',
-				// 		duration: 2000
-				// 	});
-				// 	this.getList()
-				// 	this.dateDiff = 0
-				// 	this.pipeiStatus = true
-				// 	this.show=false
-				// })
+					this.dateDiff = 0
+					this.pipeiStatus = true
+					this.show=false
+				})
 			},
 			//师傅详情
 			workerDetailed() {

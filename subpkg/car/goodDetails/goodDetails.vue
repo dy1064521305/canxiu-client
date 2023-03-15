@@ -53,14 +53,14 @@
 		<view class="comment bgf">
 			<view class="title">
 				<text>用户评论({{appraiseList.length}})</text>
-				<view style="display:flex;align-items: center;" @click="allComment">
+				<view v-if="appraiseList.length!=0" style="display:flex;align-items: center;" @click="allComment">
 					<view style="font-size: 25rpx;color: #CBCFCE;margin-right: 17rpx;">全部</view>
 					<image
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
 						mode=""></image>
 				</view>
 			</view>
-			<view style="margin:30rpx 0 10rpx;display: flex;">
+			<view v-if="appraiseList.length!=0" style="margin:30rpx 0 10rpx;display: flex;">
 				<u-avatar :src="appraiseList[0].avatarUrl" size="25"></u-avatar>
 				<!-- 	<image src="../../static/img/login/loginBg.png" mode=""></image> -->
 				<view
@@ -575,6 +575,7 @@
 							}
 						})
 					} else {
+						console.log(query.list);
 						uni.navigateTo({
 							url: '../submitOrder/submitOrder?item=' + JSON.stringify(query.list)
 						})
