@@ -2,7 +2,7 @@ const { environment } = require('./config/environment.js')
 
 module.exports = {
   devServer: {
-    port: 9001,
+    port: 8080,
     proxy: {
       '/': {
         target: environment.baseURL,

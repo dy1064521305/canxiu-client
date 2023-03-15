@@ -31,12 +31,12 @@ module.exports = (vm) => {
       config.header.Authorization = 'Bearer ' + storage.get(ACCESS_TOKEN)
     }
     // 根据custom参数中配置的是否需要显示loading
-    if (config?.custom?.loading) {
-      uni.showLoading({
-        title: '加载中...',
-        mask: true
-      })
-    }
+    // if (config?.custom?.loading) {
+    //   uni.showLoading({
+    //     title: '加载中...',
+    //     mask: true
+    //   })
+    // }
     return config 
   }, config => { // 可使用async await 做异步操作
     return Promise.reject(config)

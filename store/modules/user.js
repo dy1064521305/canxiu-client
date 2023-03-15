@@ -1,28 +1,35 @@
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { ACCESS_TOKEN ,CLIENID} from '@/store/mutation-types'
 import storage from '@/utils/storage'
 import * as LoginApi from '@/api/login'
 import * as UserApi from '@/api/user'
 
 // 登陆成功后执行
-const loginSuccess = (commit, { token }) => {
+const loginSuccess = (commit,  result ) => {
   // 过期时间30天
   const expiryTime = 30 * 86400
+  console.log(result);
   // 保存tokne和userId到缓存
-  storage.set(ACCESS_TOKEN, token, expiryTime)
+  storage.set(ACCESS_TOKEN, result.token, expiryTime)
+   storage.set(CLIENID, result.clientId, expiryTime)
   // 记录到store全局变量
-  commit('SET_TOKEN', token)
+ commit('SET_TOKEN', result.token),
+  commit('SET_CLIENTID', result.clientId)
 }
 
 export const state = {
   // 用户认证token
   token: '',
   // 用户信息
-  userInfo: null
+  userInfo: null,
+  clientId:''
 }
 
 export const mutations = {
   SET_TOKEN: (state, value) => {
     state.token = value
+  },
+  SET_CLIENTID: (state, value) => {
+    state.clientId = value
   },
   SET_USER: (state, value) => {
     state.userInfo = value
@@ -35,7 +42,8 @@ export const actions = {
   Login({ commit }, data) {
     return new Promise((resolve, reject) => {
       LoginApi.login(data, { custom: { catch: true } }).then(response => {
-          const result = response;
+          const result = response.data;
+		  console.log(result);
           loginSuccess(commit, result)
           resolve(response)
         }).catch(reject)
@@ -59,11 +67,14 @@ export const actions = {
   // 退出登录
   Logout({ commit }, data) {
     return new Promise((resolve, reject) => {
-      LoginApi.logout(data, { custom: { catch: true } }).then(response => {
+		console.log(1111);
+    //  LoginApi.logout(data, { custom: { catch: true } }).then(response => {
         storage.remove(ACCESS_TOKEN)
+		 storage.remove(CLIENID)
         commit('SET_TOKEN', '')
-        resolve(response)
-      }).catch(reject)
+		  commit('SET_CLIENTID', '')
+       // resolve(response)
+    //  }).catch(reject)
     })
   }
 
