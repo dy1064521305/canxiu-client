@@ -54,7 +54,8 @@ const request = {
   // delete提交
   delete (url, params, config = {}) {
     config = mixinCustom(config)
-    return http.delete(url, params, config);
+	 let path = urlFormater(url, params)
+    return http.delete(path, config);
   },
 
 };

@@ -1,115 +1,202 @@
-<!-- 蓝色简洁登录页面 -->
 <template>
-	<view class="t-login">
-		<!-- 页面装饰图片 -->
-		<image class="img-a" src="/static/img/b-1.png"></image>
-		<image class="img-b" src="/static/img/b-2.png"></image>
-		<!-- 标题 -->
-		<view class="t-b">{{ title }}</view>
-		<view class="t-b2">{{ subTitle }}</view>
-		<form class="cl">
-			<!-- 登录账号 -->
-			<view class="login-form-item">
-				<u-input v-model="username" placeholder="请输入登录用户名" maxlength="30">
-					<u-icon slot="prefix" name="account" size="35px"></u-icon>
-				</u-input>
+	<view class="login">	
+	
+		<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/1cabf1cc977e4cc29a33272885693202.png" mode="">
+		</image>
+	
+		<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/75537c81465d49b3916abd1ee8694e1f.png" mode="">
+		</image>
+		<u-icon class='icon' name="close-circle"  color="#fff" size="25" @click="goHome"></u-icon>
+		<view class="slogin">
+			让餐饮维修更简单
+		</view>
+		<view class="main">
+			<view class="input-box">
+				<input type="number" v-model="phone" placeholder="请输入您的手机号">
 			</view>
-			<!-- 登录密码 -->
-			<view class="login-form-item">
-				<u-input v-model="password" type="password" placeholder="请输入登录密码" maxlength="16">
-					<u-icon slot="prefix" name="lock" size="35px"></u-icon>
-				</u-input>
+			<view class="input-box">
+				<input type="number" v-model="code" placeholder="请输入验证码">
+				<text v-if="countDownNum==0" @click="getCode">获取验证码</text>
+				<text style="width: 24%;text-align:end;" v-if="countDownNum!=0">{{countDownNum}}s</text>
 			</view>
-			<!-- 图形验证码 -->
-			<view class="login-form-item t-captcha">
-				<u-input v-model="captchaCode" type="number" placeholder="请输入验证码" maxlength="4">
-					<u-icon slot="prefix" name="fingerprint" size="35px"></u-icon>
-				</u-input>
-				<image :src="captcha" @click="getCaptcha" class="t-captcha-img"></image>
+			<view class="fonts">
+				<view style="margin-top:3rpx;">
+					<view v-if="!checked" class="check" @click="check"></view>
+					<view v-else style="width: 26rpx;height: 26rpx;" @click="check">
+						<image style="width: 100%;height: 100%;"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+						</image>
+					</view>
+
+				</view>
+				<view style="margin-left: 8rpx;width:610rpx;">
+					未注册手机号登录后将自动生成账号，且代表已阅读并同意
+					<text v-for="(item,index) in agreementList" @click="goAgreement(item)">《{{item.agreementName}}》<text
+							v-if="index!=agreementList.length-1">、</text></text>
+				</view>
 			</view>
-			<button @tap="login()">登 录</button>
-		</form>
+			<view class="login">
+				<image style="width: 100%;height: 100%;"
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/afc56c996d564ba48186af4549a42c71.png"
+					mode="" @click="login()"></image>
+			</view>
+
+			<view class="bottom">
+				<view class='font'>
+					<view class="">
+						第三方登录
+					</view>
+					<view class="">
+						<image style="width: 83rpx;margin-top: 35rpx;"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/eb942b0c00be4ccc81bea4dc1bf8214b.png"
+							mode="widthFix"></image>
+					</view>
+				</view>
+
+			</view>
+		</view>
+
 	</view>
 </template>
 <script>
-import * as CaptchaApi from '@/api/captcha'
-import { isEmpty } from '@/utils/verify.js'
+	import * as CaptchaApi from '@/api/captcha'
+	import {
+		getCode,
+		getAgreement
+	} from '@/api/login.js'
+	import {
+		isEmpty,
+		isPhone
+	} from '@/utils/verify.js'
 
-export default {
-	data() {
-		return {
-			title: '餐修管理平台',
-			subTitle: '欢迎回来，开始工作吧！',
-			// 图形验证码信息
-			captcha: null,
-			// 登录账号
-			username: 'admin',
-			// 密码
-			password: 'admin123',
-			// 图形验证码
-			captchaCode: '',
-			uuid: ''
-		};
-	},
-	created() {
-	  // 获取图形验证码
-	  this.getCaptcha()
-	},
-	methods: {
-		// 获取图形验证码
-		getCaptcha() {
-			const app = this
-			CaptchaApi.image().then(result => {
-				app.captcha = 'data:image/gif;base64,' + result.img
-				app.uuid = result.uuid
-			})
+	export default {
+		data() {
+			return {
+				checked: false,
+				title: '餐修管理平台',
+				subTitle: '欢迎回来，开始工作吧！',
+				// 登录账号
+				phone: '18974241028',
+				code: '',
+				countDownNum: 0, //获取验证码后倒数
+				agreementList: [], //问题协议
+			};
 		},
-		// 验证表单内容
-		validItem() {
-			const app = this
-			if (isEmpty(app.username)) {
-				uni.$u.toast('请输入登录用户名')
-				return false
-			}
-			if (isEmpty(app.password)) {
-				uni.$u.toast('请输入登录密码')
-				return false
-			}
-			if (isEmpty(app.captchaCode)) {
-				uni.$u.toast('请输入验证码')
-				return false
-			}
-			return true
+		created() {
+			this.getList()
 		},
-		// 确认登录
-		login() {
-      const app = this
-			let valid = app.validItem();
-			if (valid) {
-				app.isLoading = true
-				app.$store.dispatch('Login', {
-				  username: app.username,
-				  password: app.password,
-				  code: app.captchaCode,
-				  uuid: app.uuid
-				}).then(result => {
-					uni.switchTab({
-						url: '/pages/index/index',
-						fail(err) {
-							console.log(err)
-						}
-					})
+		methods: {
+			getList() {
+				getAgreement().then(res => {
+					console.log(res);
+					this.agreementList = res.data
 				})
-				.catch(err => {
-					app.captchaCode = ''
-					app.getCaptcha()
+			},
+			check() {
+				this.checked = !this.checked
+			},
+			radioChange() {
+				console.log(this.check);
+			},
+			//倒计时定时器
+			countDown() {
+				this.countDownNum = 60
+				this.timer = setInterval(() => {
+					this.countDownNum--
+					if (this.countDownNum <= 0) {
+						clearInterval(this.timer);
+					}
+				}, 1000)
+
+			},
+			// 验证表单内容
+			validItem() {
+				const app = this
+				if (isEmpty(app.phone)) {
+					uni.$u.toast('请输入手机号')
+					return false
+				}
+				if (isEmpty(app.code)) {
+					uni.$u.toast('请输入验证码')
+					return false
+				}
+				if (this.checked == false) {
+					uni.$u.toast('请勾选相关协议')
+					return false
+				}
+				return true
+			},
+			//获取验证码
+			getCode() {
+				//校验手机号
+				const app = this
+				app.code = ''
+				if (isEmpty(app.phone)) {
+					uni.$u.toast('请输入手机号')
+					return false
+				}
+				if (!isPhone(app.phone)) {
+					uni.$u.toast('请输入正确的手机号')
+					return false
+				}
+				this.countDown()
+				getCode({
+					phonenumber: this.phone
+				}).then(res => {
+					console.log(res);
 				})
-				.finally(() => app.isLoading = false)
+
+			},
+			// 确认登录
+			login() {
+				const app = this
+				// uni.navigateTo({
+				// 	url: '../../subpkg/login/info/info',
+				// 	fail(err) {
+				// 		console.log(err)
+				// 	}
+				// })
+				let valid = app.validItem();
+				if (valid) {
+					//	app.isLoading = true
+					app.$store.dispatch('Login', {
+							phonenumber: app.phone,
+							smsCode: app.code,
+						}).then(result => {
+							console.log(result.data.type);
+							result.data.type == 'Success' ? uni.switchTab({
+								url: '/pages/home/index',
+								fail(err) {
+									console.log(err)
+								}
+							}): uni.navigateTo({
+								url: '../../subpkg/login/info/info',
+								fail(err) {
+									console.log(err)
+								}
+							}) 
+
+						})
+						.catch(err => {})
+
+				}
+			},
+			//查协议内容
+			goAgreement(item) {
+				console.log(item);
+				uni.navigateTo({
+					url:'../../subpkg/login/agreementDetailed/agreementDetailed?name='+item.agreementName
+				})
+			},
+			//未登录回到首页
+			goHome(){
+				uni.switchTab({
+					url:'/pages/home/index'
+				})
 			}
-		},
-	}
-};
+		}
+	};
 </script>
 <style lang="scss" scoped>
-@import 'index.scss';
+	@import 'index.scss';
 </style>

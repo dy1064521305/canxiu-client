@@ -193,6 +193,7 @@
 			},
 			// 索引列表被触摸
 			touchStart(e) {
+				console.log('eeeeeeeeee',e);
 				// 获取触摸点信息
 				const touchStart = e.changedTouches[0]
 				if (!touchStart) return
