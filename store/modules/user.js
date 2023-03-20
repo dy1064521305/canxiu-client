@@ -71,6 +71,7 @@ export const actions = {
     //  LoginApi.logout(data, { custom: { catch: true } }).then(response => {
         storage.remove(ACCESS_TOKEN)
 		 storage.remove(CLIENID)
+		 
         commit('SET_TOKEN', '')
 		  commit('SET_CLIENTID', '')
        // resolve(response)

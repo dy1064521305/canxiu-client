@@ -1,7 +1,7 @@
 <template>
 	<view class="info">
 		<u-checkbox-group v-model="checkboxValue1" placement="column">
-			<view v-for="(item, index) in list" :key="index">
+			<view v-for="(item, index) in dataList" :key="index">
 
 				<view class="check">
 					<u-checkbox v-if="submit" shape="circle" :name="item.id?item.id:item.projectId"
@@ -124,19 +124,22 @@
 				checkboxValue1: [],
 				isLogin: storage.get('AccessToken'),
 				checkArr: [],
-				remark:{}
+				remark:{},
+				dataList:[]
 			};
 		},
 		watch: {
 			list: {
 				immediate: true,
-				handler: function() {
-					this.checkboxValue1 = this.list.filter(l => l.checked).map(l1 => l1.id)
+				deep:true,
+				handler: function(n) {
+					this.dataList = uni.$u.deepClone(n)
+					this.checkboxValue1 = n.filter(l => l.checked).map(l1 => l1.id)
 					console.log(this.checkboxValue1, 'this.checkboxValue1++++++++++++++140');
-					console.log(this.list);
-					this.list.forEach(item => {
-						if (this.isCar) {
-							console.log(this.isCar);
+					console.log(n);
+					this.dataList.forEach(item => {
+						if (this.isCar&& item.serviceProjectName) {
+							console.log('139......',item);
 							item.projectName = item.serviceProjectName
 						} else {
 							item.shuoming=item.remark
@@ -163,9 +166,9 @@
 			isJoinCar: {
 				handler: function() {
 					console.log(this.checkboxValue1);
-					console.log(this.list);
+					console.log(this.dataList);
 					let arr = [];
-					arr = this.list.filter(item => this.checkboxValue1.includes(item.id ? item.id : item.projectId))
+					arr = this.dataList.filter(item => this.checkboxValue1.includes(item.id ? item.id : item.projectId))
 					console.log(arr);
 					let query={
 						list:arr,
@@ -203,6 +206,7 @@
 				// console.log(this.checkArr,'aaaaaaaaaa');
 			},
 			numChange(item, value) {
+				console.log('207...',item,value,this.dataList);
 				this.$emit('getCheck', {
 					item: item,
 					num: value
@@ -218,11 +222,11 @@
 			},
 
 			getUrl(val) {
-				val.type == 'video' ? this.list[val.index].projectVideo = val.urls : this.list[val.index].projectImg = val
+				val.type == 'video' ? this.dataList[val.index].projectVideo = val.urls : this.dataList[val.index].projectImg = val
 					.urls
 				//this.isCar ? this.$emit('submitOrder', this.list) : ''
-				console.log(this.list);
-				this.$emit('getDeleteUrlList',this.list)
+				console.log(this.dataList);
+				this.$emit('getDeleteUrlList',this.dataList)
 			},
 			//删除
 			deleteById(id) {
@@ -237,14 +241,14 @@
 							console.log(id);
 							let arr = []
 							arr.push(id)
-							deleteCar(arr).then(res => {
+							 deleteCar(arr).then(res => {
 								console.log(res);
 								if (res.code === 200) {
 									uni.showToast({
 										title: '删除成功',
 										duration: 2000
 									});
-									this.$emit('getCarList')
+									this.$emit('deleteCarList',arr)
 								}
 							})
 						} else if (res.cancel) {
