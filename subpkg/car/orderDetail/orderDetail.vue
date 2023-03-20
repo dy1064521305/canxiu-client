@@ -12,7 +12,7 @@
 								<text class="time__item">{{ timeData.seconds }}&nbsp;秒</text>
 							</view>
 						</u-count-down>
-						<view v-if="pipeiStatus&&info.orderStatus!='待上门'&&info.orderStatus!='待接单'" style="margin-top: -10rpx;">
+						<view v-if="pipeiStatus&&info.orderStatus!='待上门'&&info.orderStatus!='客户取消'" style="margin-top: -10rpx;">
 							<u-loadmore status="loading" :loading-text="loadingText" />
 						</view>
 					</view>
@@ -368,12 +368,13 @@
 				var dateBegin = new Date(d1.replace(/-/g, "/")); //将-转化为/，使用new Date
 				var dateEnd = new Date(); //获取当前时间
 				var dateDiff = dateEnd.getTime() - dateBegin.getTime(); //时间差的毫秒数
+				//var dateDiff=1000000
 				console.log(dateDiff);
-				if (dateDiff > 900000) {
+				if (dateDiff > 90000) {
 					this.dateDiff = 0
 					this.pipeiStatus = true
 				} else {
-					this.dateDiff = Number((dateDiff - 900000).toString().substring(1))
+					this.dateDiff = Number((dateDiff - 90000).toString().substring(1))
 				}
 				console.log(Number((dateDiff - 900000).toString().substring(1)));
 			},
@@ -397,11 +398,26 @@
 							this.status = this.info.orderStatus
 							this.content = this.info.orderStatus
 						}
+						console.log(this.info.orderStatus);
+						if (this.info.orderStatus == '已完成') {
+							console.log(1111);
+							//获取评论
+							order.appraiseList({
+								orderId: this.id
+							}).then(res => {
+								console.log(res);
+								res.rows[0].imgs = res.rows[0].appraiseImg != null ? res.rows[0].appraiseImg.split(
+									',') : []
+								this.appraise = res.rows[0]
+								console.log(this.appraise);
+							})
+						}
 						//获取追踪列表
 						order.orderTrackList({
 							orderId: this.id
 						}).then(res => {
 							//	console.log(res);
+							this.step=[]
 							res.data.forEach(item => {
 								this.step.push({
 									name: item.trackStatus,
@@ -443,19 +459,7 @@
 					order.getNewMaterial(this.id).then(res => {
 						//console.log(res);
 					})
-
-				if (this.info.orderStatus == '待评价') {
-					//获取评论
-					order.appraiseList({
-						orderId: this.id
-					}).then(res => {
-						console.log(res);
-						res.rows[0].imgs = res.rows[0].appraiseImg != null ? res.rows[0].appraiseImg.split(
-							',') : []
-						this.appraise = res.rows[0]
-						console.log(this.appraise);
-					})
-				}
+				
 
 
 			},
@@ -475,7 +479,7 @@
 			//支付
 			pay(){
 				uni.navigateTo({
-					url:'../pay/pay?money='+this.info.orderPrice
+					url:'../pay/pay?item='+encodeURIComponent(JSON.stringify(this.info))
 				})
 			},
 			//取消

@@ -123,7 +123,7 @@
 			},
 			// 笔迹移动
 			uploadScaleMove(e) {
-				console.log(e);
+			//	console.log(e);
 				//取点
 				let temX = e.changedTouches[0].x
 				let temY = e.changedTouches[0].y

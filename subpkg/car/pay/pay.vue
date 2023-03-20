@@ -5,7 +5,7 @@
 				实付金额
 			</view>
 			<view class="money">
-				¥{{money}}
+				¥{{info.orderPrice}}
 			</view>
 		</view>
 		<view class="method">
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+		import storage from '@/utils/storage'
+	import * as pay from '@/api/pay.js'
 	export default {
 		data() {
 			return {
@@ -49,11 +51,15 @@
 					},
 				],
 				currentIndex: undefined,
-				money:''
+				info:{}
 			};
 		},
 		onLoad(option) {
-			this.money=option.money
+			this.info= JSON.parse(decodeURIComponent(option.item))
+			console.log(this.info);
+			// #ifdef MP-WEIXIN
+			this.list.splice(1,1)
+			// #endif
 		},
 		methods: {
 			choseMethod(i) {
@@ -66,6 +72,17 @@
 						duration: 2000,
 						icon:'none'
 					});
+				}else if(this.currentIndex==0){
+					console.log(this.info);
+					pay.weChatPay({
+						clientId:storage.get('ClientId'),
+						orderId:this.info.orderId,
+						orderNumber:this.info.orderNumber,
+						orderPrice:this.info.orderPrice,
+						tradeType:'JSAPI'
+					}).then(res=>{
+						console.log(res);
+					})
 				}
 			}
 		}

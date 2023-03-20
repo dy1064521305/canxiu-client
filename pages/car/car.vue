@@ -23,12 +23,12 @@
 
 			</z-paging> -->
 			<u-navbar title="维修车" :safeAreaInsetTop="true" :autoBack='false'>
-				<view v-if="dataList.length!=0" class="u-nav-slot" slot="right">
-					<image @click='isDelete=!isDelete'
+				<view class="u-nav-slot" slot="right">
+					<image v-if="dataList.length!=0" @click='isDelete=!isDelete'
 						:style="{'margin-right':menuButtonInfoWidth+'rpx','width': '29rpx','height': '29rpx','padding-left': '10rpx'}"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/77aa4cd356c141118bd73c3bfc162be9.png"
 						mode=""></image>
-					<view @click='isDelete=!isDelete'
+					<view v-if="dataList.length!=0" @click='isDelete=!isDelete'
 						:style="{'margin-top':'-10rpx','font-size': '22rpx','color': '#3D3F3E','padding-right': '15rpx','margin-right':menuButtonInfoWidth+'rpx'}">
 						{{isDelete?'取消':'管理'}}
 					</view>
@@ -66,7 +66,7 @@
 						工种：{{item.workerType}}
 					</view>
 					<proInfo :list="item.children" :isCar='true' :isDelete='isDelete' @getCarList='getCarList'
-						@getCheck='getCheck' @check_change="checkChange" />
+						@getCheck='getCheck' @check_change="checkChange" @deleteCarList="deleteList" />
 				</view>
 
 				<u-empty v-if="dataList.length==0" mode="car" icon="http://cdn.uviewui.com/uview/empty/car.png"
@@ -142,6 +142,14 @@
 			// #endif
 
 		},
+		onLoad(option) {
+			console.log(option);
+			if (option.type == 'goCar' && storage.get('AccessToken')) {
+				this.getCarList()
+				this.allNum = 0
+				this.checkedList = []
+			}
+		},
 		onShow() {
 			// #ifdef APP-PLUS
 			this.tabbarHeight = uni.getSystemInfoSync().windowBottom
@@ -158,8 +166,8 @@
 
 			if (storage.get('AccessToken')) {
 				this.getCarList()
-				this.allNum=0
-				this.checkedList=[]
+				this.allNum = 0
+				this.checkedList = []
 			}
 		},
 		methods: {
@@ -171,6 +179,13 @@
 				} else {
 					this.checkedList.splice(index, 1)
 				}
+				this.dataList.forEach(ele1 => {
+					ele1.children.forEach(ele2 => {
+						if (ele2.id === data.item.id) ele2.checked = data.value
+					})
+				})
+				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
+				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
 				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 			},
 			getList() {
@@ -228,9 +243,10 @@
 				}).then(res => {
 					console.log(res);
 					this.dataList = res.data
+					this.totalMoney = 0
 					this.dataList.forEach(item => {
 						this.allNum += item.children.length
-					
+
 					})
 				})
 			},
@@ -253,12 +269,12 @@
 			allCheckHandle(bool) {
 				console.log(this.allNum, this.checkedList.length);
 				console.log(bool);
-				
+
 				//console.log(this.dataList);
 				if (bool) {
 					console.log(this.dataList);
 					this.checkedList = this.dataList.map(c => c.children).flatMap(c1 => c1)
-					console.log(this.checkedList);
+					console.log('277,.',this.checkedList);
 					this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 				} else {
 					this.checkedList = []
@@ -272,7 +288,6 @@
 						})
 					})
 				})
-
 
 			},
 			//删除
@@ -293,7 +308,8 @@
 										title: '删除成功',
 										duration: 2000
 									});
-									this.getCarList()
+									//this.getCarList()
+									this.deleteList(arr)
 								}
 							})
 						} else if (res.cancel) {
@@ -313,32 +329,52 @@
 					duration: 2000,
 					icon: 'none'
 				}) : uni.navigateTo({
-					url: '../../subpkg/car/submitOrder/submitOrder?item=' + JSON.stringify(this.checkedList)
+					url: '../../subpkg/car/submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(this.checkedList))
 				})
 			},
 			//查看我的地址
 			myAddress() {
-
+				let params={
+						type:'car',
+				}
 				uni.navigateTo({
-					url: '../../subpkg/car/myAddress/myAddress?type=car'
+					url: '../../subpkg/car/myAddress/myAddress?params='+encodeURIComponent(JSON.stringify(params))
 				})
 			},
 			//计算总钱数
 			getCheck(data) {
+				this.dataList.forEach(ele1 => {
+					ele1.children.forEach(ele2 => {
+						if (ele2.id === data.item.id) ele2.projectNumber = data.num.value
+					})
+				})
+				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
+				console.log(this.dataList, '.....346', this.checkedList);
 				this.totalMoney = this.checkedList.reduce((p, c) => p + ((c.id === data.item.id ? data.num.value : c
 					.projectNumber) * c.projectPrice), 0)
-
+			},
+			//
+			deleteList(arr) {
+				this.dataList.forEach(ele1 => {
+					ele1.children.forEach((ele2, Index2) => {
+						if (arr.includes(ele2.id)) ele1.children.splice(Index2, 1)
+					})
+				})
+				this.dataList = this.dataList.filter(d => d.children && d.children.length > 0)
+				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
+				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
+				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
 			},
 			//取消登录
-			quxiao(){
+			quxiao() {
 				uni.switchTab({
-					url:'/pages/home/index'
+					url: '/pages/home/index'
 				})
 			},
 			//去登录
-			login(){
+			login() {
 				uni.navigateTo({
-					url:'/pages/login/index'
+					url: '/pages/login/index'
 				})
 			}
 		}
@@ -356,8 +392,8 @@
 			display: flex;
 			justify-content: space-evenly;
 			margin: 50rpx auto;
-			    width: 63%;
-			
+			width: 63%;
+
 			view {
 				width: 180rpx;
 				height: 60rpx;

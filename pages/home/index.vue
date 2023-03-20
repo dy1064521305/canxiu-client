@@ -231,12 +231,18 @@
 			this.navHeight = 100
 			this.titleHeight = 120
 			this.offsetTop = 145
-
+			// this.queryParams.pageNum = 1
 			// #endif
+			uni.getStorage({
+				key: 'AccessToken',
+				complete: (res) => {
+					console.log();
+					this.isShowMoney = Boolean(res.data)
+					this.getList()
+					this.getServiceSymptomsHandle('init')
+				}
+			})
 
-			this.getList()
-			this.isShowMoney = storage.get('AccessToken') ? true : false
-			this.getServiceSymptomsHandle('init')
 
 			var that = this
 			uni.getStorage({
@@ -319,20 +325,32 @@
 			getServiceSymptomsHandle(type) {
 				//获取故障现象
 				this.loading = true
+				console.log(this.isShowMoney, '.....328');
 				//console.log(this.queryParams.pageNum, 'numnum 111111111');
 				return getServiceSymptoms(this.queryParams).then(res => {
-						this.loading = false
-						this.serviceSymptomsName = res.data.map((d, i) => ({
-							name: d.symptomsName,
-							list: this.queryParams.pageNum === 1 ? d.productVoList.records : this
-								.serviceSymptomsName[i].list.concat(d.productVoList.records),
-							total: d.productVoList.total
-						}))
-						console.log(this.serviceSymptomsName);
-						this.serviceSymptomsName[this.currentIndex].list.forEach(item =>{
-							item.servicePrice = !this.isShowMoney ? this.replaceMoney(item.servicePrice) :item.servicePrice
-						}) 
-						this.$nextTick(() => {
+					console.log(res,'.............331', this.queryParams);
+					this.loading = false
+					this.serviceSymptomsName = res.data.map((d, i) => ({
+						name: d.symptomsName,
+						list: this.queryParams.pageNum === 1 ? d.productVoList.records.map(rec => ({
+								...rec,
+								servicePrice: !this.isShowMoney ? this.replaceMoney(rec
+									.servicePrice) : rec.servicePrice
+							})) : this
+							.serviceSymptomsName[i].list.concat(d.productVoList.records.map(rec => ({
+								...rec,
+								servicePrice: !this.isShowMoney ? this.replaceMoney(rec
+									.servicePrice) : rec.servicePrice
+							}))),
+						total: d.productVoList.total
+					}))
+					console.log(this.serviceSymptomsName);
+					// this.serviceSymptomsName[this.currentIndex].list.forEach(item =>{
+					// 	console.log(this.isShowMoney,JSON.stringify(storage.get('AccessToken')) );
+					// 	item.servicePrice = !this.isShowMoney ? this.replaceMoney(item.servicePrice) :item.servicePrice
+					// 	//console.log(item,'334....',!this.isShowMoney ? this.replaceMoney(item.servicePrice) :item.servicePrice);
+					// }) 
+					this.$nextTick(() => {
 						uni.createSelectorQuery().in(this).selectAll('.scroll-view').boundingClientRect(
 							data => {
 								this.swiperHeight = data.reduce((p, c) => p >= c.height ? p : c.height,
@@ -381,276 +399,276 @@
 					// console.log(this.productVoList);
 					//console.log(this.serviceSymptomsName);
 				}).finally(() => {
-				uni.stopPullDownRefresh()
-			})
-		},
-		getList() {
-			//获取一级分类
-			getServiceType().then(res => {
-				//console.log(res);
-				this.typesList = res.data
-				this.typesList.forEach((item, index) => {
-					this.iconList.forEach((icon, ii) => {
-						if (index == ii) {
-							item['iconUrl'] = icon
+					uni.stopPullDownRefresh()
+				})
+			},
+			getList() {
+				//获取一级分类
+				getServiceType().then(res => {
+					//console.log(res);
+					this.typesList = res.data
+					this.typesList.forEach((item, index) => {
+						this.iconList.forEach((icon, ii) => {
+							if (index == ii) {
+								item['iconUrl'] = icon
+							}
+
+						})
+					})
+				})
+				//获取热门报修
+				getHotService().then(res => {
+					//	console.log(res, '1111111111111');
+
+					if (res.data != []) {
+						res.data.forEach(item => {
+							item.imgs = item.serviceImg.split(',')
+							item.servicePrice = !this.isShowMoney ? this.replaceMoney(item
+									.servicePrice) :
+								item.servicePrice
+						})
+					}
+					this.hotServiceList = res.data
+					this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
+				})
+
+				//获取故障区域
+				getRegionService().then(res => {
+					//	console.log(res);
+					this.regionService = res.data
+					this.regionService.forEach(item => {
+						switch (item.regionName) {
+							case '前厅':
+								item.img = this.regionImg[0]
+								break;
+							case '厨房':
+								item.img = this.regionImg[1]
+								break;
+							case '包厢':
+								item.img = this.regionImg[2]
+								break;
+							case '卫生间':
+								item.img = this.regionImg[3]
+								break;
 						}
-
 					})
 				})
-			})
-			//获取热门报修
-			getHotService().then(res => {
-				//	console.log(res, '1111111111111');
-
-				if (res.data != []) {
-					res.data.forEach(item => {
-						item.imgs = item.serviceImg.split(',')
-						item.servicePrice = !this.isShowMoney ? this.replaceMoney(item
-								.servicePrice) :
-							item.servicePrice
-					})
-				}
-				this.hotServiceList = res.data
-				this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
-			})
-
-			//获取故障区域
-			getRegionService().then(res => {
-				//	console.log(res);
-				this.regionService = res.data
-				this.regionService.forEach(item => {
-					switch (item.regionName) {
-						case '前厅':
-							item.img = this.regionImg[0]
-							break;
-						case '厨房':
-							item.img = this.regionImg[1]
-							break;
-						case '包厢':
-							item.img = this.regionImg[2]
-							break;
-						case '卫生间':
-							item.img = this.regionImg[3]
-							break;
-					}
-				})
-			})
 
 
-		},
-		getLoction() {
-			var that = this
-			console.log('2-----------------');
-			//获取地址
-			this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
+			},
+			getLoction() {
+				var that = this
+				console.log('2-----------------');
+				//获取地址
+				this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
 
-				uni.getLocation({
-					isHighAccuracy: true,
-					highAccuracyExpireTime: 1234,
-					type: 'gcj02',
-					success: (suc) => {
-						console.log(suc, '1812222222222222222');
-						// this.location.latitude = suc.latitude
-						// this.location.longitude = suc.longitude
-						var demo = new QQMapWX({
-							key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
-						})
-						demo.reverseGeocoder({
-							location: suc.latitude + "," + suc.longitude,
-							success: function(res) {
-								console.log(res)
-								that.cityName = res.result
-									.address_component.city
-								uni.setStorage({
-									key: 'city',
-									data: that.cityName
-								})
-								console.log(that.cityName,
-									'37837888888888888888');
-								// that.position = res.result.address_component
-								// 	.city;
-								// let item = {
-								// 	cityName: 
-								// }
-								// that.back_city(item);
-							}
-						})
-					},
-					fail(err) {
-						console.log(err);
-						uni.showToast({
-							title: err.errMsg,
-							icon: "none"
-						})
-					}
-				})
-			})
-
-
-
-		},
-		checkForAuthorization(scope, jurisdiction) {
-			let that = this
-			return new Promise((resolve, reject) => {
-				const appAuthorizeSetting = uni.getAppAuthorizeSetting();
-				//	console.log(appAuthorizeSetting[jurisdiction]);
-
-				if (appAuthorizeSetting[jurisdiction] === "denied") {
-					that.locationStatus = appAuthorizeSetting[jurisdiction]
-					uni.showModal({
-							title: "服务未开启",
-							content: "请在手机设置“设置->应用权限”中打开微信位置权限!",
-							showCancel: false,
-							confirmText: "我知道了",
-						})
-						.then((res) => {
-							if (res[1]["confirm"]) {
-								reject();
-								uni.openAppAuthorizeSetting()
-							}
-						});
-				} else {
-					uni.authorize({
-						scope: scope,
-						success() {
-							console.log('yes')
-							that.locationStatus = ''
-							resolve();
+					uni.getLocation({
+						isHighAccuracy: true,
+						highAccuracyExpireTime: 1234,
+						type: 'gcj02',
+						success: (suc) => {
+							console.log(suc, '1812222222222222222');
+							// this.location.latitude = suc.latitude
+							// this.location.longitude = suc.longitude
+							var demo = new QQMapWX({
+								key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
+							})
+							demo.reverseGeocoder({
+								location: suc.latitude + "," + suc.longitude,
+								success: function(res) {
+									console.log(res)
+									that.cityName = res.result
+										.address_component.city
+									uni.setStorage({
+										key: 'city',
+										data: that.cityName
+									})
+									console.log(that.cityName,
+										'37837888888888888888');
+									// that.position = res.result.address_component
+									// 	.city;
+									// let item = {
+									// 	cityName: 
+									// }
+									// that.back_city(item);
+								}
+							})
 						},
 						fail(err) {
-							err = err["errMsg"];
-							that.locationStatus = 'errMsg'
-							console.log(that.locationStatus);
-							uni.showModal({
-								title: "温馨提示",
-								content: "为享受智能小程序，您必须授权!",
-								confirmText: "确认授权",
-							}).then((res) => {
-								if (res[1]["confirm"]) {
-									uni.openSetting({
-										success(res) {
-											if (res.errMsg.includes(
-													'ok')) {
-												resolve('ok')
-											}
-										},
-									});
+							console.log(err);
+							uni.showToast({
+								title: err.errMsg,
+								icon: "none"
+							})
+						}
+					})
+				})
 
-								} else {
+
+
+			},
+			checkForAuthorization(scope, jurisdiction) {
+				let that = this
+				return new Promise((resolve, reject) => {
+					const appAuthorizeSetting = uni.getAppAuthorizeSetting();
+					//	console.log(appAuthorizeSetting[jurisdiction]);
+
+					if (appAuthorizeSetting[jurisdiction] === "denied") {
+						that.locationStatus = appAuthorizeSetting[jurisdiction]
+						uni.showModal({
+								title: "服务未开启",
+								content: "请在手机设置“设置->应用权限”中打开微信位置权限!",
+								showCancel: false,
+								confirmText: "我知道了",
+							})
+							.then((res) => {
+								if (res[1]["confirm"]) {
 									reject();
+									uni.openAppAuthorizeSetting()
 								}
 							});
+					} else {
+						uni.authorize({
+							scope: scope,
+							success() {
+								console.log('yes')
+								that.locationStatus = ''
+								resolve();
+							},
+							fail(err) {
+								err = err["errMsg"];
+								that.locationStatus = 'errMsg'
+								console.log(that.locationStatus);
+								uni.showModal({
+									title: "温馨提示",
+									content: "为享受智能小程序，您必须授权!",
+									confirmText: "确认授权",
+								}).then((res) => {
+									if (res[1]["confirm"]) {
+										uni.openSetting({
+											success(res) {
+												if (res.errMsg.includes(
+														'ok')) {
+													resolve('ok')
+												}
+											},
+										});
+
+									} else {
+										reject();
+									}
+								});
+							},
+						});
+					}
+
+
+
+				})
+			},
+			//设置定位权限
+			setting() {
+				console.log(this.locationStatus, 'this.locationStatus');
+				if (this.locationStatus != 'authorized' && this.locationStatus != 'errMsg') {
+					console.log('3333333333333');
+					uni.openAppAuthorizeSetting()
+
+				} else if (this.locationStatus == 'errMsg') {
+					console.log('1111111111');
+					uni.openSetting({
+						success(res) {
+							if (res.errMsg.includes('ok')) {
+								resolve('ok')
+							}
 						},
 					});
 				}
+				console.log('22222222222222222');
+			},
+			//将钱替换为星号
+			replaceMoney(i) {
+				//	console.log(i);
+				return i.replace(/[0-9]/g, "x")
+			},
 
+			//选择城市
+			choseCity() {
+				console.log(1111111);
+				uni.navigateTo({
+					url: '../../subpkg/home/choseCity/choseCity'
+				})
+			},
+			//更多报修
+			goMore(type, arr) {
+				arr.forEach(item => {
+					item.servicePrice = !this.isShowMoney ? this.replaceMoney(item.servicePrice) :
+						item.servicePrice
+				})
+				let infos = {
+					list: [],
+					name: type
+				}
+				infos.list = type == 'more' ? this.hotServiceList : arr
+				//	console.log(infos);
+				uni.navigateTo({
+					url: '../../subpkg/home/hotRepair/hotRepair?infos=' + encodeURIComponent(JSON
+						.stringify(infos))
+				})
+			},
+			//详情
+			goDetailed(item) {
+				console.log(item);
+				uni.navigateTo({
+					url: '../../subpkg/car/goodDetails/goodDetails?serviceId=' + item.serviceId
+				})
+			},
+			//搜索
+			goSearch() {
+				uni.navigateTo({
+					url: '../../subpkg/home/search/search'
+				})
+			},
+			//tab栏点击
+			tabClick(item, num) {
+				if (item.index === this.currentIndex) return
+				//	console.log(this.scrollTop);
+				// this.queryParams.pageNum = 1
+				// this.bottomNum = 1
+				console.log(this.scrollTop, '-----------------');
+				num != 1 &&
+					uni.pageScrollTo({
+						scrollTop: this.scrollTop + 55
+					});
+				// this.queryParams.pageNum = 1
+				// if (item.init) return
+				// this.getServiceSymptomsHandle()
+				//		console.log(this.serviceSymptoms);
+				this.currentIndex = item.index
+				//	console.log(this.serviceSymptoms, '318---------------------------------');
+				// this.serviceSymptoms.forEach((ser, i) => {
+				// 	if (item.index == i) {
+				// 		console.log(ser);
+				// 		this.productVoList = ser.productVoList.records
+				// 		console.log(this.productVoList);
+				// 		if (this.productVoList.length == 0) {
+				// 			console.log('this.none------324', this.none, ser);
+				// 			this.none = true
+				// 			this.loaded = false
+				// 			this.loading = false
+				// 		}
+				// 	}
+				// })
 
-
-			})
-		},
-		//设置定位权限
-		setting() {
-			console.log(this.locationStatus, 'this.locationStatus');
-			if (this.locationStatus != 'authorized' && this.locationStatus != 'errMsg') {
-				console.log('3333333333333');
-				uni.openAppAuthorizeSetting()
-
-			} else if (this.locationStatus == 'errMsg') {
-				console.log('1111111111');
-				uni.openSetting({
-					success(res) {
-						if (res.errMsg.includes('ok')) {
-							resolve('ok')
-						}
-					},
-				});
+			},
+			//跳转服务页
+			goService(i) {
+				//		console.log(i);
+				getApp().index = i
+				uni.switchTab({
+					url: '/pages/service/service'
+				})
 			}
-			console.log('22222222222222222');
-		},
-		//将钱替换为星号
-		replaceMoney(i) {
-			//	console.log(i);
-			return i.replace(/[0-9]/g, "x")
-		},
-
-		//选择城市
-		choseCity() {
-			console.log(1111111);
-			uni.navigateTo({
-				url: '../../subpkg/home/choseCity/choseCity'
-			})
-		},
-		//更多报修
-		goMore(type, arr) {
-			arr.forEach(item => {
-				item.servicePrice = !this.isShowMoney ? this.replaceMoney(item.servicePrice) :
-					item.servicePrice
-			})
-			let infos = {
-				list: [],
-				name: type
-			}
-			infos.list = type == 'more' ? this.hotServiceList : arr
-			//	console.log(infos);
-			uni.navigateTo({
-				url: '../../subpkg/home/hotRepair/hotRepair?infos=' + encodeURIComponent(JSON
-					.stringify(infos))
-			})
-		},
-		//详情
-		goDetailed(item) {
-			console.log(item);
-			uni.navigateTo({
-				url: '../../subpkg/car/goodDetails/goodDetails?serviceId=' + item.serviceId
-			})
-		},
-		//搜索
-		goSearch() {
-			uni.navigateTo({
-				url: '../../subpkg/home/search/search'
-			})
-		},
-		//tab栏点击
-		tabClick(item, num) {
-			if (item.index === this.currentIndex) return
-			//	console.log(this.scrollTop);
-			// this.queryParams.pageNum = 1
-			// this.bottomNum = 1
-			console.log(this.scrollTop, '-----------------');
-			num != 1 &&
-				uni.pageScrollTo({
-					scrollTop: this.scrollTop + 55
-				});
-			// this.queryParams.pageNum = 1
-			// if (item.init) return
-			// this.getServiceSymptomsHandle()
-			//		console.log(this.serviceSymptoms);
-			this.currentIndex = item.index
-			//	console.log(this.serviceSymptoms, '318---------------------------------');
-			// this.serviceSymptoms.forEach((ser, i) => {
-			// 	if (item.index == i) {
-			// 		console.log(ser);
-			// 		this.productVoList = ser.productVoList.records
-			// 		console.log(this.productVoList);
-			// 		if (this.productVoList.length == 0) {
-			// 			console.log('this.none------324', this.none, ser);
-			// 			this.none = true
-			// 			this.loaded = false
-			// 			this.loading = false
-			// 		}
-			// 	}
-			// })
-
-		},
-		//跳转服务页
-		goService(i) {
-			//		console.log(i);
-			getApp().index = i
-			uni.switchTab({
-				url: '/pages/service/service'
-			})
 		}
-	}
 	}
 </script>
 

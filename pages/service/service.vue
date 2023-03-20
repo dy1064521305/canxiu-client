@@ -214,7 +214,7 @@
 				this.scrollRightTop = this.oldScrollTop;
 				this.$nextTick(function() {
 					this.scrollRightTop = this.arr[index];
-					console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
+				//	console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
 					this.current = index;
 					this.leftMenuStatus(index);
 				})

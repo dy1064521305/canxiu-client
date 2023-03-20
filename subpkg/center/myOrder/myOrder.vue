@@ -33,9 +33,9 @@
 							<text>{{item.orderStatus}}</text>
 						</text>
 						<view v-if="item.isUrgent==1" style="position: absolute;top: 0;right:0">
-							<image style="width: 54rpx;"
+							<image style="width: 54rpx;height: 54rpx;"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/2889ed6d29b441d9a6da3c69af618f96.png"
-								mode="widthFix"></image>
+								mode=""></image>
 						</view>
 					</view>
 					<view v-for="(pro,i) in item.projectDataVoList" :key="i" style="margin: 20rpx 0;">
@@ -344,7 +344,7 @@
 			pay(item){
 				console.log(item);
 				uni.navigateTo({
-					url:'../../car/pay/pay?money='+item.orderPrice
+					url:'../../car/pay/pay?item='+encodeURIComponent(JSON.stringify(item))
 				})
 			}
 

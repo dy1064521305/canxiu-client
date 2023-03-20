@@ -67,15 +67,22 @@
 					pageNum:1,
 					orderByColumn: 'isDefault',
 					isAsc: 'asc',
-				}
+				},
+				submitList:[]
 			};
 		},
 		onShow() {
 			this.getList(1,10)
 		},
 		onLoad(option) {
-			console.log(option);
-			this.type = option.type
+			if(option.params!=undefined){
+					console.log(option);
+			console.log(JSON.parse(decodeURIComponent(option.params)));
+			let info=JSON.parse(decodeURIComponent(option.params))
+			this.type = info.type
+			this.submitList=info.list
+			}
+		
 		},
 		methods: {
 			getList(pageNo, pageSize) {
@@ -161,12 +168,21 @@
 						key: 'address_info',
 						data: item,
 					})
-					console.log(this.type == 'car');
-					this.type == 'car' ? uni.switchTab({
-						url: '../../../pages/car/car'
-					}) : uni.navigateTo({
-						url: '../submitOrder/submitOrder'
-					})
+					const pages = uni.$u.pages()
+					
+					console.log(this.submitList);
+					// this.type == 'car' ?  : uni.navigateTo({
+					// 	url: '../submitOrder/submitOrder?item='+encodeURIComponent(JSON.stringify(this.submitList))
+					// })
+					if (this.type === 'car') {
+						uni.switchTab({
+							url: '../../../pages/car/car'
+						})
+					} else{
+						console.log(pages);
+						pages[pages.length-2].$vm.getInfo(this.submitList)
+						uni.navigateBack()
+					}
 				}
 			}
 		}

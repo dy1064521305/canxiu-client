@@ -12,14 +12,14 @@
 			发票总数{{info.list.length}}张
 		</view>
 		<view v-for="(item,index) in info.list" :key="index" class="box">
-			<view class="">
-				<text>发票内容</text>{{item.projectName}}
+			<view >
+				<text class="font">发票内容</text><text style="width: 73%;">{{item.projectName}}</text>
 			</view>
 			<view class="">
-				<text>开票方</text>杭州餐修网络科技有限公司
+				<text class="font">开票方</text>杭州餐修网络科技有限公司
 			</view>
 			<view class="">
-				<text>发票金额</text>¥{{item.orderPrice}}
+				<text class="font">发票金额</text>¥{{item.orderPrice}}
 			</view>
 
 		</view>
@@ -67,7 +67,7 @@
 		}
 
 		.box {
-			width: 707rpx;
+			//width: 707rpx;
 			background: #FFFFFF;
 			box-shadow: 0px 0px 4px 0px rgba(42, 64, 55, 0.05);
 			border-radius: 14rpx;
@@ -76,7 +76,7 @@
 			view{
 				display: flex;
 				margin: 20rpx 0;
-				text{
+				.font{
 					width: 27%;
 					font-weight: 600;
 				}

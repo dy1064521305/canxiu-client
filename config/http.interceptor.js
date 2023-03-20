@@ -60,6 +60,7 @@ module.exports = (vm) => {
       // 判断状态码
       switch (data.code) {
         case 401: {
+			
           uni.reLaunch({ url: '/' })
           return;
         }

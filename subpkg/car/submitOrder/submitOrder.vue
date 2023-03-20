@@ -98,25 +98,29 @@
 
 		},
 		onLoad(option) {
-			try {
-				const value = uni.getStorageSync('submit_order');
-				console.log(value);
-				//如果有本地数据就用本地的
-				if (value) {
-					this.submitList = value
-					console.log(value);
-				} else {
-					//如果没有本地的就获取option的值
-					this.submitList = JSON.parse(option.item)
-					console.log(this.submitList);
-					uni.setStorage({
-						key: 'submit_order',
-						data: this.submitList,
-					})
-				}
-			} catch (e) {
-				// error
-			}
+		//	console.log(decodeURIComponent(option.item));
+			this.submitList = JSON.parse(decodeURIComponent(option.item))
+			//console.log(this.submitList );
+			// try {
+			// 	const value = uni.getStorageSync('submit_order');
+			// 	console.log(value);
+			// 	//如果有本地数据就用本地的
+			// 	if (value) {
+			// 		this.submitList = value
+			// 		console.log(value);
+			// 	} else {
+			// 		//如果没有本地的就获取option的值
+			// 		console.log( JSON.parse(option.item));
+			// 		this.submitList = JSON.parse(option.item)
+			// 		console.log(this.submitList);
+			// 		uni.setStorage({
+			// 			key: 'submit_order',
+			// 			data: this.submitList,
+			// 		})
+			// 	}
+			// } catch (e) {
+			// 	// error
+			// }
 			this.info.orderPrice = this.submitList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 		},
 		methods: {
@@ -241,15 +245,21 @@
 			},
 			//查看我的地址
 			myAddress() {
-
+			 let params={
+				 type:'order',
+				 list:this.submitList
+			 }
 				uni.navigateTo({
-					url: '../myAddress/myAddress?type=order'
+					url: '../myAddress/myAddress?params='+encodeURIComponent(JSON.stringify(params))
 				})
 			},
+			getInfo(data){
+				console.log(data,'......257');
+			},
 			leftClick(){
-				uni.removeStorage({
-					key:'submit_order'
-				})
+				// uni.removeStorage({
+				// 	key:'submit_order'
+				// })
 				const pages = uni.$u.pages();
 				console.log(pages);
 				pages.some(p=>p.route.includes('service'))?uni.navigateBack():uni.switchTab({

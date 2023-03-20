@@ -65,19 +65,21 @@
 				<!-- 	<image src="../../static/img/login/loginBg.png" mode=""></image> -->
 				<view
 					style="font-size: 25rpx;color: #3D3F3E;width:10%;height: 50rpx;line-height: 50rpx;margin-left: 20rpx;">
-					{{appraiseList[0].name}}</view>
-				<u-rate  :count="count" v-model="appraiseList[0].num" allowHalf activeColor='#ec9322' readonly></u-rate>
-				<view style="font-size: 25rpx;color: #3D3F3E;height: 50rpx;line-height: 50rpx;width: 50%;text-align: end;">
+					{{appraiseList[0].name}}
+				</view>
+				<u-rate :count="count" v-model="appraiseList[0].num" allowHalf activeColor='#ec9322' readonly></u-rate>
+				<view
+					style="font-size: 25rpx;color: #3D3F3E;height: 50rpx;line-height: 50rpx;width: 50%;text-align: end;">
 					{{appraiseList[0].time}}
 				</view>
 			</view>
 			<view>
-				<u--text :lines="2"
-					:text="appraiseList[0].appraiseContent">
+				<u--text :lines="2" :text="appraiseList[0].appraiseContent">
 				</u--text>
 			</view>
 			<view style="display: flex;width:97%;overflow: hidden;">
-				<view style='margin:15rpx 10rpx;' v-for="(item, index) in appraiseList[0].imgs" :key="index" v-if="index < 3">
+				<view style='margin:15rpx 10rpx;' v-for="(item, index) in appraiseList[0].imgs" :key="index"
+					v-if="index < 3">
 					<u-image radius='8px' width="156rpx" height="156rpx" :src="item" mode=""
 						@click="previewImage(item)">
 					</u-image>
@@ -218,7 +220,7 @@
 				isJoinCar: 0, //是否加入维修车
 				chargeList: [], //收费标准
 				types: '',
-				appraiseList:[],
+				appraiseList: [],
 				qrCode: '', //二维码
 			}
 		},
@@ -253,6 +255,7 @@
 		methods: {
 			//获取详细信息
 			getInfo() {
+				console.log(1111);
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
 					uni.setNavigationBarTitle({
@@ -272,23 +275,27 @@
 					//获取评论
 					order.appraiseList({
 						productId: this.goodInfo.serviceId,
-						pageNum:1,
-						pageSize:10
+						pageNum: 1,
+						pageSize: 10
 					}).then(res => {
 						console.log(res);
-						res.rows.forEach(item=>{
-							let num=(Number(item.attitudeScore)+Number(item.technicalScore)+Number(item.velocityScore))/3
-							item.num=Math.floor(num)
-							item.imgs=item.appraiseImg!=null?item.appraiseImg.split(',') : [],
-								item.name=item.clientName[0]+'*'
-								item.time=formatter.transDate(item.createTime).one
+						res.rows.forEach(item => {
+							let num = (Number(item.attitudeScore) + Number(item.technicalScore) +
+								Number(item.velocityScore)) / 3
+							item.num = Math.floor(num)
+							item.imgs = item.appraiseImg != null ? item.appraiseImg.split(',') :
+							[],
+								item.name = item.clientName[0] + '*'
+							item.time = formatter.transDate(item.createTime).one
 						})
-					
-						this.appraiseList=res.rows
+
+						this.appraiseList = res.rows
 					})
 					this.serviceImgList = this.goodInfo.serviceImg !== null ? this.goodInfo.serviceImg.split(',') :
 						[]
-					this.projectVoList = this.goodInfo.projectVoList
+					this.goodInfo.projectVoList.forEach((p, i) => {
+						this.projectVoList.splice(i, 1, p)
+					})
 					this.projectVoList.forEach(item => {
 						item.serviceProjectImg = item.projectImg,
 							item.projectImg = ''
@@ -339,7 +346,7 @@
 			allComment() {
 				console.log(11111);
 				uni.navigateTo({
-					url: '../allComments/allComments?id='+ this.goodInfo.serviceId
+					url: '../allComments/allComments?id=' + this.goodInfo.serviceId
 				})
 			},
 			//分享
@@ -516,9 +523,9 @@
 			},
 			//维修车
 			goCar() {
-
-				this.isLogin ? uni.switchTab({
-					url: '../../../pages/car/car'
+				let type = 'goCar'
+				this.isLogin ? uni.reLaunch({
+					url: '../../../pages/car/car?type=' + type
 				}).then(res => {
 					console.log(res);
 				}) : this.isShowLogin = true
@@ -571,6 +578,7 @@
 									title: '添加成功',
 									duration: 2000
 								});
+								this.projectVoList = []
 								this.getInfo()
 							}
 						})
