@@ -38,8 +38,8 @@
 				this.go()
 			},
 			go() {
-				uni.navigateTo({
-					url: '../login/index',
+				uni.switchTab({
+					url: '../home/index',
 					fail(err) {
 						console.log(err)
 					}
