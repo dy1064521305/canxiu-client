@@ -63,10 +63,11 @@
 
 		<u-popup mode="bottom" closeable :show="showQestion" :round="10" @close="showQestion=false">
 			<view style="height: 400rpx;text-align: center;margin-top: 80rpx;">
-				<view>
+				<view >
 					{{remark.name}}收费标准
 				</view>
-				<view style="font-size: 29rpx;color: #A5A7A7;margin-top:40rpx;"> 
+				
+				<view v-if="remark.content!=null"style="font-size: 29rpx;color: #A5A7A7;margin-top:40rpx;"> 
 					<text>{{remark.content}}</text>
 				</view>
 			</view>
@@ -182,6 +183,7 @@
 		},
 		methods: {
 			checkChange(val, item) {
+				console.log(val,item);
 				if (val) {
 					this.checkboxValue1.push(item.id)
 				} else {
@@ -222,10 +224,11 @@
 			},
 
 			getUrl(val) {
+				console.log(val,'.....val......227');
 				val.type == 'video' ? this.dataList[val.index].projectVideo = val.urls : this.dataList[val.index].projectImg = val
 					.urls
 				//this.isCar ? this.$emit('submitOrder', this.list) : ''
-				console.log(this.dataList);
+				console.log(this.dataList,'.......230');
 				this.$emit('getDeleteUrlList',this.dataList)
 			},
 			//删除

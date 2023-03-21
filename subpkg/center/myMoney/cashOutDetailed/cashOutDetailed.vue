@@ -3,12 +3,12 @@
 		<view class="titles-box">
 			<text v-for="(item,index) in title" :key="index">{{item}}</text>
 		</view>
-		<view v-for="item in 2" class="main" style="border-bottom: 2rpx solid  #F8F8F8;">
+		<!-- <view v-for="item in 2" class="main" style="border-bottom: 2rpx solid  #F8F8F8;">
 			<text style="width: 23%;font-size: 25rpx;color: #A5A7A7;text-align: center;">2022-11-15 22:25:12</text>
 			<text>¥1000.00</text>
 			<text>¥1000.00</text>
 			<text>提现中</text>
-		</view>
+		</view> -->
 	</view>
 </template>
 

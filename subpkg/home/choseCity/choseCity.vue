@@ -61,7 +61,7 @@
 
 
 			<!-- 城市列表 -->
-			<view  v-if="searchValue == ''&&!isSearch" v-for="(item, index) in list" :id="getId(index)" :key="index">
+			<view v-if="searchValue == ''&&!isSearch" v-for="(item, index) in list" :id="getId(index)" :key="index">
 				<view class="letter-header">{{ getId(index) }}</view>
 				<view class="city-div" v-for="(city, i) in item.data" :key="i" @click="checkCity(city.regionName)">
 					<text class="city">{{ city.regionName }}</text>
@@ -71,7 +71,7 @@
 		</scroll-view>
 
 		<!-- 右侧字母 -->
-		<view  class="letters" v-if="searchValue == ''&&!isSearch">
+		<view class="letters" v-if="searchValue == ''&&!isSearch">
 			<!-- <view class="letters-item" @click="scrollTo('hot')">最近</view> -->
 			<view :class="['letters-item',scrollIntoId==item?'letters-item-active':'']" v-for="item in letter"
 				:key="item" @click="scrollTo(item)">{{ item }}</view>
@@ -267,6 +267,8 @@
 					key: 'city',
 					data: name
 				})
+				
+			  this.historyCity(name)
 				uni.navigateBack()
 			},
 			//清空
@@ -275,42 +277,74 @@
 				this.searchCity = ''
 				this.isSearch = false
 			},
+			historyCity(name){
+				let _this = this;
+				uni.getStorage({ //从缓存中取搜索历史记录的数组
+					key: 'search_cache',
+					success(res) { //获取成功
+						let list = res.data;
+						for (let i in list) { //循环遍历
+							if (list[i] == name) { //如果缓存数组中有搜索关键词
+								list.splice(i, 1) //删除数组中的该关键词
+							}
+						}
+						list.unshift(name); //将搜索关键词添加到数组开头
+						list.splice(6) //只保留6个
+						_this.hList = list;
+						uni.setStorage({ //将新的数组存入缓存
+							key: 'search_cache',
+							data: _this.hList,
+						});
+					},
+					fail() { //没有获取到缓存
+						console.log(1111);
+						_this.hList = [];
+						_this.hList.push(name);
+						uni.setStorage({
+							key: 'search_cache',
+							data: _this.hList,
+						});
+					}
+				})
+			},
 			//访问历史
 			history() {
 				let _this = this;
 				_this.isSearch = true
 				if (_this.searchCity == '') {
 					this.isSearch = false
-				} else {
-					uni.getStorage({ //从缓存中取搜索历史记录的数组
-						key: 'search_cache',
-						success(res) { //获取成功
-							let list = res.data;
-							for (let i in list) { //循环遍历
-								if (list[i] == _this.searchCity) { //如果缓存数组中有搜索关键词
-									list.splice(i, 1) //删除数组中的该关键词
-								}
-							}
-							list.unshift(_this.searchCity); //将搜索关键词添加到数组开头
-							list.splice(6) //只保留6个
-							_this.hList = list;
-							uni.setStorage({ //将新的数组存入缓存
-								key: 'search_cache',
-								data: _this.hList,
-							});
-							_this.search(_this.searchCity); //搜索
-						},
-						fail() { //没有获取到缓存
-							console.log(1111);
-							_this.hList = [];
-							_this.hList.push(_this.searchCity);
-							uni.setStorage({
-								key: 'search_cache',
-								data: _this.hList,
-							});
-							_this.search(_this.searchCity); //搜索
-						}
-					})
+				} else {	
+					_this.historyCity(_this.searchCity)
+					_this.search(_this.searchCity); //搜索
+					// uni.getStorage({ //从缓存中取搜索历史记录的数组
+					// 	key: 'search_cache',
+					// 	success(res) { //获取成功
+					// 		let list = res.data;
+					// 		for (let i in list) { //循环遍历
+					// 			if (list[i] == _this.searchCity) { //如果缓存数组中有搜索关键词
+					// 				list.splice(i, 1) //删除数组中的该关键词
+					// 			}
+					// 		}
+					// 		list.unshift(_this.searchCity); //将搜索关键词添加到数组开头
+					// 		list.splice(6) //只保留6个
+					// 		_this.hList = list;
+					// 		uni.setStorage({ //将新的数组存入缓存
+					// 			key: 'search_cache',
+					// 			data: _this.hList,
+					// 		});
+					// 		_this.search(_this.searchCity); //搜索
+					// 	},
+					// 	fail() { //没有获取到缓存
+					// 		console.log(1111);
+					// 		_this.hList = [];
+					// 		_this.hList.push(_this.searchCity);
+					// 		uni.setStorage({
+					// 			key: 'search_cache',
+					// 			data: _this.hList,
+					// 		});
+						
+					// 	}
+					// })
 				}
 			},
 			//搜索
@@ -420,7 +454,7 @@
 		.boxs {
 			display: flex;
 			flex-wrap: wrap;
-			justify-content: space-between;
+			//justify-content: space-between;
 
 		}
 	}

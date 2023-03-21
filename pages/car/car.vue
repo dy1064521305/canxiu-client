@@ -22,7 +22,7 @@
 				</view>
 
 			</z-paging> -->
-			<u-navbar title="维修车" :safeAreaInsetTop="true" :autoBack='false'>
+			<u-navbar title="维修车" placeholder :safeAreaInsetTop="true" :autoBack='false'>
 				<view class="u-nav-slot" slot="right">
 					<image v-if="dataList.length!=0" @click='isDelete=!isDelete'
 						:style="{'margin-right':menuButtonInfoWidth+'rpx','width': '29rpx','height': '29rpx','padding-left': '10rpx'}"
@@ -35,8 +35,9 @@
 				</view>
 
 			</u-navbar>
-			<view class="address" @click="myAddress">
-				<view class="left" v-if="addressList!=[]">
+			<view class="address" @click="myAddress"
+				:style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'200rpx'}">
+				<view class="left" v-if="addressList.length!=0">
 					<view style="font-size: 36rpx;color: #3D3F3E;font-weight: bold;">
 						{{addressInfo.contact}}
 					</view>
@@ -47,7 +48,7 @@
 						{{addressInfo.addressRegion}}{{addressInfo.addressDetailed}}
 					</view>
 				</view>
-				<view v-else class="left" style="font-size: 36rpx;color: #A5A7A7;">
+				<view v-else class="left" style="font-size: 36rpx;color: #A5A7A7;margin-top: 20rpx;">
 					请添加服务地址
 				</view>
 				<view class="right">
@@ -66,7 +67,8 @@
 						工种：{{item.workerType}}
 					</view>
 					<proInfo :list="item.children" :isCar='true' :isDelete='isDelete' @getCarList='getCarList'
-						@getCheck='getCheck' @check_change="checkChange" @deleteCarList="deleteList" />
+						@getCheck='getCheck' @check_change="checkChange" @deleteCarList="deleteList"
+						@getDeleteUrlList='getDeleteUrlList' />
 				</view>
 
 				<u-empty v-if="dataList.length==0" mode="car" icon="http://cdn.uviewui.com/uview/empty/car.png"
@@ -171,20 +173,53 @@
 			}
 		},
 		methods: {
+			getDeleteUrlList(data) {
+				this.dataList.forEach((fu, index) => {
+					fu.children.forEach((son, ind) => {
+						data.forEach(d => {
+							if (d.id === son.id) {
+								this.$set(this.dataList[index].children, ind, d)
+							}
+						})
+					})
+				})
+				console.log(this.dataList, '....185', data);
+			},
+			//其他页面改变数据
+			changeData(data) {
+				console.log(data[0]);
+				this.dataList.forEach((fu, index) => {
+					fu.children.forEach((son, ind) => {
+						if (son.id == data[0].id) {
+							this.$set(this.dataList[index].children, ind, data[0])
+							console.log(this.dataList, '....182');
+						}
+					})
+				})
+				console.log(this.dataList, '....186');
+			},
 			//单个复选框勾选或不勾选事件回调
 			checkChange(data) {
+				console.log(data, 'datadata');
 				let index = this.checkedList.findIndex(c => c.id === data.item.id)
 				if (data.value) {
 					index < 0 && this.checkedList.push(data.item)
 				} else {
 					this.checkedList.splice(index, 1)
 				}
+				console.log(this.dataList, 'this.dataListthis.dataList');
 				this.dataList.forEach(ele1 => {
 					ele1.children.forEach(ele2 => {
-						if (ele2.id === data.item.id) ele2.checked = data.value
+
+						if (ele2.id === data.item.id) {
+							ele2.checked = data.value
+							// ele2.projectImg = data.item.projectImg
+							// ele2.projectVideo = data.item.projectVideo
+						}
 					})
 				})
 				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
+				console.log(this.checkedList);
 				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
 				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 			},
@@ -196,24 +231,37 @@
 					}).then(res => {
 						console.log(res);
 						this.addressList = res.rows
-						try {
-							const value = uni.getStorageSync('address_info');
-							if (value) {
-								this.addressInfo = value
-								console.log(value);
-							} else {
-								this.addressList.forEach(item => {
-									if (item.isDefault == 0) {
-										this.addressInfo = item
-										console.log(111, '118111111111111111111');
-										uni.setStorage({
-											key: 'address_info',
-											data: item,
-										})
-									}
-								})
-							}
-						} catch (e) {}
+						if (this.addressList.length == 0) {
+							uni.removeStorage({
+								key: 'address_info'
+							})
+						} else {
+							try {
+								const value = uni.getStorageSync('address_info');
+								if (value) {
+									let arr = this.addressList.filter(item => {
+										return item.addressId == value.addressId
+									})
+									arr.length == 0 ? uni.removeStorage({
+										key: 'address_info'
+									}):	this.addressInfo = value
+								
+									console.log(value);
+								} else {
+									this.addressList.forEach(item => {
+										if (item.isDefault == 0) {
+											this.addressInfo = item
+											console.log(111, '118111111111111111111');
+											uni.setStorage({
+												key: 'address_info',
+												data: item,
+											})
+										}
+									})
+								}
+							} catch (e) {}
+						}
+
 
 
 						console.log(this.addressInfo);
@@ -274,7 +322,7 @@
 				if (bool) {
 					console.log(this.dataList);
 					this.checkedList = this.dataList.map(c => c.children).flatMap(c1 => c1)
-					console.log('277,.',this.checkedList);
+					console.log('277,.', this.checkedList);
 					this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 				} else {
 					this.checkedList = []
@@ -322,23 +370,24 @@
 			},
 			//下单
 			submitOrder() {
-				console.log(1111);
-				console.log(this.checkedList, 'jjjjjjjjjjjjjjjjjjjjjjjj');
+				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
 				this.checkedList.length == 0 ? uni.showToast({
 					title: '请选择商品',
 					duration: 2000,
 					icon: 'none'
 				}) : uni.navigateTo({
-					url: '../../subpkg/car/submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(this.checkedList))
+					url: '../../subpkg/car/submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(this
+						.checkedList))
 				})
 			},
 			//查看我的地址
 			myAddress() {
-				let params={
-						type:'car',
+				let params = {
+					type: 'car',
 				}
 				uni.navigateTo({
-					url: '../../subpkg/car/myAddress/myAddress?params='+encodeURIComponent(JSON.stringify(params))
+					url: '../../subpkg/car/myAddress/myAddress?params=' + encodeURIComponent(JSON.stringify(
+						params))
 				})
 			},
 			//计算总钱数
@@ -364,6 +413,7 @@
 				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
 				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
+				console.log(this.dataList);
 			},
 			//取消登录
 			quxiao() {
@@ -431,15 +481,7 @@
 			display: flex;
 
 
-			/* #ifdef H5 */
-			margin-top: 80rpx;
-			/* #endif */
-			/* #ifdef APP-PLUS */
-			margin-top: 174rpx;
-			/* #endif */
-			/* #ifdef MP-WEIXIN */
-			margin-top: 150rpx;
-			/* #endif */
+
 
 			.left {
 				padding-top: 16rpx;

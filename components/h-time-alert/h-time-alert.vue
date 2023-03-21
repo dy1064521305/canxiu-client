@@ -18,7 +18,7 @@
 					<view @click="_changeTime(index)" :class="{ active: item.checked }"
 						v-for="(item, index) in activeTimeArr" :key="item.time">
 						{{ item.time }}{{ rangeType ? '-' + item.endtime : '' }}	
-						<image v-if="activeTimeArr.length>=5&&index<4" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/2889ed6d29b441d9a6da3c69af618f96.png" mode="widthFix"></image>
+						<image v-if="activeTimeArr.length>=5&&index<4&&isToday" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/2889ed6d29b441d9a6da3c69af618f96.png" mode="widthFix"></image>
 					</view>
 				
 				</view>
@@ -106,7 +106,8 @@
 				selectTime: '',
 				selectEndime: '',
 				activeTimeArr: [],
-				isUrgent:false
+				isUrgent:false,
+				isToday:true,
 			};
 		},
 		beforeMount() {
@@ -136,6 +137,7 @@
 				this.$emit('closeAlert', data);
 			},
 			_changeDay(e) {
+				
 				let _ind = e - 0;
 				let {
 					timeList
@@ -149,6 +151,7 @@
 				this.selectDateStr = timeList[_ind].dateStr;
 				this.select_dateStr = timeList[_ind]._dateStr;
 				this.activeTimeArr = timeList[_ind].timeArr;
+				this.isToday=e==0
 			},
 			_changeTime(e) {
 				console.log(e);

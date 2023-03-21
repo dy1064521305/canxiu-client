@@ -324,7 +324,12 @@
 				/* #endif */
 				display: flex;
 				flex-direction: column;
+				/* #ifdef MP-WEIXIN */
 				height: 84vh;
+				/* #endif */
+				/* #ifdef APP-PLUS */
+				height: 87vh;
+				/* #endif */
 			}
 
 			.u-search-box {

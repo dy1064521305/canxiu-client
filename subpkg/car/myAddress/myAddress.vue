@@ -116,6 +116,17 @@
 								}
 							})
 						})
+					}else{
+						item.isDefault = 0
+						editDefault(item).then(res => {
+							if (res.code === 200) {
+								uni.showToast({
+									title: '设置成功',
+									duration: 2000
+								});
+								this.getList(1,10)
+							}
+						})
 					}
 				})
 

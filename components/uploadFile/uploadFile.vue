@@ -13,9 +13,9 @@
 					</view>
 
 					<view v-if="isDel" style="position: absolute;top: 0; right: 0;">
-						<image style="width: 40rpx;" @tap.stop="billDelImg" :data-index="index"
+						<image style="width: 40rpx;height: 40rpx;" @tap.stop="billDelImg" :data-index="index"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/25/067d6e5b8f6a4b9c8362040b84e5a03a.png"
-							mode="widthFix"></image>
+							></image>
 					</view>
 
 				</view>
@@ -31,9 +31,9 @@
 					</image>
 
 					<view v-if="isDel" style="position: absolute;top: 0; right: 0;">
-						<image style="width: 40rpx;" @tap.stop="billDelImg" :data-index="index"
+						<image style="width: 40rpx;height: 40rpx;" @tap.stop="billDelImg(index)" :data-index="index"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/25/067d6e5b8f6a4b9c8362040b84e5a03a.png"
-							mode="widthFix"></image>
+							></image>
 					</view>
 
 				</view>
@@ -62,12 +62,12 @@
 			</view>
 
 			<u-overlay opacity='1' :show="showsImg" @click="showsImg=false">
-				<view style="position: absolute;z-index: 9999;display: flex;top: 50rpx;align-items: center;width: 100%;">
+				<view style="position: absolute;z-index: 9999;display: flex;top: 150rpx;align-items: center;width: 100%;">
 				
 					<view style="color:#fff;width: 41%;padding-left:370rpx;">
 						{{indexx+1}}/{{billImgList.length}}
 					</view>
-					<view @click.stop='billDelImg(index)' v-if='!isInfo'>
+					<view @click.stop='billDelImg(indexx)' v-if='!isInfo'>
 						<u-icon name="trash" color="#ccc" size="28"></u-icon>
 					</view>
 					
@@ -183,6 +183,7 @@
 
 			},
 			billDelImg(e) {
+				console.log( this.billImgList);
 				uni.showModal({
 					title: '删除',
 					content: '确定要删除吗？',
@@ -217,6 +218,7 @@
 											this.showsImg=false
 										}
 										this.$emit('getUrl', {
+											type:this.types,
 											urls: this.billImgList,
 											index: this.index,
 										})

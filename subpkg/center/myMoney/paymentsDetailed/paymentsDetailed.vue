@@ -9,14 +9,14 @@
 			</picker>
 		</view>
 		<view class="content">
-			<view style="display: flex;font-size: 31prx;justify-content: space-between;font-weight: bold;">
+		<!-- 	<view style="display: flex;font-size: 31prx;justify-content: space-between;font-weight: bold;">
 				<text >师傅拉新收入</text>
 				<text>88.00</text>
 			</view>
 			<view style="align-items: center;margin-top: 20rpx;display: flex;justify-content: space-between;">
 				<text style="font-size: 25rpx;color: #A5A7A7;">2022-11-15    22:25:12</text>
 				<text style="font-size: 31rpx;">已结算</text>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>

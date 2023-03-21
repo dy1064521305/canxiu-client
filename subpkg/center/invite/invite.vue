@@ -82,7 +82,7 @@
 			</view>
 		</view>
 
-		<u-overlay :show="shows" @click.stop="overlayClose">
+		<u-overlay :show="shows" @click="overlayClose">
 			<view class="warp">
 				<view class="rect">
 					<view style="width: 100vw;">

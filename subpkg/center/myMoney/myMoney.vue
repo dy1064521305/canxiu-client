@@ -10,7 +10,7 @@
 						账户余额(元)
 					</view>
 					<view style="margin-top: 14rpx;">
-						5254.67
+						0
 					</view>
 				</view>
 				<view class="btn">
@@ -24,7 +24,7 @@
 						冻结余额(元)
 					</view>
 					<view class="">
-						300.00
+						0
 					</view>
 				</view>
 				<view class="box">
@@ -32,7 +32,7 @@
 						可提现余额(元)
 					</view>
 					<view class="">
-						300.00
+						0
 					</view>
 				</view>
 				<view class="box">
@@ -40,7 +40,7 @@
 						累计提现(元)
 					</view>
 					<view class="">
-						300.00
+						0
 					</view>
 				</view>
 			</view>
@@ -109,9 +109,9 @@
 			.bottom {
 				display: flex;
 				padding: 22rpx 12rpx;
-
+				justify-content: space-evenly;
 				.box {
-					width: 36%;
+					//width: 36%;
 
 					view:first-child {
 						margin-bottom: 14rpx;

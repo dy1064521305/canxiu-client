@@ -18,7 +18,6 @@
 				</view>
 			</u-navbar>
 			<view class="content">
-
 				<view class="types">
 					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(index)'>
 						<image :src="item.iconUrl" mode=""></image>
@@ -32,7 +31,7 @@
 						<view class="title blod">
 							热门报修
 						</view>
-						<view class="more" @click="goMore('more',[])">
+						<view v-if="hotServiceList.length>4" class="more" @click="goMore('more',[])">
 							<text>更多报修</text>
 							<view>
 								<image
@@ -42,8 +41,8 @@
 						</view>
 					</view>
 					<view class="bottom">
-						<view v-for="(item,index) in hotServiceListFour" :key="index" class="box"
-							@click="goDetailed(item)">
+						<view v-if="hotServiceListFour.length!=0" v-for="(item,index) in hotServiceListFour"
+							:key="index" class="box" @click="goDetailed(item)">
 							<image :src="item.imgs[0]" mode=""></image>
 							<view class="title blod">
 								{{item.serviceName}}
@@ -58,6 +57,9 @@
 								<image src="../../static/img/home/intoCar.png" mode=""></image>
 							</view>
 
+						</view>
+						<view style="margin: 0 auto;" v-if="hotServiceListFour.length==0">
+							暂无数据
 						</view>
 					</view>
 				</view>
@@ -77,7 +79,7 @@
 				</view>
 				<view class="home-bottom" id='bottom' :style="{minHeight:scrollHeight+'px'}">
 					<view class="tabs"
-						:style="{backgroundColor:tabsBg,position:tabsBg === '#fff'&&'sticky',zIndex:3,top:offsetTop+'px'}">
+						:style="{backgroundColor:tabsBg,position:tabsBg === '#fff'&&'sticky',zIndex:3,top:tabHeight+'px'}">
 						<u-tabs :current="currentIndex" :list="serviceSymptomsName" lineWidth="60" lineHeight="7"
 							lineColor='linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);' :activeStyle="{
 							    color: '#303133',
@@ -213,8 +215,8 @@
 
 		},
 		onPageScroll(e) {
-			//console.log(e.scrollTop, this.scrollTop);
-			if (e.scrollTop >= this.scrollTop + 55) {
+			// console.log((e.scrollTop).toFixed(0),(this.scrollTop).toFixed(0));
+			if ((e.scrollTop).toFixed(0)*1 >= (this.scrollTop).toFixed(0)*1) {
 				//	console.log(this.tabsBg, 'lllllllllllllllllllllllllllll---216', e.scrollTop, this.scrollTop + 55);
 				this.tabsBg = '#fff'
 			} else {
@@ -290,9 +292,13 @@
 			onReachBottom() {
 				console.log('触底');
 				this.bottomNum++
-				console.log(this.bottomNum);
-				this.queryParams.pageNum++
-				this.getServiceSymptomsHandle()
+				console.log(this.serviceSymptomsName[this.currentIndex]);
+				if (this.serviceSymptomsName[this.currentIndex].list.length < this.serviceSymptomsName[this.currentIndex]
+					.total) {
+					this.queryParams.pageNum++
+					this.getServiceSymptomsHandle()
+				}
+
 
 			},
 			// //上拉函数
@@ -328,22 +334,23 @@
 				console.log(this.isShowMoney, '.....328');
 				//console.log(this.queryParams.pageNum, 'numnum 111111111');
 				return getServiceSymptoms(this.queryParams).then(res => {
-					console.log(res,'.............331', this.queryParams);
+					console.log(res, '.............331', this.queryParams);
 					this.loading = false
-					this.serviceSymptomsName = res.data.map((d, i) => ({
-						name: d.symptomsName,
-						list: this.queryParams.pageNum === 1 ? d.productVoList.records.map(rec => ({
-								...rec,
-								servicePrice: !this.isShowMoney ? this.replaceMoney(rec
-									.servicePrice) : rec.servicePrice
-							})) : this
-							.serviceSymptomsName[i].list.concat(d.productVoList.records.map(rec => ({
-								...rec,
-								servicePrice: !this.isShowMoney ? this.replaceMoney(rec
-									.servicePrice) : rec.servicePrice
-							}))),
-						total: d.productVoList.total
-					}))
+						this.serviceSymptomsName = res.data.map((d, i) => ({
+							name: d.symptomsName,
+							list: this.queryParams.pageNum === 1 ? d.productVoList.records.map(rec => ({
+									...rec,
+									servicePrice: !this.isShowMoney ? this.replaceMoney(rec
+										.servicePrice) : rec.servicePrice
+								})) : this
+								.serviceSymptomsName[i].list.concat(d.productVoList.records.map(rec => ({
+									...rec,
+									servicePrice: !this.isShowMoney ? this.replaceMoney(rec
+										.servicePrice) : rec.servicePrice
+								}))),
+							total: d.productVoList.total
+						}))
+						this.$forceUpdate();
 					console.log(this.serviceSymptomsName);
 					// this.serviceSymptomsName[this.currentIndex].list.forEach(item =>{
 					// 	console.log(this.isShowMoney,JSON.stringify(storage.get('AccessToken')) );
@@ -358,8 +365,13 @@
 							}).exec();
 						this.scrollTop || uni.createSelectorQuery().in(this).select('#bottom')
 							.boundingClientRect(data => {
-								this.scrollTop = data.top - this.navHeight * 2
-								this.tabHeight = 60
+								uni.createSelectorQuery().in(this).select('.content')
+									.boundingClientRect(data1 => {
+										console.log(data1,data);
+										this.scrollTop = data.top - data1.top
+										this.tabHeight = data1.top
+									}).exec();
+
 							}).exec();
 					})
 					// this.serviceSymptoms = res.data
@@ -418,7 +430,7 @@
 				})
 				//获取热门报修
 				getHotService().then(res => {
-					//	console.log(res, '1111111111111');
+					console.log(res, '1111111111111');
 
 					if (res.data != []) {
 						res.data.forEach(item => {
@@ -435,7 +447,7 @@
 				//获取故障区域
 				getRegionService().then(res => {
 					//	console.log(res);
-					this.regionService = res.data
+					this.regionService = res.data.filter((item, index) => index <= 3)
 					this.regionService.forEach(item => {
 						switch (item.regionName) {
 							case '前厅':
@@ -637,7 +649,7 @@
 				console.log(this.scrollTop, '-----------------');
 				num != 1 &&
 					uni.pageScrollTo({
-						scrollTop: this.scrollTop + 55
+						scrollTop: this.scrollTop 
 					});
 				// this.queryParams.pageNum = 1
 				// if (item.init) return
@@ -735,10 +747,10 @@
 			// top: 87rpx;
 			//margin: 0 20rpx;
 
-
+ 
 			.types {
-
-				margin: 25rpx 20rpx 0 20rpx;
+			padding-top: 25rpx;
+			margin: 0rpx 20rpx 0 20rpx;
 				//width: 100%;
 				height: 696rpx;
 				background: #FFFFFF;
@@ -851,22 +863,22 @@
 				.boxs {
 					display: flex;
 					flex-wrap: wrap;
-					//justify-content: space-evenly;
+					justify-content: space-evenly;
 					padding: 0 10rpx;
 
 					.box {
-						width: 322rpx;
+						width: 48%;
 						height: 199rpx;
 						//background-color: #CBCFCE;
 						border-radius: 15rpx;
 						position: relative;
-						margin: 10rpx 12rpx;
+						margin-top: 14rpx;
 
 						.mask {
 							position: absolute;
 							bottom: 4rpx;
 							left: 4rpx;
-							width: 315rpx;
+							width: 97%;
 							height: 64rpx;
 							background: rgba(42, 42, 42, 0.6);
 							border-radius: 0 0 15rpx 15rpx;
