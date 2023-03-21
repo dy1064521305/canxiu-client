@@ -45,13 +45,13 @@
 								<view class="item-title">
 									<text>{{item.typeName}}</text>
 								</view>
-								<view :id="'box' + index" v-for="(item1,index1) in item.children" :key='index1'
+								<view :id="'box' + index"
 									style="margin-top: 30rpx;">
-									<view class="item-title" style="margin-left: 15rpx;">
+								<!-- 	<view class="item-title" style="margin-left: 15rpx;">
 										<text>{{item1.typeName}}</text>
-									</view>
+									</view> -->
 									<view class="item-container">
-										<view class="thumb-box" v-for="(item2, index2) in item1.children" :key="index2"
+										<view class="thumb-box" v-for="(item2, index2) in item.children" :key="index2"
 											@click="featureC(item2)">
 											<image v-if="item2.icon != ''" class="item-menu-image" :src="item2.src"
 												mode="">
@@ -120,6 +120,7 @@
 			getList() {
 				service.getService(this.query).then(res => {
 					this.typesList = res.data
+					console.log(this.typesList);
 				})
 			},
 			// 获取微信右上角胶囊高度
