@@ -114,11 +114,11 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">预估服务费</text>
-				<text style="color: #EC5722;">¥{{info.servicePrice}}</text>
+				<text v-if="info.servicePrice!=null" style="color: #EC5722;">¥{{info.servicePrice}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">附加费</text>
-				<text style="color: #EC5722;">¥{{info.additionalPrice}}</text>
+				<text v-if="info.additionalPrice!=null" style="color: #EC5722;">¥{{info.additionalPrice}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">合计(不含材料)</text>
@@ -189,7 +189,7 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">订单类型</text>
-				<text>{{info.orderType}}</text>
+				<text v-if='info.orderType!=null'>{{info.orderType}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">订单优先级</text>
@@ -370,11 +370,11 @@
 				var dateDiff = dateEnd.getTime() - dateBegin.getTime(); //时间差的毫秒数
 				//var dateDiff=1000000
 				console.log(dateDiff);
-				if (dateDiff > 90000) {
+				if (dateDiff > 900000) {
 					this.dateDiff = 0
 					this.pipeiStatus = true
 				} else {
-					this.dateDiff = Number((dateDiff - 90000).toString().substring(1))
+					this.dateDiff = Number((dateDiff - 900000).toString().substring(1))
 				}
 				console.log(Number((dateDiff - 900000).toString().substring(1)));
 			},
@@ -443,7 +443,7 @@
 						this.info.projectDataVoList.forEach(item => {
 							item.projectImg = item.projectImg != '' ? item.projectImg.split(',') : []
 							item.projectVideo = item.projectVideo != '' ? item.projectVideo.split(',') : []
-							item.projectUrl = item.projectUrl.split(',')
+							item.projectUrl =  item.projectUrl!=null?item.projectUrl.split(','):[]
 						})
 					}),
 					//取消原因

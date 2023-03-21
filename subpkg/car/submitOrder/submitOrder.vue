@@ -100,6 +100,7 @@
 		onLoad(option) {
 		//	console.log(decodeURIComponent(option.item));
 			this.submitList = JSON.parse(decodeURIComponent(option.item))
+			console.log(JSON.parse(decodeURIComponent(option.item)));
 			//console.log(this.submitList );
 			// try {
 			// 	const value = uni.getStorageSync('submit_order');
@@ -138,6 +139,17 @@
 							if (value) {
 								this.addressInfo = value
 								console.log(value);
+							}else{
+								this.addressList.forEach(item => {
+									if (item.isDefault == 0) {
+										this.addressInfo = item
+										console.log(111, '118111111111111111111');
+										uni.setStorage({
+											key: 'address_info',
+											data: item,
+										})
+									}
+								})
 							}
 						} catch (e) {
 							// error
@@ -160,6 +172,8 @@
 			//删除url
 			getDeleteUrlList(data) {
 				console.log(data);
+				const pages = uni.$u.pages()
+				pages[pages.length-2].$vm.changeData(data)
 				uni.setStorage({
 					key: 'submit_order',
 					data: data,
@@ -187,9 +201,10 @@
 						icon: 'none'
 					});
 				} else {
+					console.log(this.addressInfo);
 					this.info.addressId = this.addressInfo.addressId
-					this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
-					this.info.clientId = this.addressInfo.clientId
+				//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
+					this.info.clientId = storage.get('ClientId')
 					this.info.expectTime = this.info.expectTime + ':00'
 					console.log(this.submitList);
 					console.log(this.info);
@@ -262,7 +277,7 @@
 				// })
 				const pages = uni.$u.pages();
 				console.log(pages);
-				pages.some(p=>p.route.includes('service'))?uni.navigateBack():uni.switchTab({
+				pages.some(p=>p.route.includes('service')||p.route.includes('goodDetails'))?uni.navigateBack():uni.switchTab({
 					url:'/pages/car/car'
 				})
 				

@@ -3,7 +3,7 @@
 		<z-paging ref="paging" v-model="orderList" @query="getOrderlistHandle" @onRefresh="refresh">
 			<view slot='top'>
 				<u-navbar title="我的订单" :safeAreaInsetTop="true" :autoBack='true'>
-					<view class="u-nav-slot" slot="right" @click="showScreen=true">
+					<view class="u-nav-slot" slot="right" @click="show">
 						<image
 							:style="{'width': '29rpx','margin-right':menuButtonInfoWidth+'rpx','padding-top':'15rpx'}"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/eb78f3eb65ec46fc92b1245b17c64838.png"
@@ -38,7 +38,7 @@
 								mode=""></image>
 						</view>
 					</view>
-					<view v-for="(pro,i) in item.projectDataVoList" :key="i" style="margin: 20rpx 0;">
+					<view v-if="item.projectDataVoList.length!=0" v-for="(pro,i) in item.projectDataVoList" :key="i" style="margin: 20rpx 0;">
 						<view style="display: flex">
 							<image style="width: 156rpx;height: 156rpx;" :src="pro.projectImg[0]">
 							</image>
@@ -204,6 +204,9 @@
 			// #endif
 
 		},
+		onShow() {
+				this.getOrderlistHandle(1,10)
+		},
 		onLoad(option) {
 			console.log(option.item);
 			this.queryParams.clientId = storage.get('ClientId')
@@ -219,9 +222,13 @@
 					name: item.name
 				})
 			}
-
+		
 		},
 		methods: {
+			show(){
+				console.log(11111);
+				this.showScreen=true
+			},
 			checkType(num) {
 				this.type = num
 			},
@@ -251,12 +258,13 @@
 					mask: true
 				});
 				getOrderList(this.queryParams).then(res => {
+					console.log(res);
 					res.rows.forEach(i => {
 						i.projectDataVoList.forEach(item => {
-							item.projectImg = item.projectImg.split(',')
+							item.projectImg =item.projectImg!=null?item.projectImg.split(','):[]
 						})
 					})
-					console.log(res);
+					console.log(res,'.......2');
 					uni.hideLoading();
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})

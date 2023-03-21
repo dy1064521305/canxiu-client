@@ -23,7 +23,7 @@
 			</u-form-item>
 			<u-form-item label="门店地址" borderBottom ref="item1">
 				<pickers @address="address">
-					<view v-if="userInfo.region!=undefined">{{userInfo.region}}</view>
+					<view v-if="region!=''">{{region}}</view>
 					<view v-else style="color: rgb(192, 196, 204);">请选择门店地址</view>
 				</pickers>
 			</u-form-item>
@@ -63,12 +63,14 @@
 				},
 				userInfo: {},
 				rules: {},
-				fileList: []
+				fileList: [],
+				region:''
 			};
 		},
 		onLoad(option) {
 			console.log(JSON.parse(option.item));
 			this.userInfo = JSON.parse(option.item)
+			this.region=this.userInfo.region
 			console.log(this.userInfo);
 			this.$set(this.userInfo, 'avatarUrl', this.userInfo.avatarUrl)
 		},
@@ -106,6 +108,7 @@
 			address(e) {
 				console.log(e) //携带的参数
 				this.userInfo.region = e.value.toString().replace(/,/g, "/")
+				this.region=this.userInfo.region
 				console.log(this.userInfo.region);
 			},
 			//查看头像信息

@@ -1,23 +1,23 @@
 <template>
-	<view class="box"  @click="goDetailed(item)">
+	<view class="box"  @click="goDetailed(info)">
 		<view class="img">
-			<image :src="Array.isArray(item.serviceImg)?item.serviceImg[0]:item.serviceImg.split(',')[0]" mode=""></image>
+			<image :src="info.serviceImg" mode=""></image>
 		</view>
 		<view class="right">
 			<view class="top">
 				<view class="title blod">
-					{{item.serviceName}}
+					{{info.serviceName}}
 				</view>
 				<view class="small">
-					{{item.serviceTypeName}}
+					{{info.serviceTypeName}}
 				</view>
 			</view>
 			<view class="bottom">
-				<text style="color: #EC5722;">
+				<text style="color: #EC5722;width: 65%;display: inline-block;">
 					<text style="font-size: 22rpx;">¥</text>
-					<text style="display:inline-block;margin: 0 12rpx;" class="blod">{{item.servicePrice}}</text>
+					<text style="display:inline-block;margin: 0 12rpx;" class="blod">{{info.servicePrice}}</text>
 				</text>
-				<text style="font-size: 22rpx;color: #A5A7A7;width: 52%;display: inline-block;">9999+人付款</text>
+		<!-- 		<text style="font-size: 22rpx;color: #A5A7A7;width: 52%;display: inline-block;">9999+人付款</text> -->
 				<text class="btn">立即下单</text>
 			</view>
 		</view>
@@ -41,10 +41,16 @@
 		},
 		data() {
 			return {
-					
+					info:{}
 			};
 		},
-
+		created() {
+			this.info=this.item
+			if(this.info.serviceImg!=null){
+				this.info.serviceImg=Array.isArray(info.serviceImg)?info.serviceImg[0]:info.serviceImg.split(',')[0]
+			}
+			
+		},
 		methods: {
 			//详情
 			goDetailed(itemm) {

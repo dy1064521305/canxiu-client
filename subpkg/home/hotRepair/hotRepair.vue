@@ -21,10 +21,10 @@
 				title: title
 			})
 			this.list=info.list
-			this.list.forEach(item=>{
-				item.serviceImg = Array.isArray(item.serviceImg) ? item.serviceImg : item.serviceImg.split(
-					',')
-			})
+			// this.list.forEach(item=>{
+			// 	item.serviceImg = item.serviceImg!=null ?Array.isArray(item.serviceImg)?item.serviceImg : item.serviceImg.split(
+			// 		','):[]
+			// })
 			console.log(this.list,'24444444444444444444444');
 		},
 		data() {

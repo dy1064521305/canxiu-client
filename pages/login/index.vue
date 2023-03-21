@@ -36,9 +36,12 @@
 				</view>
 			</view>
 			<view class="login">
-				<image style="width: 100%;height: 100%;"
+				<view :class="['btn',checked&&phone!=''&&code!=''?'btn-active':'btn-unactive']" @click="login()">
+					登 录
+				</view>
+			<!-- 	<image style="width: 100%;height: 100%;"
 					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/afc56c996d564ba48186af4549a42c71.png"
-					mode="" @click="login()"></image>
+					mode="" ></image> -->
 			</view>
 
 			<view class="bottom">
@@ -76,7 +79,7 @@
 				title: '餐修管理平台',
 				subTitle: '欢迎回来，开始工作吧！',
 				// 登录账号
-				phone: '18974241028',
+				phone: '',
 				code: '',
 				countDownNum: 0, //获取验证码后倒数
 				agreementList: [], //问题协议
@@ -84,6 +87,17 @@
 		},
 		created() {
 			this.getList()
+		},
+		watch:{
+			  // "isLogin": {
+			  //       immediate: true, // 立即执行
+			  //      // deep: true, // 深度监听复杂类型内变化
+			  //       handler (newVal, oldVal) {
+			  //           console.log(this.checked&&this.phone!=''&&this.code!='');
+			  //           return this.checked&&this.phone!=''&&this.code!=''
+			  //       }
+			  //   }
+
 		},
 		methods: {
 			getList() {

@@ -91,6 +91,22 @@
 			margin: 76rpx 48rpx;
 			width: 663rpx;
 			height: 91rpx;
+			.btn{
+				width: 663rpx;
+				height: 91rpx;
+				color: #fff;
+				text-align: center;
+				line-height: 91rpx;
+				margin: 0 auto;
+				border-radius:50rpx;
+				font-weight: bold;
+			}
+			.btn-active{
+				background:#9FD6BA;
+			}
+			.btn-unactive{
+				background:#CFEADC ;
+			}
 		}
 		.bottom{
 		.font{

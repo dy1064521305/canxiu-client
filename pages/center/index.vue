@@ -79,7 +79,7 @@
 					</view>
 
 				</view>
-				<view class="hetong">
+			<!-- 	<view class="hetong">
 					<view class="imgPlace">
 						<image style="width: 36rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/a5a0b58c2d674bacb335cb758d4fca3d.png"
@@ -104,53 +104,53 @@
 					<view class="btn">
 						立即开通
 					</view>
-				</view>
+				</view> -->
 				<view class="my">
 					<view class="title">我的服务</view>
 					<view class="main">
 						<view class="box">
 							<view class='img'>
-								<image style="width: 54rpx;"
+								<image style="width: 54rpx;height: 46rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/bc5a61260236484e840a1ddb5090bace.png"
-									mode="widthFix"></image>
+									></image>
 							</view>
 							<text>优惠券</text>
 						</view>
 						<view class="box" @click="fuwuClick('address')">
 							<view class='img'>
-								<image style="width: 48rpx;"
+								<image style="width: 48rpx;height: 56rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cdd0134f2d7e4200af485661223615eb.png"
-									mode="widthFix"></image>
+									></image>
 							</view>
 							<text>维修地址</text>
 						</view>
 						<view class="box">
 							<view class='img'>
-								<image style="width: 55rpx;"
+								<image style="width: 55rpx;height: 56rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/ac09219e58a84b6e9edbb63508138c70.png"
-									mode="widthFix"></image>
+									></image>
 							</view>
 							<text>联系客服</text>
 						</view>
 						<view class="box" @click="fuwuClick('invite')">
 							<view class='img'>
-								<image style="width: 48rpx;"
+								<image style="width: 48rpx;height: 54rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/f44ea061b78849129614c02e0deb3cdd.png"
-									mode="widthFix"></image>
+									></image>
 							</view>
 							<text>邀请挣钱</text>
 						</view>
 						<view class="box" @click="fuwuClick('invoice')">
 							<view class='img'>
-								<image style="width: 46rpx;"
+								<image style="width: 46rpx;height: 53rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/f44ea061b78849129614c02e0deb3cdd.png"
-									mode="widthFix"></image>
+									></image>
 							</view>
 							<text>我的发票</text>
 						</view>
 						<view class="box" @click="fuwuClick('set')">
 							<view class='img'>
-								<image style="width: 54rpx;"
+								<image style="width: 54rpx;height: 51rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/1eab510981eb44e98c97646c650bfb5d.png"
 									mode="widthFix"></image>
 							</view>
@@ -226,7 +226,7 @@
 					getInfoById(storage.get('ClientId')).then(res => {
 						console.log(res);
 						this.userInfo = res.data
-						let arr = res.data.avatarUrl.split(',')
+						let arr = res.data.avatarUrl!=null?res.data.avatarUrl.split(','):[]
 						this.userInfo.phone = this.geTel(this.userInfo.phoneNumber)
 						//	this.fileList.push({url:arr[0]})
 					})

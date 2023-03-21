@@ -50,7 +50,7 @@
 			</view>
 		</view>
 
-		<view class="comment bgf">
+		<view  class="comment bgf">
 			<view class="title">
 				<text>用户评论({{appraiseList.length}})</text>
 				<view v-if="appraiseList.length!=0" style="display:flex;align-items: center;" @click="allComment">
@@ -73,11 +73,11 @@
 					{{appraiseList[0].time}}
 				</view>
 			</view>
-			<view>
+			<view v-if="appraiseList.length!=0">
 				<u--text :lines="2" :text="appraiseList[0].appraiseContent">
 				</u--text>
 			</view>
-			<view style="display: flex;width:97%;overflow: hidden;">
+			<view  v-if="appraiseList.length!=0" style="display: flex;width:97%;overflow: hidden;">
 				<view style='margin:15rpx 10rpx;' v-for="(item, index) in appraiseList[0].imgs" :key="index"
 					v-if="index < 3">
 					<u-image radius='8px' width="156rpx" height="156rpx" :src="item" mode=""
@@ -232,7 +232,10 @@
 			} else {
 				this.query.serviceId = options.serviceId
 			}
-			this.getInfo()
+
+			this.$nextTick(() => {
+				this.getInfo()
+			})
 			var that = this
 			uni.getStorage({
 				key: 'city',
@@ -262,17 +265,8 @@
 						title: this.goodInfo.serviceName
 					})
 					console.log(this.goodInfo);
-					//获取二维码
-					generateQrCode({
-						codeStatus: 'c',
-						page: 'pages/home/index',
-						// scene: 'a=1'
-					}).then(async res => {
-						console.log(res);
-						//this.qrCode = await this.Tobase(res.msg)
-						//console.log(this.qrCode);
-					})
 					//获取评论
+
 					order.appraiseList({
 						productId: this.goodInfo.serviceId,
 						pageNum: 1,
@@ -290,7 +284,19 @@
 						})
 
 						this.appraiseList = res.rows
+
 					})
+					//获取二维码
+					generateQrCode({
+						codeStatus: 'c',
+						page: 'pages/home/index',
+						// scene: 'a=1'
+					}).then(async res => {
+						console.log(res);
+						//this.qrCode = await this.Tobase(res.msg)
+						//console.log(this.qrCode);
+					})
+
 					this.serviceImgList = this.goodInfo.serviceImg !== null ? this.goodInfo.serviceImg.split(',') :
 						[]
 					this.goodInfo.projectVoList.forEach((p, i) => {
@@ -584,8 +590,17 @@
 						})
 					} else {
 						console.log(query.list);
+						let newSetArray = [] //新数组
+						query.list.map((item, index) => { //setArray是老数组
+							newSetArray.push(Object.assign({}, item, {
+								clientId: storage.get('ClientId')
+							}, {
+								productId: this.goodInfo.serviceId
+							}))
+						})
+						console.log(newSetArray);
 						uni.navigateTo({
-							url: '../submitOrder/submitOrder?item=' + JSON.stringify(query.list)
+							url: '../submitOrder/submitOrder?item=' + JSON.stringify(newSetArray)
 						})
 					}
 

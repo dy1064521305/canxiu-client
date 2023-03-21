@@ -93,10 +93,11 @@
 		onLoad(option) {
 			console.log(option);
 			uni.setNavigationBarTitle({
-				title: option.id != '' ? '修改地址' : '添加地址'
+				title: option.id ? '修改地址' : '添加地址'
 			})
-			if (option.id != '') {
+			if (option.id ) {
 				this.id = option.id
+				console.log('2222222222');
 				getAddressInfo(this.id).then(res => {
 					console.log(res);
 					this.model1.address = res.data
