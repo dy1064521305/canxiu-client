@@ -30,7 +30,7 @@
 			</view>
 		</view>
 
-		<view class="worker bg" @click="workerDetailed" v-if="info.orderStatus!='待接单'">
+	<!-- 	<view class="worker bg" @click="workerDetailed" v-if="info.orderStatus!='待接单'">
 			<view class="title">
 				本单维修师
 			</view>
@@ -54,7 +54,7 @@
 			</view>
 
 
-		</view>
+		</view> -->
 		<view class="project bg">
 
 			<view v-for="(item,index) in info.projectDataVoList" :key="index"
