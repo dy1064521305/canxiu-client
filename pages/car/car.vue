@@ -244,8 +244,8 @@
 									})
 									arr.length == 0 ? uni.removeStorage({
 										key: 'address_info'
-									}):	this.addressInfo = value
-								
+									}) : this.addressInfo = value
+
 									console.log(value);
 								} else {
 									this.addressList.forEach(item => {
@@ -341,6 +341,7 @@
 			//删除
 			deleteHandle() {
 				let arr = this.checkedList.map(item => item.id)
+			//	this.deleteList(arr)
 				uni.showModal({
 					title: '删除',
 					content: '确定要删除吗？',
@@ -404,16 +405,32 @@
 			},
 			//
 			deleteList(arr) {
+				console.log(arr);
+				console.log(this.dataList, '409409409409');
 				this.dataList.forEach(ele1 => {
+					let arrs = []
 					ele1.children.forEach((ele2, Index2) => {
-						if (arr.includes(ele2.id)) ele1.children.splice(Index2, 1)
+						console.log(ele2, Index2);
+						arrs.push(ele2)
+					})
+					console.log(arrs);
+					arrs.forEach((v, i) => {
+						if (arr.includes(v.id)) {
+								ele1.children.forEach((vv,ii)=>{
+									if(v.id==vv.id){
+										ele1.children.splice(ii,1)
+									}
+								})
+						}
 					})
 				})
+				
+				console.log(this.dataList, '417417417');
 				this.dataList = this.dataList.filter(d => d.children && d.children.length > 0)
 				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
 				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
-				console.log(this.dataList);
+				console.log(this.dataList, '422422422422');
 			},
 			//取消登录
 			quxiao() {

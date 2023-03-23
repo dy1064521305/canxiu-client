@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<u-navbar @leftClick='leftClick' title="门店头像" :titleStyle="{'color':'#fff'}" bgColor="#333"
+		<u-navbar placeholder @leftClick='leftClick' title="门店头像" :titleStyle="{'color':'#fff'}" bgColor="#333"
 			leftIconColor='#fff'>
 			<view class="u-nav-slot" slot="right" @click="billChooseImage">
 				<view :style="{'width': '29rpx','margin-right':menuButtonInfoWidth+'rpx','padding-top':'5rpx'}">
@@ -9,7 +9,14 @@
 
 			</view>
 		</u-navbar>
-		<image style="width: 100%;padding-top: 400rpx;" :src="userInfo.avatarUrl" mode="widthFix"></image>
+		<view style="height: 86vh;display: flex;align-items: center;">
+			<image v-if="userInfo.avatarUrl!=null" style="width: 100%;" :src="userInfo.avatarUrl"
+				mode="widthFix"></image>
+			<image v-else style="width: 100%;height: 700rpx;"
+				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
+			</image>
+		</view>
+
 	</view>
 </template>
 
@@ -22,7 +29,7 @@
 		data() {
 			return {
 				urls: '',
-				menuButtonInfoWidth: 0,
+				menuButtonInfoWidth: 30,
 				userInfo: {}
 			};
 		},
@@ -72,13 +79,13 @@
 			leftClick() {
 				const pages = uni.$u.pages();
 				const len = pages.length
-				let prevPage = pages[len-2]; //上一个页面
-				console.log(pages,'pages.........');
+				let prevPage = pages[len - 2]; //上一个页面
+				console.log(pages, 'pages.........');
 				//重点$vm
 				uni.navigateBack({
-					success:()=>{
-						console.log(prevPage,'./..........',this.userInfo);
-						prevPage.$vm.otherFun(this.userInfo); 
+					success: () => {
+						console.log(prevPage, './..........', this.userInfo);
+						prevPage.$vm.otherFun(this.userInfo);
 					}
 				})
 			}

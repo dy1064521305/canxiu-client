@@ -21,13 +21,12 @@
 
 				<view class="info" @click="editInfo">
 					<view>
-						<!-- 	<image v-if="userInfo.avatarUrl==null" style="width: 136rpx;"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/34bbeddfb6114e51b478ff3b823b54c7.png"
-						mode="widthFix"></image> -->
-						<u--image width='136rpx' height='136rpx' :src="userInfo.avatarUrl" shape="circle"></u--image>
+							<image v-if="userInfo.avatarUrl==null" style="width: 136rpx;height: 136rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png"></image>
+						<u--image v-else width='136rpx' height='136rpx' :src="userInfo.avatarUrl" shape="circle"></u--image>
 					</view>
 					<view class="name">
-						<view style="font-size: 36rpx;">
+						<view v-if="userInfo.clientName!=null " style="font-size: 36rpx;">
 							{{userInfo.clientName}}
 						</view>
 						<view style="font-size: 29rpx;">

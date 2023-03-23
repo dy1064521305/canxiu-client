@@ -60,8 +60,11 @@ module.exports = (vm) => {
       // 判断状态码
       switch (data.code) {
         case 401: {
-			
-          uni.reLaunch({ url: '/' })
+		uni.showToast({
+			title: '请重新登录',
+			duration: 2000
+		});
+          uni.reLaunch({ url: '/pages/login/index' })
           return;
         }
       }
