@@ -8,7 +8,7 @@
 				<view slot='center' style="padding-bottom:50rpx;width: 94%;">
 					<view class="search" :style="{'margin-top':titleHeight+'rpx'}">
 						<view class="left">
-							<view @click="choseCity" style="margin:0 10rpx 0 30rpx;">{{cityName}}</view>
+							<view @click="choseCity" style="margin:0 10rpx 0 30rpx;font-size: 29rpx;">{{cityName}}</view>
 							<image @click="choseCity" class="triangle" src="../../static/img/home/triangle.png" mode="">
 							</image>
 							<view class="line">|</view>
@@ -738,7 +738,7 @@
 
 				.line {
 					color: #D8D8D8;
-					margin: 0 20rpx;
+					margin: 0 15rpx;
 				}
 
 				.search-icon {
