@@ -254,8 +254,12 @@
 			},
 			//修改个人信息
 			editInfo() {
+				let list={
+					userInfo:this.userInfo,
+					type:'edit'
+				}
 				uni.navigateTo({
-					url: '../../subpkg/center/personalInfo/personalInfo?item=' + JSON.stringify(this.userInfo)
+					url: '../../subpkg/center/personalInfo/personalInfo?item=' + JSON.stringify(list)
 				})
 			},
 			//我的服务
