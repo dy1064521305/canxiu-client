@@ -17,7 +17,7 @@ export default {
 	* @returns { Object }
 	*/
 	 getDateByCode(code) {
-	  const date = new Date();
+	  const date = new Date()+86400000;
 	  let endTime = this.formatDate(date);
 	  let date1 = Date.parse(date);
 	  let start = '';
@@ -30,7 +30,8 @@ export default {
 	      break;
 	    //最近3天
 	    case '最近三天':
-	      start = date1 - oneDay * 2;
+	      start = date1 - oneDay * 2
+		 
 	      break;
 	    //最近1周
 	    case '最近7天':
@@ -91,6 +92,7 @@ export default {
 	      end.setYear(start.getFullYear() + 1)
 	      break;
 	  }
+	 //  console.log(endTime)
 	  return {
 	    startTime: this.formatDate(new Date(start)),
 	    endTime: end ? this.formatDate(new Date(end)) : endTime,

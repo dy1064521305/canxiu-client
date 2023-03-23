@@ -1,9 +1,9 @@
 <template>
 	<view>
-		<u-navbar placeholder @leftClick='leftClick' title="门店头像" :titleStyle="{'color':'#fff'}" bgColor="#333"
+		<u-navbar placeholder :leftText="type=='edit'?'确定':''" @leftClick='leftClick' title="门店头像" :titleStyle="{'color':'#fff'}" bgColor="#333"
 			leftIconColor='#fff'>
-			<view class="u-nav-slot" slot="right" @click="billChooseImage">
-				<view :style="{'width': '29rpx','margin-right':menuButtonInfoWidth+'rpx','padding-top':'5rpx'}">
+			<view  class="u-nav-slot" slot="right" @click="billChooseImage">
+				<view v-if="type=='edit'" :style="{'width': '29rpx','margin-right':menuButtonInfoWidth+'rpx','padding-top':'5rpx'}">
 					<u-icon name="more-dot-fill" color="#fff"></u-icon>
 				</view>
 
@@ -30,7 +30,8 @@
 			return {
 				urls: '',
 				menuButtonInfoWidth: 30,
-				userInfo: {}
+				userInfo: {},
+				type:''
 			};
 		},
 		onReady() {
@@ -41,8 +42,9 @@
 
 		},
 		onLoad(option) {
-			this.userInfo = JSON.parse(option.item)
-			console.log(JSON.parse(option.item));
+			this.userInfo = JSON.parse(option.item).userInfo
+			this.type = JSON.parse(option.item).type
+			console.log(this.type);
 		},
 		methods: {
 			billChooseImage() {

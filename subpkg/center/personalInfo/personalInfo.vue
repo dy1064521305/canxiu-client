@@ -7,10 +7,11 @@
 			<u-form-item label="门店头像" ref="item1" style='height: 120rpx;'>
 				<view style="display: flex;align-items: center;width: 100%;" @click="goLogoInfo">
 					<view style="width: 89%;">
-					
+
 						<image v-if="userInfo.avatarUrl==null" style="width: 100rpx;height: 100rpx;"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png"></image>
-							<u-avatar v-else :src="userInfo.avatarUrl" size="50"></u-avatar>
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
+						</image>
+						<u-avatar v-else :src="userInfo.avatarUrl" size="50"></u-avatar>
 					</view>
 					<view class="">
 						<image style="width:14rpx;height: 25rpx;"
@@ -20,23 +21,30 @@
 				</view>
 			</u-form-item>
 
+			<u-form-item v-if="disabled" label="电话" prop="phoneNumber" borderBottom ref="item1">
+				<u--input v-model="userInfo.phoneNumber" :disabled='disabled' disabledColor="#ffffff" border="none" >
+				</u--input>
+			</u-form-item>
 			<u-form-item label="门店名称" prop="clientName" borderBottom ref="item1">
-				<u--input v-model="userInfo.clientName" border="none" placeholder="请输入门店名称"></u--input>
+				<u--input v-model="userInfo.clientName" :disabled='disabled' disabledColor="#ffffff" border="none" :placeholder="disabled?'':'请输入门店名称'">
+				</u--input>
 			</u-form-item>
 			<u-form-item label="门店地址" borderBottom ref="item1">
-				<pickers @address="address">
+				<pickers v-if="!disabled" @address="address">
 					<view v-if="region!=''&&region!=null">{{region}}</view>
 					<view v-else style="color: rgb(192, 196, 204);">请选择门店地址</view>
 				</pickers>
+				<u--input v-else v-model="region" :disabled='disabled' disabledColor="#ffffff" border="none" ></u--input>
 			</u-form-item>
 			<u-form-item label="详细地址" prop="detailAddress" borderBottom ref="item1">
-				<u--input v-model="userInfo.detailAddress" border="none" placeholder="请输入详细地址"></u--input>
+				<u--input v-model="userInfo.detailAddress" :disabled='disabled' disabledColor="#ffffff" border="none" :placeholder="disabled?'':'请输入详细地址'">
+				</u--input>
 			</u-form-item>
 
 		</u--form>
 
 
-		<view class="button" @click="edit">
+		<view class="button" @click="edit" v-if="type=='edit'">
 			确认修改
 		</view>
 	</view>
@@ -66,25 +74,29 @@
 				userInfo: {},
 				rules: {},
 				fileList: [],
-				region:''
+				region: '',
+				type: '',
+				disabled: false
 			};
 		},
 		onLoad(option) {
 			console.log(JSON.parse(option.item));
-			this.userInfo = JSON.parse(option.item)
-			this.region=this.userInfo.region
+			this.userInfo = JSON.parse(option.item).userInfo
+			this.type = JSON.parse(option.item).type
+			this.disabled = this.type == 'info'
+			this.region = this.userInfo.region
 			console.log(this.userInfo);
 			this.$set(this.userInfo, 'avatarUrl', this.userInfo.avatarUrl)
 		},
-		
+
 		methods: {
-		   otherFun(object){
-			   console.log(object,'!!!!!!!!!!!!');
-		                if(!!object){
-		                    console.log('object=========',object)
-							this.userInfo=object
-		                }
-		            },
+			otherFun(object) {
+				console.log(object, '!!!!!!!!!!!!');
+				if (!!object) {
+					console.log('object=========', object)
+					this.userInfo = object
+				}
+			},
 			reset() {
 				this.index = undefined
 				this.userInfo = {
@@ -110,14 +122,18 @@
 			address(e) {
 				console.log(e) //携带的参数
 				this.userInfo.region = e.value.toString().replace(/,/g, "/")
-				this.region=this.userInfo.region
+				this.region = this.userInfo.region
 				console.log(this.userInfo.region);
 			},
 			//查看头像信息
 			goLogoInfo() {
 				console.log(this.userInfo);
+				let list={
+					type:this.type,
+					userInfo:this.userInfo
+				}
 				uni.navigateTo({
-					url: '../../../subpkg/center/logoInfo/logoInfo?item=' + JSON.stringify(this.userInfo)
+					url: '../../../subpkg/center/logoInfo/logoInfo?item=' + JSON.stringify(list)
 				})
 			}
 		}
@@ -149,7 +165,6 @@
 			bottom: 200rpx;
 			left: 43rpx;
 		}
-
 
 
 	}
