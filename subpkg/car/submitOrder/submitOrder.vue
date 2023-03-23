@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<u-navbar @leftClick='leftClick' title="填写订单" placeholder>
+		<u-navbar placeholder @leftClick='leftClick' title="填写订单" placeholder>
 	
 		</u-navbar>
 		<view class="address" :style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'250rpx'}" @click="myAddress">
@@ -232,13 +232,12 @@
 								orderId:res.data
 							}
 							console.log(info);
-							uni.navigateTo({
+							uni.redirectTo({
 								url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(info)
 							})
 						}
 					})
-
-
+				
 				}
 
 

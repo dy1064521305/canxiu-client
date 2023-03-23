@@ -31,6 +31,9 @@
 			console.log(JSON.parse(option.info));
 			this.info=JSON.parse(option.info)
 		},
+		onHide() {
+			console.log('hidehide');
+		},
 		methods:{
 			backHome(){
 				uni.switchTab({
@@ -57,7 +60,7 @@
 <style lang="scss" scoped>
 .succeeded{
 	width: 100%;
-	margin:180rpx 0;
+	margin:300rpx 0;
 	text-align: center;
 	.succeeded-icon{
 		width: 284rpx;

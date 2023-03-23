@@ -189,7 +189,7 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">订单类型</text>
-				<text v-if='info.orderType!=null'>{{info.orderType}}</text>
+				<text >维修</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">订单优先级</text>

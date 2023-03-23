@@ -1,5 +1,5 @@
 <template>
-	<view class="box"  @click="goDetailed(info)">
+	<view class="box" @click="goDetailed(info)">
 		<view class="img">
 			<image :src="info.serviceImg" mode=""></image>
 		</view>
@@ -17,12 +17,12 @@
 					<text style="font-size: 22rpx;">¥</text>
 					<text style="display:inline-block;margin: 0 12rpx;" class="blod">{{info.servicePrice}}</text>
 				</text>
-		<!-- 		<text style="font-size: 22rpx;color: #A5A7A7;width: 52%;display: inline-block;">9999+人付款</text> -->
+				<!-- 		<text style="font-size: 22rpx;color: #A5A7A7;width: 52%;display: inline-block;">9999+人付款</text> -->
 				<text class="btn">立即下单</text>
 			</view>
 		</view>
-		
-		
+
+
 	</view>
 </template>
 
@@ -32,42 +32,59 @@
 			item: {
 				type: Object
 			},
-			isLogin:{
-				type:Boolean
+			isLogin: {
+				type: Boolean
 			},
-			type:{
-				type:String
+			type: {
+				type: String
 			}
 		},
 		data() {
 			return {
-					info:{}
+				info: {}
 			};
 		},
-		created() {
-			this.info=this.item
-			if(this.info.serviceImg!=null){
-				this.info.serviceImg=Array.isArray(info.serviceImg)?info.serviceImg[0]:info.serviceImg.split(',')[0]
+		watch: {
+			item: {
+			//	immediate: true,
+				handler: function() {
+					console.log(this.info);
+					this.info = this.item
+					if (this.info.serviceImg != null) {
+						this.info.serviceImg = Array.isArray(this.info.serviceImg) ? this.info.serviceImg[0] : this
+							.info.serviceImg.split(',')[0]
+					}
+					
+				}
 			}
-			
+		},
+		created() {
+			//console.log(this.item);
+			this.info = this.item
+			if (this.info.serviceImg != null) {
+				this.info.serviceImg = Array.isArray(this.info.serviceImg) ? this.info.serviceImg[0] : this
+					.info.serviceImg.split(',')[0]
+			}
+
+
 		},
 		methods: {
 			//详情
 			goDetailed(itemm) {
 				console.log(itemm);
 				console.log(this.type);
-				this.type=='pro'?uni.navigateTo({
+				this.type == 'pro' ? uni.navigateTo({
 					url: '../../subpkg/car/goodDetails/goodDetails?serviceId=' + itemm.serviceId,
 					fail(res) {
 						console.log(res);
 					}
-				}):uni.navigateTo({
+				}) : uni.navigateTo({
 					url: '../../../subpkg/car/goodDetails/goodDetails?serviceId=' + itemm.serviceId,
 					fail(res) {
 						console.log(res);
 					}
 				})
-				
+
 			},
 		}
 	}

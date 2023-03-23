@@ -1,12 +1,12 @@
 <template>
-	<view class="login">	
-	
+	<view class="login">
+
 		<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/1cabf1cc977e4cc29a33272885693202.png" mode="">
 		</image>
-	
+
 		<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/75537c81465d49b3916abd1ee8694e1f.png" mode="">
 		</image>
-		<u-icon class='icon' name="close-circle"  color="#fff" size="25" @click="goHome"></u-icon>
+		<u-icon class='icon' name="close-circle" color="#fff" size="25" @click="goHome"></u-icon>
 		<view class="slogin">
 			让餐饮维修更简单
 		</view>
@@ -31,7 +31,8 @@
 				</view>
 				<view style="margin-left: 8rpx;width:610rpx;">
 					未注册手机号登录后将自动生成账号，且代表已阅读并同意
-					<text v-for="(item,index) in agreementList" @click="goAgreement(item)">《{{item.agreementName}}》<text
+					<text v-for="(item,index) in agreementList" :key="index"
+						@click="goAgreement(item)">《{{item.agreementName}}》<text
 							v-if="index!=agreementList.length-1">、</text></text>
 				</view>
 			</view>
@@ -39,7 +40,7 @@
 				<view :class="['btn',checked&&phone!=''&&code!=''?'btn-active':'btn-unactive']" @click="login()">
 					登 录
 				</view>
-			<!-- 	<image style="width: 100%;height: 100%;"
+				<!-- 	<image style="width: 100%;height: 100%;"
 					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/afc56c996d564ba48186af4549a42c71.png"
 					mode="" ></image> -->
 			</view>
@@ -88,15 +89,15 @@
 		created() {
 			this.getList()
 		},
-		watch:{
-			  // "isLogin": {
-			  //       immediate: true, // 立即执行
-			  //      // deep: true, // 深度监听复杂类型内变化
-			  //       handler (newVal, oldVal) {
-			  //           console.log(this.checked&&this.phone!=''&&this.code!='');
-			  //           return this.checked&&this.phone!=''&&this.code!=''
-			  //       }
-			  //   }
+		watch: {
+			// "isLogin": {
+			//       immediate: true, // 立即执行
+			//      // deep: true, // 深度监听复杂类型内变化
+			//       handler (newVal, oldVal) {
+			//           console.log(this.checked&&this.phone!=''&&this.code!='');
+			//           return this.checked&&this.phone!=''&&this.code!=''
+			//       }
+			//   }
 
 		},
 		methods: {
@@ -163,14 +164,10 @@
 			},
 			// 确认登录
 			login() {
+			
 				const app = this
-				// uni.navigateTo({
-				// 	url: '../../subpkg/login/info/info',
-				// 	fail(err) {
-				// 		console.log(err)
-				// 	}
-				// })
 				let valid = app.validItem();
+				const apps = getApp()
 				if (valid) {
 					//	app.isLoading = true
 					app.$store.dispatch('Login', {
@@ -178,17 +175,26 @@
 							smsCode: app.code,
 						}).then(result => {
 							console.log(result.data.type);
-							result.data.type == 'Success' ? uni.switchTab({
-								url: '/pages/home/index',
-								fail(err) {
-									console.log(err)
-								}
-							}): uni.navigateTo({
-								url: '../../subpkg/login/info/info',
-								fail(err) {
-									console.log(err)
-								}
-							}) 
+							if (result.data.type == 'Success') {
+								const pages = uni.$u.pages();
+								console.log(pages);
+								apps.type='login'
+								pages.some(p => p.route.includes('goodDetails')) ? uni.navigateBack() : uni.switchTab({
+									url: '/pages/home/index',
+									fail(err) {
+										console.log(err)
+									}
+								})
+
+							} else {
+								console.log(1111);
+								uni.navigateTo({
+									url: '../../subpkg/login/info/info',
+									fail(err) {
+										console.log(err)
+									}
+								})
+							}
 
 						})
 						.catch(err => {})
@@ -199,14 +205,15 @@
 			goAgreement(item) {
 				console.log(item);
 				uni.navigateTo({
-					url:'../../subpkg/login/agreementDetailed/agreementDetailed?name='+item.agreementName
+					url: '../../subpkg/login/agreementDetailed/agreementDetailed?name=' + item.agreementName
 				})
 			},
 			//未登录回到首页
-			goHome(){
-				uni.switchTab({
-					url:'/pages/home/index'
-				})
+			goHome() {
+				uni.navigateBack()
+				// uni.switchTab({
+				// 	url:'/pages/home/index'
+				// })
 			}
 		}
 	};

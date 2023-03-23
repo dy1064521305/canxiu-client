@@ -5,14 +5,16 @@
 				<view slot='left'>
 
 				</view>
-				<view slot='center' style="padding-bottom:50rpx;">
+				<view slot='center' style="padding-bottom:50rpx;width: 94%;">
 					<view class="search" :style="{'margin-top':titleHeight+'rpx'}">
-						<view @click="choseCity" style="margin:0 18rpx 0 30rpx;">{{cityName}}</view>
-						<image @click="choseCity" class="triangle" src="../../static/img/home/triangle.png" mode="">
-						</image>
-						<view class="line">|</view>
-						<image class="search-icon" src="../../static/img/home/search.png" mode=""></image>
-						<input type="text" @click="goSearch">
+						<view class="left">
+							<view @click="choseCity" style="margin:0 10rpx 0 30rpx;">{{cityName}}</view>
+							<image @click="choseCity" class="triangle" src="../../static/img/home/triangle.png" mode="">
+							</image>
+							<view class="line">|</view>
+							<image class="search-icon" src="../../static/img/home/search.png" mode=""></image>
+							<input type="text" @click="goSearch" disabled>
+						</view>
 						<view class="search-title" @click="goSearch">搜索</view>
 					</view>
 				</view>
@@ -100,6 +102,9 @@
 									<view v-if="item.list.length!=0">
 										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
 									</view>
+								<!-- 	<view v-if="item.list.length!=0&&isShowMoney&&item1.servicePrice.indexOf('x')==-1">
+										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
+									</view> -->
 
 								</view>
 								<u-empty marginTop="200rpx" v-if="item.list.length==0" mode="list"
@@ -112,6 +117,11 @@
 							</view>
 						</swiper-item>
 					</swiper>
+					<!-- #ifdef APP-PLUS -->
+					<view style="height: 10rpx;">
+						
+					</view>
+					<!-- #endif -->
 				</view>
 
 			</view>
@@ -191,7 +201,7 @@
 				productVoList: [], //产品服务列表
 				queryParams: {
 					pageNum: 1,
-					pageSize: 5
+					pageSize: 10
 				},
 				currentIndex: 0,
 				location: {},
@@ -216,7 +226,7 @@
 		},
 		onPageScroll(e) {
 			// console.log((e.scrollTop).toFixed(0),(this.scrollTop).toFixed(0));
-			if ((e.scrollTop).toFixed(0)*1 >= (this.scrollTop).toFixed(0)*1) {
+			if ((e.scrollTop).toFixed(0) * 1 >= (this.scrollTop).toFixed(0) * 1) {
 				//	console.log(this.tabsBg, 'lllllllllllllllllllllllllllll---216', e.scrollTop, this.scrollTop + 55);
 				this.tabsBg = '#fff'
 			} else {
@@ -227,24 +237,31 @@
 		},
 		onShow() {
 
-
+			console.log('onshowinshow');
 			// #ifdef MP-WEIXIN
 			this.getHeight();
 			this.navHeight = 100
 			this.titleHeight = 120
 			this.offsetTop = 145
-			// this.queryParams.pageNum = 1
+
 			// #endif
+			//this.queryParams.pageNum = 1
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
 					console.log();
 					this.isShowMoney = Boolean(res.data)
 					this.getList()
-					this.getServiceSymptomsHandle('init')
+					const apps = getApp()
+					console.log(apps.type);
+					if (apps.type == 'login') {
+						this.queryParams.pageNum = 1
+						this.getServiceSymptomsHandle()
+					} else {
+						this.getServiceSymptoms()
+					}
 				}
 			})
-
 
 			var that = this
 			uni.getStorage({
@@ -255,10 +272,25 @@
 				}
 			});
 
+
+		},
+		onHide() {
+			console.log('onhide');
+			const apps = getApp()
+			apps.type = undefined
 		},
 		onLoad() {
+			console.log('onloadonload.......');
 			this.locationStatus = ''
+
 			console.log(this.locationStatus);
+			uni.getStorage({
+				key: 'AccessToken',
+				complete: (res) => {
+					this.getServiceSymptomsHandle()
+				}
+			})
+
 			var that = this
 			uni.getStorage({
 				key: 'city',
@@ -295,6 +327,7 @@
 				console.log(this.serviceSymptomsName[this.currentIndex]);
 				if (this.serviceSymptomsName[this.currentIndex].list.length < this.serviceSymptomsName[this.currentIndex]
 					.total) {
+					console.log(1111);
 					this.queryParams.pageNum++
 					this.getServiceSymptomsHandle()
 				}
@@ -328,35 +361,32 @@
 				if (e.detail.current === this.currentIndex) return
 				this.currentIndex = e.detail.current
 			},
-			getServiceSymptomsHandle(type) {
+
+			getServiceSymptomsHandle() {
 				//获取故障现象
 				this.loading = true
 				console.log(this.isShowMoney, '.....328');
-				//console.log(this.queryParams.pageNum, 'numnum 111111111');
+				console.log(this.queryParams.pageNum, 'numnum 111111111');
 				return getServiceSymptoms(this.queryParams).then(res => {
 					console.log(res, '.............331', this.queryParams);
 					this.loading = false
-						this.serviceSymptomsName = res.data.map((d, i) => ({
-							name: d.symptomsName,
-							list: this.queryParams.pageNum === 1 ? d.productVoList.records.map(rec => ({
-									...rec,
-									servicePrice: !this.isShowMoney ? this.replaceMoney(rec
-										.servicePrice) : rec.servicePrice
-								})) : this
-								.serviceSymptomsName[i].list.concat(d.productVoList.records.map(rec => ({
-									...rec,
-									servicePrice: !this.isShowMoney ? this.replaceMoney(rec
-										.servicePrice) : rec.servicePrice
-								}))),
-							total: d.productVoList.total
-						}))
-						this.$forceUpdate();
+
+					this.serviceSymptomsName = res.data.map((d, i) => ({
+						name: d.symptomsName,
+						list: this.queryParams.pageNum === 1 ? d.productVoList.records.map(rec => ({
+								...rec,
+								servicePrice: !this.isShowMoney ? this.replaceMoney(rec
+									.servicePrice) : rec.servicePrice
+							})) : this
+							.serviceSymptomsName[i].list.concat(d.productVoList.records.map(rec => ({
+								...rec,
+								servicePrice: !this.isShowMoney ? this.replaceMoney(rec
+									.servicePrice) : rec.servicePrice
+							}))),
+						total: d.productVoList.total
+					}))
+
 					console.log(this.serviceSymptomsName);
-					// this.serviceSymptomsName[this.currentIndex].list.forEach(item =>{
-					// 	console.log(this.isShowMoney,JSON.stringify(storage.get('AccessToken')) );
-					// 	item.servicePrice = !this.isShowMoney ? this.replaceMoney(item.servicePrice) :item.servicePrice
-					// 	//console.log(item,'334....',!this.isShowMoney ? this.replaceMoney(item.servicePrice) :item.servicePrice);
-					// }) 
 					this.$nextTick(() => {
 						uni.createSelectorQuery().in(this).selectAll('.scroll-view').boundingClientRect(
 							data => {
@@ -367,52 +397,32 @@
 							.boundingClientRect(data => {
 								uni.createSelectorQuery().in(this).select('.content')
 									.boundingClientRect(data1 => {
-										console.log(data1,data);
+										console.log(data1, data);
 										this.scrollTop = data.top - data1.top
 										this.tabHeight = data1.top
 									}).exec();
 
 							}).exec();
 					})
-					// this.serviceSymptoms = res.data
-					// //console.log(this.serviceSymptoms);
-					// wx.stopPullDownRefresh()
-					// if (type == 'init') {
-					// 	//console.log(1111111111111111111111111111111, 'innitinit');
-					// 	this.tabClick({
-					// 		name: '',
-					// 		index: 0,
-					// 		init: true
-					// 	}, 1)
-					// }
-
-					// this.serviceSymptomsName = []
-					// res.data.forEach(item => {
-					// 	this.serviceSymptomsName.push({
-					// 		name: item.symptomsName
-					// 	})
-					// })
-					// //console.log(this.productVoList, '++++++++201++++++++', this.currentIndex);
-					// let list = this.queryParams.pageNum != 1 ? this.productVoList.concat(res.data[this
-					// 	.currentIndex].productVoList.records) : this.productVoList
-					// this.productVoList = list
-					// this.productVoList.forEach(item => {
-					// 	item.servicePrice = !this.isShowMoney ? this.replaceMoney(item.servicePrice) : item
-					// 		.servicePrice
-					// })
-					// if (this.productVoList.length != this.serviceSymptoms[this.currentIndex].productVoList.total) {
-					// 	//	console.log(this.queryParams, '====', this.productVoList.length, this.serviceSymptoms[this
-					// 	//.currentIndex].productVoList.total, 'this.loading----------210', this.loading);
-					// 	this.loaded = false
-					// } else {
-					// 	this.loaded = true
-					// }
-					// this.loading = false
-					// console.log(this.productVoList);
-					//console.log(this.serviceSymptomsName);
 				}).finally(() => {
 					uni.stopPullDownRefresh()
 				})
+			},
+			getServiceSymptoms() {
+				console.log(this.serviceSymptomsName);
+				this.loading = true
+
+				this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
+					name: d.name,
+					list: d.list.map(rec => ({
+						...rec,
+						servicePrice: !this.isShowMoney ? this.replaceMoney(rec
+							.servicePrice) : rec.servicePrice
+					})),
+					total: d.total
+				}))
+				this.loading = false
+				console.log(this.serviceSymptomsName);
 			},
 			getList() {
 				//获取一级分类
@@ -430,7 +440,7 @@
 				})
 				//获取热门报修
 				getHotService().then(res => {
-					console.log(res, '1111111111111');
+				//	console.log(res, '1111111111111');
 
 					if (res.data != []) {
 						res.data.forEach(item => {
@@ -649,7 +659,7 @@
 				console.log(this.scrollTop, '-----------------');
 				num != 1 &&
 					uni.pageScrollTo({
-						scrollTop: this.scrollTop 
+						scrollTop: this.scrollTop
 					});
 				// this.queryParams.pageNum = 1
 				// if (item.init) return
@@ -714,21 +724,28 @@
 			border-radius: 36rpx;
 			padding-right: 10rpx;
 
-			.triangle {
-				width: 25rpx;
-				height: 16rpx;
-				display: inline-block;
-			}
+			.left {
+				height: 100%;
+				display: flex;
+				align-items: center;
+				width: 89%;
 
-			.line {
-				color: #D8D8D8;
-				margin: 0 20rpx;
-			}
+				.triangle {
+					width: 25rpx;
+					height: 16rpx;
+					display: inline-block;
+				}
 
-			.search-icon {
-				width: 25rpx;
-				height: 25rpx;
-				margin-right: 18rpx;
+				.line {
+					color: #D8D8D8;
+					margin: 0 20rpx;
+				}
+
+				.search-icon {
+					width: 25rpx;
+					height: 25rpx;
+					margin-right: 18rpx;
+				}
 			}
 
 			.search-title {
@@ -747,10 +764,10 @@
 			// top: 87rpx;
 			//margin: 0 20rpx;
 
- 
+
 			.types {
-			padding-top: 25rpx;
-			margin: 0rpx 20rpx 0 20rpx;
+				padding-top: 25rpx;
+				margin: 0rpx 20rpx 0 20rpx;
 				//width: 100%;
 				height: 696rpx;
 				background: #FFFFFF;
@@ -790,6 +807,7 @@
 
 					.more {
 						display: flex;
+						align-items: center;
 
 						text {
 							font-size: 25rpx;

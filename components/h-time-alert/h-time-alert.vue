@@ -18,7 +18,7 @@
 					<view @click="_changeTime(index)" :class="{ active: item.checked }"
 						v-for="(item, index) in activeTimeArr" :key="item.time">
 						{{ item.time }}{{ rangeType ? '-' + item.endtime : '' }}	
-						<image v-if="activeTimeArr.length>=5&&index<4&&isToday" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/2889ed6d29b441d9a6da3c69af618f96.png" mode="widthFix"></image>
+						<image v-if="activeTimeArr.length>=5&&index<4&&isToday" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/2889ed6d29b441d9a6da3c69af618f96.png" style="width: 36rpx;height: 36rpx;"></image>
 					</view>
 				
 				</view>
@@ -651,6 +651,7 @@
 		transform: rotate(45deg);
 	} */
 	.btns{
+		margin-bottom: 20rpx;
 		display: flex;
 		image{
 			width: 337rpx;

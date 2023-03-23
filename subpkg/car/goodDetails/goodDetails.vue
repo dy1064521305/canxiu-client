@@ -41,8 +41,8 @@
 						name="Docs guide">
 						<view v-for="(ch,index) in item.children" :key='index'
 							style="display: flex;justify-content: space-between;">
-							<text>{{ch.serviceName}}({{ch.standardCompany}})</text>
-							<text>{{ch.standardPrice}}元({{ch.standardCompany}})</text>
+							<text>{{ch.serviceName}}{{ch.standardCompany!=null?'('+ch.standardCompany+')':''}}</text>
+							<text>{{ch.standardPrice}}元{{ch.standardCompany!=null?'('+ch.standardCompany+')':''}}</text>
 						</view>
 					</u-collapse-item>
 
@@ -50,7 +50,7 @@
 			</view>
 		</view>
 
-		<view  class="comment bgf">
+		<view class="comment bgf">
 			<view class="title">
 				<text>用户评论({{appraiseList.length}})</text>
 				<view v-if="appraiseList.length!=0" style="display:flex;align-items: center;" @click="allComment">
@@ -77,7 +77,7 @@
 				<u--text :lines="2" :text="appraiseList[0].appraiseContent">
 				</u--text>
 			</view>
-			<view  v-if="appraiseList.length!=0" style="display: flex;width:97%;overflow: hidden;">
+			<view v-if="appraiseList.length!=0" style="display: flex;width:97%;overflow: hidden;">
 				<view style='margin:15rpx 10rpx;' v-for="(item, index) in appraiseList[0].imgs" :key="index"
 					v-if="index < 3">
 					<u-image radius='8px' width="156rpx" height="156rpx" :src="item" mode=""
@@ -163,8 +163,11 @@
 		</view>
 
 		<!-- 未登录去登录 -->
-		<u-modal :show="isShowLogin" title="提示" width="400rpx" content='您还未登录,是否去登录' showCancelButton confirmText='去登录'
-			confirmColor='#98d6b6' @cancel='isShowLogin = false' @confirm='confirm'>
+		<u-modal :show="isShowLogin" title="提示" width="400rpx" showCancelButton confirmText='去登录' confirmColor='#98d6b6'
+			@cancel='isShowLogin = false' @confirm='confirm'>
+			<view class="slot-content">
+				您还未登录,是否去登录
+			</view>
 		</u-modal>
 	</view>
 
@@ -254,7 +257,11 @@
 			// 	menus: ['shareAppMessage', 'shareTimeline']
 			// })
 		},
-
+		onShow() {
+			console.log(this.query);
+			this.isLogin=storage.get('AccessToken')
+			this.getInfo()
+		},
 		methods: {
 			//获取详细信息
 			getInfo() {
@@ -279,7 +286,7 @@
 							item.num = Math.floor(num)
 							item.imgs = item.appraiseImg != null ? item.appraiseImg.split(',') :
 							[],
-								item.name = item.clientName[0] + '*'
+								item.name = item.clientName!=null?item.clientName[0] + '*':'**'
 							item.time = formatter.transDate(item.createTime).one
 						})
 

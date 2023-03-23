@@ -2,7 +2,7 @@
 	<view class="my-order">
 		<z-paging ref="paging" v-model="orderList" @query="getOrderlistHandle" @onRefresh="refresh">
 			<view slot='top'>
-				<u-navbar title="我的订单" :safeAreaInsetTop="true" :autoBack='true'>
+				<u-navbar title="我的订单" placeholder :safeAreaInsetTop="true" :autoBack='true'>
 					<view class="u-nav-slot" slot="right" @click="show">
 						<image
 							:style="{'width': '29rpx','margin-right':menuButtonInfoWidth+'rpx','padding-top':'15rpx'}"
@@ -370,16 +370,7 @@
 <style lang="scss">
 	.my-order {
 		.top {
-			background: #fff;
-			/* #ifdef H5 */
-			margin-top: 80rpx;
-			/* #endif */
-			/* #ifdef APP-PLUS */
-			margin-top: 100rpx;
-			/* #endif */
-			/* #ifdef MP-WEIXIN */
-			margin-top: 150rpx;
-			/* #endif */
+			background: #fff;	
 			padding: 20rpx 20rpx 0 20rpx;
 
 			.type {
@@ -468,7 +459,7 @@
 		}
 
 		.screen {
-			height: 700rpx;
+			height: 500rpx;
 
 			.title {
 				font-size: 29rpx;

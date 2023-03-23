@@ -1,5 +1,24 @@
 {
-	 "pages": [
+	"pages": [
+		{
+		    "path" : "pages/init/init",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		},
+		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/welcome/welcome",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+
+			}
+
+		},
 		{
 			"path": "pages/swiper/swiper",
 			"style": {
@@ -9,17 +28,8 @@
 			}
 
 		},
-	//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-	{
-		"path": "pages/welcome/welcome",
-		"style": {
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false
-	
-		}
-	
-	},
-	{
+
+		{
 			"path": "pages/home/index",
 			"style": {
 				"navigationBarTitleText": "首页",
@@ -28,7 +38,7 @@
 				//"disableScroll": true
 			}
 		},
-	
+
 		{
 			"path": "pages/login/index",
 			"style": {
@@ -72,7 +82,8 @@
 		}
 
 
-	],
+	    
+    ],
 	"subPackages": [{
 			"root": "subpkg/login",
 			"pages": [
@@ -205,26 +216,22 @@
 						"enablePullDownRefresh": false
 					}
 
+				}, {
+					"path": "accept/accept",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "pay/pay",
+					"style": {
+						"navigationBarTitleText": "支付",
+						"enablePullDownRefresh": false
+					}
+
 				}
-			    ,{
-                    "path" : "accept/accept",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "pay/pay",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "支付",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+			]
 		},
 		{
 			"root": "subpkg/center",
@@ -309,7 +316,7 @@
 						"enablePullDownRefresh": false
 					}
 
-				}, 
+				},
 				{
 					"path": "invite/invite",
 					"style": {
@@ -360,45 +367,44 @@
 						"enablePullDownRefresh": false
 					}
 
+				}, {
+					"path": "invited/invited",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+
+				}, {
+					"path": "myMoney/paymentsDetailed/paymentsDetailed",
+					"style": {
+						"navigationBarTitleText": "订单收支明细",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "myMoney/cashOutDetailed/cashOutDetailed",
+					"style": {
+						"navigationBarTitleText": "提现记录",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "myMoney/myCard/myCard",
+					"style": {
+						"navigationBarTitleText": "我的银行卡",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "aboutUs/aboutUs",
+					"style": {
+						"navigationBarTitleText": "关于我们",
+						"enablePullDownRefresh": false
+					}
+
 				}
-			    ,{
-                    "path" : "invited/invited",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "",
-                    "enablePullDownRefresh": false,
-				  "navigationStyle": "custom"
-                }
-                
-                }
-                ,{
-                    "path" : "myMoney/paymentsDetailed/paymentsDetailed",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "订单收支明细",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "myMoney/cashOutDetailed/cashOutDetailed",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "提现记录",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "myMoney/myCard/myCard",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "我的银行卡",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+			]
 		}
 	],
 	"tabBar": {

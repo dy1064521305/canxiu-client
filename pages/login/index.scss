@@ -7,7 +7,8 @@
 	}
 	image:nth-child(2){
 		position: absolute;
-		top: 196rpx;
+		//top: 196rpx;
+		top: 13%;
 		left: 301rpx;
 		width: 149rpx;
 		height: 72rpx;
@@ -19,7 +20,8 @@
 	}
 	.slogin{
 		position: absolute;
-		top: 271rpx;
+		//top: 271rpx;
+		top: 19%;
 		left:261rpx;
 		width: 240rpx;
 		height: 40rpx;
@@ -29,7 +31,8 @@
 	}
 	.main{
 		position: absolute;
-		top: 428rpx;
+		top: 30%;
+		//top: 428rpx;
 		width: 100%;
 		height: 1196rpx;
 		background: #FFFFFF;
@@ -88,7 +91,7 @@
 			}
 		}
 		.login{
-			margin: 76rpx 48rpx;
+			margin: 5vh 48rpx;
 			width: 663rpx;
 			height: 91rpx;
 			.btn{
@@ -110,7 +113,7 @@
 		}
 		.bottom{
 		.font{
-			margin:200rpx auto 0 ;
+			margin:8vh auto 0 ;
 			font-size: 25rpx;
 			color: #A5A7A7;
 			width: fit-content;

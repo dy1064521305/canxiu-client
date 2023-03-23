@@ -3,8 +3,16 @@
 		<swiper indicator-active-color='#9FD6BA' class="swiper" :current="current" @change="swiperChange">
 			<swiper-item v-for="(item,index) in swiperArr" :key="index">
 				<view class="swiper-item ">
-					<image :src="item.image" style="width: 511rpx;height: 562rpx;"></image>
-					<image :src="item.title" style="width: 263rpx;height: 53rpx;margin-top:130rpx ;"></image>
+					<view style="height: 23vh;">
+						
+					</view>
+					<view style="height: 39vh;">
+						<image :src="item.image" style="width: 511rpx;height: 85%;"></image>
+					</view>
+					<view style="height: 6vh;">
+							<image :src="item.title" style="width: 263rpx;height: 53rpx;"></image>
+					</view>
+				
 					<view class="font">
 						{{item.slogin}}
 					</view>
@@ -15,7 +23,7 @@
 			<ul v-if='current!=3'>
 				<li v-for="(item1,index1) in swiperArr" :key="index1" :class="[current===index1&&'current']"></li>
 			</ul>
-			<image @click="lijitiyan" v-else src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/07/5373c9e5f6eb44c0b17b913efd414e2b.png" style="width: 663rpx;height: 91rpx;"></image>
+				<image @click="lijitiyan" v-else  src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/07/5373c9e5f6eb44c0b17b913efd414e2b.png" style="width: 663rpx;height: 91rpx;"></image>
 		</view>
 	</view>
 </template>
@@ -49,14 +57,17 @@
 
 			};
 		},
+		onLoad() {
+			
+		},
 		methods: {
 			//轮播组件滑动
 			swiperChange(e) {
 				this.current = e.detail.current
 			},
 			lijitiyan(){
-				uni.navigateTo({
-					url:'/pages/welcome/welcome'
+				uni.switchTab({
+					url:'/pages/home/index'
 				})
 			}
 		}
@@ -104,15 +115,13 @@
 		height: 100vh;
 
 		.swiper-item {
-			display: block;
-			height: 300rpx;
 			//line-height: 300rpx;
 			text-align: center;
-			margin-top: 280rpx;
+			    display: flex;
+			    flex-direction: column;
 			.font{
 				font-size: 40rpx;
 				color: #626D65;
-				margin-top: 60rpx;
 			}
 		}
 	}

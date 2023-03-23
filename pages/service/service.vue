@@ -10,7 +10,7 @@
 					<u--input @clear='clear' clearable border='none' @confirm="search" v-model="query.name" type="text"
 						placeholder="请输入需要的服务" />
 				</view>
-				<view class="search-title">搜索</view>
+				<view class="search-title" @click="search">搜索</view>
 			</view>
 		</view>
 		<u-empty marginTop='70' text='没有找到哦，换个关键词试一下吧' v-if="query.name!=''&&typesList.length==0&&isSearch"
@@ -45,9 +45,8 @@
 								<view class="item-title">
 									<text>{{item.typeName}}</text>
 								</view>
-								<view :id="'box' + index"
-									style="margin-top: 30rpx;">
-								<!-- 	<view class="item-title" style="margin-left: 15rpx;">
+								<view :id="'box' + index" style="margin-top: 30rpx;">
+									<!-- 	<view class="item-title" style="margin-left: 15rpx;">
 										<text>{{item1.typeName}}</text>
 									</view> -->
 									<view class="item-container">
@@ -70,6 +69,8 @@
 				</view>
 			</view>
 		</view>
+
+		<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 
@@ -201,10 +202,10 @@
 			},
 			async swichMenu(index) {
 				const ind = index
-				if(this.typesList.length ===0){
-					setTimeout(()=>{
+				if (this.typesList.length === 0) {
+					setTimeout(() => {
 						this.swichMenu(ind)
-					},333)
+					}, 333)
 					return
 				}
 				if (this.arr.length == 0) {
@@ -215,7 +216,7 @@
 				this.scrollRightTop = this.oldScrollTop;
 				this.$nextTick(function() {
 					this.scrollRightTop = this.arr[index];
-				//	console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
+					//	console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
 					this.current = index;
 					this.leftMenuStatus(index);
 				})
@@ -258,10 +259,18 @@
 			},
 			//搜索
 			search() {
-				console.log(this.searchName);
-				console.log(this.typesList);
-				this.isSearch = true
-				this.getList()
+				// console.log(this.searchName);
+				// console.log(this.typesList);
+				if (this.query.name == '') {
+					this.$refs.uToast.show({
+						type: 'error',
+						message:'搜索内容不能为空'
+					});
+				} else {
+					this.isSearch = true
+					this.getList()
+				}
+
 
 			},
 			clear() {

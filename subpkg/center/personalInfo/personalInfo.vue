@@ -7,8 +7,10 @@
 			<u-form-item label="门店头像" ref="item1" style='height: 120rpx;'>
 				<view style="display: flex;align-items: center;width: 100%;" @click="goLogoInfo">
 					<view style="width: 89%;">
-						<u-avatar :src="userInfo.avatarUrl" size="50"></u-avatar>
-
+					
+						<image v-if="userInfo.avatarUrl==null" style="width: 100rpx;height: 100rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png"></image>
+							<u-avatar v-else :src="userInfo.avatarUrl" size="50"></u-avatar>
 					</view>
 					<view class="">
 						<image style="width:14rpx;height: 25rpx;"
@@ -23,7 +25,7 @@
 			</u-form-item>
 			<u-form-item label="门店地址" borderBottom ref="item1">
 				<pickers @address="address">
-					<view v-if="region!=''">{{region}}</view>
+					<view v-if="region!=''&&region!=null">{{region}}</view>
 					<view v-else style="color: rgb(192, 196, 204);">请选择门店地址</view>
 				</pickers>
 			</u-form-item>
