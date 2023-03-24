@@ -2,13 +2,13 @@
 	<view class="myAddress">
 		<z-paging ref="paging" v-model="addressList" @query="getList">
 			<view v-for="(item,index) in addressList" :key='index' class="box">
-				<view style="padding: 20rpx;">
-					<view class="top" @click='choseAddress(item)'>
+				<view style="padding: 20rpx;" @click='choseAddress(item)'>
+					<view class="top" >
 						<text class="font" style="font-weight: bold;">{{item.contact}}</text>
 						<text class="font" style="margin-left: 14rpx;">{{item.phone}}</text>
 						<image @click.stop="editAndAddAddress(item.addressId)"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/ad57c5f8079e459da0f85cfc0c9b818f.png"
-							mode="widthFix"></image>
+							style="width: 29rpx;height:31rpx;"></image>
 					</view>
 					<view style="font-size: 25rpx;color: #A5A7A7;margin: 22rpx 0;">
 						{{item.addressRegion}}{{item.addressDetailed}}
@@ -17,15 +17,15 @@
 					<view style="display: flex;margin-top: 22rpx;">
 						<view style="width: 92%;">
 							<view v-if="item.isDefault==0" class="moren">
-								<image style="width: 32rpx;margin-right: 11rpx;"
+								<image style="width: 32rpx;margin-right: 11rpx;height: 32rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png"
-									mode="widthFix"></image>已设为默认
+								></image>已设为默认
 							</view>
-							<view v-else class="un" @click="morenHandle(item)">
+							<view v-else class="un" @click.stop="morenHandle(item)">
 								<view class="circle"></view>设为默认
 							</view>
 						</view>
-						<view style="font-size: 25rpx;color: #EC5722;" @click="deleteAddressHandle(item.addressId)">
+						<view style="font-size: 25rpx;color: #EC5722;" @click.stop="deleteAddressHandle(item.addressId)">
 							删除
 						</view>
 					</view>
@@ -34,17 +34,17 @@
 				</view>
 			</view>
 			<view slot="bottom">
-					<view class="btn" @click="editAndAddAddress('')">
-				添加地址
+				<view class="btn" @click="editAndAddAddress('')">
+					添加地址
+				</view>
 			</view>
-			</view>
-		
+
 
 		</z-paging>
 
 
 
-		
+
 	</view>
 </template>
 
@@ -62,38 +62,49 @@
 				list: 1,
 				addressList: [],
 				type: '',
-				queryParams:{
-					pageSize:10,
-					pageNum:1,
+				queryParams: {
+					pageSize: 10,
+					pageNum: 1,
 					orderByColumn: 'isDefault',
 					isAsc: 'asc',
 				},
-				submitList:[]
+				submitList: []
 			};
 		},
 		onShow() {
-			this.getList(1,10)
+			this.getList(1, 10)
 		},
 		onLoad(option) {
-			if(option.params!=undefined){
-					console.log(option);
-			console.log(JSON.parse(decodeURIComponent(option.params)));
-			let info=JSON.parse(decodeURIComponent(option.params))
-			this.type = info.type
-			this.submitList=info.list
+			if (option.params != undefined) {
+				console.log(option);
+				console.log(JSON.parse(decodeURIComponent(option.params)));
+				let info = JSON.parse(decodeURIComponent(option.params))
+				this.type = info.type
+				this.submitList = info.list
 			}
-		
+
 		},
 		methods: {
 			getList(pageNo, pageSize) {
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
-				this.queryParams.clientId=storage.get('ClientId'),
-				//查询是否有地址
-				console.log(this.queryParams);
+				this.queryParams.clientId = storage.get('ClientId'),
+					//查询是否有地址
+					console.log(this.queryParams);
 				getAddressList(this.queryParams).then(res => {
 					console.log(res);
-						this.$refs.paging.completeByTotal(res.rows,res.total);
+					let bool =res.rows.some(item => {
+						return item.isDefault == 0
+					})
+					console.log(bool);
+					if (!bool) {
+						res.rows[0].isDefault=0
+						editDefault(res.rows[0]).then(res => {
+							this.getList(1,10)
+						})
+					}	
+					console.log(bool);
+					this.$refs.paging.completeByTotal(res.rows, res.total);
 					//this.$refs.paging.complete(res.rows,res.total);
 					//	this.addressList = res.rows
 				})
@@ -112,22 +123,12 @@
 										title: '设置成功',
 										duration: 2000
 									});
-									this.getList(1,10)
+									this.getList(1, 10)
 								}
 							})
 						})
-					}else{
-						item.isDefault = 0
-						editDefault(item).then(res => {
-							if (res.code === 200) {
-								uni.showToast({
-									title: '设置成功',
-									duration: 2000
-								});
-								this.getList(1,10)
-							}
-						})
 					}
+				
 				})
 
 			},
@@ -150,6 +151,7 @@
 					confirmColor: '#9FD6BA',
 					success: function(res) {
 						if (res.confirm) {
+
 							deleteAddress(id).then(res => {
 								if (res.code === 200) {
 									uni.showToast({
@@ -157,6 +159,7 @@
 										duration: 2000
 									});
 									that.$refs.paging.reload();
+								
 									uni.removeStorage({
 										key: 'address_info',
 										success: function(res) {}
@@ -180,7 +183,7 @@
 						data: item,
 					})
 					const pages = uni.$u.pages()
-					
+
 					console.log(this.submitList);
 					// this.type == 'car' ?  : uni.navigateTo({
 					// 	url: '../submitOrder/submitOrder?item='+encodeURIComponent(JSON.stringify(this.submitList))
@@ -189,9 +192,9 @@
 						uni.switchTab({
 							url: '../../../pages/car/car'
 						})
-					} else{
+					} else {
 						console.log(pages);
-						pages[pages.length-2].$vm.getInfo(this.submitList)
+						pages[pages.length - 2].$vm.getInfo(this.submitList)
 						uni.navigateBack()
 					}
 				}

@@ -371,6 +371,7 @@
 			},
 			//下单
 			submitOrder() {
+				console.log(	this.checkedList);
 				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
 				this.checkedList.length == 0 ? uni.showToast({
 					title: '请选择商品',

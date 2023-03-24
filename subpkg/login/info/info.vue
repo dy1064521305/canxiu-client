@@ -27,7 +27,7 @@
 			</u-form-item>
 			<u-form-item label="门头图" ref="item1">
 
-				<uploadFile :fileList="fileList" @getUrl='getUrl' :limit='1' />
+				<uploadFile :fileListt="fileList" @getUrl='getUrl' :limit='1' types='image'/>
 			</u-form-item>
 
 		</u--form>
@@ -43,6 +43,9 @@
 	import storage from '@/utils/storage'
 	import uploadFile from '@/components/uploadFile/uploadFile.vue'
 	import pickers from "@/components/ming-picker/ming-picker.vue"
+	import {
+		getInfoById,
+	} from '@/api/user.js'
 	import {
 		refine,
 		getStoreType
@@ -67,11 +70,30 @@
 				},
 				rules: {},
 				storeTypeList: [], //店铺类型
-				fileList: []
+				fileList: [],
 			};
 		},
-		onLoad() {
+		onLoad(option) {
 			this.getList()
+			console.log(option.id);
+			getInfoById(option.id).then(res => {
+				console.log(res);
+				this.userInfo = res.data
+				if(this.userInfo.storeTypeId!=null){
+					console.log(this.storeTypeList);
+					this.storeTypeList.forEach((item,index1)=>{
+						if(item.typeId==this.userInfo.storeTypeId){
+							this.index=index1
+							console.log(this.index);
+						}
+					})
+				}
+				
+				let arr = res.data.avatarUrl!=null?res.data.avatarUrl.split(','):[]
+				this.fileList=arr
+				console.log(this.fileList);
+			})
+			
 		},
 		watch: {
 
@@ -81,6 +103,7 @@
 			getList() {
 				getStoreType().then(res => {
 					this.storeTypeList = res.data
+					console.log(this.storeTypeList ,'11111111');
 				})
 			},
 			bindPickerChange(e) {

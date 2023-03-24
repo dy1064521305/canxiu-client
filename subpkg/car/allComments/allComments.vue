@@ -78,7 +78,7 @@
 							.velocityScore)) / 3
 						item.num = Math.floor(num)
 						item.imgs = item.appraiseImg != null ? item.appraiseImg.split(',') : [],
-							item.name = item.clientName!=null?item.clientName[0] + '*':'**'
+							item.name = item.clientName!=null&& item.clientName!=''?item.clientName[0] + '*':'**'
 						item.time = formatter.transDate(item.createTime).one
 
 					})

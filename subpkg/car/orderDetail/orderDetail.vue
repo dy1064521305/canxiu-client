@@ -118,7 +118,7 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">附加费</text>
-				<text v-if="info.additionalPrice!=null" style="color: #EC5722;">¥{{info.additionalPrice}}</text>
+				<text style="color: #EC5722;">¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">合计(不含材料)</text>
@@ -241,6 +241,7 @@
 				验收
 			</view>
 		</view>
+		
 
 
 
