@@ -4,7 +4,8 @@
 
 // 是否为空
 export const isEmpty = (str) => {
-  return !str || str.trim() == ''
+	console.log(str);
+  return !str || str.trim() == ''||str==undefined||str==null
 }
 
 /**

@@ -243,7 +243,7 @@
 			uni.getStorage({
 				key: 'city',
 				success: function(res) {
-					console.log(res);
+					console.log(res, '246246246');
 					//获取收费标准
 					getListCharge({
 						city: res.data
@@ -259,10 +259,16 @@
 		},
 		onShow() {
 			console.log(this.query);
-			this.isLogin=storage.get('AccessToken')
-			this.getInfo()
+			this.isLogin = storage.get('AccessToken')
+		
 		},
 		methods: {
+			otherFun(object) {
+				if (object) {
+					console.log(object,'objectobjectobject')
+					this.getInfo()
+				}
+			},
 			//获取详细信息
 			getInfo() {
 				console.log(1111);
@@ -286,7 +292,8 @@
 							item.num = Math.floor(num)
 							item.imgs = item.appraiseImg != null ? item.appraiseImg.split(',') :
 							[],
-								item.name = item.clientName!=null?item.clientName[0] + '*':'**'
+								item.name = item.clientName != null && item.clientName != '' ? item
+								.clientName[0] + '*' : '**'
 							item.time = formatter.transDate(item.createTime).one
 						})
 

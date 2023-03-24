@@ -65,6 +65,9 @@
 <script>
 	import * as CaptchaApi from '@/api/captcha'
 	import {
+		getInfoById,
+	} from '@/api/user.js'
+	import {
 		getCode,
 		getAgreement
 	} from '@/api/login.js'
@@ -84,6 +87,7 @@
 				code: '',
 				countDownNum: 0, //获取验证码后倒数
 				agreementList: [], //问题协议
+				userInfo: {}
 			};
 		},
 		created() {
@@ -164,7 +168,7 @@
 			},
 			// 确认登录
 			login() {
-			
+
 				const app = this
 				let valid = app.validItem();
 				const apps = getApp()
@@ -174,27 +178,50 @@
 							phonenumber: app.phone,
 							smsCode: app.code,
 						}).then(result => {
-							console.log(result.data.type);
-							if (result.data.type == 'Success') {
-								const pages = uni.$u.pages();
-								console.log(pages);
-								apps.type='login'
-								pages.some(p => p.route.includes('goodDetails')) ? uni.navigateBack() : uni.switchTab({
-									url: '/pages/home/index',
-									fail(err) {
-										console.log(err)
+							console.log(result.data);
+							getInfoById(result.data.clientId).then(res => {
+								console.log(res);
+								this.userInfo = res.data
+								let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
+								if (result.data.type == 'Success' && !isEmpty(this.userInfo.avatarUrl) && !
+									isEmpty(this.userInfo.clientName) && !isEmpty(this.userInfo
+										.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
+										.userInfo
+										.storeTypeId)) {
+									const pages = uni.$u.pages();
+									console.log(pages);
+									apps.type = 'login'
+									if (pages.some(p => p.route.includes('goodDetails'))) {
+										  var pagess = getCurrentPages();
+										    var prevPage = pagess[pagess.length - 2]; //上一个页面
+										    var object = {
+												name:"back"}
+										    prevPage.$vm.otherFun(object);
+										uni.navigateBack()
+									} else {
+										uni.switchTab({
+											url: '/pages/home/index',
+											fail(err) {
+												console.log(err)
+											}
+										})
 									}
-								})
 
-							} else {
-								console.log(1111);
-								uni.navigateTo({
-									url: '../../subpkg/login/info/info',
-									fail(err) {
-										console.log(err)
-									}
-								})
-							}
+								} else {
+									console.log(!isEmpty(this.userInfo.avatarUrl), !isEmpty(this.userInfo
+										.clientName), !isEmpty(this.userInfo.detailAddress), !isEmpty(
+										this.userInfo.region), !isEmpty(this.userInfo.storeTypeId));
+									uni.navigateTo({
+										url: '../../subpkg/login/info/info?id=' + result.data.clientId,
+										fail(err) {
+											console.log(err)
+										}
+									})
+								}
+								//	this.fileList.push({url:arr[0]})
+							})
+							console.log(this.userInfo.clientName);
+
 
 						})
 						.catch(err => {})

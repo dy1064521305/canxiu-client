@@ -51,8 +51,8 @@
 						热门城市
 					</view>
 					<view class="boxs">
-						<view class="box" v-for="(item,index) in hotCity" :key="index" @click="checkCity(item.provinceName)">
-							{{item.provinceName}}
+						<view class="box" v-for="(item,index) in hotCity" :key="index" @click="checkCity(item.cityName)">
+							{{item.cityName}}
 						</view>
 					</view>
 				</view>
@@ -157,7 +157,8 @@
 			getList() {
 				//获取热门城市
 				home.getHotCity().then(res => {
-					console.log(res);
+					console.log(res,'1601600160');
+					console.log(111111111111111111);
 					this.hotCity = res.data
 				})
 				return new Promise((r, j) => {

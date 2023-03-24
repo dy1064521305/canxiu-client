@@ -45,7 +45,7 @@
 								<view class="item-title">
 									<text>{{item.typeName}}</text>
 								</view>
-								<view v-for="(item1, index1) in item.children" :id="'box' + index" style="margin-top: 30rpx;">
+								<view v-for="(item1, index1) in item.children" :key="index1" :id="'box' + index" style="margin-top: 30rpx;">
 										<view class="item-title" style="margin-left: 15rpx;">
 										<text>{{item1.typeName}}</text>
 									</view>
