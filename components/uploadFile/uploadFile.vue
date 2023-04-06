@@ -150,7 +150,6 @@
 				handler: function() {
 					//	console.log(this.fileListt);
 					this.billImgList = this.fileListt != undefined ? Array.from(new Set(this.fileListt)) : []
-					//	console.log(this.billImgList);
 				}
 
 			}

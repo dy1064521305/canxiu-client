@@ -65,6 +65,9 @@
 <script>
 	import * as CaptchaApi from '@/api/captcha'
 	import {
+		getInfoById,
+	} from '@/api/user.js'
+	import {
 		getCode,
 		getAgreement
 	} from '@/api/login.js'
@@ -95,6 +98,7 @@ const app = getApp();
 				code: '',
 				countDownNum: 0, //获取验证码后倒数
 				agreementList: [], //问题协议
+				userInfo: {}
 			};
 		},
 		created() {
@@ -145,6 +149,7 @@ const app = getApp();
 			},
 			//倒计时定时器
 			countDown() {
+				uni.$u.toast('验证码已发送，请查收短信')
 				this.countDownNum = 60
 				this.timer = setInterval(() => {
 					this.countDownNum--
@@ -194,7 +199,7 @@ const app = getApp();
 			},
 			// 确认登录
 			login() {
-			
+
 				const app = this
 				let valid = app.validItem();
 				const apps = getApp()
@@ -205,35 +210,57 @@ const app = getApp();
 							smsCode: app.code,
 						}).then(result => {
 							console.log(result.data);
-							this.wxIMLogin(result);
-							if (result.data.type == 'Success') {
-								const pages = uni.$u.pages();
-								console.log(pages);
-								apps.type='login'
-								pages.some(p => p.route.includes('goodDetails')) ? uni.navigateBack() : uni.switchTab({
-									url: '/pages/home/index',
-									fail(err) {
-										console.log(err)
+							getInfoById(result.data.clientId).then(res => {
+								console.log(res);
+								this.userInfo = res.data
+								let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
+								if (result.data.type == 'Success' && !isEmpty(this.userInfo.avatarUrl) && !
+									isEmpty(this.userInfo.clientName) && !isEmpty(this.userInfo
+										.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
+										.userInfo
+										.storeTypeId)) {
+									const pages = uni.$u.pages();
+									console.log(pages);
+									apps.type = 'login'
+									if (pages.some(p => p.route.includes('goodDetails'))) {
+										  var pagess = getCurrentPages();
+										    var prevPage = pagess[pagess.length - 2]; //上一个页面
+										    var object = {
+												name:"back"}
+										    prevPage.$vm.otherFun(object);
+										uni.navigateBack()
+									} else {
+										uni.switchTab({
+											url: '/pages/home/index',
+											fail(err) {
+												console.log(err)
+											}
+										})
 									}
-								})
 
-							} else {
-								uni.navigateTo({
-									url: '../../subpkg/login/info/info',
-									fail(err) {
-										console.log(err)
-									}
-								})
-							}
-							
+								} else {
+									console.log(!isEmpty(this.userInfo.avatarUrl), !isEmpty(this.userInfo
+										.clientName), !isEmpty(this.userInfo.detailAddress), !isEmpty(
+										this.userInfo.region), !isEmpty(this.userInfo.storeTypeId));
+									uni.navigateTo({
+										url: '../../subpkg/login/info/info?id=' + result.data.clientId,
+										fail(err) {
+											console.log(err)
+										}
+									})
+								}
+								//	this.fileList.push({url:arr[0]})
+							})
+							console.log(this.userInfo.clientName);
+
+
 						})
 						.catch(err => {})
 
 				}
-				
 			},
 			wxIMLogin(result){
-				
+
 				// 腾讯im登录
 				const userID = this.phone;
 				const userSig = genTestUserSig(userID).userSig;
@@ -245,10 +272,10 @@ const app = getApp();
 				this.setData({
 					userID: userID
 				});
-				
-				
-				
-				
+
+
+
+
 				app.globalData.userInfo = {
 					userSig,
 					userID
@@ -257,14 +284,14 @@ const app = getApp();
 					userInfo: app.globalData.userInfo
 				});
 				wx.setStorageSync(`TIM_${getApp().SDKAppID}_isTUIKit`, true);
-				
+
 				uni.$TUIKit.login({
 					userID: userID,
 					userSig: userSig
 				}).then(() => {
 				}).catch((error) => {
 				})
-				
+
 				// 登录原生插件
 				// // #ifdef APP-PLUS
 				// if(typeof(uni.$TUICallKit) == 'undefined') {
@@ -291,10 +318,10 @@ const app = getApp();
 				// 	);
 				// }
 				// // #endif
-				
+
 			},
-			
-			
+
+
 			//查协议内容
 			goAgreement(item) {
 				console.log(item);

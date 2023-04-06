@@ -1,9 +1,10 @@
 <template>
 	<view class="page">
 		<u-navbar placeholder @leftClick='leftClick' title="填写订单" placeholder>
-	
+
 		</u-navbar>
-		<view class="address" :style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'250rpx'}" @click="myAddress">
+		<view class="address" :style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'250rpx'}"
+			@click="myAddress">
 			<view v-if='addressList.length!=0' class="left">
 				<view style="font-size: 36rpx;color: #3D3F3E;font-weight: bold;">
 					{{addressInfo.contact}}
@@ -35,7 +36,7 @@
 
 		<view class="list">
 			<proInfo :list="submitList" :isCar='true' :submit='false' @getCheck='getCheck'
-				@getDeleteUrlList='getDeleteUrlList' />
+				@getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
 		</view>
 
 		<view class="bottom">
@@ -88,7 +89,7 @@
 				addressList: [], //地址列表
 				addressInfo: {}, //地址信息
 				info: {
-					orderPrice:''
+					orderPrice: ''
 				},
 				dateRange: ''
 			};
@@ -98,9 +99,9 @@
 
 		},
 		onLoad(option) {
-		//	console.log(decodeURIComponent(option.item));
+			//	console.log(decodeURIComponent(option.item));
 			this.submitList = JSON.parse(decodeURIComponent(option.item))
-			console.log(JSON.parse(decodeURIComponent(option.item)));
+			console.log(JSON.parse(decodeURIComponent(option.item)), this.submitList, '.........103');
 			//console.log(this.submitList );
 			// try {
 			// 	const value = uni.getStorageSync('submit_order');
@@ -139,7 +140,7 @@
 							if (value) {
 								this.addressInfo = value
 								console.log(value);
-							}else{
+							} else {
 								this.addressList.forEach(item => {
 									if (item.isDefault == 0) {
 										this.addressInfo = item
@@ -164,16 +165,19 @@
 			getCheck(data) {
 				console.log(data);
 				console.log(this.submitList);
-			   let id=data.item.id?data.item.id:data.item.projectId
-			   console.log(id);
-				this.info.orderPrice = this.submitList.reduce((p, c) => p + (((c.id?c.id:c.projectId) === id	? data.num.value : c.projectNumber) * Number(c.projectPrice)), 0)
-					console.log(this.info.orderPrice );
+				let id = data.item.id ? data.item.id : data.item.projectId
+				console.log(id);
+				this.info.orderPrice = this.submitList.reduce((p, c) => p + (((c.id ? c.id : c.projectId) === id ? data.num
+					.value : c.projectNumber) * Number(c.projectPrice)), 0)
+				console.log(this.info.orderPrice);
+				const pages = uni.$u.pages()
+				pages[pages.length - 2].$vm.changeData([data.item])
 			},
 			//删除url
 			getDeleteUrlList(data) {
 				console.log(data);
 				const pages = uni.$u.pages()
-				pages[pages.length-2].$vm.changeData(data)
+				pages[pages.length - 2].$vm.changeData(data)
 				uni.setStorage({
 					key: 'submit_order',
 					data: data,
@@ -203,7 +207,7 @@
 				} else {
 					console.log(this.addressInfo);
 					this.info.addressId = this.addressInfo.addressId
-				//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
+					//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
 					this.info.clientId = storage.get('ClientId')
 					this.info.expectTime = this.info.expectTime + ':00'
 					console.log(this.submitList);
@@ -221,15 +225,15 @@
 						console.log(res);
 						if (res.code == 200) {
 							uni.removeStorage({
-								key:'address_info'
+								key: 'address_info'
 							})
 							uni.removeStorage({
-								key:'submit_order'
+								key: 'submit_order'
 							})
 							let info = {
 								money: this.info.orderPrice,
 								time: this.dateRange,
-								orderId:res.data
+								orderId: res.data
 							}
 							console.log(info);
 							uni.redirectTo({
@@ -237,7 +241,7 @@
 							})
 						}
 					})
-				
+
 				}
 
 
@@ -259,29 +263,36 @@
 			},
 			//查看我的地址
 			myAddress() {
-			 let params={
-				 type:'order',
-				 list:this.submitList
-			 }
+				let params = {
+					type: 'order',
+					list: this.submitList
+				}
 				uni.navigateTo({
-					url: '../myAddress/myAddress?params='+encodeURIComponent(JSON.stringify(params))
+					url: '../myAddress/myAddress?params=' + encodeURIComponent(JSON.stringify(params))
 				})
 			},
-			getInfo(data){
-				console.log(data,'......257');
+			getInfo(data) {
+				console.log(data, '......257');
 			},
-			leftClick(){
+			leftClick() {
 				// uni.removeStorage({
 				// 	key:'submit_order'
 				// })
 				const pages = uni.$u.pages();
 				console.log(pages);
-				pages.some(p=>p.route.includes('service')||p.route.includes('goodDetails'))?uni.navigateBack():uni.switchTab({
-					url:'/pages/car/car'
-				})
-				
+				pages.some(p => p.route.includes('service') || p.route.includes('goodDetails')) ? uni.navigateBack() : uni
+					.switchTab({
+						url: '/pages/car/car'
+					})
+
+			},
+			textConfirm(arr) {
+				console.log(arr);
+				this.submitList = arr
+				const pages = uni.$u.pages()
+				pages[pages.length - 2].$vm.changeData(arr)
 			}
-			
+
 		}
 	};
 </script>

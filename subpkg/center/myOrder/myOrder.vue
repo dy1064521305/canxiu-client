@@ -16,9 +16,11 @@
 						<text @click='checkType(0)' :class="[type==0?'text-active':'']">维修</text>
 						<text @click='checkType(1)' :class="[type==1?'text-active':'']">维保</text>
 					</view> -->
-					<u-search v-model="queryParams.projectName" @search="queryList" @clear="queryList"
-						placeholder="搜索订单" :clearabled="true" :showAction='false'></u-search>
-					<u-tabs style='margin-top: 20rpx;' :current='current' :list="list1" @click="statusClick"
+					<view style="padding: 20rpx 20rpx 0 20rpx;">
+						<u-search v-model="queryParams.projectName" @search="queryList" @clear="queryList"
+							placeholder="搜索订单" :clearabled="true" :showAction='false'></u-search>
+					</view>
+					<u-tabs :scrollable='false' style='margin-top: 20rpx;' :current='current' :list="list1" @click="statusClick"
 						lineColor='#72DAA4' lineWidth="50" lineHeight='8' :inactiveStyle="{
 					        color: '#A5A7A7',
 					    }"></u-tabs>
@@ -63,7 +65,7 @@
 					<view class="btns">
 						<view  @click.stop='backFix'  class="btn-white"v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view>
 						<view  @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'">联系师傅</view>
-						<view  @click.stop='appraise' class="btn-green" v-if="item.orderStatus=='待评价'">去评价</view>
+						<view  @click.stop='appraise(item)' class="btn-green" v-if="item.orderStatus=='待评价'">去评价</view>
 						<view  @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
 						<view  @click.stop='ok' class="btn-green" v-if="item.orderStatus=='服务中【待客户确认】'">确认</view>
 					</view>
@@ -343,9 +345,10 @@
 				this.queryParams.endTime = list.endTime
 			},
 			//评价
-			appraise(){
+			appraise(item){
+				console.log(item);
 				uni.navigateTo({
-					url:'../../car/appraise/appraise'
+					url:'../../car/appraise/appraise?id='+item.orderId
 				})
 			},
 			//支付
@@ -371,7 +374,7 @@
 	.my-order {
 		.top {
 			background: #fff;	
-			padding: 20rpx 20rpx 0 20rpx;
+			//padding: 20rpx 20rpx 0 20rpx;
 
 			.type {
 				width: 707rpx;

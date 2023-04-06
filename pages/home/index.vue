@@ -6,14 +6,14 @@
 
 				</view>
 				<view slot='center' style="padding-bottom:50rpx;width: 94%;">
-					<view class="search" :style="{'margin-top':titleHeight+'rpx'}">
+					<view class="search" :style="{'margin-top':titleHeight+'rpx'}" @click="goSearch" >
 						<view class="left">
-							<view @click="choseCity" style="margin:0 10rpx 0 30rpx;font-size: 29rpx;">{{cityName}}</view>
-							<image @click="choseCity" class="triangle" src="../../static/img/home/triangle.png" mode="">
+							<view @click.stop="choseCity" style="margin:0 10rpx 0 30rpx;font-size: 29rpx;">{{cityName}}</view>
+							<image @click.stop="choseCity" class="triangle" src="../../static/img/home/triangle.png" mode="">
 							</image>
 							<view class="line">|</view>
 							<image class="search-icon" src="../../static/img/home/search.png" mode=""></image>
-							<input type="text" @click="goSearch" disabled>
+							<input style="width: 0%;" type="text" disabled>
 						</view>
 						<view class="search-title" @click="goSearch">搜索</view>
 					</view>

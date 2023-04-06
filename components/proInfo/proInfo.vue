@@ -1,7 +1,7 @@
 <template>
 	<view class="info">
 		<u-checkbox-group v-model="checkboxValue1" placement="column">
-			<view v-for="(item, index) in dataList" :key="index">
+			<view v-for="(item, index) in dataList" :key="item.id?item.id:item.projectId">
 
 				<view class="check">
 					<u-checkbox v-if="submit" shape="circle" :name="item.id?item.id:item.projectId"
@@ -53,7 +53,7 @@
 						<view style="margin-right: 10rpx;">订单备注</view>
 						<view style='width: 80%'>
 							<u--textarea height='30rpx' border='none' maxlength='50' confirmType="done" autoHeight
-								v-model="item.remark" placeholder="备注内容(选填)" count></u--textarea>
+								v-model="item.remark" placeholder="备注内容(选填)" count @input='textareaInput'></u--textarea>
 						</view>
 					</view>
 				</view>
@@ -63,11 +63,11 @@
 
 		<u-popup mode="bottom" closeable :show="showQestion" :round="10" @close="showQestion=false">
 			<view style="height: 400rpx;text-align: center;margin-top: 80rpx;">
-				<view >
+				<view>
 					{{remark.name}}收费标准
 				</view>
-				
-				<view v-if="remark.content!=null"style="font-size: 29rpx;color: #A5A7A7;margin-top:40rpx;"> 
+
+				<view v-if="remark.content!=null" style="font-size: 29rpx;color: #A5A7A7;margin-top:40rpx;">
 					<text>{{remark.content}}</text>
 				</view>
 			</view>
@@ -114,8 +114,8 @@
 				type: Boolean
 			},
 			//是购物车还是立即下单
-			types:{
-				type:String
+			types: {
+				type: String
 			}
 		},
 		data() {
@@ -125,36 +125,42 @@
 				checkboxValue1: [],
 				isLogin: storage.get('AccessToken'),
 				checkArr: [],
-				remark:{},
-				dataList:[]
+				remark: {},
+				dataList: []
 			};
 		},
 		watch: {
 			list: {
 				immediate: true,
-				deep:true,
+				deep: true,
 				handler: function(n) {
 					this.dataList = uni.$u.deepClone(n)
 					this.checkboxValue1 = n.filter(l => l.checked).map(l1 => l1.id)
 					console.log(this.checkboxValue1, 'this.checkboxValue1++++++++++++++140');
 					console.log(n);
+					console.log(this.dataList, this.isCar, 'this.dataListthis.dataList');
 					this.dataList.forEach(item => {
-						if (this.isCar&& item.serviceProjectName) {
-							console.log('139......',item);
-							item.projectName = item.serviceProjectName
+						if (this.isCar) {
+							console.log('139......', item);
+							item.projectName = item.serviceProjectName ? item.serviceProjectName : item
+								.projectName
 						} else {
-							item.shuoming=item.remark
-							item.remark =''
-							item.projectNumber = 1
+							console.log(item, '.......147...');
+							item.shuoming = item.remark
+							item.remark = item.remark || ''
+							item.projectNumber = (item.projectNumber === undefined || item.projectNumber ===
+								0) ? 1 : item.projectNumber
 							console.log(1111);
 						}
 						console.log(item);
-						item.imgList = item.serviceProjectImg !== null ? item.serviceProjectImg.split(',') :[],
-						
+						item.imgList = item.serviceProjectImg !== null ? item.serviceProjectImg.split(',') :
+						[],
+
 							item.projectImg = item.projectImg != '' && !Array.isArray(item.projectImg) ? item
 							.projectImg.split(',') : Array.isArray(item.projectImg) ? item.projectImg : [],
-							console.log( item.projectVideo );
-							item.projectVideo = item.projectVideo != ''&&item.projectVideo !=undefined && !Array.isArray(item.projectVideo) ?
+							console.log(item.projectVideo);
+						item.projectVideo = item.projectVideo != '' && item.projectVideo != undefined && !Array
+							.isArray(item.projectVideo) ?
 							item.projectVideo.split(',') : Array.isArray(item.projectVideo) ? item
 							.projectVideo : []
 					})
@@ -169,11 +175,12 @@
 					console.log(this.checkboxValue1);
 					console.log(this.dataList);
 					let arr = [];
-					arr = this.dataList.filter(item => this.checkboxValue1.includes(item.id ? item.id : item.projectId))
+					arr = this.dataList.filter(item => this.checkboxValue1.includes(item.id ? item.id : item
+						.projectId))
 					console.log(arr);
-					let query={
-						list:arr,
-						type:this.types
+					let query = {
+						list: arr,
+						type: this.types
 					}
 					this.$emit('joinCarHandle', query)
 				}
@@ -183,7 +190,7 @@
 		},
 		methods: {
 			checkChange(val, item) {
-				console.log(val,item);
+				console.log(val, item);
 				if (val) {
 					this.checkboxValue1.push(item.id)
 				} else {
@@ -208,7 +215,7 @@
 				// console.log(this.checkArr,'aaaaaaaaaa');
 			},
 			numChange(item, value) {
-				console.log('207...',item,value,this.dataList);
+				console.log('207...', item, value, this.dataList);
 				this.$emit('getCheck', {
 					item: item,
 					num: value
@@ -224,12 +231,13 @@
 			},
 
 			getUrl(val) {
-				console.log(val,'.....val......227');
-				val.type == 'video' ? this.dataList[val.index].projectVideo = val.urls : this.dataList[val.index].projectImg = val
+				console.log(val, '.....val......227');
+				val.type == 'video' ? this.dataList[val.index].projectVideo = val.urls : this.dataList[val.index]
+					.projectImg = val
 					.urls
 				//this.isCar ? this.$emit('submitOrder', this.list) : ''
-				console.log(this.dataList,'.......230');
-				this.$emit('getDeleteUrlList',this.dataList)
+				console.log(this.dataList, '.......230');
+				this.$emit('getDeleteUrlList', this.dataList)
 			},
 			//删除
 			deleteById(id) {
@@ -244,14 +252,14 @@
 							console.log(id);
 							let arr = []
 							arr.push(id)
-							 deleteCar(arr).then(res => {
+							deleteCar(arr).then(res => {
 								console.log(res);
 								if (res.code === 200) {
 									uni.showToast({
 										title: '删除成功',
 										duration: 2000
 									});
-									this.$emit('deleteCarList',arr)
+									this.$emit('deleteCarList', arr)
 								}
 							})
 						} else if (res.cancel) {
@@ -263,16 +271,19 @@
 
 			},
 			//问题
-			questionHandle(item){
-				this.remark={
-					content:item.shuoming,
-					name:item.projectName
+			questionHandle(item) {
+				this.remark = {
+					content: item.shuoming,
+					name: item.projectName
 				}
-				this.showQestion=true
-				
+				this.showQestion = true
+
+			},
+			textareaInput() {
+				uni.$u.debounce(() => this.$emit('textareaInput', this.dataList), 200)
 			}
 
-		
+
 		}
 	}
 </script>

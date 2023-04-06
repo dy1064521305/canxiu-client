@@ -61,6 +61,7 @@ module.exports = (vm) => {
       switch (data.code) {
         case 401: {
 		uni.showToast({
+			icon:'error',
 			title: '请重新登录',
 			duration: 2000
 		});

@@ -2,7 +2,7 @@
 	<view class="page">
 		<!-- 未登录 -->
 		<view v-if="!isLogin" style="padding-top: 330rpx;">
-			<u-empty mode="permission" icon="http://cdn.uviewui.com/uview/empty/permission.png" text="您还未登录">
+			<u-empty mode="permission" icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png" text="您还未登录">
 			</u-empty>
 			<view class="btns">
 				<view @click="quxiao">
@@ -68,10 +68,10 @@
 					</view>
 					<proInfo :list="item.children" :isCar='true' :isDelete='isDelete' @getCarList='getCarList'
 						@getCheck='getCheck' @check_change="checkChange" @deleteCarList="deleteList"
-						@getDeleteUrlList='getDeleteUrlList' />
+						@getDeleteUrlList='getDeleteUrlList' @textareaInput='textareaInput' />
 				</view>
 
-				<u-empty v-if="dataList.length==0" mode="car" icon="http://cdn.uviewui.com/uview/empty/car.png"
+				<u-empty v-if="dataList.length==0" mode="car" icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/125e056702434056b9b3bc5f7768eb0a.png"
 					text='维修车为空' marginTop='100' width="210px">
 				</u-empty>
 
@@ -190,13 +190,21 @@
 				console.log(data[0]);
 				this.dataList.forEach((fu, index) => {
 					fu.children.forEach((son, ind) => {
-						if (son.id == data[0].id) {
-							this.$set(this.dataList[index].children, ind, data[0])
-							console.log(this.dataList, '....182');
-						}
+						data.forEach(d => {
+							if (son.id == d.id) {
+								this.$set(this.dataList[index].children, ind, d)
+								console.log(this.dataList, '....182');
+							}
+						})
 					})
 				})
 				console.log(this.dataList, '....186');
+				this.$nextTick(() => {
+					this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 =>
+						c2)
+					this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
+					this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
+				})
 			},
 			//单个复选框勾选或不勾选事件回调
 			checkChange(data) {
@@ -341,7 +349,7 @@
 			//删除
 			deleteHandle() {
 				let arr = this.checkedList.map(item => item.id)
-			//	this.deleteList(arr)
+				//	this.deleteList(arr)
 				uni.showModal({
 					title: '删除',
 					content: '确定要删除吗？',
@@ -371,6 +379,7 @@
 			},
 			//下单
 			submitOrder() {
+				console.log('374.。。。', this.checkedList);
 				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
 				this.checkedList.length == 0 ? uni.showToast({
 					title: '请选择商品',
@@ -407,30 +416,34 @@
 			deleteList(arr) {
 				console.log(arr);
 				console.log(this.dataList, '409409409409');
-				this.dataList.forEach(ele1 => {
-					let arrs = []
-					ele1.children.forEach((ele2, Index2) => {
-						console.log(ele2, Index2);
-						arrs.push(ele2)
-					})
-					console.log(arrs);
-					arrs.forEach((v, i) => {
-						if (arr.includes(v.id)) {
-								ele1.children.forEach((vv,ii)=>{
-									if(v.id==vv.id){
-										ele1.children.splice(ii,1)
-									}
-								})
-						}
-					})
-				})
-				
+				// this.dataList.forEach(ele1 => {
+				// 	// let arrs = []
+				// 	// ele1.children.forEach((ele2, Index2) => {
+				// 	// 	console.log(ele2, Index2);
+				// 	// 	arrs.push(ele2)
+				// 	// })
+				// 	// console.log(arrs);
+				// 	// arrs.forEach((v, i) => {
+				// 	// 	if (arr.includes(v.id)) {
+				// 	// 		ele1.children.forEach((vv, ii) => {
+				// 	// 			if (v.id == vv.id) {
+				// 	// 				ele1.children.splice(ii, 1)
+				// 	// 			}
+				// 	// 		})
+				// 	// 	}
+				// 	// })
+
+				// })
+				this.dataList = this.dataList.map(d => ({
+					...d,
+					children: d.children.filter(d1 => !arr.includes(d1.id))
+				}))
 				console.log(this.dataList, '417417417');
 				this.dataList = this.dataList.filter(d => d.children && d.children.length > 0)
 				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
 				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
-				console.log(this.dataList, '422422422422');
+				console.log(this.dataList, '4224224224220',this.checkedList);
 			},
 			//取消登录
 			quxiao() {
@@ -442,6 +455,15 @@
 			login() {
 				uni.navigateTo({
 					url: '/pages/login/index'
+				})
+			},
+			textareaInput(arr) {
+				this.dataList.forEach(item1 => {
+					item1.children.forEach(item2 => {
+						if (item2.id === arr[0].id) {
+							item2.remark = arr[0].remark
+						}
+					})
 				})
 			}
 		}

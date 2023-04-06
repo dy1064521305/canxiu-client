@@ -15,9 +15,9 @@
 					<view style="margin-top: 20rpx;">
 						<view>
 							<view v-if="item.isDefault==0" class="moren">
-								<image style="width: 32rpx;margin-right: 11rpx;"
+								<image style="width: 32rpx;margin-right: 11rpx;height: 32rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png"
-									mode="widthFix"></image>已设为默认抬头
+									></image>已设为默认抬头
 							</view>
 							<view v-else class="un" @click="morenHandle(item)">
 								<view class="circle"></view>设为默认抬头
@@ -54,11 +54,11 @@
 				moren: 0,
 				list: 3,
 				invoiceHeaderList: [],
-				queryParams:{
+				queryParams: {
 					orderByColumn: 'isDefault',
 					isAsc: 'asc',
-					pageSize:10,
-					pageNum:1
+					pageSize: 10,
+					pageNum: 1
 				}
 			};
 		},
@@ -66,7 +66,8 @@
 			//设为默认
 			morenHandle(item) {
 				console.log(item)
-				console.log( this.invoiceHeaderList);
+				console.log(this.invoiceHeaderList);
+				console.log(1111);
 				this.invoiceHeaderList.forEach(invoice => {
 					if (invoice.isDefault == 0) {
 						invoice.isDefault = 1
@@ -78,22 +79,24 @@
 										title: '设置成功',
 										duration: 2000
 									});
-									this.getList()
+									this.getList(1, 10)
 								}
 							})
 						})
 					}
+				
 				})
-			
+
+
 			},
 			getList(pageNo, pageSize) {
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
-				this.queryParams.clientId=storage.get('ClientId'),
-				getInvoiceHeaderList(this.queryParams).then(res => {
-					console.log(res);
-						this.$refs.paging.completeByTotal(res.rows,res.total);
-				})
+				this.queryParams.clientId = storage.get('ClientId'),
+					getInvoiceHeaderList(this.queryParams).then(res => {
+						console.log(res);
+						this.$refs.paging.completeByTotal(res.rows, res.total);
+					})
 			},
 			//修改抬头
 			addAndEditInvoice(id) {

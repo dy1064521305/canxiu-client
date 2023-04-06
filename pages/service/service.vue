@@ -45,14 +45,14 @@
 								<view class="item-title">
 									<text>{{item.typeName}}</text>
 								</view>
-								<view v-for="(item1, index1) in item.children" :id="'box' + index" style="margin-top: 30rpx;">
+								<view v-for="(item1, index1) in item.children" :key="index1" :id="'box' + index" style="margin-top: 30rpx;">
 										<view class="item-title" style="margin-left: 15rpx;">
 										<text>{{item1.typeName}}</text>
 									</view>
 									<view class="item-container">
 										<view class="thumb-box" v-for="(item2, index2) in item1.children" :key="index2"
 											@click="featureC(item2)">
-											<image v-if="item2.icon != ''" class="item-menu-image" :src="item2.src"
+											<image v-if="item2.url != ''" class="item-menu-image" :src="item2.url"
 												mode="">
 											</image>
 											<view v-else class="item-menu-image row-c"

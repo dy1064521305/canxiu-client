@@ -425,7 +425,8 @@
 					"path": "myMoney/myCard/myCard",
 					"style": {
 						"navigationBarTitleText": "我的银行卡",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
 					}
 
 				}, {
@@ -436,7 +437,16 @@
 					}
 
 				}
-			]
+			    ,{
+                    "path" : "myMoney/addCard/addCard",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "添加银行卡",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
 		}
 	],
 	"tabBar": {
