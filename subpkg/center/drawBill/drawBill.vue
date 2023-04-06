@@ -168,7 +168,7 @@
 				this.model1.invoice.orderId = this.getId('id')
 				this.model1.invoice.orderNumber = this.getId('num')
 				this.model1.invoice.requestTime =formatter.formatDateTime(new Date().toLocaleString())	
-				console.log(this.model1.invoice.requestTime);
+				console.log(new Date().toLocaleString());
 				postInvoice(this.model1.invoice).then(res=>{
 					console.log(res);
 					if (res.code === 200) {

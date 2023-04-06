@@ -13,8 +13,10 @@ export const orderTrackList = (params) => request.get('/basic/orderTrack/list',p
 //订单详情中新材料
 export const getNewMaterial = (orderId) => request.get('/client/order/getNewMaterial/'+orderId)
 
-//生成维修报告
+//订单详情中新维修方案
+export const getNewProject = (orderId) => request.get('/worker/order/getNewProject/'+orderId)
 
+//生成维修报告
 export const generateReports = (orderId) => request.get('/client/order/generateReports/'+orderId)
 
 //客户验收签字
@@ -35,3 +37,6 @@ export const appraiseList = (params) => request.get('/app/client/appraise/list',
 //客户取消订单
 export const cancelOrder = (params) => request.put('/client/order/cancelOrder',params)
 
+
+//获取维修师详情
+export const getWorkerInfo = (workerId) => request.get('/client/order/workerInfo/'+workerId)

@@ -47,10 +47,8 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 </template>
 
 <script>
+	import * as order from '@/api/order.js'
 	import upLoadFile from '../../../components/uploadFile/uploadFile.vue'
-	import {
-		appraise
-	} from '@/api/order.js'
 	export default {
 		components: {
 			upLoadFile
@@ -65,20 +63,28 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 					velocityScore: '0',
 					technicalScore: '0',
 					productIdList: []
-				}
+				},
+				id:''
 			};
 		},
 		onLoad(option) {
-			this.info = JSON.parse(option.item)
-			console.log(this.info);
-			this.query.orderId = this.info.orderId
-			this.query.clientId = this.info.clientId
-			this.query.productIdList = this.info.projectDataVoList.map(item => {
-				return item.productId
-			})
-			console.log(this.query.productIdList);
+			 this.id =option.id
+			this.getList()
 		},
 		methods: {
+			getList(){
+				order.getOrderInfo(this.id).then(res => {
+					console.log(res);
+					this.query.orderId = res.data.orderId
+					this.query.clientId = res.data.clientId
+					this.query.workerId=res.data.workerId
+					console.log(res.data.projectDataVoList);
+					this.query.productIdList = res.data.projectDataVoList.map(item => {
+						return item.productId
+					})
+					console.log(this.query.productIdList);
+				})
+			},
 			getUrl(val) {
 				console.log(val);
 				this.query.appraiseImg = val.urls.toString()
@@ -87,20 +93,20 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 				console.log(this.query);
 
 
-				// appraise(this.query).then(res => {
-				// 	console.log(res);
-				// 	if (res.code == 200) {
-				// 		uni.showToast({
-				// 			title: '评论成功',
-				// 			duration: 2000
-				// 		});
-				// 		setTimeout(() => {
-				// 			uni.navigateTo({
-				// 				url: '../../center/myOrder/myOrder'
-				// 			})
-				// 		}, 800)
-				// 	}
-				// })
+				order.appraise(this.query).then(res => {
+					console.log(res);
+					if (res.code == 200) {
+						uni.showToast({
+							title: '评论成功',
+							duration: 2000
+						});
+						setTimeout(() => {
+							uni.navigateTo({
+								url: '../../center/myOrder/myOrder'
+							})
+						}, 800)
+					}
+				})
 			}
 		}
 	}

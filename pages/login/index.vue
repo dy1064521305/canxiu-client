@@ -119,6 +119,7 @@
 			},
 			//倒计时定时器
 			countDown() {
+				uni.$u.toast('验证码已发送，请查收短信')
 				this.countDownNum = 60
 				this.timer = setInterval(() => {
 					this.countDownNum--

@@ -52,7 +52,7 @@
 									<view class="item-container">
 										<view class="thumb-box" v-for="(item2, index2) in item1.children" :key="index2"
 											@click="featureC(item2)">
-											<image v-if="item2.icon != ''" class="item-menu-image" :src="item2.src"
+											<image v-if="item2.url != ''" class="item-menu-image" :src="item2.url"
 												mode="">
 											</image>
 											<view v-else class="item-menu-image row-c"

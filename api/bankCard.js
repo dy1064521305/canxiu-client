@@ -8,7 +8,7 @@ export const getBankCardList = (params) => request.get('/client/bankCard/list',p
 export const addBankCard = (params) => request.post('/client/bankCard',params)
 
 // 删除银行卡
-export const deleteBankCard = (cardId) => request.delete('/client/bankCard/'+cardId)
+export const deleteBankCard = (cardIds) => request.delete('/client/bankCard/'+cardIds)
 
 // 修改银行卡
 export const editBankCard = (params) => request.put('/client/bankCard',params)
