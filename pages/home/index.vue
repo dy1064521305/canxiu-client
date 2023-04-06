@@ -134,7 +134,7 @@
 				去设置
 			</view>
 		</view>
-
+		<app-update ref="app_update" :force="true"></app-update>
 	</view>
 </template>
 
@@ -151,12 +151,16 @@
 		getHotService,
 		getRegionService
 	} from '@/api/home.js';
+	
+	import appUpdate from "@/components/app-update/app-update.vue";
+	
 	import {
 		getLnglat
 	} from '@/utils/location.js'
 	export default {
 		components: {
-			goodCard
+			goodCard,
+			appUpdate
 		},
 		data() {
 			return {
@@ -236,7 +240,6 @@
 				1) * 1)
 		},
 		onShow() {
-
 			console.log('onshowinshow');
 			// #ifdef MP-WEIXIN
 			this.getHeight();
@@ -271,7 +274,9 @@
 					that.cityName = res.data
 				}
 			});
-
+			
+				
+			this.$refs.app_update.update();
 
 		},
 		onHide() {
@@ -689,7 +694,8 @@
 				uni.switchTab({
 					url: '/pages/service/service'
 				})
-			}
+			},
+			// app 更新
 		}
 	}
 </script>

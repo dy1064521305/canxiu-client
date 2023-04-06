@@ -73,6 +73,17 @@
 		isPhone
 	} from '@/utils/verify.js'
 
+
+
+
+import { setTokenStorage } from '../../utils/token';
+import logger from '../../utils/logger';
+import { genTestUserSig } from '../../debug/GenerateTestUserSig.js';
+const { getTokenStorage } = require('../../utils/token.js');
+const app = getApp();
+
+
+
 	export default {
 		data() {
 			return {
@@ -88,6 +99,25 @@
 		},
 		created() {
 			this.getList()
+		},
+		onLoad(option) {
+			const that = this;
+			this.setData({
+				path: option.path
+			});
+			uni.getStorage({
+				// 获取本地缓存
+				key: 'sessionID',
+				success(res) {
+					that.setData({
+						sessionID: res.data
+					});
+				}
+			});
+			uni.setStorage({
+				key: 'path',
+				data: option.path
+			});
 		},
 		watch: {
 			// "isLogin": {
@@ -174,7 +204,8 @@
 							phonenumber: app.phone,
 							smsCode: app.code,
 						}).then(result => {
-							console.log(result.data.type);
+							console.log(result.data);
+							this.wxIMLogin(result);
 							if (result.data.type == 'Success') {
 								const pages = uni.$u.pages();
 								console.log(pages);
@@ -187,7 +218,6 @@
 								})
 
 							} else {
-								console.log(1111);
 								uni.navigateTo({
 									url: '../../subpkg/login/info/info',
 									fail(err) {
@@ -195,12 +225,76 @@
 									}
 								})
 							}
-
+							
 						})
 						.catch(err => {})
 
 				}
+				
 			},
+			wxIMLogin(result){
+				
+				// 腾讯im登录
+				const userID = this.phone;
+				const userSig = genTestUserSig(userID).userSig;
+				const SDKAppID = app.globalData.SDKAppID;
+				logger.log(`TUI-login | login  | userSig:${userSig} userID:${userID}`);
+				this.setData({
+					privateAgree: true
+				});
+				this.setData({
+					userID: userID
+				});
+				
+				
+				
+				
+				app.globalData.userInfo = {
+					userSig,
+					userID
+				};
+				setTokenStorage({
+					userInfo: app.globalData.userInfo
+				});
+				wx.setStorageSync(`TIM_${getApp().SDKAppID}_isTUIKit`, true);
+				
+				uni.$TUIKit.login({
+					userID: userID,
+					userSig: userSig
+				}).then(() => {
+				}).catch((error) => {
+				})
+				
+				// 登录原生插件
+				// // #ifdef APP-PLUS
+				// if(typeof(uni.$TUICallKit) == 'undefined') {
+				// 	// uni.showToast({
+				// 	// 	title: '如果需要音视频功能，请集成插件使用真机运行并且自定义基座调试哦～',
+				// 	// 	icon: 'none',
+				// 	// 	duration: 3000
+				// 	// });
+				// 	logger.error('请使用真机运行并且自定义基座调试，否则影响音视频功能～ 插件地址：https://ext.dcloud.net.cn/plugin?id=9035 , 调试地址：https://nativesupport.dcloud.net.cn/NativePlugin/use/use');
+				// } else {
+				// 	uni.$TUICallKit.login(
+				// 		{
+				// 			SDKAppID: SDKAppID,
+				// 			userID: userID,
+				// 			userSig: userSig
+				// 		},
+				// 		res => {
+				// 			console.log(JSON.stringify(res.msg));
+				// 			uni.showToast({
+				// 				title: 'login',
+				// 				icon: 'none'
+				// 			});
+				// 		}
+				// 	);
+				// }
+				// // #endif
+				
+			},
+			
+			
 			//查协议内容
 			goAgreement(item) {
 				console.log(item);

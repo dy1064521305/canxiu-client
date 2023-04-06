@@ -79,12 +79,44 @@
 				"navigationBarTitleText": "信息",
 				"navigationStyle": "custom"
 			}
-		}
+		},
+		// {
+		// 		"path": "pages/message/TUI-Login/login",
+		// 		"style": {}
+		// 	},
+			// {
+			// 	"path": "pages/message/TUI-Index/index",
+			// 	"style": {
+			// 		"navigationStyle": "custom"
+			// 	}
+			// },
+			{
+				"path": "pages/message/TUI-Conversation/conversation/conversation",
+				"style": {
+					"navigationBarTitleText": "会话列表",
+					"navigationBarBackgroundColor": "#006EFF",
+					"backgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "white"
+				}
+			},
+			{
+				"path": "pages/message/TUI-Chat/chat",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			},
+			{
+				"path": "pages/message/TUI-Conversation/create-conversation/create",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			}
 
 
 	    
     ],
-	"subPackages": [{
+	"subPackages": [
+		{
 			"root": "subpkg/login",
 			"pages": [
 
@@ -432,7 +464,7 @@
 				}
 			},
 			{
-				"pagePath": "pages/message/message",
+				"pagePath": "pages/message/TUI-Conversation/conversation/conversation",
 				"iconPath": "./static/img/tabbar/message-unactive.png",
 				"selectedIconPath": "./static/img/tabbar/message-active.png",
 				"text": "消息"

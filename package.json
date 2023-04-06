@@ -15,6 +15,10 @@
         ]
     },
     "dependencies": {
-        "pinyin-pro": "^3.13.1"
+        "cos-wx-sdk-v5": "^1.0.10",
+        "pinyin-pro": "^3.13.1",
+        "tim-js-sdk": "^2.17.0",
+        "tim-upload-plugin": "^1.0.4",
+        "tim-wx-sdk": "^2.17.0"
     }
 }
