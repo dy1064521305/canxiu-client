@@ -69,7 +69,8 @@
 	} from '@/api/user.js'
 	import {
 		getCode,
-		getAgreement
+		getAgreement,
+		bindIds
 	} from '@/api/login.js'
 	import {
 		isEmpty,
@@ -79,11 +80,17 @@
 
 
 
-import { setTokenStorage } from '../../utils/token';
-import logger from '../../utils/logger';
-import { genTestUserSig } from '../../debug/GenerateTestUserSig.js';
-const { getTokenStorage } = require('../../utils/token.js');
-const app = getApp();
+	import {
+		setTokenStorage
+	} from '../../utils/token';
+	import logger from '../../utils/logger';
+	import {
+		genTestUserSig
+	} from '../../debug/GenerateTestUserSig.js';
+	const {
+		getTokenStorage
+	} = require('../../utils/token.js');
+	const app = getApp();
 
 
 
@@ -210,6 +217,20 @@ const app = getApp();
 							smsCode: app.code,
 						}).then(result => {
 							console.log(result.data);
+							plus.push.getClientInfoAsync((info) => {
+								let cid = info["clientid"];
+								console.log({
+									cid: info["clientid"],
+									userId: result.data.clientId
+								});
+								bindIds({
+									clientId: info["clientid"],
+									userId: result.data.clientId
+								}).then(res => {
+									console.log(res);
+								})
+							}),
+
 							getInfoById(result.data.clientId).then(res => {
 								console.log(res);
 								this.userInfo = res.data
@@ -223,11 +244,12 @@ const app = getApp();
 									console.log(pages);
 									apps.type = 'login'
 									if (pages.some(p => p.route.includes('goodDetails'))) {
-										  var pagess = getCurrentPages();
-										    var prevPage = pagess[pagess.length - 2]; //上一个页面
-										    var object = {
-												name:"back"}
-										    prevPage.$vm.otherFun(object);
+										var pagess = getCurrentPages();
+										var prevPage = pagess[pagess.length - 2]; //上一个页面
+										var object = {
+											name: "back"
+										}
+										prevPage.$vm.otherFun(object);
 										uni.navigateBack()
 									} else {
 										uni.switchTab({
@@ -250,8 +272,7 @@ const app = getApp();
 									})
 								}
 								//	this.fileList.push({url:arr[0]})
-							})
-							console.log(this.userInfo.clientName);
+							}) 
 
 
 						})
@@ -259,7 +280,7 @@ const app = getApp();
 
 				}
 			},
-			wxIMLogin(result){
+			wxIMLogin(result) {
 
 				// 腾讯im登录
 				const userID = this.phone;
@@ -288,9 +309,7 @@ const app = getApp();
 				uni.$TUIKit.login({
 					userID: userID,
 					userSig: userSig
-				}).then(() => {
-				}).catch((error) => {
-				})
+				}).then(() => {}).catch((error) => {})
 
 				// 登录原生插件
 				// // #ifdef APP-PLUS
