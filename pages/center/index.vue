@@ -1,7 +1,7 @@
 <template>
 	<view class="center-con">
 		<view v-if="!isLogin" style="padding-top: 330rpx;">
-			<u-empty mode="permission" icon="http://cdn.uviewui.com/uview/empty/permission.png" text="您还未登录">
+			<u-empty mode="permission" icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png" text="您还未登录">
 			</u-empty>
 			<view class="btns">
 				<view @click="quxiao">

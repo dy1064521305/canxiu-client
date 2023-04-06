@@ -57,7 +57,7 @@
 			return {
 				urlImg: [],
 				info: {},
-				popHeight:100,
+				popHeight: 100,
 				showAccept: false, //弹出框
 				cavShow: false, //canvas
 				canvasName: 'handWriting',
@@ -71,6 +71,7 @@
 				lineSize: 5, // 笔记倍数
 				item: undefined,
 				count: undefined,
+				
 			};
 		},
 		onLoad(option) {
@@ -87,7 +88,7 @@
 				uni.hideLoading();
 			})
 			// #ifdef MP-WEIXIN
-			this.popHeight=97
+			this.popHeight = 97
 			// #endif
 		},
 		methods: {
@@ -123,7 +124,7 @@
 			},
 			// 笔迹移动
 			uploadScaleMove(e) {
-			//	console.log(e);
+				//	console.log(e);
 				//取点
 				let temX = e.changedTouches[0].x
 				let temY = e.changedTouches[0].y
@@ -231,7 +232,12 @@
 					});
 				}
 			},
-
+			//支付
+			pay() {
+				uni.navigateTo({
+					url: '../pay/pay?item=' + encodeURIComponent(JSON.stringify(this.info.info))
+				})
+			},
 		}
 	}
 </script>
@@ -314,9 +320,9 @@
 				}
 
 				.image {
-					    position: absolute;
-					    bottom: 24rpx;
-					    left: 16rpx;
+					position: absolute;
+					bottom: 24rpx;
+					left: 16rpx;
 					transform: rotate(90deg);
 				}
 

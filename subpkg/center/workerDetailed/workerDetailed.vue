@@ -2,94 +2,129 @@
 	<view class="worker">
 		<image style="height:543rpx ;width: 100%;"
 			src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/0e5d1d17ab0d4e379f0919441fc177f0.png"></image>
+
 		<view class="main">
-			<view class="info">
-				<view>
-					<image style="width: 136rpx;"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/05/2b752f2fa84446d8867149d48996ec45.png"
-						mode="widthFix"></image>
-				</view>
-				<view class="name">
-					<view style="font-size: 36rpx;font-weight: bold;">
-						小小商店
-					</view>
-					<view style="font-size: 29rpx;">
-						188****5698
-					</view>
-				</view>
-			</view>
-
-			<!-- 专业技能 -->
-			<view class="skill box-bg">
-				<view class="title">
-					专业技能
-				</view>
-				<view style="display: flex;	padding-left: 10rpx;flex-wrap: wrap;">
-					<view v-for="(item,index) in 7" :key="index" class="box">
-						水龙头6666
-					</view>
-				</view>
-			</view>
-
-			<!-- 用户评论 -->
-			<view class="comment box-bg">
-				<view class="title">
-					用户评论
-				</view>
-				<view class="mains" v-for="item in 4">
-					<view style="display: flex;margin-bottom: 10rpx;">
-						<u-avatar src="../../static/img/login/loginBg.png" size="28"></u-avatar>
-						<view style="font-size: 25rpx;color: #3D3F3E;height: 60rpx;line-height: 60rpx;margin:0 20rpx;">
-							哈*</view>
-						<u-rate :count="count" v-model="value" allowHalf activeColor='#ec9322' readonly></u-rate>
-						<view class="time" :style="{'width':isshow?'43%':'50%'}">
-							{{$u.timeFrom(1645416000000)}}
+			<z-paging ref="paging" v-model="appraiseList" @query="getList">
+				<view slot='top'>
+					<view class="info">
+						<view>
+							<image v-if="workerInfo.avatarUrl==null" style="width:136rpx;height: 136rpx;"
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/05/2b752f2fa84446d8867149d48996ec45.png">
+							</image>
+							<image v-else style="width:136rpx;height:136rpx;" :src="workerInfo.avatarUrl"></image>
 						</view>
-						<image	
-						 v-if="isshow"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/20/21b951ca87d8420798c562475302716f.png"
-							mode=""></image>
-						<view  v-if="isshow" style="width:60rpx;">
-							
+						<view class="name">
+							<view style="font-size: 36rpx;font-weight: bold;">
+								{{workerInfo.workerName}}
+							</view>
+							<img :src="workerInfo.levelIcon" style='width: 140rpx;height: 34rpx;'>
 						</view>
 					</view>
-					<view style="">
-						过年这段时间油烟机超负荷运作，过完年油烟机就变得油腻腻的，网上找了很久终于确定了用餐修来下订单，总体不错油烟机也可以拆开清洗虽然多加了钱吧，但是可以变得和新的一样还是可以的
+
+					<!-- 专业技能 technical-->
+				<!-- 	<view class="skill box-bg">
+						<view class="title">
+							专业技能
+						</view>
+						<view style="display: flex;	padding-left: 10rpx;flex-wrap: wrap;">
+							<view v-for="(item,index) in 7" :key="index" class="box">
+								水龙头6666
+							</view>
+						</view>
+					</view> -->
+				</view>
+
+				<!-- 用户评论 -->
+				<view class="comment box-bg">
+					<view class="title">
+						用户评论
 					</view>
-					<view style="display: flex;flex-wrap: wrap;margin: 10rpx">
-							<u-image style='margin:10rpx;' v-for="(item, index) in imgList"  radius='8px' width="156rpx" height="156rpx" :src="item" mode=""
-								@click="previewImage(item)">
-							</u-image>
+					<view class="mains" v-for="(item,index1) in appraiseList" :key='index1'>
+						<view style="display: flex;margin-bottom: 10rpx;">
+							<view class="">
+								<u-avatar :src="item.avatarUrl" size="28"></u-avatar>
+							</view>
+							<view
+								style="font-size: 25rpx;color: #3D3F3E;height: 60rpx;line-height: 60rpx;margin:0 20rpx;">
+								哈*</view>
+							<u-rate :count="count" v-model="item.num" allowHalf activeColor='#ec9322' readonly></u-rate>
+							<view class="time" :style="{'width':isshow?'43%':'50%'}">
+								{{item.time}}
+							</view>
+							<image 
+							  class="isWonderful"
+							  v-if="item.isWonderful=='Y'&&item.isWonderful!=null"
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/14/b58459dc35794691a6953855e24f1c93.png"
+								mode=""></image>
+						</view>
+						<view style="">
+							{{item.appraiseContent}}
+						</view>
+						<view style="display: flex;width: 98%;flex-wrap: wrap;margin-top: 10rpx;">
+							<view style='margin:15rpx 5rpx;' v-for="(itemm, index2) in item.imgs" :key="index2">
+								<u-image radius='8px' width="156rpx" height="156rpx" :src="itemm" mode=""
+									@click="previewImage(item.imgs,index2)">
+								</u-image>
+							</view>
+						</view>
 					</view>
 				</view>
-			</view>
+			</z-paging>
 		</view>
 
 	</view>
 </template>
 
 <script>
+	import * as order from '@/api/order.js'
+	import formatter from '@/utils/formatter.js'
 	export default {
 		data() {
 			return {
-				isshow:true,
+				isshow: true,
 				count: 5,
 				value: 2,
 				imgList: [
 					'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/4cb33e4d1a614bda86187d7fd7d1732e.png',
 					'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/4cb33e4d1a614bda86187d7fd7d1732e.png',
 				],
+				queryParams: {
+					pageSize: 10,
+					pageNum: 1,
+				},
+				appraiseList: [],
+				workerInfo: {}
 			};
 		},
-		onLoad() {
-			console.log(uni.$u.timeFrom(1676952000000), '-----80');
+		onLoad(option) {
+			console.log(JSON.parse(option.info));
+			this.workerInfo = JSON.parse(option.info).info
+			this.queryParams.workerId = JSON.parse(option.info).workerId
 		},
 		methods: {
-			previewImage(e) {
-				console.log(e);
-				wx.previewImage({
-					current: e, // 当前显示图片的http链接
-					urls: this.imgList, // 需要预览的图片http链接列表
+			getList(pageNo, pageSize) {
+				this.queryParams.pageNum = pageNo;
+				this.queryParams.pageSize = pageSize;
+				//获取评论
+				order.appraiseList(this.queryParams).then(res => {
+					console.log(res);
+					res.rows.forEach(item => {
+						let num = (Number(item.attitudeScore) + Number(item.technicalScore) + Number(item
+							.velocityScore)) / 3
+						item.num = Math.floor(num)
+						item.imgs = item.appraiseImg != null ? item.appraiseImg.split(',') : [],
+							item.name = item.clientName != null && item.clientName != '' ? item.clientName[
+								0] + '*' : '**'
+						item.time = formatter.transDate(item.createTime).one
+
+					})
+					this.$refs.paging.completeByTotal(res.rows, res.total);
+				})
+			},
+			previewImage(list, i) {
+				uni.previewImage({
+					current: list[i], // 当前显示图片的http链接
+					urls: list, // 需要预览的图片http链接列表
 				})
 			},
 		}
@@ -103,13 +138,13 @@
 		position: relative;
 
 		.main {
-			position: absolute;
-			top: 0;
-			left: 0;
-			margin:0 20rpx;
+			// position: absolute;
+			// top: 0;
+			// left: 0;
+			// margin: 0 20rpx;
 
 			.info {
-				margin: 40rpx 0;
+				margin: 40rpx 20rpx;
 				display: flex;
 
 				.name {
@@ -136,6 +171,7 @@
 			}
 
 			.skill {
+				margin: 40rpx 20rpx;
 
 				.box {
 					padding: 5rpx 30rpx;
@@ -151,16 +187,16 @@
 			}
 
 			.comment {
-				margin-top: 20rpx;
+				margin: 0 20rpx;
 
 				.mains {
 					//width: 100%;
 					background: #FFFFFF;
 					margin: 19rpx;
 					position: relative;
-				//	padding: 0 18rpx;
+					//	padding: 0 18rpx;
 
-					image {
+					.isWonderful {
 						position: absolute;
 						width: 53rpx;
 						height: 62rpx;
@@ -172,7 +208,7 @@
 						font-size: 25rpx;
 						color: #3D3F3E;
 						height: 60rpx;
-						line-height: 60rpx;	
+						line-height: 60rpx;
 						text-align: end;
 					}
 				}

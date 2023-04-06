@@ -25,7 +25,7 @@
 
 		<view class="services bgf">
 			<proInfo :list='projectVoList' :isCar='false' :isJoinCar='isJoinCar' :question='true'
-				@joinCarHandle='joinCarHandle' :types='types' />
+				@joinCarHandle='joinCarHandle' :types='types' @textareaInput='textConfirm' ref="proInfo" />
 		</view>
 
 		<view class="price bgf">
@@ -189,6 +189,7 @@
 	import {
 		generateQrCode
 	} from '@/api/captcha.js'
+	var checkValues = [];
 	export default {
 		components: {
 			lPainter,
@@ -260,12 +261,12 @@
 		onShow() {
 			console.log(this.query);
 			this.isLogin = storage.get('AccessToken')
-		
+
 		},
 		methods: {
 			otherFun(object) {
 				if (object) {
-					console.log(object,'objectobjectobject')
+					console.log(object, 'objectobjectobject')
 					this.getInfo()
 				}
 			},
@@ -369,6 +370,7 @@
 					url: '../allComments/allComments?id=' + this.goodInfo.serviceId
 				})
 			},
+
 			//分享
 			shareInfo() {
 				console.log(this.$refs);
@@ -551,6 +553,7 @@
 				}) : this.isShowLogin = true
 
 			},
+
 			//去登录
 			confirm() {
 				uni.navigateTo({
@@ -560,6 +563,7 @@
 			},
 			//是否是加入维修车
 			joinCar(types) {
+
 				this.types = types
 				if (this.isLogin) {
 					this.isJoinCar++
@@ -604,10 +608,13 @@
 						})
 					} else {
 						console.log(query.list);
+						console.log(this.goodInfo, this.$refs.proInfo, '.......610');
+						checkValues = this.$refs.proInfo.checkboxValue1
 						let newSetArray = [] //新数组
 						query.list.map((item, index) => { //setArray是老数组
 							newSetArray.push(Object.assign({}, item, {
-								clientId: storage.get('ClientId')
+								clientId: storage.get('ClientId'),
+								workerType: this.goodInfo.workerType
 							}, {
 								productId: this.goodInfo.serviceId
 							}))
@@ -625,6 +632,26 @@
 						icon: 'none'
 					});
 				}
+			},
+			//其他页面改变数据
+			changeData(data) {
+				this.projectVoList.forEach((fu, index) => {
+					data.forEach(d=>{
+						if (fu.projectId == d.projectId) {
+							this.$set(this.projectVoList, index, d)
+							console.log(this.projectVoList, '....182');
+						}
+					})
+				})
+				this.$nextTick(() => {
+					this.$refs.proInfo.checkboxValue1 = checkValues
+					console.log(checkValues, 'checkValuescheckValuescheckValuescheckValues...', this.$refs
+					.proInfo);
+				})
+			},
+			textConfirm(arr) {
+				console.log(arr);
+				this.submitList = arr
 			},
 
 		}

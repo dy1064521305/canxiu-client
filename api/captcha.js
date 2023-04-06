@@ -6,3 +6,6 @@ export const image = () => request.get('/captchaImage', null, { custom: { auth: 
 
 //生成微信小程序码
 export const generateQrCode = (params) => request.get('/common/code/generateQrCode',params )
+
+//校验验证码
+export const validateSmsCode= (params) => request.post('/validateSmsCode',params)

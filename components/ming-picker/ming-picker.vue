@@ -8,7 +8,7 @@
 </template>
 
 <script>
-	import addressData from '@/utils/area.js';
+	import addressData from '@/utils/areaa.js';
 	export default {
 		props: {
 			defaultAddress: {
@@ -18,9 +18,9 @@
 		},
 		data() {
 			return {
-				province: addressData.map(it => it.label),
-				city: addressData[0].children.map(it => it.label),
-				area: addressData[0].children[0].children.map(it => it.label),
+				province: addressData.map(it => it.name),
+				city: addressData[0].children.map(it => it.name),
+				area: addressData[0].children[0].children.map(it => it.name),
 				value: [0, 0, 0]
 			};
 		},
@@ -33,29 +33,29 @@
 				if (address[0]) {
 					// 如果有初始值，则需要初始地址
 					const filter = (index) => (index > -1 ? index : 0);
-					const currentProvince = filter(addressData.findIndex(it => it.label === address[0]));
-					const currentCity = filter(addressData[currentProvince].children.findIndex(it => it.label === address[
+					const currentProvince = filter(addressData.findIndex(it => it.name === address[0]));
+					const currentCity = filter(addressData[currentProvince].children.findIndex(it => it.name === address[
 						1]));
 					const currentArea = filter(addressData[currentProvince].children[currentCity].children.findIndex(it =>
-						it.label === address[2]));
+						it.name === address[2]));
 					const city = addressData[currentProvince].children;
 					const area = addressData[currentProvince].children[currentCity].children;
 					this.value = [currentProvince, currentCity, currentArea];
-					this.city = city.map(it => it.label);
-					this.area = area.map(it => it.label);
-					this.address = [addressData[currentProvince].label, city[currentCity].label, area[currentArea].label];
+					this.city = city.map(it => it.name);
+					this.area = area.map(it => it.name);
+					this.address = [addressData[currentProvince].name, city[currentCity].name, area[currentArea].name];
 				}
 			},
 			changeHandler() {
-				let value=this.getAddress(...this.value),
-				code=this.getCode(...this.value)
+				let value1=this.getAddress(...this.value),
+				value=this.getCode(...this.value)
 				this.$emit("address", {
+					value1,
 					value,
-					code,
 					data:{
-						[code[0]]:value[0],
-						[code[1]]:value[1],
-						[code[2]]:value[2],
+						[value[0]]:value[0],
+						[value[1]]:value[1],
+						[value[2]]:value[2],
 					}
 				})
 			},
@@ -71,7 +71,7 @@
 				return [province[p], city[c] || '', area[a] || ''];
 			},
 			getCode(p, c, a) {
-				let province=addressData.map(it => it.value),city=addressData[p].children.map(it => it.value),area=addressData[p].children[c].children.map(it => it.value)
+				let province=addressData.map(it => it.name),city=addressData[p].children.map(it => it.name),area=addressData[p].children[c].children.map(it => it.name)
 				return [province[p], city[c] || 0, area[a] || 0];
 			},
 			columnchange(e) {
@@ -82,13 +82,13 @@
 				} = e.detail;
 				if (column === 0) {
 					// 省份变了
-					this.city = addressData[index].children.map(it => it.label);
-					this.area = addressData[index].children[0].children.map(it => it.label);
+					this.city = addressData[index].children.map(it => it.name);
+					this.area = addressData[index].children[0].children.map(it => it.name);
 					this.value = [index, 0, 0];
 				} else if (column === 1) {
 					// 城市变了
 					const currentProvince = this.value[0];
-					this.area = addressData[currentProvince].children[index].children.map(it => it.label);
+					this.area = addressData[currentProvince].children[index].children.map(it => it.name);
 					this.value = [currentProvince, index, 0];
 				} else {
 					const value = this.value;
