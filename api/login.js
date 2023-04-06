@@ -18,3 +18,6 @@ export const refine = (params) => request.put('/client/user/refine',params)
 
 //选择店铺类型
 export const getStoreType = () => request.get('/client/user/queryStoreType')
+
+//绑定用户id和cid
+export const bindIds= (params) => request.post('/common/getui/bind',params)

@@ -88,9 +88,8 @@
 	//import Citys from '../city.js';
 	var QQMapWX = require('@/utils/qqmap-wx-jssdk.js')
 	import * as home from '@/api/home.js'
-	import {
-		pinyin
-	} from 'pinyin-pro';
+
+	import {pinyin} from 'pinyin-pro'
 	export default {
 		components: {},
 		props: {},

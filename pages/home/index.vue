@@ -276,7 +276,7 @@
 			});
 			
 				
-			this.$refs.app_update.update();
+			// this.$refs.app_update.update();
 
 		},
 		onHide() {
