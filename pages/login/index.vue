@@ -217,6 +217,7 @@
 							smsCode: app.code,
 						}).then(result => {
 							console.log(result.data);
+							// #ifdef APP-PLUS
 							plus.push.getClientInfoAsync((info) => {
 								let cid = info["clientid"];
 								console.log({
@@ -231,6 +232,8 @@
 								})
 							}),
 
+							// #endif
+							
 							getInfoById(result.data.clientId).then(res => {
 								console.log(res);
 								this.userInfo = res.data

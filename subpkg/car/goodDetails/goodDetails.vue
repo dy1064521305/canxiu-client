@@ -39,7 +39,7 @@
 				<u-collapse :border='false'>
 					<u-collapse-item v-for="(item,index) in chargeList" :key="index" :title="item.typeName"
 						name="Docs guide">
-						<view v-for="(ch,index) in item.children" :key='index'
+						<view v-for="(ch,chindex) in item.children" :key='chindex'
 							style="display: flex;justify-content: space-between;">
 							<text>{{ch.serviceName}}{{ch.standardCompany!=null?'('+ch.standardCompany+')':''}}</text>
 							<text>{{ch.standardPrice}}元{{ch.standardCompany!=null?'('+ch.standardCompany+')':''}}</text>

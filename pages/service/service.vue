@@ -7,19 +7,19 @@
 				<view class="line">|</view> -->
 				<image class="search-icon" src="../../static/img/home/search.png" mode=""></image>
 				<view style="width: 65%;">
-					<u--input @clear='clear' clearable border='none' @confirm="search" v-model="query.name" type="text"
-						placeholder="请输入需要的服务" />
+					<u--input @clear='input("clear")' @input='input("input")' clearable border='none' @confirm="search"
+						v-model="query.name" type="text" placeholder="请输入需要的服务" />
 				</view>
 				<view class="search-title" @click="search">搜索</view>
 			</view>
 		</view>
-		<u-empty marginTop='70' text='没有找到哦，换个关键词试一下吧' v-if="query.name!=''&&typesList.length==0&&isSearch"
+		<u-empty marginTop='70' text='没有找到该服务项目哦，换个关键词试一下吧' v-if="query.name!=''&&typesList.length==0&&isSearch"
 			icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/04/cb8a19a85cd14c86ad85b72b97ea2d1e.png">
 		</u-empty>
-		<view class="main" style="background: #fff;padding: 40rpx;" v-if="typesList.length!=0&&isSearch">
+		<view class="main" style="background: #fff;padding: 40rpx;display: flex;" v-if="typesList.length!=0&&isSearch">
 			<view class="thumb-box" style="width: 150rpx;" v-for="(item, index) in typesList" :key="index"
 				@click="featureC(item)">
-				<image v-if="item.icon != ''" class="item-menu-image" :src="item.src" mode="">
+				<image v-if="item.url != ''" class="item-menu-image" :src="item.url" mode="">
 				</image>
 				<view v-else class="item-menu-image row-c" style="background-color: #F4F6F8;">
 					<text style="font-size: 20rpx;color: #d0d0d0;">加载失败</text>
@@ -45,8 +45,9 @@
 								<view class="item-title">
 									<text>{{item.typeName}}</text>
 								</view>
-								<view v-for="(item1, index1) in item.children" :key="index1" :id="'box' + index" style="margin-top: 30rpx;">
-										<view class="item-title" style="margin-left: 15rpx;">
+								<view v-for="(item1, index1) in item.children" :key="index1" :id="'box' + index"
+									style="margin-top: 30rpx;">
+									<view class="item-title" style="margin-left: 15rpx;">
 										<text>{{item1.typeName}}</text>
 									</view>
 									<view class="item-container">
@@ -118,9 +119,26 @@
 			getApp().index = undefined
 		},
 		methods: {
-			getList() {
+			getList(type) {
+
+				console.log(type);
 				service.getService(this.query).then(res => {
-					this.typesList = res.data
+					if (type == 'search') {
+						console.log(111);
+						console.log(res.data);
+						this.typesList = []
+						res.data.forEach(item => {
+							if (item.typeLevel == 3) {
+								this.typesList.push(item)
+							}
+						})
+					} else {
+						console.log(11111);
+						this.typesList = []
+						this.typesList = res.data
+					}
+
+
 					console.log(this.typesList);
 				})
 			},
@@ -264,11 +282,12 @@
 				if (this.query.name == '') {
 					this.$refs.uToast.show({
 						type: 'error',
-						message:'搜索内容不能为空'
+						message: '搜索内容不能为空'
 					});
+					//this.getList(')
 				} else {
 					this.isSearch = true
-					this.getList()
+					this.getList('search')
 				}
 
 
@@ -277,8 +296,24 @@
 				this.query.name = ''
 				this.isSearch = false
 				this.getList()
-			}
+			},
+			input(type) {
+				uni.$u.debounce(this.toNext(type), 800)
+			},
 
+			toNext(type) {
+				if (this.query.name != '' && type == 'input') {
+					this.isSearch = true
+					this.getList('search')
+				} else {
+					if (type == 'clear') {
+						this.query.name = ''
+					}
+					this.isSearch = false
+					this.getList()
+				}
+				console.log(this.query.name);
+			}
 		}
 	}
 </script>

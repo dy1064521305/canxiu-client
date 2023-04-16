@@ -1,13 +1,12 @@
 {
 	"pages": [
 		{
-		    "path" : "pages/init/init",
-		    "style" :                                                                                    
-		    {
-		        "navigationBarTitleText": "",
-		        "enablePullDownRefresh": false
-		    }
-		    
+			"path": "pages/init/init",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
 		},
 		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
@@ -73,49 +72,51 @@
 				"navigationStyle": "custom"
 			}
 		},
-		{
-			"path": "pages/message/message",
-			"style": {
-				"navigationBarTitleText": "信息",
-				"navigationStyle": "custom"
-			}
-		},
+
 		// {
 		// 		"path": "pages/message/TUI-Login/login",
 		// 		"style": {}
 		// 	},
-			// {
-			// 	"path": "pages/message/TUI-Index/index",
-			// 	"style": {
-			// 		"navigationStyle": "custom"
-			// 	}
-			// },
-			{
-				"path": "pages/message/TUI-Conversation/conversation/conversation",
-				"style": {
-					"navigationBarTitleText": "会话列表",
-					"navigationBarBackgroundColor": "#006EFF",
-					"backgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "white"
-				}
-			},
-			{
-				"path": "pages/message/TUI-Chat/chat",
-				"style": {
-					"navigationStyle": "custom"
-				}
-			},
-			{
-				"path": "pages/message/TUI-Conversation/create-conversation/create",
-				"style": {
-					"navigationStyle": "custom"
-				}
+		// {
+		// 	"path": "pages/message/TUI-Index/index",
+		// 	"style": {
+		// 		"navigationStyle": "custom"
+		// 	}
+		// },
+		{
+			"path": "pages/TUI-Conversation/conversation/conversation",
+			"style": {
+				"navigationBarTitleText": "会话列表",
+				"navigationBarBackgroundColor": "#006EFF",
+				"backgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "white"
 			}
+		}
+
+	
 
 
-	    
-    ],
-	"subPackages": [
+
+	],
+	"subPackages": [{
+			"root": "subpkgChat",
+			"pages": [
+
+				{
+					"path": "TUI-Chat/chat",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "create-conversation/create",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}
+			]
+
+		},
 		{
 			"root": "subpkg/login",
 			"pages": [
@@ -436,17 +437,15 @@
 						"enablePullDownRefresh": false
 					}
 
+				}, {
+					"path": "myMoney/addCard/addCard",
+					"style": {
+						"navigationBarTitleText": "添加银行卡",
+						"enablePullDownRefresh": false
+					}
+
 				}
-			    ,{
-                    "path" : "myMoney/addCard/addCard",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "添加银行卡",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+			]
 		}
 	],
 	"tabBar": {
@@ -474,7 +473,7 @@
 				}
 			},
 			{
-				"pagePath": "pages/message/TUI-Conversation/conversation/conversation",
+				"pagePath": "pages/TUI-Conversation/conversation/conversation",
 				"iconPath": "./static/img/tabbar/message-unactive.png",
 				"selectedIconPath": "./static/img/tabbar/message-active.png",
 				"text": "消息"

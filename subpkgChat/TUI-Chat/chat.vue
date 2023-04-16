@@ -8,7 +8,7 @@
 	</tuicalling> -->
 		<!-- #endif -->
 		<view class="tui-chatroom-navigatorbar">
-			<image class="tui-chatroom-navigatorbar-back" src="/static/static/assets/ic_back_white.svg" @tap="goBack" />
+			<image class="tui-chatroom-navigatorbar-back" src="../../static/static/assets/ic_back_white.svg" @tap="goBack" />
 			<!-- 先查 remark；无 remark 查 (c2c)nick/(group)name；最后查 (c2c)userID/(group)groupID -->
 			<view class="conversation-title">{{ conversationName }}</view>
 		</view>
@@ -33,9 +33,9 @@
 </template>
 
 <script>
-import logger from '../../../utils/logger';
-import TUIMessageList from '../../../components/tui-chat/message-list/index';
-import TUIMessageInput from '../../../components/tui-chat/message-input/index';
+import logger from '../../utils/logger';
+import TUIMessageList from '../../components/tui-chat/message-list/index';
+import TUIMessageInput from '../../components/tui-chat/message-input/index';
 
 const app = getApp();
 export default {
