@@ -21,9 +21,9 @@
 <!-- 这里有个加载的补丁逻辑待优化，页面向SDK请求conversationList的时候会有时延，
 造成页面的一个抖动，这里加一个if逻辑打一个补丁，后续继续优化 -->
 <script>
-import logger from '../../../../utils/logger';
-import TUIConversationItem from '../../../../components/tui-conversation/conversation-item/index';
-import TUIMessageList from '../../../../components/tui-chat/message-list/index';
+import logger from '../../../utils/logger';
+import TUIConversationItem from '../../../components/tui-conversation/conversation-item/index';
+import TUIMessageList from '../../../components/tui-chat/message-list/index';
 
 export default {
 	data() {
@@ -129,7 +129,7 @@ export default {
 		goHomePage() {
 			// uni.navigateTo 不能跳转到 tabbar 页面，使用 uni.switchTab 代替
 			uni.switchTab({
-				url: '../../TUI-Index/index'
+				url: '/subpkgChat/TUI-Index/index'
 			});
 		},
 
@@ -141,7 +141,7 @@ export default {
 
 		$createConversation() {
 			uni.navigateTo({
-				url: '../create-conversation/create'
+				url: '/subpkgChat/create-conversation/create'
 			});
 		},
 

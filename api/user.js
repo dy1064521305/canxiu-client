@@ -4,7 +4,7 @@ import request from '@/config/request.js';
 export const getInfoById = (clientId) => request.get('/client/user/'+clientId)
 
 // 修改客户端用户
-export const editUser = (params) => request.put('/client/user',params)
+export const editUser = (data) => request.put('/client/user',data)
 
 //获取我的页面数据
 export const queryMyInfo = (clientId) => request.get('/client/user/queryMyInfo/'+clientId)

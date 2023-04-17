@@ -348,6 +348,9 @@
 			margin-top: 20rpx;
 			width: 100%;
 			background-color: #fff;
+			bottom: 110rpx;
+			    position: relative;
+				top: 2rpx;
 		}
 
 		.bottom {

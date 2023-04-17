@@ -20,13 +20,13 @@ export const getNewProject = (orderId) => request.get('/worker/order/getNewProje
 export const generateReports = (orderId) => request.get('/client/order/generateReports/'+orderId)
 
 //客户验收签字
-export const acceptance = (params) => request.put('/client/order/acceptance',params)
+export const acceptance = (data) => request.put('/client/order/acceptance',data)
 
 //新增客户端订单投诉
-export const orderComplaint = (params) => request.post('/client/orderComplaint',params)
+export const orderComplaint = (data) => request.post('/client/orderComplaint',data)
 
 //新增客户端订单评价
-export const appraise = (params) => request.post('/app/client/appraise',params)
+export const appraise = (data) => request.post('/app/client/appraise',data)
 
 //获取客户端服务评价详细信息
 export const appraiseInfo = (appraiseId) => request.get('/app/client/appraise/'+appraiseId)
@@ -35,7 +35,7 @@ export const appraiseInfo = (appraiseId) => request.get('/app/client/appraise/'+
 export const appraiseList = (params) => request.get('/app/client/appraise/list',params)
 
 //客户取消订单
-export const cancelOrder = (params) => request.put('/client/order/cancelOrder',params)
+export const cancelOrder = (data) => request.put('/client/order/cancelOrder',data)
 
 
 //获取维修师详情

@@ -113,7 +113,7 @@ export default {
 		bindConfirmInvite() {
 			if (this.isChoose) {
 				uni.navigateTo({
-					url: `../../TUI-Chat/chat?conversationID=C2C${this.searchUser.userID}`
+					url: `../../../../subpkgChat/TUI-Chat/chat?conversationID=C2C${this.searchUser.userID}`
 				});
 			} else {
 				uni.showToast({

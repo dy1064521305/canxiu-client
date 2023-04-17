@@ -414,7 +414,7 @@
 				})
 			},
 			getServiceSymptoms() {
-				console.log(this.serviceSymptomsName);
+			//	console.log(this.serviceSymptomsName);
 				this.loading = true
 
 				this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
