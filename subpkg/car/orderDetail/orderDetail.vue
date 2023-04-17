@@ -219,7 +219,28 @@
 			</view>
 		</view>
 
-
+	<view v-if="info.deliveryVo" class="bg project">
+		<view class="title">
+			维修详情
+		</view>
+		<view class="info-box">
+			<view class="font">
+				图片
+			</view>
+			<view>
+				<upLoadFile :fileListt='info.deliveryVo.deliveryImg!=null?info.deliveryVo.deliveryImg.split(",") : []' types='image' :isDel='false'
+					:isInfo='true' />
+			</view>
+		</view>
+		<view class="info-box">
+			<view class="font">
+				订单备注
+			</view>
+			<view>
+				{{info.deliveryVo.remark}}
+			</view>
+		</view>
+	</view>
 
 		<view class="bg info">
 			<view class="title">
@@ -345,7 +366,7 @@
 			</view>
 		</view>
 
-		<!-- 	<view v-if="info.orderStatus=='待评价'" class="btns">
+		<view v-if="info.orderStatus=='待评价'" class="btns">
 			<view style="width:281rpx" class="btn-white" @click="report('生成维修报告')">
 				生成维修报告
 			</view>
@@ -355,7 +376,7 @@
 			<view style="width:163rpx" class="btn-green" @click="appraiseHandle">
 				评价
 			</view>
-		</view> -->
+		</view>
 
 
 		<!-- 取消原因 -->
@@ -486,6 +507,9 @@
 			}
 		},
 		methods: {
+			acceptRefresh() {
+				this.getList()
+			},
 			//倒数计时15分钟时间
 			timeFn(d1) { //di作为一个变量传进来
 				//如果时间格式是正确的，那下面这一步转化时间格式就可以不用了
@@ -695,7 +719,7 @@
 				let info = {
 					name: name,
 					id: this.info.orderId,
-					info:this.info
+					info: this.info
 				}
 				console.log(info);
 				uni.navigateTo({

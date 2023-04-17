@@ -227,63 +227,61 @@
 							})
 							// this.wxIMLogin(result);
 							plus.push.getClientInfoAsync((info) => {
-									let cid = info["clientid"];
-									console.log({
-										cid: info["clientid"],
-										userId: result.data.clientId
-									});
-									bindIds({
-										clientId: info["clientid"],
-										userId: result.data.clientId
-									}).then(res => {
-										console.log(res);
-									})
-								}),
-
-								getInfoById(result.data.clientId).then(res => {
+								let cid = info["clientid"];
+								console.log({
+									cid: info["clientid"],
+									userId: result.data.clientId
+								});
+								bindIds({
+									clientId: info["clientid"],
+									userId: result.data.clientId
+								}).then(res => {
 									console.log(res);
-									this.userInfo = res.data
-									let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
-									if (result.data.type == 'Success' && !isEmpty(this.userInfo.avatarUrl) && !
-										isEmpty(this.userInfo.clientName) && !isEmpty(this.userInfo
-											.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
-											.userInfo
-											.storeTypeId)) {
-										const pages = uni.$u.pages();
-										console.log(pages);
-										apps.type = 'login'
-										if (pages.some(p => p.route.includes('goodDetails'))) {
-											var pagess = getCurrentPages();
-											var prevPage = pagess[pagess.length - 2]; //上一个页面
-											var object = {
-												name: "back"
-											}
-											prevPage.$vm.otherFun(object);
-											uni.navigateBack()
-										} else {
-											uni.switchTab({
-												url: '/pages/home/index',
-												fail(err) {
-													console.log(err)
-												}
-											})
-										}
+								})
+							}),
 
+							getInfoById(result.data.clientId).then(res => {
+								console.log(res);
+								this.userInfo = res.data
+								let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
+								if (result.data.type == 'Success' && !isEmpty(this.userInfo.avatarUrl) && !
+									isEmpty(this.userInfo.clientName) && !isEmpty(this.userInfo
+										.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
+										.userInfo
+										.storeTypeId)) {
+									const pages = uni.$u.pages();
+									console.log(pages);
+									apps.type = 'login'
+									if (pages.some(p => p.route.includes('goodDetails'))) {
+										var pagess = getCurrentPages();
+										var prevPage = pagess[pagess.length - 2]; //上一个页面
+										var object = {
+											name: "back"
+										}
+										prevPage.$vm.otherFun(object);
+										uni.navigateBack()
 									} else {
-										console.log(!isEmpty(this.userInfo.avatarUrl), !isEmpty(this.userInfo
-												.clientName), !isEmpty(this.userInfo.detailAddress), !
-											isEmpty(
-												this.userInfo.region), !isEmpty(this.userInfo.storeTypeId));
-										uni.navigateTo({
-											url: '../../subpkg/login/info/info?id=' + result.data
-												.clientId,
+										uni.switchTab({
+											url: '/pages/home/index',
 											fail(err) {
 												console.log(err)
 											}
 										})
 									}
-									//	this.fileList.push({url:arr[0]})
-								})
+
+								} else {
+									console.log(!isEmpty(this.userInfo.avatarUrl), !isEmpty(this.userInfo
+										.clientName), !isEmpty(this.userInfo.detailAddress), !isEmpty(
+										this.userInfo.region), !isEmpty(this.userInfo.storeTypeId));
+									uni.navigateTo({
+										url: '../../subpkg/login/info/info?id=' + result.data.clientId,
+										fail(err) {
+											console.log(err)
+										}
+									})
+								}
+								//	this.fileList.push({url:arr[0]})
+							})
 
 
 						})
@@ -359,8 +357,7 @@
 			goAgreement(item) {
 				console.log(item);
 				uni.navigateTo({
-					url: '../../subpkg/login/agreementDetailed/agreementDetailed?name=' + item
-						.agreementName
+					url: '../../subpkg/login/agreementDetailed/agreementDetailed?name=' + item.agreementName
 				})
 			},
 			//未登录回到首页

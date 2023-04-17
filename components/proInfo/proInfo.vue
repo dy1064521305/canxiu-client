@@ -1,7 +1,7 @@
 <template>
 	<view class="info">
 		<u-checkbox-group v-model="checkboxValue1" placement="column">
-			<view v-for="(item, index) in dataList" :key="item.id?item.id:item.projectId">
+			<view v-for="(item, index) in dataList" :key="index">
 
 				<view class="check">
 					<u-checkbox v-if="submit" shape="circle" :name="item.id?item.id:item.projectId"

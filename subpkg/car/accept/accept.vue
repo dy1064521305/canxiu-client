@@ -216,6 +216,10 @@
 											that.retDraw()
 											that.cavShow = false
 											that.showAccept = false
+											let pages = getCurrentPages()
+											let prevPage = pages[pages.length - 2]
+											prevPage.$vm.acceptRefresh()
+											uni.navigateBack()
 										})
 
 									}

@@ -4,14 +4,14 @@
 			<view class="search">
 				<image src="../../../static/img/home/search.png"></image>
 				<view style="width: 85%;">
-					<u--input @clear="searchs('clear')" @confirm="searchs('search')" clearable border='none' v-model="serviceName" type="text"
-						placeholder="请输入需要的服务" />
+					<u--input @input='searchs("change")' @clear="searchs('clear')" @confirm="searchs('search')"
+						clearable border='none' v-model="serviceName" type="text" placeholder="请输入需要的服务" />
 				</view>
 			</view>
-		
+
 			<view class="close" @click="close">取消</view>
 		</header>
-		<view v-if="isSearch&&searchList!=[]" style="padding: 0 20rpx;">
+		<view v-if="isSearch&&searchList.length!=0" style="padding: 0 20rpx;">
 			<block v-for="(item,index) in searchList" :key="index">
 				<goodCard :item='item' />
 			</block>
@@ -36,7 +36,8 @@
 					</view>
 				</view>
 				<view class="names">
-					<view v-for="(item,index) in historyList" :key="index" class="box">
+					<view v-for="(item,index) in historyList" :key="index" class="box"
+						@click="searchHandle(item,'history')">
 						{{item}}
 					</view>
 
@@ -81,7 +82,7 @@
 				serviceName: '',
 				showHistory: true,
 				// 延时器的 timerId
-				//timer: null,
+				timer: null,
 				isSearch: false,
 
 			};
@@ -143,48 +144,57 @@
 						_this.showHistory = true
 						_this.searchList = []
 						_this.serviceName = ''
-						_this.isSearch=false
+						_this.isSearch = false
 						//clearTimeout(this.timer)
+					} else if (type == 'change') {
+						_this.showHistory = false
+						// 清除 timer 对应的延时器
+						clearTimeout(_this.timer)
+						// 重新启动一个延时器，并把 timerId 赋值给 this.timer
+						_this.timer = setTimeout(() => {
+							// 如果 500 毫秒内，没有触发新的输入事件，则为搜索关键词赋值
+							let name = _this.serviceName
+							if (name == '') {
+								_this.searchList = []
+								_this.showHistory = true
+								console.log(name);
+							} else {
+								_this.searchHandle(name)
+							}
+
+						}, 400)
+						console.log(_this);
 					}
+
 				} else {
 					_this.isSearch = false
+					_this.showHistory = true
 				}
 
-				// else if (type == 'change') {
-				// 	this.showHistory = false
-				// 	// 清除 timer 对应的延时器
-				// 	clearTimeout(this.timer)
-				// 	// 重新启动一个延时器，并把 timerId 赋值给 this.timer
-				// 	this.timer = setTimeout(() => {
-				// 		// 如果 500 毫秒内，没有触发新的输入事件，则为搜索关键词赋值
-				// 		let name = val
-				// 		if(name==''){
-				// 				this.searchList = []
-				// 				this.showHistory = true
-				// 				console.log(name);
-				// 		}else{
-				// 			this.searchHandle(name)
-				// 		}
-
-				// 	}, 400)
-				// 	console.log(this.serviceName);
-				// }
 
 			},
 
-			searchHandle(name) {
+			searchHandle(name, type) {
+				console.log(name);
+				if (type == 'history') {
+					this.serviceName = name
+
+				}
+				this.showHistory = false
+				this.isSearch = true
+				this.searchList = []
 				search({
 					serviceName: name
 				}).then(res => {
 					console.log(this.serviceName);
 					this.searchList = res.data
-					console.log(this.searchList);
+					console.log(res.data);
 					this.searchList.forEach(item => {
 						item.serviceImg = Array.isArray(item.serviceImg) ? item.serviceImg : item
 							.serviceImg.split(
 								',')
 					})
-					this.search = false
+					//	this.isSearch = true
 				})
 			},
 
@@ -195,7 +205,8 @@
 					key: 'search_fuwu',
 
 				})
-			}
+			},
+			
 
 		}
 	}
@@ -210,6 +221,7 @@
 			background: #FFFFFF;
 			display: flex;
 			padding: 20rpx;
+
 			.search {
 				width: 600rpx;
 				height: 72rpx;
@@ -217,7 +229,7 @@
 				border-radius: 36rpx;
 				align-items: center;
 				display: flex;
-			
+
 				image {
 					width: 25rpx;
 					height: 25rpx;

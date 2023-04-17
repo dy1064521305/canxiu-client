@@ -134,7 +134,7 @@
 						<view class="box" @click="fuwuClick('invite')">
 							<view class='img'>
 								<image style="width: 48rpx;height: 54rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/f44ea061b78849129614c02e0deb3cdd.png"
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/47c98144cb6a456c9767451b3d0db13f.png"
 									></image>
 							</view>
 							<text>邀请挣钱</text>
@@ -185,7 +185,7 @@
 						num: undefined
 					},
 					{
-						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/ca1bc8d48d3d4c119034e8a24e6fefbb.png',
+						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/10/2173827600e44de3b84103911dbbb81f.png',
 						name: '待上门',
 						num: undefined
 					},

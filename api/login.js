@@ -1,7 +1,7 @@
 import request from '@/config/request.js';
 
 // 用户登录(手机号+验证码)
-export const login = (params) => request.post('/client/login/smsLogin', params, { custom: { auth: false } })
+export const login = (data) => request.post('/client/login/smsLogin', data, { custom: { auth: false } })
 
 
 
@@ -14,10 +14,10 @@ export const getAgreement = () => request.get('/basic/problemAgreement/agreement
 
 
 //完善客户信息
-export const refine = (params) => request.put('/client/user/refine',params)
+export const refine = (data) => request.put('/client/user/refine',data)
 
 //选择店铺类型
 export const getStoreType = () => request.get('/client/user/queryStoreType')
 
 //绑定用户id和cid
-export const bindIds= (params) => request.post('/common/getui/bind',params)
+export const bindIds= (data) => request.post('/common/getui/bind',data)
