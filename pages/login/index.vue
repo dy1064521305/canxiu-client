@@ -78,18 +78,12 @@
 	} from '@/utils/verify.js'
 
 
-
-
-	import {
-		setTokenStorage
-	} from '../../utils/token';
 	import logger from '../../utils/logger';
+
 	import {
-		genTestUserSig
-	} from '../../debug/GenerateTestUserSig.js';
-	const {
-		getTokenStorage
-	} = require('../../utils/token.js');
+		getUserSig
+	} from '@/api/tim.js'
+
 	const app = getApp();
 
 
@@ -112,23 +106,23 @@
 			this.getList()
 		},
 		onLoad(option) {
-			const that = this;
-			this.setData({
-				path: option.path
-			});
-			uni.getStorage({
-				// 获取本地缓存
-				key: 'sessionID',
-				success(res) {
-					that.setData({
-						sessionID: res.data
-					});
-				}
-			});
-			uni.setStorage({
-				key: 'path',
-				data: option.path
-			});
+			// const that = this;
+			// this.setData({
+			// 	path: option.path
+			// });
+			// uni.getStorage({
+			// 	// 获取本地缓存
+			// 	key: 'sessionID',
+			// 	success(res) {
+			// 		that.setData({
+			// 			sessionID: res.data
+			// 		});
+			// 	}
+			// });
+			// uni.setStorage({
+			// 	key: 'path',
+			// 	data: option.path
+			// });
 		},
 		watch: {
 			// "isLogin": {
@@ -217,62 +211,79 @@
 							smsCode: app.code,
 						}).then(result => {
 							console.log(result.data);
+							getUserSig().then(res => {
+								uni.$TUIKit.login({
+									userID: result.data.clientId,
+									userSig: res.msg
+								}).then(function(imResponse) {
+									console.log('-----------1111111111111111111111'); // 登录成功
+									console.log(imResponse); // 登录成功
+									console.log('22222222222222222222222222222'); // 登录成功
+									if (imResponse.data.repeatLogin === true) {
+										// 标识帐号已登录，本次登录操作为重复登录。v2.5.1 起支持
+										console.log(imResponse.data.errorInfo);
+									}
+								}).catch((error) => {})
+							})
+							// this.wxIMLogin(result);
 							plus.push.getClientInfoAsync((info) => {
-								let cid = info["clientid"];
-								console.log({
-									cid: info["clientid"],
-									userId: result.data.clientId
-								});
-								bindIds({
-									clientId: info["clientid"],
-									userId: result.data.clientId
-								}).then(res => {
-									console.log(res);
-								})
-							}),
+									let cid = info["clientid"];
+									console.log({
+										cid: info["clientid"],
+										userId: result.data.clientId
+									});
+									bindIds({
+										clientId: info["clientid"],
+										userId: result.data.clientId
+									}).then(res => {
+										console.log(res);
+									})
+								}),
 
-							getInfoById(result.data.clientId).then(res => {
-								console.log(res);
-								this.userInfo = res.data
-								let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
-								if (result.data.type == 'Success' && !isEmpty(this.userInfo.avatarUrl) && !
-									isEmpty(this.userInfo.clientName) && !isEmpty(this.userInfo
-										.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
-										.userInfo
-										.storeTypeId)) {
-									const pages = uni.$u.pages();
-									console.log(pages);
-									apps.type = 'login'
-									if (pages.some(p => p.route.includes('goodDetails'))) {
-										var pagess = getCurrentPages();
-										var prevPage = pagess[pagess.length - 2]; //上一个页面
-										var object = {
-											name: "back"
+								getInfoById(result.data.clientId).then(res => {
+									console.log(res);
+									this.userInfo = res.data
+									let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
+									if (result.data.type == 'Success' && !isEmpty(this.userInfo.avatarUrl) && !
+										isEmpty(this.userInfo.clientName) && !isEmpty(this.userInfo
+											.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
+											.userInfo
+											.storeTypeId)) {
+										const pages = uni.$u.pages();
+										console.log(pages);
+										apps.type = 'login'
+										if (pages.some(p => p.route.includes('goodDetails'))) {
+											var pagess = getCurrentPages();
+											var prevPage = pagess[pagess.length - 2]; //上一个页面
+											var object = {
+												name: "back"
+											}
+											prevPage.$vm.otherFun(object);
+											uni.navigateBack()
+										} else {
+											uni.switchTab({
+												url: '/pages/home/index',
+												fail(err) {
+													console.log(err)
+												}
+											})
 										}
-										prevPage.$vm.otherFun(object);
-										uni.navigateBack()
+
 									} else {
-										uni.switchTab({
-											url: '/pages/home/index',
+										console.log(!isEmpty(this.userInfo.avatarUrl), !isEmpty(this.userInfo
+												.clientName), !isEmpty(this.userInfo.detailAddress), !
+											isEmpty(
+												this.userInfo.region), !isEmpty(this.userInfo.storeTypeId));
+										uni.navigateTo({
+											url: '../../subpkg/login/info/info?id=' + result.data
+												.clientId,
 											fail(err) {
 												console.log(err)
 											}
 										})
 									}
-
-								} else {
-									console.log(!isEmpty(this.userInfo.avatarUrl), !isEmpty(this.userInfo
-										.clientName), !isEmpty(this.userInfo.detailAddress), !isEmpty(
-										this.userInfo.region), !isEmpty(this.userInfo.storeTypeId));
-									uni.navigateTo({
-										url: '../../subpkg/login/info/info?id=' + result.data.clientId,
-										fail(err) {
-											console.log(err)
-										}
-									})
-								}
-								//	this.fileList.push({url:arr[0]})
-							}) 
+									//	this.fileList.push({url:arr[0]})
+								})
 
 
 						})
@@ -281,6 +292,12 @@
 				}
 			},
 			wxIMLogin(result) {
+
+				getUserSig().then(res => {
+					console.info('--------------------------------------');
+					console.info(res);
+					console.info('---------------------------=======----');
+				})
 
 				// 腾讯im登录
 				const userID = this.phone;
@@ -294,16 +311,13 @@
 					userID: userID
 				});
 
-
-
-
 				app.globalData.userInfo = {
 					userSig,
 					userID
 				};
-				setTokenStorage({
-					userInfo: app.globalData.userInfo
-				});
+				// setTokenStorage({
+				// 	userInfo: app.globalData.userInfo
+				// });
 				wx.setStorageSync(`TIM_${getApp().SDKAppID}_isTUIKit`, true);
 
 				uni.$TUIKit.login({
@@ -345,7 +359,8 @@
 			goAgreement(item) {
 				console.log(item);
 				uni.navigateTo({
-					url: '../../subpkg/login/agreementDetailed/agreementDetailed?name=' + item.agreementName
+					url: '../../subpkg/login/agreementDetailed/agreementDetailed?name=' + item
+						.agreementName
 				})
 			},
 			//未登录回到首页

@@ -1,19 +1,33 @@
 <template>
 	<view class="container-conversation">
-		<view class="scroll-box">
-			<view class="uni-list margintop-bar">
-				<view v-for="item in conversationList" :key="item.conversationID" @tap="handleRoute(item.conversationID)">
-					<TUI-conversation-item :data-type="item.type" :conversation="item"></TUI-conversation-item>
+		<view v-if="!isLogin" style="padding-top: 330rpx;">
+			<u-empty mode="permission" icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png" text="您还未登录">
+			</u-empty>
+			<view class="btns">
+				<view @click="quxiao">
+					取消
+				</view>
+				<view @click="login">
+					去登录
 				</view>
 			</view>
 		</view>
-		<view class="bottom-back">
-			<view class="bottom-area">
-				<view v-if="showSelectTag" class="conversation-bubble" @tap.stop="handleEditToggle">
-					<view v-for="(item, index) in array" :key="index" class="picker" :data-name="item.name" @tap="handleOnTap">{{ item.name }}</view>
+		<view v-else class="">
+			<view class="scroll-box">
+				<view class="uni-list margintop-bar">
+					<view v-for="item in conversationList" :key="item.conversationID" @tap="handleRoute(item.conversationID)">
+						<TUI-conversation-item :data-type="item.type" :conversation="item"></TUI-conversation-item>
+					</view>
 				</view>
-				<image @tap="showMore" class="btn-show-more" src="/static/static/assets/add.svg"></image>
-				<view @tap="learnMore" class="im-link">了解更多IM功能</view>
+			</view>
+			<view class="bottom-back">
+				<view class="bottom-area">
+					<view v-if="showSelectTag" class="conversation-bubble" @tap.stop="handleEditToggle">
+						<view v-for="(item, index) in array" :key="index" class="picker" :data-name="item.name" @tap="handleOnTap">{{ item.name }}</view>
+					</view>
+					<image @tap="showMore" class="btn-show-more" src="/static/static/assets/add.svg"></image>
+					<view @tap="learnMore" class="im-link">了解更多IM功能</view>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -25,9 +39,16 @@ import logger from '../../../../utils/logger';
 import TUIConversationItem from '../../../../components/tui-conversation/conversation-item/index';
 import TUIMessageList from '../../../../components/tui-chat/message-list/index';
 
+import { accountQueryState } from '@/api/tim.js'
+import storage from '@/utils/storage'
+import {
+		getUserSig
+	} from '@/api/tim.js'
+	
 export default {
 	data() {
 		return {
+			isLogin: false,
 			conversationList: [],
 			showSelectTag: false,
 			array: [
@@ -57,6 +78,7 @@ export default {
 		// 登入后拉去会话列表
 		this.getConversationList();
 		uni.$TUIKit.on(uni.$TUIKitEvent.CONVERSATION_LIST_UPDATED, this.onConversationListUpdated);
+		
 	},
 
 	/**
@@ -65,8 +87,49 @@ export default {
 	onUnload() {
 		uni.$TUIKit.off(uni.$TUIKitEvent.SDK_READY, this.onConversationListUpdated);
 	},
-
+	onShow() {
+		this.isLogin = storage.get('AccessToken');
+		this.queryState();
+		console.info('---------======================')
+		console.info(this.conversationList)
+		console.info('===============================')
+	},
 	methods: {
+		
+		queryState(){
+			accountQueryState().then(res => {
+				if(res.data.QueryResult[0].State == 'Offline' && this.isLogin != false){
+					getUserSig().then(ress => {
+						uni.$TUIKit.login({
+							userID: res.data.QueryResult[0].To_Account,
+							userSig: ress.msg
+						}).then(function(imResponse) {
+							if (imResponse.data.repeatLogin === true) {
+								// 标识帐号已登录，本次登录操作为重复登录。v2.5.1 起支持
+								console.log(imResponse.data.errorInfo);
+							}
+						}).catch((error) => {
+							console.info(error)
+						})
+					})
+				}
+				
+			})
+		},
+		//取消登录
+		quxiao() {
+			uni.switchTab({
+				url: '/pages/home/index'
+			})
+		},
+		//去登录
+		login() {
+			uni.navigateTo({
+				url: '/pages/login/index'
+			})
+		},
+		
+		
 		handleRoute(id) {
 			const url = `../../TUI-Chat/chat?conversationID=${id}`;
 			uni.navigateTo({
@@ -161,4 +224,33 @@ export default {
 </script>
 <style scoped>
 @import './conversation.css';
+.center-con {
+		position: relative;
+	}
+.btns {
+		display: flex;
+		justify-content: space-evenly;
+		margin: 50rpx auto;
+		width: 63%;
+
+		view {
+			width: 180rpx;
+			height: 60rpx;
+			border-radius: 45rpx;
+			text-align: center;
+			line-height: 60rpx;
+			font-size: 28rpx;
+		}
+
+		view:first-child {
+			background: #9FD6BA;
+			color: #fff;
+		}
+
+		view:nth-child(2) {
+			background: #FFFFFF;
+			border: 4rpx solid #9FD6BA;
+			color: #9FD6BA;
+		}
+	}
 </style>
