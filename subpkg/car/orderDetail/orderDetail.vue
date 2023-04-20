@@ -219,28 +219,29 @@
 			</view>
 		</view>
 
-	<view v-if="info.deliveryVo" class="bg project">
-		<view class="title">
-			维修详情
+		<view v-if="info.deliveryVo" class="bg project">
+			<view class="title">
+				维修详情
+			</view>
+			<view class="info-box">
+				<view class="font">
+					图片
+				</view>
+				<view>
+					<upLoadFile
+						:fileListt='info.deliveryVo.deliveryImg!=null?info.deliveryVo.deliveryImg.split(",") : []'
+						types='image' :isDel='false' :isInfo='true' />
+				</view>
+			</view>
+			<view class="info-box">
+				<view class="font">
+					订单备注
+				</view>
+				<view>
+					{{info.deliveryVo.remark}}
+				</view>
+			</view>
 		</view>
-		<view class="info-box">
-			<view class="font">
-				图片
-			</view>
-			<view>
-				<upLoadFile :fileListt='info.deliveryVo.deliveryImg!=null?info.deliveryVo.deliveryImg.split(",") : []' types='image' :isDel='false'
-					:isInfo='true' />
-			</view>
-		</view>
-		<view class="info-box">
-			<view class="font">
-				订单备注
-			</view>
-			<view>
-				{{info.deliveryVo.remark}}
-			</view>
-		</view>
-	</view>
 
 		<view class="bg info">
 			<view class="title">
@@ -337,10 +338,10 @@
 		</view>
 
 		<view v-if="info.orderStatus=='待评价'" class="btns">
-			<view style="width:281rpx" class="btn-white" @click="report('生成维修报告')">
+			<view style="width:281rpx" class="btn-white" @click="report('待评价')">
 				生成维修报告
 			</view>
-			<view style="width:205rpx" class="btn-white">
+			<view style="width:205rpx" class="btn-white" @click="repairOrderShow=true">
 				申请返修
 			</view>
 			<view style="width:163rpx" class="btn-green" @click="appraiseHandle">
@@ -349,7 +350,7 @@
 		</view>
 
 		<view v-if="info.orderStatus=='待支付'" class="btns">
-			<view style="width:335rpx" class="btn-white" @click="report('生成维修报告')">
+			<view style="width:335rpx" class="btn-white" @click="report('待支付')">
 				生成维修报告
 			</view>
 			<view style="width: 335rpx;" class="btn-green" @click='pay'>
@@ -366,15 +367,15 @@
 			</view>
 		</view>
 
-		<view v-if="info.orderStatus=='待评价'" class="btns">
-			<view style="width:281rpx" class="btn-white" @click="report('生成维修报告')">
-				生成维修报告
+		<view v-if="info.orderStatus=='服务中【审核通过】'" class="btns">
+			<view style="padding: 0 40rpx;" class="btn-white" @click="rejectShowModal=true">
+				驳回
 			</view>
-			<view style="width:205rpx" class="btn-white">
-				申请返修
+			<view style="padding: 0 40rpx;" class="btn-white" @click="show=true">
+				取消订单
 			</view>
-			<view style="width:163rpx" class="btn-green" @click="appraiseHandle">
-				评价
+			<view style="padding: 0 40rpx;" class="btn-green" @click="handles('确认')">
+				确认维修方案
 			</view>
 		</view>
 
@@ -413,8 +414,22 @@
 			</view>
 		</u-popup>
 
+		<!-- 返修 -->
+		<u-modal :show="repairOrderShow" title="温馨提示" showCancelButton confirmColor='#9FD6BA'
+			@cancel="repairOrderShow=false" @confirm="handles('返修')">
+			<view style="width: 100%;text-align: center;">
+				是否确认申请返修?
+			</view>
+		</u-modal>
 
-
+		<!-- 驳回理由 -->
+		<u-modal :show="rejectShowModal" width="600rpx" title="驳回理由" showCancelButton confirmColor='#9FD6BA'
+			@cancel="rejectShowModal=false" @confirm="handles('驳回')">
+			<view style="width: 100%;display: flex;">
+				驳回理由：
+				<u--textarea v-model="reason" placeholder="请输入驳回理由"></u--textarea>
+			</view>
+		</u-modal>
 	</view>
 </template>
 
@@ -433,6 +448,9 @@
 		},
 		data() {
 			return {
+				rejectShowModal: false, //驳回理由弹出框
+				reason: '', //驳回理由
+				repairOrderShow: false, //返修
 				loadingText: '',
 				pipeiStatus: false, //匹配中图标
 				timeData: {},
@@ -459,7 +477,7 @@
 						content: '等待维修师上门维修',
 					},
 					{
-						orderStatus: '服务中【待客户确认】',
+						orderStatus: '服务中【审核通过】',
 						status: '请确认维修方案及报价',
 						content: '维修师已提供了维修方案及报价，请确认',
 					},
@@ -473,11 +491,11 @@
 						status: '请评价本次服务',
 						content: '服务已完成，请您对本次服务进行评价',
 					},
-					{
-						orderStatus: '客户取消',
-						status: '订单已取消',
-						content: '订单取消并收取上门费',
-					},
+					// {
+					// 	orderStatus: '客户取消',
+					// 	status: '订单已取消',
+					// 	content: '订单取消并收取上门费',
+					// },
 					{
 						orderStatus: '已完成',
 						status: '评价已完成',
@@ -715,9 +733,10 @@
 
 			//生成维修报告
 			report(type) {
-				let name = type == '生成维修报告' ? '维修报告' : '服务验收'
+				let name = type == '待评价' || type == '待支付' ? '维修报告' : '服务验收'
 				let info = {
 					name: name,
+					type: type,
 					id: this.info.orderId,
 					info: this.info
 				}
@@ -725,7 +744,44 @@
 				uni.navigateTo({
 					url: '../accept/accept?info=' + JSON.stringify(info)
 				})
+			},
+			handles(type) {
+				switch (type) {
+					case '返修':
+						order.repairOrder(this.info).then(res => {
+							uni.showToast({
+								title: '返修成功',
+								duration: 500
+							});
+							this.getList()
+						})
+						break;
+					case '确认':
+						order.confirmScenario(this.info).then(res => {
+							uni.showToast({
+								title: '确认成功',
+								duration: 500
+							});
+							this.getList()
+						})
+						break;
+					case '驳回':
+
+						this.info.reason = this.reason
+						console.log(this.info);
+						order.overruleScenario(this.info).then(res => {
+							uni.showToast({
+								title: '驳回成功',
+								duration: 500
+							});
+							this.rejectShowModal = false
+							this.getList()
+						})
+						break;
+				}
 			}
+
+
 		}
 	}
 </script>

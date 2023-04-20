@@ -6,7 +6,7 @@
 
 		<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/75537c81465d49b3916abd1ee8694e1f.png" mode="">
 		</image>
-		<u-icon class='icon' name="close-circle" color="#fff" size="25" @click="goHome"></u-icon>
+	<!-- 	<u-icon class='icon' name="close-circle" color="#fff" size="25" @click="goHome"></u-icon> -->
 		<view class="slogin">
 			让餐饮维修更简单
 		</view>

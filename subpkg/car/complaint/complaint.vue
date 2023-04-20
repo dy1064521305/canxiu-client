@@ -1,6 +1,6 @@
 <template>
 	<view class="complaint">
-		<view v-for="(item,index) in info.projectDataVoList" class="box">
+		<view v-for="(item,index) in info.projectDataVoList" :key="index" class="box">
 			<view class="">
 				<image style="width: 130rpx;height: 130rpx;margin: 20rpx;
 border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
@@ -14,14 +14,15 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 						x{{item.projectNumber}}
 					</view>
 				</view>
-			<!-- 	<view style="color: #A5A7A7;">
+				<!-- 	<view style="color: #A5A7A7;">
 					订单编号：20222251250251
 				</view> -->
 			</view>
 		</view>
 		<view class="main">
 			<view class="content">
-				<u--textarea confirmType='done' height='70' v-model="value1" border='none' placeholder="请详细描述您所投诉的内容，方便工作人员核查"></u--textarea>
+				<u--textarea confirmType='done' height='70' v-model="value1" border='none'
+					placeholder="请详细描述您所投诉的内容，方便工作人员核查"></u--textarea>
 				<view style="margin-left: 20rpx;">
 					<upLoadFile :isOrder='true' :limit='9' :fileListt="fileList" types='image' @getUrl='getUrl' />
 				</view>
@@ -30,56 +31,63 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 				</view>
 			</view>
 		</view>
-		
+
 		<view class="button" @click="tousu">
 			确认投诉
 		</view>
-		
-			<u-modal width="280" :show="show" title="投诉成功" :content='content' confirmText='知道了' confirmColor='#72DAA4' @confirm="confirm"></u-modal>
+
+		<u-modal width="280" :show="show" title="投诉成功" :content='content' confirmText='知道了' confirmColor='#72DAA4'
+			@confirm="confirm"></u-modal>
 	</view>
 </template>
 
 <script>
 	import upLoadFile from '../../../components/uploadFile/uploadFile.vue'
-	import {orderComplaint} from '@/api/order.js'
+	import {
+		orderComplaint
+	} from '@/api/order.js'
 	export default {
-		components:{
+		components: {
 			upLoadFile
 		},
 		data() {
 			return {
 				value1: '',
-				fileList:[],
-				info:{},
-				query:{},
-				show:false,
-				content:'我们已经收到您的投诉并会尽快处理，请耐心等待客服与您联系'
+				fileList: [],
+				info: {},
+				query: {},
+				show: false,
+				content: '我们已经收到您的投诉并会尽快处理，请耐心等待客服与您联系'
 			};
 		},
 		onLoad(option) {
-			this.info=JSON.parse(option.item)
+			this.info = JSON.parse(option.item)
 			console.log(this.info);
-			this.query.orderId=this.info.orderId
+			this.query.orderId = this.info.orderId
 		},
-		methods:{
-		 getUrl(val){
-			 console.log(val);
-			 let str=val.urls.toString()
-			 this.query.complaintImg=str
-		 },
-		 tousu(){
-			 this.query.complaintContent=this.value1
-			 console.log(this.query);
-			 orderComplaint(query).then(res=>{
-				 console.log(res);
-				 if(res.code==200){
-					 this.show=true
-				 }
-			 })
-		 },
-		 confirm(){
-			 console.log(1111);
-		 }
+		methods: {
+			getUrl(val) {
+				console.log(val);
+				let str = val.urls.toString()
+			 this.query.complaintImg = str
+			},
+			tousu() {
+				this.query.complaintContent = this.value1
+				console.log(this.query);
+			 orderComplaint(query).then(res => {
+					console.log(res);
+					if (res.code == 200) {
+						this.show = true
+					}
+				})
+			},
+			confirm() {
+				this.show = false
+				uni.navigateBack({
+					delta: 2
+				});
+
+			}
 		}
 	}
 </script>
@@ -117,6 +125,7 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 				}
 			}
 		}
+
 		.button {
 			width: 663rpx;
 			height: 91rpx;
