@@ -12,9 +12,9 @@
 		// #endif
 		
 		import logger from './utils/logger'; // app.js
-		import {
-			genTestUserSig
-		} from './debug/GenerateTestUserSig.js';
+		// import {
+		// 	genTestUserSig
+		// } from './debug/GenerateTestUserSig.js';
 		
 		// 首先需要通过 uni.requireNativePlugin("ModuleName") 获取 module
 		// #ifdef APP-PLUS
@@ -34,7 +34,7 @@
 			// uni.onPushMessage((res) => {
 			// 			console.log("收到推送消息：",res) //监听推送消息
 			// 		})
-			const SDKAppID = genTestUserSig('').sdkAppID;
+			const SDKAppID = 1400802214;
 			uni.setStorageSync(`TIM_${SDKAppID}_isTUIKit`, true);
 			// 重点注意： 为了 uni-app 更好地接入使用 tim，快速定位和解决问题，请勿修改 uni.$TUIKit 命名。
 			// 如果您已经接入 tim ，请将 uni.tim 修改为 uni.$TUIKit。
@@ -82,7 +82,7 @@
 			isTUIKit: true,
 			headerHeight: 0,
 			statusBarHeight: 0,
-			SDKAppID: genTestUserSig('').sdkAppID
+			SDKAppID: 1400802214
 		},
 		methods: {
 			// TODO:
