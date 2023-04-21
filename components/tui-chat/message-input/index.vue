@@ -2,9 +2,9 @@
 	<view>
 		<view class="TUI-message-input-container">
 			<view class="TUI-commom-function">
-				<view v-for="(item, index) in commonFunction" :key="index" class="TUI-commom-function-item" :data-function="item" @tap="handleCommonFunctions">
+				<!-- <view v-for="(item, index) in commonFunction" :key="index" class="TUI-commom-function-item" :data-function="item" @tap="handleCommonFunctions">
 					{{ item.name }}
-				</view>
+				</view> -->
 			</view>
 			<view class="TUI-message-input">
 				<image class="TUI-icon" @tap="switchAudio" :src="isAudio ? '/static/static/assets/keyboard.svg' : '/static/static/assets/audio.svg'"></image>
@@ -59,7 +59,7 @@
 					<image class="TUI-Extension-icon" src="/static/static/assets/send-video.svg"></image>
 					<view class="TUI-Extension-slot-name">发送视频</view>
 				</view>
-				<view class="TUI-Extension-slot" @tap="handleCalling(1)">
+				<!-- <view class="TUI-Extension-slot" @tap="handleCalling(1)">
 					<image class="TUI-Extension-icon" src="/static/static/assets/audio-calling.svg"></image>
 					<view class="TUI-Extension-slot-name">语音通话</view>
 				</view>
@@ -74,7 +74,7 @@
 				<view class="TUI-Extension-slot" @tap="handleSendOrder">
 					<image class="TUI-Extension-icon" src="/static/static/assets/send-order.svg"></image>
 					<view class="TUI-Extension-slot-name">发送订单</view>
-				</view>
+				</view> -->
 			</view>
 			<TUI-Common-Words class="tui-cards" :display="displayCommonWords" @sendMessage="$handleSendTextMessage" @close="$handleCloseCards"></TUI-Common-Words>
 			<TUI-Order-List class="tui-cards" :display="displayOrderList" @sendCustomMessage="$handleSendCustomMessage" @close="$handleCloseCards"></TUI-Order-List>

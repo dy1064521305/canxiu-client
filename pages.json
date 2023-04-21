@@ -87,7 +87,7 @@
 			"path": "pages/TUI-Conversation/conversation/conversation",
 			"style": {
 				"navigationBarTitleText": "会话列表",
-				"navigationBarBackgroundColor": "#006EFF",
+				"navigationBarBackgroundColor": "#9FD6BA",
 				"backgroundColor": "#FFFFFF",
 				"navigationBarTextStyle": "white"
 			}

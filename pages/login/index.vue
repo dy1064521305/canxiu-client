@@ -225,7 +225,6 @@
 									}
 								}).catch((error) => {})
 							})
-							// this.wxIMLogin(result);
 							plus.push.getClientInfoAsync((info) => {
 								let cid = info["clientid"];
 								console.log({
@@ -289,69 +288,6 @@
 
 				}
 			},
-			wxIMLogin(result) {
-
-				getUserSig().then(res => {
-					console.info('--------------------------------------');
-					console.info(res);
-					console.info('---------------------------=======----');
-				})
-
-				// 腾讯im登录
-				const userID = this.phone;
-				const userSig = genTestUserSig(userID).userSig;
-				const SDKAppID = app.globalData.SDKAppID;
-				logger.log(`TUI-login | login  | userSig:${userSig} userID:${userID}`);
-				this.setData({
-					privateAgree: true
-				});
-				this.setData({
-					userID: userID
-				});
-
-				app.globalData.userInfo = {
-					userSig,
-					userID
-				};
-				// setTokenStorage({
-				// 	userInfo: app.globalData.userInfo
-				// });
-				wx.setStorageSync(`TIM_${getApp().SDKAppID}_isTUIKit`, true);
-
-				uni.$TUIKit.login({
-					userID: userID,
-					userSig: userSig
-				}).then(() => {}).catch((error) => {})
-
-				// 登录原生插件
-				// // #ifdef APP-PLUS
-				// if(typeof(uni.$TUICallKit) == 'undefined') {
-				// 	// uni.showToast({
-				// 	// 	title: '如果需要音视频功能，请集成插件使用真机运行并且自定义基座调试哦～',
-				// 	// 	icon: 'none',
-				// 	// 	duration: 3000
-				// 	// });
-				// 	logger.error('请使用真机运行并且自定义基座调试，否则影响音视频功能～ 插件地址：https://ext.dcloud.net.cn/plugin?id=9035 , 调试地址：https://nativesupport.dcloud.net.cn/NativePlugin/use/use');
-				// } else {
-				// 	uni.$TUICallKit.login(
-				// 		{
-				// 			SDKAppID: SDKAppID,
-				// 			userID: userID,
-				// 			userSig: userSig
-				// 		},
-				// 		res => {
-				// 			console.log(JSON.stringify(res.msg));
-				// 			uni.showToast({
-				// 				title: 'login',
-				// 				icon: 'none'
-				// 			});
-				// 		}
-				// 	);
-				// }
-				// // #endif
-
-			},
-
 
 			//查协议内容
 			goAgreement(item) {
