@@ -30,7 +30,7 @@
 			<view class="orders" @click="orderDetail(item.orderId)" v-for='(item,index) in orderList' :key='index'>
 				<view class="main">
 					<view class="title">
-						<text :style="{'font-weight': 'bold','width':item.isUrgent==1?'53%':'65%'}"></text>
+						<text :style="{'font-weight': 'bold','width':item.isUrgent==1?'53%':'65%'}">{{item.warrantyStore}}</text>
 						<text style="font-size: 25rpx;text-align: end;width:42%;">
 							<text>{{item.orderStatus}}</text>
 						</text>
@@ -161,6 +161,7 @@
 	} from '@/api/order.js'
 	import storage from '@/utils/storage'
 	import formatter from '@/utils/formatter.js'
+
 	export default {
 		data() {
 
@@ -200,7 +201,7 @@
 					beginTime: ''
 				},
 				endTime: '', //显示的时间
-				beginTime: ''
+				beginTime: '',
 			};
 		},
 		computed: {
@@ -224,6 +225,11 @@
 		onLoad(option) {
 			console.log(option.item);
 			this.queryParams.clientId = storage.get('ClientId')
+			// getInfoById(storage.get('ClientId')).then(res => {
+			// 	console.log(res);
+			// 	this.clientName=res.data.clientName
+			// 	//	this.fileList.push({url:arr[0]})
+			// })
 			if (option.item == undefined) {
 				this.statusClick({
 					name: '全部'

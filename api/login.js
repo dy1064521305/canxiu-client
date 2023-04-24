@@ -10,7 +10,7 @@ export const getCode = (params) => request.get('/captchaSms', params, { custom: 
 
 
 //获取问题协议
-export const getAgreement = () => request.get('/basic/problemAgreement/agreement',  { custom: { auth: false } })
+export const getAgreement = (params) => request.get('/basic/problemAgreement/agreement',params,  { custom: { auth: false } })
 
 
 //完善客户信息

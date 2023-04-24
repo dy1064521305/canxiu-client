@@ -6,7 +6,7 @@
 
 		<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/75537c81465d49b3916abd1ee8694e1f.png" mode="">
 		</image>
-	<!-- 	<u-icon class='icon' name="close-circle" color="#fff" size="25" @click="goHome"></u-icon> -->
+		<!-- 	<u-icon class='icon' name="close-circle" color="#fff" size="25" @click="goHome"></u-icon> -->
 		<view class="slogin">
 			让餐饮维修更简单
 		</view>
@@ -45,7 +45,7 @@
 					mode="" ></image> -->
 			</view>
 
-			<view class="bottom">
+			<!-- 	<view class="bottom">
 				<view class='font'>
 					<view class="">
 						第三方登录
@@ -57,7 +57,7 @@
 					</view>
 				</view>
 
-			</view>
+			</view> -->
 		</view>
 
 	</view>
@@ -137,7 +137,9 @@
 		},
 		methods: {
 			getList() {
-				getAgreement().then(res => {
+				getAgreement({
+					type:'用户端'
+				}).then(res => {
 					console.log(res);
 					this.agreementList = res.data
 				})
@@ -205,6 +207,7 @@
 				let valid = app.validItem();
 				const apps = getApp()
 				if (valid) {
+				
 					//	app.isLoading = true
 					app.$store.dispatch('Login', {
 							phonenumber: app.phone,
@@ -226,62 +229,66 @@
 								}).catch((error) => {})
 							})
 							// this.wxIMLogin(result);
+							// #ifdef APP-PLUS
 							plus.push.getClientInfoAsync((info) => {
-								let cid = info["clientid"];
-								console.log({
-									cid: info["clientid"],
-									userId: result.data.clientId
-								});
-								bindIds({
-									clientId: info["clientid"],
-									userId: result.data.clientId
-								}).then(res => {
-									console.log(res);
-								})
-							}),
+									let cid = info["clientid"];
+									console.log({
+										cid: info["clientid"],
+										userId: result.data.clientId
+									});
+									bindIds({
+										clientId: info["clientid"],
+										userId: result.data.clientId
+									}).then(res => {
+										console.log(res);
+									})
+								}),
+								// #endif
 
-							getInfoById(result.data.clientId).then(res => {
-								console.log(res);
-								this.userInfo = res.data
-								let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
-								if (result.data.type == 'Success' && !isEmpty(this.userInfo.avatarUrl) && !
-									isEmpty(this.userInfo.clientName) && !isEmpty(this.userInfo
-										.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
-										.userInfo
-										.storeTypeId)) {
-									const pages = uni.$u.pages();
-									console.log(pages);
-									apps.type = 'login'
-									if (pages.some(p => p.route.includes('goodDetails'))) {
-										var pagess = getCurrentPages();
-										var prevPage = pagess[pagess.length - 2]; //上一个页面
-										var object = {
-											name: "back"
+
+								getInfoById(result.data.clientId).then(res => {
+									console.log(res);
+									this.userInfo = res.data
+									let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
+									if (result.data.type == 'Success' && !isEmpty(this.userInfo.avatarUrl) && !
+										isEmpty(this.userInfo.clientName) && !isEmpty(this.userInfo
+											.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
+											.userInfo
+											.storeTypeId)) {
+										const pages = uni.$u.pages();
+										console.log(pages);
+										apps.type = 'login'
+										if (pages.some(p => p.route.includes('goodDetails'))) {
+											var pagess = getCurrentPages();
+											var prevPage = pagess[pagess.length - 2]; //上一个页面
+											var object = {
+												name: "back"
+											}
+											prevPage.$vm.otherFun(object);
+											uni.navigateBack()
+										} else {
+											console.log('666666666666666666666');
+											uni.switchTab({
+												url: '/pages/home/index',
+												fail(err) {
+													console.log(err)
+												}
+											})
 										}
-										prevPage.$vm.otherFun(object);
-										uni.navigateBack()
+
 									} else {
-										uni.switchTab({
-											url: '/pages/home/index',
+										console.log(!isEmpty(this.userInfo.avatarUrl), !isEmpty(this.userInfo
+											.clientName), !isEmpty(this.userInfo.detailAddress), !isEmpty(
+											this.userInfo.region), !isEmpty(this.userInfo.storeTypeId));
+										uni.navigateTo({
+											url: '../../subpkg/login/info/info?id=' + result.data.clientId,
 											fail(err) {
 												console.log(err)
 											}
 										})
 									}
-
-								} else {
-									console.log(!isEmpty(this.userInfo.avatarUrl), !isEmpty(this.userInfo
-										.clientName), !isEmpty(this.userInfo.detailAddress), !isEmpty(
-										this.userInfo.region), !isEmpty(this.userInfo.storeTypeId));
-									uni.navigateTo({
-										url: '../../subpkg/login/info/info?id=' + result.data.clientId,
-										fail(err) {
-											console.log(err)
-										}
-									})
-								}
-								//	this.fileList.push({url:arr[0]})
-							})
+									//	this.fileList.push({url:arr[0]})
+								})
 
 
 						})
@@ -357,7 +364,7 @@
 			goAgreement(item) {
 				console.log(item);
 				uni.navigateTo({
-					url: '../../subpkg/login/agreementDetailed/agreementDetailed?name=' + item.agreementName
+					url: '../../subpkg/login/agreementDetailed/agreementDetailed?remark=' + item.remark
 				})
 			},
 			//未登录回到首页

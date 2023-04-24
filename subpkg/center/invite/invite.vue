@@ -3,10 +3,10 @@
 
 		<image style='width:714rpx'
 			src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/04/b126e5441eb64a749d8d4476e553796f.png"
-			mode="widthFix" @click='shareInfo'></image>
+			mode="widthFix" @click='codeStatus("c")'></image>
 		<image style='width:714rpx'
 			src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/04/66b1ef040a4e43059260de607c762d33.png"
-			mode="widthFix" @click='shareInfo'></image>
+			mode="widthFix" @click='codeStatus("w")'></image>
 		<view class="box">
 			<view class="title">
 				邀请商家记录
@@ -137,7 +137,8 @@
 		getInfoById
 	} from '@/api/user.js'
 	import {
-		generateQrCode
+		generateQrCode,
+		generateAppQrCode
 	} from '@/api/captcha.js'
 	export default {
 
@@ -180,17 +181,26 @@
 					getInfoById(storage.get('ClientId')).then(async res => {
 						this.userInfo = res.data
 						console.log(this.userInfo);
-						//获取二维码
-						generateQrCode({
-							codeStatus: 'c',
-							page: '../invited/invited',
-							scene: this.userInfo.invitationCode
-						}).then(async res => {
-							console.log(res);
-							this.qrCode = await this.Tobase(res.msg)
-							console.log(this.qrCode);
-						})
-						this.image = await this.Tobase(res.data.avatarUrl.split(',')[0])
+					//获取二维码
+					// #ifdef MP-WEIXIN
+					generateQrCode({
+						codeStatus: 'w',
+						page: '../invited/invited',
+						// scene: this.userInfo.invitationCode
+					}).then(async res => {
+						console.log(res);
+						this.qrCode = await this.Tobase(res.msg)
+						console.log(this.qrCode);
+					})
+					// #endif
+					
+					
+				
+					
+					this.image = res.data.avatarUrl != null ? await this.Tobase(res.data.avatarUrl) :
+						await this.Tobase(
+							'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png'
+						)
 						this.bigImg = await this.Tobase(
 							'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/10/17851f49252a48279a0903172c45033e.png'
 						)
@@ -243,6 +253,19 @@
 				}
 
 			},
+			codeStatus(type){
+				//app二维码
+				// #ifdef APP-PLUS
+				generateAppQrCode({
+					codeStatus: type
+				
+				}).then(async res => {
+					this.qrCode = await this.Tobase(res.msg)
+					// 	console.log(this.qrCode);
+				})
+				// #endif
+				this.shareInfo() 
+			},
 			//分享
 			shareInfo() {
 				if (this.imageUrl == '') {
@@ -251,7 +274,7 @@
 						title: '卡片生成中'
 					});
 				}
-				if (!this.image || !this.bigImg) {
+				if (!this.image || !this.bigImg||!this.qrCode) {
 					return setTimeout(this.shareInfo, 888)
 				}
 				this.base = {

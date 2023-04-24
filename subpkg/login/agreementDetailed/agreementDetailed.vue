@@ -16,14 +16,7 @@
 		},
 		onLoad(options) {
 			console.log(options);
-			getAgreement().then(res => {
-				console.log(res);
-				res.data.forEach(info => {
-					if (info.agreementName == options.name) {
-						this.content = info.remark
-					}
-				})
-			})
+			this.content=options.remark
 		},
 		methods: {
 		}
