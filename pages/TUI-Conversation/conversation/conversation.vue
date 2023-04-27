@@ -219,7 +219,7 @@ export default {
 	}
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 @import './conversation.css';
 .center-con {
 		position: relative;

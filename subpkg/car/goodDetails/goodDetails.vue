@@ -105,7 +105,7 @@
 
 
 		<view class="bottom">
-			<view style="display: flex;flex-direction: column;">
+			<view style="display: flex;flex-direction: column;" @click="showPhone=true">
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/425df36a57004f1e8bd6c525a58bcd5a.png"
 					mode=""></image>
 				<text>客服</text>
@@ -169,6 +169,11 @@
 				您还未登录,是否去登录
 			</view>
 		</u-modal>
+		
+		
+		<!-- 拨打电话 -->
+		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
+			:actions="actionList" :show="showPhone"></u-action-sheet>
 	</view>
 
 
@@ -198,6 +203,17 @@
 		},
 		data() {
 			return {
+				actionList: [{
+						name: '11111111'
+					},
+					{
+						name: '呼叫'
+					},
+					{
+						name: '取消'
+					},
+				], //拨打电话
+				showPhone: false, //底部电话显示
 				isShowLogin: false, //去登录显示框
 				info: {},
 				shows: false,
@@ -370,7 +386,15 @@
 					url: '../allComments/allComments?id=' + this.goodInfo.serviceId
 				})
 			},
-
+			actionSelect(e) {
+				console.log(e);
+				if (e.name == '取消') {
+					this.showPhone = false
+				} else {
+					this.callPhone()
+					this.showPhone = false
+				}
+			},
 			//分享
 			shareInfo() {
 				console.log(this.$refs);

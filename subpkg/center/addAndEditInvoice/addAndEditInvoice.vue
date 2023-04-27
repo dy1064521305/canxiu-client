@@ -111,11 +111,11 @@
 							if (res.code === 200) {
 								uni.showToast({
 									title: '编辑成功',
-									duration: 2000
+									duration: 800
 								});
 							setTimeout(function() {
 								uni.navigateBack()
-							}, 1000)
+							}, 800)
 							}
 						})
 					} else {
@@ -124,11 +124,11 @@
 							if (res.code === 200) {
 								uni.showToast({
 									title: '添加成功',
-									duration: 2000
+									duration: 800
 								});
 							setTimeout(function() {
 								uni.navigateBack()
-							}, 1000)
+							}, 800)
 							}
 						})
 					}

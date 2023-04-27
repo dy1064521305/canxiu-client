@@ -64,20 +64,20 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 					technicalScore: '0',
 					productIdList: []
 				},
-				id:''
+				id: ''
 			};
 		},
 		onLoad(option) {
-			 this.id =option.id
+			this.id = option.id
 			this.getList()
 		},
 		methods: {
-			getList(){
+			getList() {
 				order.getOrderInfo(this.id).then(res => {
 					console.log(res);
 					this.query.orderId = res.data.orderId
 					this.query.clientId = res.data.clientId
-					this.query.workerId=res.data.workerId
+					this.query.workerId = res.data.workerId
 					console.log(res.data.projectDataVoList);
 					this.query.productIdList = res.data.projectDataVoList.map(item => {
 						return item.productId
@@ -98,12 +98,12 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 					if (res.code == 200) {
 						uni.showToast({
 							title: '评论成功',
-							duration: 2000
+							duration: 800
 						});
 						setTimeout(() => {
-							uni.navigateTo({
-								url: '../../center/myOrder/myOrder'
-							})
+							uni.navigateBack({
+								delta: 2
+							});
 						}, 800)
 					}
 				})

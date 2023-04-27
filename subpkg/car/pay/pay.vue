@@ -32,7 +32,7 @@
 </template>
 
 <script>
-		import storage from '@/utils/storage'
+	import storage from '@/utils/storage'
 	import * as pay from '@/api/pay.js'
 	export default {
 		data() {
@@ -45,43 +45,67 @@
 						name: '支付宝支付',
 						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/15/9955d4e3556e402091654a20d34956aa.png',
 					},
-					{
-						name: '集团代付',
-						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/15/7483d75ee78344d7b12762f5585a5bdd.png',
-					},
+					// {
+					// 	name: '集团代付',
+					// 	url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/15/7483d75ee78344d7b12762f5585a5bdd.png',
+					// },
 				],
 				currentIndex: undefined,
-				info:{}
+				info: {},
+				code: ''
 			};
 		},
 		onLoad(option) {
-			this.info= JSON.parse(decodeURIComponent(option.item))
+			this.info = JSON.parse(decodeURIComponent(option.item))
 			console.log(this.info);
 			// #ifdef MP-WEIXIN
-			this.list.splice(1,1)
+			this.list.splice(1, 1)
 			// #endif
+			let that = this
+			uni.getStorage({
+				key: 'code',
+				success: function(res) {
+					console.log(res.data);
+					that.code = res.data
+				}
+			});
 		},
 		methods: {
 			choseMethod(i) {
 				this.currentIndex = i
 			},
 			pay() {
-				if (this.currentIndex==undefined) {
+				if (this.currentIndex == undefined) {
 					uni.showToast({
 						title: '请选择支付方式',
-						duration: 2000,
-						icon:'none'
+						duration: 800,
+						icon: 'none'
 					});
-				}else if(this.currentIndex==0){
-					console.log(this.info);
+				} else if (this.currentIndex == 0) {
 					pay.weChatPay({
-						clientId:storage.get('ClientId'),
-						orderId:this.info.orderId,
-						orderNumber:this.info.orderNumber,
-						orderPrice:this.info.orderPrice,
-						tradeType:'JSAPI'
-					}).then(res=>{
+						orderId: this.info.orderId,
+						tradeType:'APP'
+					}).then(res => {
 						console.log(res);
+					
+					})
+				}else{
+					pay.alipay({
+						orderId: this.info.orderId,
+					}).then(res => {
+					//	console.log(res);
+							console.log(res.data.orderStr);
+						uni.requestPayment({
+						    provider: 'alipay',
+						    orderInfo: res.data.orderStr, 
+						    success: function (res) {
+						        console.log('success:' + JSON.stringify(res));
+						    },
+						    fail: function (err) {
+						        console.log('fail:' + JSON.stringify(err));
+						    }
+						});
+
 					})
 				}
 			}
