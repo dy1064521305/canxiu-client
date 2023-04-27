@@ -20,8 +20,8 @@
 						<u-search v-model="queryParams.projectName" @search="queryList" @clear="queryList"
 							placeholder="搜索订单" :clearabled="true" :showAction='false'></u-search>
 					</view>
-					<u-tabs :scrollable='false' style='margin-top: 20rpx;' :current='current' :list="list1" @click="statusClick"
-						lineColor='#72DAA4' lineWidth="50" lineHeight='8' :inactiveStyle="{
+					<u-tabs :scrollable='false' style='margin-top: 20rpx;' :current='current' :list="list1"
+						@click="statusClick" lineColor='#72DAA4' lineWidth="50" lineHeight='8' :inactiveStyle="{
 					        color: '#A5A7A7',
 					    }"></u-tabs>
 				</view>
@@ -30,7 +30,7 @@
 			<view class="orders" @click="orderDetail(item.orderId)" v-for='(item,index) in orderList' :key='index'>
 				<view class="main">
 					<view class="title">
-						<text :style="{'font-weight': 'bold','width':item.isUrgent==1?'53%':'65%'}"></text>
+						<text :style="{'font-weight': 'bold','width':item.isUrgent==1?'53%':'65%'}">{{item.warrantyStore}}</text>
 						<text style="font-size: 25rpx;text-align: end;width:42%;">
 							<text>{{item.orderStatus}}</text>
 						</text>
@@ -40,7 +40,8 @@
 								mode=""></image>
 						</view>
 					</view>
-					<view v-if="item.projectDataVoList.length!=0" v-for="(pro,i) in item.projectDataVoList" :key="i" style="margin: 20rpx 0;">
+					<view v-if="item.projectDataVoList.length!=0" v-for="(pro,i) in item.projectDataVoList" :key="i"
+						style="margin: 20rpx 0;">
 						<view style="display: flex">
 							<image style="width: 156rpx;height: 156rpx;" :src="pro.projectImg[0]">
 							</image>
@@ -63,11 +64,12 @@
 						预约时间：{{item.expectTime}}
 					</view>
 					<view class="btns">
-						<view  @click.stop='backFix'  class="btn-white"v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view>
-						<view  @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'">联系师傅</view>
-						<view  @click.stop='appraise(item)' class="btn-green" v-if="item.orderStatus=='待评价'">去评价</view>
-						<view  @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
-						<view  @click.stop='ok' class="btn-green" v-if="item.orderStatus=='服务中【待客户确认】'">确认</view>
+						<view @click.stop='backFix(item)' class="btn-white"
+							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view>
+						<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'">联系师傅</view>
+						<view @click.stop='appraise(item)' class="btn-green" v-if="item.orderStatus=='待评价'">去评价</view>
+						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
+						<view @click.stop='orderDetail(item.orderId)' class="btn-green" v-if="item.orderStatus=='服务中【审核通过】'">确认方案</view>
 					</view>
 				</view>
 			</view>
@@ -75,7 +77,13 @@
 		</z-paging>
 
 
-
+		<!-- 返修 -->
+		<u-modal :show="repairOrderShow" title="温馨提示" showCancelButton confirmColor='#9FD6BA'
+			@cancel="repairOrderShow=false" @confirm="repairOrderHandle">
+			<view style="width: 100%;text-align: center;">
+				是否确认申请返修?
+			</view>
+		</u-modal>
 
 
 		<!-- 筛选 -->
@@ -142,19 +150,26 @@
 				</view>
 			</view>
 		</u-popup>
+		
+			<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 
 
 <script>
 	import {
-		getOrderList
+		getOrderList,
+		repairOrder
 	} from '@/api/order.js'
 	import storage from '@/utils/storage'
 	import formatter from '@/utils/formatter.js'
+
 	export default {
 		data() {
+
 			return {
+				repairOrderShow: false,
+				repairInfo:{},
 				activeTimes: '',
 				date: '年月日',
 				checkboxValue1: [],
@@ -188,7 +203,7 @@
 					beginTime: ''
 				},
 				endTime: '', //显示的时间
-				beginTime: ''
+				beginTime: '',
 			};
 		},
 		computed: {
@@ -207,11 +222,16 @@
 
 		},
 		onShow() {
-				this.getOrderlistHandle(1,10)
+			this.getOrderlistHandle(1, 10)
 		},
 		onLoad(option) {
 			console.log(option.item);
 			this.queryParams.clientId = storage.get('ClientId')
+			// getInfoById(storage.get('ClientId')).then(res => {
+			// 	console.log(res);
+			// 	this.clientName=res.data.clientName
+			// 	//	this.fileList.push({url:arr[0]})
+			// })
 			if (option.item == undefined) {
 				this.statusClick({
 					name: '全部'
@@ -224,12 +244,12 @@
 					name: item.name
 				})
 			}
-		
+
 		},
 		methods: {
-			show(){
+			show() {
 				console.log(11111);
-				this.showScreen=true
+				this.showScreen = true
 			},
 			checkType(num) {
 				this.type = num
@@ -247,7 +267,7 @@
 
 					this.queryParams.orderStatus = ''
 					console.log(this.queryParams);
-					this.getOrderlistHandle(1,10)
+					this.getOrderlistHandle(1, 10)
 				}
 
 			},
@@ -263,10 +283,11 @@
 					console.log(res);
 					res.rows.forEach(i => {
 						i.projectDataVoList.forEach(item => {
-							item.projectImg =item.projectImg!=null?item.projectImg.split(','):[]
+							item.projectImg = item.projectImg != null ? item.projectImg.split(
+								',') : []
 						})
 					})
-					console.log(res,'.......2');
+					console.log(res, '.......2');
 					uni.hideLoading();
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})
@@ -345,17 +366,34 @@
 				this.queryParams.endTime = list.endTime
 			},
 			//评价
-			appraise(item){
+			appraise(item) {
 				console.log(item);
 				uni.navigateTo({
-					url:'../../car/appraise/appraise?id='+item.orderId
+					url: '../../car/appraise/appraise?id=' + item.orderId
 				})
 			},
 			//支付
-			pay(item){
+			pay(item) {
 				console.log(item);
 				uni.navigateTo({
-					url:'../../car/pay/pay?item='+encodeURIComponent(JSON.stringify(item))
+					url: '../../car/pay/pay?item=' + encodeURIComponent(JSON.stringify(item))
+				})
+			},
+			backFix(item){
+				this.repairInfo=item
+				this.repairOrderShow=true
+			},
+			//申请返修
+			repairOrderHandle() {
+				repairOrder(this.repairInfo).then(res => {
+					console.log(res);
+				
+					this.$refs.uToast.show({
+						type: 'error',
+						message: res.data.msg
+					});
+					this.repairOrderShow=false
+					this.getOrderlistHandle(1, 10)
 				})
 			}
 
@@ -373,7 +411,7 @@
 <style lang="scss">
 	.my-order {
 		.top {
-			background: #fff;	
+			background: #fff;
 			//padding: 20rpx 20rpx 0 20rpx;
 
 			.type {

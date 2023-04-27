@@ -1,7 +1,9 @@
 <template>
 	<view class="center-con">
 		<view v-if="!isLogin" style="padding-top: 330rpx;">
-			<u-empty mode="permission" icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png" text="您还未登录">
+			<u-empty mode="permission"
+				icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
+				text="您还未登录">
 			</u-empty>
 			<view class="btns">
 				<view @click="quxiao">
@@ -21,9 +23,11 @@
 
 				<view class="info" @click="editInfo">
 					<view>
-							<image v-if="userInfo.avatarUrl==null" style="width: 136rpx;height: 136rpx;"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png"></image>
-						<u--image v-else width='136rpx' height='136rpx' :src="userInfo.avatarUrl" shape="circle"></u--image>
+						<image v-if="userInfo.avatarUrl==null" style="width: 136rpx;height: 136rpx;"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
+						</image>
+						<u--image v-else width='136rpx' height='136rpx' :src="userInfo.avatarUrl" shape="circle">
+						</u--image>
 					</view>
 					<view class="name">
 						<view v-if="userInfo.clientName!=null " style="font-size: 36rpx;">
@@ -47,7 +51,7 @@
 					</view>
 					<text style="font-size: 29rpx;" class='color'>账户余额:</text>
 					<view style="width: 47%;">
-						<text style="font-size: 36rpx;margin: 0 10rpx;" class='color'>0</text>
+						<text style="font-size: 36rpx;margin: 0 10rpx;" class='color'>{{balance}}</text>
 						<text style="font-size: 22rpx;" class='color'>元</text>
 					</view>
 					<view class="btn">
@@ -78,7 +82,7 @@
 					</view>
 
 				</view>
-			<!-- 	<view class="hetong">
+				<!-- 	<view class="hetong">
 					<view class="imgPlace">
 						<image style="width: 36rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/a5a0b58c2d674bacb335cb758d4fca3d.png"
@@ -110,40 +114,40 @@
 						<view class="box">
 							<view class='img'>
 								<image style="width: 54rpx;height: 46rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/bc5a61260236484e840a1ddb5090bace.png"
-									></image>
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/bc5a61260236484e840a1ddb5090bace.png">
+								</image>
 							</view>
 							<text>优惠券</text>
 						</view>
 						<view class="box" @click="fuwuClick('address')">
 							<view class='img'>
 								<image style="width: 48rpx;height: 56rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cdd0134f2d7e4200af485661223615eb.png"
-									></image>
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cdd0134f2d7e4200af485661223615eb.png">
+								</image>
 							</view>
 							<text>维修地址</text>
 						</view>
-						<view class="box">
+						<view class="box" @click="showPhone=true">
 							<view class='img'>
 								<image style="width: 55rpx;height: 56rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/ac09219e58a84b6e9edbb63508138c70.png"
-									></image>
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/ac09219e58a84b6e9edbb63508138c70.png">
+								</image>
 							</view>
 							<text>联系客服</text>
 						</view>
 						<view class="box" @click="fuwuClick('invite')">
 							<view class='img'>
 								<image style="width: 48rpx;height: 54rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/47c98144cb6a456c9767451b3d0db13f.png"
-									></image>
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/47c98144cb6a456c9767451b3d0db13f.png">
+								</image>
 							</view>
 							<text>邀请挣钱</text>
 						</view>
 						<view class="box" @click="fuwuClick('invoice')">
 							<view class='img'>
 								<image style="width: 46rpx;height: 53rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/f44ea061b78849129614c02e0deb3cdd.png"
-									></image>
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/f44ea061b78849129614c02e0deb3cdd.png">
+								</image>
 							</view>
 							<text>我的发票</text>
 						</view>
@@ -160,6 +164,9 @@
 				</view>
 			</view>
 		</view>
+		<!-- 拨打电话 -->
+		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
+			:actions="actionList" :show="showPhone"></u-action-sheet>
 
 	</view>
 
@@ -167,6 +174,7 @@
 
 <script>
 	import storage from '@/utils/storage'
+		import {getUserWallet} from '@/api/money.js'
 	import {
 		getOrderList
 	} from '@/api/order.js'
@@ -177,6 +185,18 @@
 	export default {
 		data() {
 			return {
+				balance:'',//账户余额
+				actionList: [{
+						name: '11111111'
+					},
+					{
+						name: '呼叫'
+					},
+					{
+						name: '取消'
+					},
+				], //拨打电话
+				showPhone: false, //底部电话显示
 				isLogin: false,
 				userInfo: {}, //用户信息
 				orderList: [{
@@ -225,7 +245,7 @@
 					getInfoById(storage.get('ClientId')).then(res => {
 						console.log(res);
 						this.userInfo = res.data
-						let arr = res.data.avatarUrl!=null?res.data.avatarUrl.split(','):[]
+						let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 						this.userInfo.phone = this.geTel(this.userInfo.phoneNumber)
 						//	this.fileList.push({url:arr[0]})
 					})
@@ -241,6 +261,12 @@
 							item.num = res.total
 						})
 					})
+					getUserWallet({
+						userId: storage.get('ClientId'),
+						userType:'c'
+					}).then(res=>{
+						this.balance=res.data.balance
+					})
 
 				}
 
@@ -254,9 +280,9 @@
 			},
 			//修改个人信息
 			editInfo() {
-				let list={
-					userInfo:this.userInfo,
-					type:'edit'
+				let list = {
+					userInfo: this.userInfo,
+					type: 'edit'
 				}
 				uni.navigateTo({
 					url: '../../subpkg/center/personalInfo/personalInfo?item=' + JSON.stringify(list)
@@ -320,7 +346,16 @@
 				uni.navigateTo({
 					url: '/pages/login/index'
 				})
-			}
+			},
+			actionSelect(e) {
+				console.log(e);
+				if (e.name == '取消') {
+					this.showPhone = false
+				} else {
+					this.callPhone()
+					this.showPhone = false
+				}
+			},
 		}
 	}
 </script>

@@ -22,6 +22,7 @@
             "Geolocation" : {},
             "Push" : {},
             "Camera" : {},
+            "Payment" : {},
             "VideoPlayer" : {},
             "Maps" : {}
         },
@@ -76,6 +77,16 @@
                     "amap" : {
                         "appkey_ios" : "1556ed4d42b1f10806f14ec319cdd3f0",
                         "appkey_android" : "8270ece1b27e6e52fafa7241b5580ad7"
+                    }
+                },
+                "payment" : {
+                    "alipay" : {
+                        "__platform__" : [ "ios", "android" ]
+                    },
+                    "weixin" : {
+                        "__platform__" : [ "ios", "android" ],
+                        "appid" : "wx365a28a668734937",
+                        "UniversalLinks" : ""
                     }
                 }
             },

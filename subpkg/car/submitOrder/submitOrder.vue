@@ -68,6 +68,9 @@
 	import {
 		postOrder
 	} from '@/api/car.js'
+	import {
+		getInfoById,
+	} from '@/api/user.js'
 	export default {
 		name: 'test',
 		components: {
@@ -128,6 +131,12 @@
 		methods: {
 			getList() {
 				if (storage.get('ClientId')) {
+					//查询门店名称
+					getInfoById(storage.get('ClientId')).then(res => {
+						console.log(res);
+						this.info.warrantyStore=res.data.clientName
+						//	this.fileList.push({url:arr[0]})
+					}),
 					//查询是否有地址
 					getAddressList({
 						clientId: storage.get('ClientId')

@@ -430,7 +430,14 @@
 						"navigationStyle": "custom"
 					}
 
-				}, {
+				},  {
+					"path": "myMoney/cashOut/cashOut",
+					"style": {
+						"navigationBarTitleText": "提现",
+						"enablePullDownRefresh": false
+					}
+
+				},{
 					"path": "aboutUs/aboutUs",
 					"style": {
 						"navigationBarTitleText": "关于我们",

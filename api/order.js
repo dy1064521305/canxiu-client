@@ -40,3 +40,12 @@ export const cancelOrder = (data) => request.put('/client/order/cancelOrder',dat
 
 //获取维修师详情
 export const getWorkerInfo = (workerId) => request.get('/client/order/workerInfo/'+workerId)
+
+//客户申请返修
+export const repairOrder = (data) => request.put('/client/order/repair',data)
+
+//客户驳回
+export const overruleScenario = (data) => request.put('/client/order/overruleScenario',data)
+
+//客户确认维修方案
+export const confirmScenario = (data) => request.put('/client/order/confirmScenario',data)

@@ -62,6 +62,9 @@
 				}
 			};
 		},
+		onShow() {
+				this.$refs.paging.reload();
+		},
 		methods: {
 			//设为默认
 			morenHandle(item) {

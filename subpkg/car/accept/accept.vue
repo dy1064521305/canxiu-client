@@ -9,7 +9,7 @@
 			<view v-if="info.name=='服务验收'" class="btn queren" @click="sign">
 				确认验收
 			</view>
-			<view v-if="info.name=='维修报告'&&urlImg.length!=0" class="btn queren" @click="pay">
+			<view v-if="info.type=='待支付'&&urlImg.length!=0" class="btn queren" @click="pay">
 				去支付
 			</view>
 		</view>
@@ -80,6 +80,7 @@
 				title: this.info.name
 			})
 			uni.showLoading({
+				title:'生成中',
 				mask: true
 			});
 			generateReports(this.info.id).then(res => {

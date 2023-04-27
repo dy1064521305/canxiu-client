@@ -9,3 +9,6 @@ export const generateQrCode = (params) => request.get('/common/code/generateQrCo
 
 //校验验证码
 export const validateSmsCode= (data) => request.post('/validateSmsCode',data)
+
+//生成App二维码
+export const generateAppQrCode = (params) => request.get('/common/code/generateAppQrCode',params )
