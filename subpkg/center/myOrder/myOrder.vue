@@ -150,6 +150,8 @@
 				</view>
 			</view>
 		</u-popup>
+		
+			<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 
@@ -384,9 +386,11 @@
 			//申请返修
 			repairOrderHandle() {
 				repairOrder(this.repairInfo).then(res => {
-					uni.showToast({
-						title: '返修成功',
-						duration: 500
+					console.log(res);
+				
+					this.$refs.uToast.show({
+						type: 'error',
+						message: res.data.msg
 					});
 					this.repairOrderShow=false
 					this.getOrderlistHandle(1, 10)

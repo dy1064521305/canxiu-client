@@ -127,8 +127,9 @@
 				model2: {
 					card: {
 						name: '',
-						cardNumber: '6214837409745597',
-						phone: '18974241028',
+						cardNumber: '',
+						//6214837409745597
+						phone: '',
 					}
 				},
 				rules1: {
@@ -234,13 +235,14 @@
 				console.log(this.num);
 			},
 			getCodeHandle() {
-				this.countDown()
+				
 
 				getCode({
 					phonenumber: this.model2.card.phone
 				}).then(res => {
 					console.log(res);
 				})
+				this.countDown()
 			},
 			goTypes() {
 				uni.navigateTo({

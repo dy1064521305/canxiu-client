@@ -10,10 +10,10 @@
 						账户余额(元)
 					</view>
 					<view style="margin-top: 14rpx;">
-						0
+						{{info.balance}}
 					</view>
 				</view>
-				<view class="btn">
+				<view class="btn" @click="goCashOut">
 					去提现
 				</view>
 			</view>
@@ -24,7 +24,7 @@
 						冻结余额(元)
 					</view>
 					<view class="">
-						0
+						{{info.freeze}}
 					</view>
 				</view>
 				<view class="box">
@@ -32,7 +32,7 @@
 						可提现余额(元)
 					</view>
 					<view class="">
-						0
+						{{info.withdrawal}}
 					</view>
 				</view>
 				<view class="box">
@@ -40,7 +40,7 @@
 						累计提现(元)
 					</view>
 					<view class="">
-						0
+						{{info.accumulate}}
 					</view>
 				</view>
 			</view>
@@ -56,6 +56,8 @@
 </template>
 
 <script>
+	import storage from '@/utils/storage'
+	import {getUserWallet} from '@/api/money.js'
 	export default {
 		data() {
 			return {
@@ -70,8 +72,28 @@
 					fontSize: '31rpx',
 					height: '55rpx',
 					lineHeight: '55rpx'
-				}
+				},
+				info:{}
 			};
+		},
+		onLoad() {
+			this.getList()
+		},
+		methods:{
+			getList(){
+				getUserWallet({
+					userId: storage.get('ClientId'),
+					userType:'c'
+				}).then(res=>{
+					console.log(res);
+					this.info=res.data
+				})
+			},
+			goCashOut(){
+				uni.navigateTo({
+					url:'cashOut/cashOut'
+				})
+			}
 		}
 	}
 </script>

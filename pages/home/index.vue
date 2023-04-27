@@ -487,7 +487,7 @@
 				var that = this
 				console.log('2-----------------');
 				//获取地址
-				this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
+			//	this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
 
 					uni.getLocation({
 						isHighAccuracy: true,
@@ -529,7 +529,7 @@
 							})
 						}
 					})
-				})
+			//	})
 
 
 

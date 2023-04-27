@@ -385,7 +385,7 @@
 			@close='show = false' @cancel='show = false' @confirm='cancelReason'></u-picker>
 
 		<!-- 进度 -->
-		<u-popup :show="showStep" @close="showStep=false" closeable>
+		<u-popup :overlayStyle="{'touch-action':'none'}"  :show="showStep" @close="showStep=false" closeable>
 			<view style="margin:70rpx 50rpx;">
 				<view style="text-align: center;margin-bottom: 40rpx;font-weight: bold;">
 					订单跟踪
@@ -749,10 +749,10 @@
 				switch (type) {
 					case '返修':
 						order.repairOrder(this.info).then(res => {
-							uni.showToast({
-								title: '返修成功',
-								duration: 500
-							});
+						this.$refs.uToast.show({
+							type: 'error',
+							message: res.data.msg
+						});
 							this.getList()
 						})
 						break;
@@ -921,7 +921,7 @@
 		.step {
 			height: 55vh;
 			overflow: scroll;
-
+			overscroll-behavior:none;
 			.box {
 				display: flex;
 

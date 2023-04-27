@@ -63,7 +63,7 @@
 				<view style="font-size: 25rpx;color: #A5A7A7;">
 					未添加发票抬头
 				</view>
-				<view class="btn">
+				<view class="btn" @click="addInvoiceTitle">
 					添加常用抬头
 				</view>
 			</view>
@@ -133,7 +133,10 @@
 			this.model1.invoice.invoiceAmount = this.info.money
 			this.model1.invoice.clientId = storage.get('ClientId')
 			console.log(JSON.parse(option.query));
-			this.getHeader()
+		
+		},
+		onShow() {
+				this.getHeader()
 		},
 		onReady() {
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
@@ -189,6 +192,11 @@
 					type == 'id' ? arr.push(item.orderId) : arr.push(item.orderNumber)
 				})
 				return arr.toString()
+			},
+			addInvoiceTitle(){
+				uni.navigateTo({
+					url:'../addAndEditInvoice/addAndEditInvoice?id='+''
+				})
 			}
 
 		}

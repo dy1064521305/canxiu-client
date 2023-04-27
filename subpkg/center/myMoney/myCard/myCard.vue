@@ -1,14 +1,16 @@
 <template>
 	<view class="myCard">
-		<z-paging ref="paging" v-model="bankCardList" @query="getList" >
+
+		<z-paging ref="paging" v-model="bankCardList" @query="getList">
+
 			<view slot='top'>
 				<u-navbar title="我的银行卡" placeholder @leftClick="leftClick">
 				</u-navbar>
 			</view>
-			<view v-for="(item,index) in bankCardList" :key='index' class="box">
+			<view v-for="(item,index) in bankCardList" :key='index' class="box" @click="choseCard(item)">
 				<view style="padding: 40rpx 34rpx;">
 					<view class="left">
-						
+
 					</view>
 					<view class="right">
 						<view class="top">
@@ -16,7 +18,7 @@
 								<text style="font-size: 35rpx;font-weight: bold;">{{item.bankName}}</text>
 								<text style="margin-left: 20rpx;">{{item.cardTypeName}}</text>
 							</view>
-							<view @click="deleteCardHandle(item.cardId)">
+							<view @click.stop="deleteCardHandle(item.cardId)">
 								<u-icon name="trash" color="#fff" size="28"></u-icon>
 							</view>
 						</view>
@@ -52,11 +54,16 @@
 				queryParams: {
 					pageSize: 10,
 					pageNum: 1,
-				}
+				},
+				type: ''
 			};
 		},
 		onShow() {
 			this.getList(1, 10)
+		},
+		onLoad(option) {
+			this.type = option.type
+			console.log(this.type);
 		},
 		methods: {
 			getList(pageNo, pageSize) {
@@ -71,9 +78,9 @@
 					//	this.bankCardList = res.rows
 				})
 			},
-			addCard(){
+			addCard() {
 				uni.navigateTo({
-					url:'../addCard/addCard'
+					url: '../addCard/addCard'
 				})
 			},
 			//修改地址
@@ -99,10 +106,10 @@
 								if (res.code === 200) {
 									uni.showToast({
 										title: '删除成功',
-										duration: 2000
+										duration: 80
 									});
 									that.$refs.paging.reload();
-								
+
 								}
 								console.log(res);
 							})
@@ -115,10 +122,23 @@
 			},
 			leftClick() {
 				uni.switchTab({
-					url: '/pages/center/index'
+					url:'/pages/center/index'
 				})
-			}
+				//uni.navigateBack()
+			},
+			//提现选择银行卡
+			choseCard(item) {
+				if (this.type != 'cash') {
+					return
+				} else {
+					let pages = getCurrentPages()
+					let prevPage = pages[pages.length - 2]
+					prevPage.$vm.getCardInfo(item)
+					uni.navigateBack()
+				}
 
+
+			}
 		}
 	}
 </script>
@@ -133,25 +153,26 @@
 		.box {
 			margin: 20rpx auto;
 			width: 707rpx;
-			background:#62B6E5;
+			background: #62B6E5;
 			box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.05);
 			border-radius: 14rpx;
 			color: #fff;
-			.right{
-			
-				.top{
-				display: flex;
-				align-items: flex-end;
-				margin-bottom: 30rpx;
-				justify-content: space-between;
-			}
+
+			.right {
+
+				.top {
+					display: flex;
+					align-items: flex-end;
+					margin-bottom: 30rpx;
+					justify-content: space-between;
+				}
 
 			}
-			
+
 
 		}
-		
-		
+
+
 		.btn {
 			width: 663rpx;
 			height: 91rpx;

@@ -185,8 +185,8 @@
 					// #ifdef MP-WEIXIN
 					generateQrCode({
 						codeStatus: 'w',
-						page: '../invited/invited',
-						// scene: this.userInfo.invitationCode
+						page: 'subpkg/center/invited/invited',
+						 scene: this.userInfo.invitationCode
 					}).then(async res => {
 						console.log(res);
 						this.qrCode = await this.Tobase(res.msg)

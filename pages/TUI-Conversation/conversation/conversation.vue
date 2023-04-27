@@ -20,7 +20,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="bottom-back">
+			<!-- <view class="bottom-back">
 				<view class="bottom-area">
 					<view v-if="showSelectTag" class="conversation-bubble" @tap.stop="handleEditToggle">
 						<view v-for="(item, index) in array" :key="index" class="picker" :data-name="item.name" @tap="handleOnTap">{{ item.name }}</view>
@@ -28,7 +28,7 @@
 					<image @tap="showMore" class="btn-show-more" src="/static/static/assets/add.svg"></image>
 					<view @tap="learnMore" class="im-link">了解更多IM功能</view>
 				</view>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -131,7 +131,7 @@ export default {
 		
 		
 		handleRoute(id) {
-			const url = `../../TUI-Chat/chat?conversationID=${id}`;
+			const url = `../../../subpkgChat/TUI-Chat/chat?conversationID=${id}`;
 			uni.navigateTo({
 				url
 			});
@@ -222,7 +222,7 @@ export default {
 	}
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 @import './conversation.css';
 .center-con {
 		position: relative;
