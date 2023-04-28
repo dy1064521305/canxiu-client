@@ -91,7 +91,8 @@
                 }
             },
             "splashscreen" : {
-                "androidStyle" : "common"
+                "androidStyle" : "common",
+                "useOriginalMsgbox" : true
             }
         },
         "uniStatistics" : {

@@ -6,10 +6,9 @@
  * @return { Promise }
  **/
 
-export  function checkForAuthorization(scope, jurisdiction, type) {
+export  function checkForAuthorization(scope, jurisdiction) {
 		console.log(type);
 		return new Promise((resolve, reject) => {
-			if (type == 'weixin') {
 				const appAuthorizeSetting = wx.getAppAuthorizeSetting();
 				if (appAuthorizeSetting[jurisdiction] === "denied") {
 					uni.showModal({
@@ -56,10 +55,6 @@ export  function checkForAuthorization(scope, jurisdiction, type) {
 						},
 					});
 				}
-			} else {
-				console.log('appappappappapp');
-
-			}
 
 		});
 	}
