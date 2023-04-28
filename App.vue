@@ -12,6 +12,7 @@
 		// #endif
 		
 		import logger from './utils/logger'; // app.js
+		// import storage from '@/utils/storage'
 		// import {
 		// 	genTestUserSig
 		// } from './debug/GenerateTestUserSig.js';
@@ -70,6 +71,7 @@
 			uni.$TUIKit.on(uni.$TUIKitEvent.ERROR, this.onTIMError);
 			uni.$TUIKit.on(uni.$TUIKitEvent.NET_STATE_CHANGE, this.onNetStateChange);
 			uni.$TUIKit.on(uni.$TUIKitEvent.SDK_RELOAD, this.onSDKReload);
+			
 		},
 		onShow() {},
 		onHide() {},
@@ -85,6 +87,7 @@
 			SDKAppID: 1400802214
 		},
 		methods: {
+			
 			// TODO:
 			resetLoginData() {
 				this.globalData.expiresIn = '';

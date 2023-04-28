@@ -39,11 +39,8 @@ import logger from '../../../utils/logger';
 import TUIConversationItem from '../../../components/tui-conversation/conversation-item/index';
 import TUIMessageList from '../../../components/tui-chat/message-list/index';
 
-import { accountQueryState } from '@/api/tim.js'
+import { accountQueryState, getUserSig } from '@/api/tim.js'
 import storage from '@/utils/storage'
-import {
-		getUserSig
-	} from '@/api/tim.js'
 	
 export default {
 	data() {
@@ -89,16 +86,15 @@ export default {
 	},
 	onShow() {
 		this.isLogin = storage.get('AccessToken');
-		this.queryState();
-		console.info('---------======================')
-		console.info(this.conversationList)
-		console.info('===============================')
+		if(this.isLogin){
+			this.queryState();
+		}
 	},
 	methods: {
 		
 		queryState(){
 			accountQueryState().then(res => {
-				if(res.data.QueryResult[0].State == 'Offline' && this.isLogin != false){
+				if(res.data.QueryResult[0].State == 'Offline'){
 					getUserSig().then(ress => {
 						uni.$TUIKit.login({
 							userID: res.data.QueryResult[0].To_Account,
@@ -131,6 +127,7 @@ export default {
 		
 		
 		handleRoute(id) {
+			console.info(this.conversationList)
 			const url = `../../../subpkgChat/TUI-Chat/chat?conversationID=${id}`;
 			uni.navigateTo({
 				url

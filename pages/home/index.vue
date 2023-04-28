@@ -154,6 +154,7 @@
 	
 	import appUpdate from "@/components/app-update/app-update.vue";
 	
+	import { accountQueryState, getUserSig } from '@/api/tim.js'
 	import {
 		getLnglat
 	} from '@/utils/location.js'
@@ -255,6 +256,9 @@
 					console.log();
 					this.isShowMoney = Boolean(res.data)
 					this.getList()
+					if(this.isShowMoney){
+						this.queryState();
+					}
 					const apps = getApp()
 					console.log(apps.type);
 					if (apps.type == 'login') {
@@ -318,6 +322,29 @@
 		},
 
 		methods: {
+			
+			queryState(){
+				accountQueryState().then(res => {
+					if(res.data.QueryResult[0].State == 'Offline'){
+						getUserSig().then(ress => {
+							uni.$TUIKit.login({
+								userID: res.data.QueryResult[0].To_Account,
+								userSig: ress.msg
+							}).then(function(imResponse) {
+								if (imResponse.data.repeatLogin === true) {
+									// 标识帐号已登录，本次登录操作为重复登录。v2.5.1 起支持
+									console.log(imResponse.data.errorInfo);
+								}
+							}).catch((error) => {
+								console.info(error)
+							})
+						})
+					}
+					
+				})
+			},
+			
+			
 			// 获取微信右上角胶囊高度
 			getHeight() {
 				let res = wx.getMenuButtonBoundingClientRect();

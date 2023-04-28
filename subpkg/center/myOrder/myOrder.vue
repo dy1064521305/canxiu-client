@@ -66,7 +66,7 @@
 					<view class="btns">
 						<view @click.stop='backFix(item)' class="btn-white"
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view>
-						<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'">联系师傅</view>
+						<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'" @click="handleRoute(item)">联系师傅</view>
 						<view @click.stop='appraise(item)' class="btn-green" v-if="item.orderStatus=='待评价'">去评价</view>
 						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
 						<view @click.stop='orderDetail(item.orderId)' class="btn-green" v-if="item.orderStatus=='服务中【审核通过】'">确认方案</view>
@@ -150,7 +150,7 @@
 				</view>
 			</view>
 		</u-popup>
-		
+
 			<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
@@ -247,7 +247,17 @@
 
 		},
 		methods: {
-			show() {
+
+			handleRoute(item) {
+				let id = 'C2C'+item.workerId
+				const url = `../../../subpkgChat/TUI-Chat/chat?conversationID=${id}`;
+				uni.navigateTo({
+					url
+				});
+			},
+
+
+			show(){
 				console.log(11111);
 				this.showScreen = true
 			},
@@ -387,7 +397,7 @@
 			repairOrderHandle() {
 				repairOrder(this.repairInfo).then(res => {
 					console.log(res);
-				
+
 					this.$refs.uToast.show({
 						type: 'error',
 						message: res.data.msg

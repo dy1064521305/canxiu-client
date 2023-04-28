@@ -332,7 +332,7 @@
 			<view style="width: 335rpx;" class="btn-white" @click="show=true">
 				取消订单
 			</view>
-			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" style="width: 335rpx;" class="btn-green">
+			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="handleRoute()" style="width: 335rpx;" class="btn-green">
 				联系维修师
 			</view>
 		</view>
@@ -525,6 +525,15 @@
 			}
 		},
 		methods: {
+			
+			handleRoute() {
+				let id = 'C2C'+this.info.workerId
+				const url = `../../../subpkgChat/TUI-Chat/chat?conversationID=${id}`;
+				uni.navigateTo({
+					url
+				});
+			},
+			
 			acceptRefresh() {
 				this.getList()
 			},
