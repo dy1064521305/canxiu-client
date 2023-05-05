@@ -2,7 +2,7 @@
   "version": "1",  
   "prompt": "template",
   "title": "服务协议和隐私政策",
-  "message": "同意<a href='https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/123.docx'>《用户协议》</a>和<a href='https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/321.docx'>《隐私协议》</a>后，餐修才可为你服务",
+  "message": "同意<a  href=\"static/registrationAgreement.html\">《用户协议》</a>和<a  href=\"static/privacyAgreement.html\">《隐私协议》</a>后，餐修才可为你服务",
   "buttonAccept": "同意并继续",
   "buttonRefuse": "不同意并退出",
   "hrefLoader": "default",
