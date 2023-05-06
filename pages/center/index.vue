@@ -182,12 +182,13 @@
 		getInfoById,
 		queryMyInfo
 	} from '@/api/user.js'
+	import {callPhone} from '@/utils/phone.js'
 	export default {
 		data() {
 			return {
 				balance:'',//账户余额
 				actionList: [{
-						name: '11111111'
+						name: '19157668838'
 					},
 					{
 						name: '呼叫'
@@ -349,10 +350,16 @@
 			},
 			actionSelect(e) {
 				console.log(e);
+				let phone='19157668838'
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
-					this.callPhone()
+					// #ifdef APP-PLUS
+					callPhone(phone,'app')
+					// #endif
+					// #ifdef MP-WEIXIN
+					callPhone(phone,'wx')
+					// #endif
 					this.showPhone = false
 				}
 			},

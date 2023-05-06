@@ -324,7 +324,8 @@
 		</view>
 
 
-		<view style="width:100%;margin:0 auto;color: #3398F3; text-align: center; margin:22rpx 0;">
+		<view @click="showPhone=true"
+			style="width:100%;margin:0 auto;color: #3398F3; text-align: center; margin:22rpx 0;">
 			有疑问？联系客服
 		</view>
 
@@ -332,7 +333,8 @@
 			<view style="width: 335rpx;" class="btn-white" @click="show=true">
 				取消订单
 			</view>
-			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="handleRoute()" style="width: 335rpx;" class="btn-green">
+			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="handleRoute()" style="width: 335rpx;"
+				class="btn-green">
 				联系维修师
 			</view>
 		</view>
@@ -385,7 +387,7 @@
 			@close='show = false' @cancel='show = false' @confirm='cancelReason'></u-picker>
 
 		<!-- 进度 -->
-		<u-popup :overlayStyle="{'touch-action':'none'}"  :show="showStep" @close="showStep=false" closeable>
+		<u-popup :overlayStyle="{'touch-action':'none'}" :show="showStep" @close="showStep=false" closeable>
 			<view style="margin:70rpx 50rpx;">
 				<view style="text-align: center;margin-bottom: 40rpx;font-weight: bold;">
 					订单跟踪
@@ -422,6 +424,10 @@
 			</view>
 		</u-modal>
 
+		<!-- 拨打电话 -->
+		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
+			:actions="actionList" :show="showPhone"></u-action-sheet>
+
 		<!-- 驳回理由 -->
 		<u-modal :show="rejectShowModal" width="600rpx" title="驳回理由" showCancelButton confirmColor='#9FD6BA'
 			@cancel="rejectShowModal=false" @confirm="handles('驳回')">
@@ -437,6 +443,9 @@
 	import * as order from '@/api/order.js'
 	import upLoadFile from '../../../components/uploadFile/uploadFile.vue'
 	import {
+		callPhone
+	} from '@/utils/phone.js'
+	import {
 		getDict
 	} from '@/api/system.js'
 	import {
@@ -448,6 +457,17 @@
 		},
 		data() {
 			return {
+				actionList: [{
+						name: '19157668838'
+					},
+					{
+						name: '呼叫'
+					},
+					{
+						name: '取消'
+					},
+				], //拨打电话
+				showPhone: false, //底部电话显示
 				rejectShowModal: false, //驳回理由弹出框
 				reason: '', //驳回理由
 				repairOrderShow: false, //返修
@@ -525,15 +545,15 @@
 			}
 		},
 		methods: {
-			
+
 			handleRoute() {
-				let id = 'C2C'+this.info.workerId
+				let id = 'C2C' + this.info.workerId
 				const url = `../../../subpkgChat/TUI-Chat/chat?conversationID=${id}`;
 				uni.navigateTo({
 					url
 				});
 			},
-			
+
 			acceptRefresh() {
 				this.getList()
 			},
@@ -754,14 +774,29 @@
 					url: '../accept/accept?info=' + JSON.stringify(info)
 				})
 			},
+			actionSelect(e) {
+				console.log(e);
+				let phone = '19157668838'
+				if (e.name == '取消') {
+					this.showPhone = false
+				} else {
+					// #ifdef APP-PLUS
+					callPhone(phone, 'app')
+					// #endif
+					// #ifdef MP-WEIXIN
+					callPhone(phone, 'wx')
+					// #endif
+					this.showPhone = false
+				}
+			},
 			handles(type) {
 				switch (type) {
 					case '返修':
 						order.repairOrder(this.info).then(res => {
-						this.$refs.uToast.show({
-							type: 'error',
-							message: res.data.msg
-						});
+							this.$refs.uToast.show({
+								type: 'error',
+								message: res.data.msg
+							});
 							this.getList()
 						})
 						break;
@@ -930,7 +965,8 @@
 		.step {
 			height: 55vh;
 			overflow: scroll;
-			overscroll-behavior:none;
+			overscroll-behavior: none;
+
 			.box {
 				display: flex;
 

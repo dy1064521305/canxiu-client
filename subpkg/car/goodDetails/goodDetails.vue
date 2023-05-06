@@ -194,6 +194,7 @@
 	import {
 		generateQrCode
 	} from '@/api/captcha.js'
+	import {callPhone} from '@/utils/phone.js'
 	var checkValues = [];
 	export default {
 		components: {
@@ -204,7 +205,7 @@
 		data() {
 			return {
 				actionList: [{
-						name: '11111111'
+						name: '19157668838'
 					},
 					{
 						name: '呼叫'
@@ -388,10 +389,17 @@
 			},
 			actionSelect(e) {
 				console.log(e);
+				let phonr='19157668838'
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
-					this.callPhone()
+					
+					// #ifdef APP-PLUS
+					callPhone(phone,'app')
+					// #endif
+					// #ifdef MP-WEIXIN
+					callPhone(phone,'wx')
+					// #endif
 					this.showPhone = false
 				}
 			},
