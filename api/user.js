@@ -8,3 +8,6 @@ export const editUser = (data) => request.put('/client/user',data)
 
 //获取我的页面数据
 export const queryMyInfo = (clientId) => request.get('/client/user/queryMyInfo/'+clientId)
+
+// 用户注销账号
+export const deleteUser = (clientId) => request.delete('/client/user/logout/'+clientId)

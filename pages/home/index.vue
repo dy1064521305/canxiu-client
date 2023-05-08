@@ -6,10 +6,12 @@
 
 				</view>
 				<view slot='center' style="padding-bottom:50rpx;width: 94%;">
-					<view class="search" :style="{'margin-top':titleHeight+'rpx'}" @click="goSearch" >
+					<view class="search" :style="{'margin-top':titleHeight+'rpx'}" @click="goSearch">
 						<view class="left">
-							<view @click.stop="choseCity" style="margin:0 10rpx 0 30rpx;font-size: 29rpx;">{{cityName}}</view>
-							<image @click.stop="choseCity" class="triangle" src="../../static/img/home/triangle.png" mode="">
+							<view @click.stop="choseCity" style="margin:0 10rpx 0 30rpx;font-size: 29rpx;">{{cityName}}
+							</view>
+							<image @click.stop="choseCity" class="triangle" src="../../static/img/home/triangle.png"
+								mode="">
 							</image>
 							<view class="line">|</view>
 							<image class="search-icon" src="../../static/img/home/search.png" mode=""></image>
@@ -72,7 +74,7 @@
 					<view class="boxs">
 						<view class="box" v-for="(item,index) in regionService" :key='index'
 							@click="goMore(item.regionName,item.productVoList)">
-							<image style="height: 100%;width: 100%;" :src="item.img"></image>
+							<image style="height: 100%;width: 100%;" :src="item.regionImage"></image>
 							<view class="mask">
 								{{item.regionName}}
 							</view>
@@ -102,7 +104,7 @@
 									<view v-if="item.list.length!=0">
 										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
 									</view>
-								<!-- 	<view v-if="item.list.length!=0&&isShowMoney&&item1.servicePrice.indexOf('x')==-1">
+									<!-- 	<view v-if="item.list.length!=0&&isShowMoney&&item1.servicePrice.indexOf('x')==-1">
 										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
 									</view> -->
 
@@ -119,7 +121,7 @@
 					</swiper>
 					<!-- #ifdef APP-PLUS -->
 					<view style="height: 10rpx;">
-						
+
 					</view>
 					<!-- #endif -->
 				</view>
@@ -151,10 +153,13 @@
 		getHotService,
 		getRegionService
 	} from '@/api/home.js';
-	
+
 	import appUpdate from "@/components/app-update/app-update.vue";
-	
-	import { accountQueryState, getUserSig } from '@/api/tim.js'
+
+	import {
+		accountQueryState,
+		getUserSig
+	} from '@/api/tim.js'
 	import {
 		getLnglat
 	} from '@/utils/location.js'
@@ -221,6 +226,7 @@
 				bottomNum: 0,
 				cityName: '获取位置中...',
 				locationStatus: '', //定位权限
+				timer: '',
 			}
 		},
 		onReady() {
@@ -256,7 +262,7 @@
 					console.log();
 					this.isShowMoney = Boolean(res.data)
 					this.getList()
-					if(this.isShowMoney){
+					if (this.isShowMoney) {
 						this.queryState();
 					}
 					const apps = getApp()
@@ -270,23 +276,17 @@
 				}
 			})
 
-			var that = this
-			uni.getStorage({
-				key: 'city',
-				success: function(res) {
-					console.log(res);
-					that.cityName = res.data
-				}
-			});
-			
-				
-			// this.$refs.app_update.update();
+
+
+			this.getCityName()
+
 
 		},
 		onHide() {
 			console.log('onhide');
 			const apps = getApp()
 			apps.type = undefined
+			clearInterval(this.timer);
 		},
 		onLoad() {
 			console.log('onloadonload.......');
@@ -300,32 +300,44 @@
 				}
 			})
 
-			var that = this
-			uni.getStorage({
-				key: 'city',
-				success: function(res) {
-					console.log(res);
-					that.cityName = res.data
-				},
-				fail(res) {
-					// #ifdef MP-WEIXIN
-					that.getLoction()
-					// #endif
-					// #ifdef APP-PLUS
-					that.getLoction()
-					// #endif
+
+			console.log(this.cityName, '255555555555');
+			this.timer = setInterval(() => {
+				this.getCityName()
+
+				if (this.cityName != '获取位置中...') {
+					clearInterval(this.timer);
+
 				}
-			});
-			console.log(that.cityName, '255555555555');
+			}, 1000)
+
 
 
 		},
 
 		methods: {
-			
-			queryState(){
+			getCityName() {
+
+				var that = this
+				uni.getStorage({
+					key: 'city',
+					success: function(res) {
+						console.log(res);
+						that.cityName = res.data
+					},
+					fail(res) {
+						// #ifdef MP-WEIXIN
+						that.getLoction()
+						// #endif
+						// #ifdef APP-PLUS
+						that.getLoction()
+						// #endif
+					}
+				});
+			},
+			queryState() {
 				accountQueryState().then(res => {
-					if(res.data.QueryResult[0].State == 'Offline'){
+					if (res.data.QueryResult[0].State == 'Offline') {
 						getUserSig().then(ress => {
 							uni.$TUIKit.login({
 								userID: res.data.QueryResult[0].To_Account,
@@ -340,11 +352,11 @@
 							})
 						})
 					}
-					
+
 				})
 			},
-			
-			
+
+
 			// 获取微信右上角胶囊高度
 			getHeight() {
 				let res = wx.getMenuButtonBoundingClientRect();
@@ -441,7 +453,7 @@
 				})
 			},
 			getServiceSymptoms() {
-			//	console.log(this.serviceSymptomsName);
+				//	console.log(this.serviceSymptomsName);
 				this.loading = true
 
 				this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
@@ -472,7 +484,7 @@
 				})
 				//获取热门报修
 				getHotService().then(res => {
-				//	console.log(res, '1111111111111');
+					//	console.log(res, '1111111111111');
 
 					if (res.data != []) {
 						res.data.forEach(item => {
@@ -488,21 +500,22 @@
 
 				//获取故障区域
 				getRegionService().then(res => {
-					//	console.log(res);
-					this.regionService = res.data.filter((item, index) => index <= 3)
+					console.log(res);
+					// .filter((i,index)=>{ return index<=3})
+					this.regionService = res.data
 					this.regionService.forEach(item => {
 						switch (item.regionName) {
 							case '前厅':
-								item.img = this.regionImg[0]
+								item.regionImage = this.regionImg[0]
 								break;
 							case '厨房':
-								item.img = this.regionImg[1]
+								item.regionImage = this.regionImg[1]
 								break;
 							case '包厢':
-								item.img = this.regionImg[2]
+								item.regionImage = this.regionImg[2]
 								break;
 							case '卫生间':
-								item.img = this.regionImg[3]
+								item.regionImage = this.regionImg[3]
 								break;
 						}
 					})
@@ -514,49 +527,49 @@
 				var that = this
 				console.log('2-----------------');
 				//获取地址
-			//	this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
+				//	this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
 
-					uni.getLocation({
-						isHighAccuracy: true,
-						highAccuracyExpireTime: 1234,
-						type: 'gcj02',
-						success: (suc) => {
-							console.log(suc, '1812222222222222222');
-							// this.location.latitude = suc.latitude
-							// this.location.longitude = suc.longitude
-							var demo = new QQMapWX({
-								key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
-							})
-							demo.reverseGeocoder({
-								location: suc.latitude + "," + suc.longitude,
-								success: function(res) {
-									console.log(res)
-									that.cityName = res.result
-										.address_component.city
-									uni.setStorage({
-										key: 'city',
-										data: that.cityName
-									})
-									console.log(that.cityName,
-										'37837888888888888888');
-									// that.position = res.result.address_component
-									// 	.city;
-									// let item = {
-									// 	cityName: 
-									// }
-									// that.back_city(item);
-								}
-							})
-						},
-						fail(err) {
-							console.log(err);
-							uni.showToast({
-								title: err.errMsg,
-								icon: "none"
-							})
-						}
-					})
-			//	})
+				uni.getLocation({
+					isHighAccuracy: true,
+					highAccuracyExpireTime: 1234,
+					type: 'gcj02',
+					success: (suc) => {
+						console.log(suc, '1812222222222222222');
+						// this.location.latitude = suc.latitude
+						// this.location.longitude = suc.longitude
+						var demo = new QQMapWX({
+							key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
+						})
+						demo.reverseGeocoder({
+							location: suc.latitude + "," + suc.longitude,
+							success: function(res) {
+								console.log(res)
+								that.cityName = res.result
+									.address_component.city
+								uni.setStorage({
+									key: 'city',
+									data: that.cityName
+								})
+								console.log(that.cityName,
+									'37837888888888888888');
+								// that.position = res.result.address_component
+								// 	.city;
+								// let item = {
+								// 	cityName: 
+								// }
+								// that.back_city(item);
+							}
+						})
+					},
+					fail(err) {
+						console.log(err);
+						// uni.showToast({
+						// 	title: err.errMsg,
+						// 	icon: "none"
+						// })
+					}
+				})
+				//	})
 
 
 
@@ -899,7 +912,7 @@
 
 			.fault-area {
 				margin: 40rpx 20rpx 0 20rpx;
-				height: 520rpx;
+				//	height: 520rpx;
 				background: #FFFFFF;
 				box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.05);
 				border-radius: 14rpx;
@@ -914,7 +927,7 @@
 				.boxs {
 					display: flex;
 					flex-wrap: wrap;
-					justify-content: space-evenly;
+					//justify-content: space-evenly;
 					padding: 0 10rpx;
 
 					.box {
@@ -923,7 +936,7 @@
 						//background-color: #CBCFCE;
 						border-radius: 15rpx;
 						position: relative;
-						margin-top: 14rpx;
+						margin: 12rpx 6rpx;
 
 						.mask {
 							position: absolute;
