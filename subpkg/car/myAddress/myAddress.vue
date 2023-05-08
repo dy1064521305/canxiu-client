@@ -3,7 +3,7 @@
 		<z-paging ref="paging" v-model="addressList" @query="getList">
 			<view v-for="(item,index) in addressList" :key='index' class="box">
 				<view style="padding: 20rpx;" @click='choseAddress(item)'>
-					<view class="top" >
+					<view class="top">
 						<text class="font" style="font-weight: bold;">{{item.contact}}</text>
 						<text class="font" style="margin-left: 14rpx;">{{item.phone}}</text>
 						<image @click.stop="editAndAddAddress(item.addressId)"
@@ -18,14 +18,15 @@
 						<view style="width: 92%;">
 							<view v-if="item.isDefault==0" class="moren">
 								<image style="width: 32rpx;margin-right: 11rpx;height: 32rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png"
-								></image>已设为默认
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+								</image>已设为默认
 							</view>
 							<view v-else class="un" @click.stop="morenHandle(item)">
 								<view class="circle"></view>设为默认
 							</view>
 						</view>
-						<view style="font-size: 25rpx;color: #EC5722;" @click.stop="deleteAddressHandle(item.addressId)">
+						<view style="font-size: 25rpx;color: #EC5722;"
+							@click.stop="deleteAddressHandle(item.addressId)">
 							删除
 						</view>
 					</view>
@@ -93,17 +94,18 @@
 					console.log(this.queryParams);
 				getAddressList(this.queryParams).then(res => {
 					console.log(res);
-					let bool =res.rows.some(item => {
-						return item.isDefault == 0
-					})
-					console.log(bool);
-					if (!bool) {
-						res.rows[0].isDefault=0
-						editDefault(res.rows[0]).then(res => {
-							this.getList(1,10)
+					if (res.rows.length != 0) {
+						let bool = res.rows.some(item => {
+							return item.isDefault == 0
 						})
-					}	
-					console.log(bool);
+						console.log(bool);
+						if (!bool) {
+							res.rows[0].isDefault = 0
+							editDefault(res.rows[0]).then(res => {
+								this.getList(1, 10)
+							})
+						}
+					}
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 					//this.$refs.paging.complete(res.rows,res.total);
 					//	this.addressList = res.rows
@@ -128,7 +130,7 @@
 							})
 						})
 					}
-				
+
 				})
 
 			},
@@ -159,7 +161,7 @@
 										duration: 2000
 									});
 									that.$refs.paging.reload();
-								
+
 									uni.removeStorage({
 										key: 'address_info',
 										success: function(res) {}

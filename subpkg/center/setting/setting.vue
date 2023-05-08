@@ -2,12 +2,30 @@
 	<view class="">
 		<view style="background-color: #fff;margin-top: 20rpx;">
 			<u-cell-group>
-					<u-cell
+				<u-cell
 					icon='http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/218734d44ff9424eb9d9ef890a54d97e.png'
 					title="个人信息" isLink @click="goInfo"></u-cell>
 				<u-cell
 					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
 					title="关于我们" isLink url="../aboutUs/aboutUs"></u-cell>
+				<a href="static/privacyAgreement.html">
+					<image
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+						style="width: 32rpx;height: 32rpx;"></image>
+					<text>隐私政策</text>
+					<u-icon name="arrow-right" color="#909399"></u-icon>
+				</a>
+				<a href="static/registrationAgreement.html">
+					<image
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+						style="width: 32rpx;height: 32rpx;"></image>
+					<text>注册协议</text>
+					<u-icon name="arrow-right" color="#909399"></u-icon>
+				</a>
+
+				<u-cell
+					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+					title="注销账号" isLink @click="isCancellation=true"></u-cell>
 			</u-cell-group>
 
 
@@ -22,6 +40,14 @@
 				</view>
 
 			</u-modal>
+
+			<u-modal :show="isCancellation" confirmColor='#8dd8b1' @cancel='isCancellation=false'
+				@confirm="cancellation" title="提示" showCancelButton>
+				<view class="slot-content" style="text-align: center;">
+					确定注销账号？
+				</view>
+
+			</u-modal>
 		</view>
 	</view>
 
@@ -30,15 +56,17 @@
 <script>
 	import storage from '@/utils/storage'
 	import {
-		getInfoById
+		getInfoById,
+		deleteUser
 	} from '@/api/user.js'
 	export default {
 		data() {
 			return {
 				showLoginOut: false, //是否退出提示框
+				isCancellation: false, //是否注销账号
 			};
 		},
-	
+
 		methods: {
 
 			loginOut() {
@@ -64,26 +92,44 @@
 			cancel() {
 				this.showLoginOut = false
 			},
-			goInfo(){
+			goInfo() {
 				//获取用户信息
 				if (storage.get('ClientId')) {
 					getInfoById(storage.get('ClientId')).then(res => {
 						console.log(res);
-						let userInfo={}
+						let userInfo = {}
 						userInfo = res.data
-						let arr = res.data.avatarUrl!=null?res.data.avatarUrl.split(','):[]
+						let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 						//	this.fileList.push({url:arr[0]})
-						let list={
-							userInfo:userInfo,
-							type:'info'
+						let list = {
+							userInfo: userInfo,
+							type: 'info'
 						}
 						uni.navigateTo({
-						
+
 							url: '../personalInfo/personalInfo?item=' + JSON.stringify(list)
 						})
 					})
 				}
-				
+
+			},
+			cancellation() {
+				deleteUser(storage.get('ClientId')).then(res => {
+					this.isCancellation = false
+					uni.showToast({
+						title: '注销成功',
+						duration: 800
+					});
+				uni.removeStorageSync("address_info")
+				 uni.removeStorageSync("AccessToken")
+				  uni.removeStorageSync("ClientId")
+							
+					setTimeout(function() {
+						uni.switchTab({
+							url: '/pages/center/index'
+						})
+					}, 800)
+				})
 			}
 		}
 	}
@@ -107,5 +153,20 @@
 		position: absolute;
 		bottom: 200rpx;
 		left: 43rpx;
+	}
+
+	a {
+		text-decoration: none;
+		color: #303133;
+		display: flex;
+		border-bottom: 2rpx solid #f0f0f1;
+		padding: 18rpx 20rpx;
+		font-size: 25rpx;
+
+		text {
+			margin-left: 10rpx;
+			display: inline-block;
+			width: 90%;
+		}
 	}
 </style>

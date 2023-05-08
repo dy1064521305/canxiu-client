@@ -26,7 +26,7 @@
 		//倒计时定时器
 		countDown() {
 			this.timer = setInterval(() => {
-				this.countDownNum--
+				this.countDownNum--	
 				if (this.countDownNum <= 0) {
 					clearInterval(this.timer);
 					this.go()

@@ -246,7 +246,7 @@
 					getInfoById(storage.get('ClientId')).then(res => {
 						console.log(res);
 						this.userInfo = res.data
-						let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
+					//	let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 						this.userInfo.phone = this.geTel(this.userInfo.phoneNumber)
 						//	this.fileList.push({url:arr[0]})
 					})
