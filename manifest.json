@@ -2,8 +2,8 @@
     "name" : "餐修",
     "appid" : "__UNI__16112CC",
     "description" : "",
-    "versionName" : "1.0.1",
-    "versionCode" : 101,
+    "versionName" : "1.0.6",
+    "versionCode" : 106,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -18,7 +18,6 @@
         },
         /* 模块配置 */
         "modules" : {
-            "OAuth" : {},
             "Geolocation" : {},
             "Push" : {},
             "Camera" : {},
@@ -37,6 +36,7 @@
                     "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
                     "<uses-permission android:name=\"android.permission.CAMERA\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
@@ -55,7 +55,14 @@
             },
             /* ios打包配置 */
             "ios" : {
-                "dSYMs" : false
+                "dSYMs" : false,
+                "privacyDescription" : {
+                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
+                    "NSLocationWhenInUseUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
+                    "NSLocationAlwaysUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
+                    "NSPhotoLibraryUsageDescription" : "从相册中选择图片或视频作为报修依据",
+                    "NSPhotoLibraryAddUsageDescription" : "生成维修报告保存本地"
+                }
             },
             /* SDK配置 */
             "sdkConfigs" : {
@@ -72,7 +79,17 @@
                 },
                 "ad" : {},
                 "push" : {
-                    "unipush" : {}
+                    "unipush" : {
+                        "icons" : {
+                            "small" : {
+                                "ldpi" : "unpackage/res/icons/20x20.png",
+                                "mdpi" : "unpackage/res/icons/29x29.png",
+                                "hdpi" : "unpackage/res/icons/40x40.png",
+                                "xhdpi" : "unpackage/res/icons/58x58.png",
+                                "xxhdpi" : "unpackage/res/icons/72x72.png"
+                            }
+                        }
+                    }
                 },
                 "maps" : {
                     "amap" : {
@@ -85,15 +102,46 @@
                         "__platform__" : [ "ios", "android" ]
                     },
                     "weixin" : {
-                        "__platform__" : [ "ios", "android" ],
-                        "appid" : "wx365a28a668734937",
-                        "UniversalLinks" : ""
+                        "__platform__" : [ "android" ],
+                        "appid" : "wx365a28a668734937"
                     }
                 }
             },
             "splashscreen" : {
                 "androidStyle" : "common",
                 "useOriginalMsgbox" : true
+            },
+            "icons" : {
+                "android" : {
+                    "hdpi" : "unpackage/res/icons/72x72.png",
+                    "xhdpi" : "unpackage/res/icons/96x96.png",
+                    "xxhdpi" : "unpackage/res/icons/144x144.png",
+                    "xxxhdpi" : "unpackage/res/icons/192x192.png"
+                },
+                "ios" : {
+                    "appstore" : "unpackage/res/icons/1024x1024.png",
+                    "ipad" : {
+                        "app" : "unpackage/res/icons/76x76.png",
+                        "app@2x" : "unpackage/res/icons/152x152.png",
+                        "notification" : "unpackage/res/icons/20x20.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png",
+                        "proapp@2x" : "unpackage/res/icons/167x167.png",
+                        "settings" : "unpackage/res/icons/29x29.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "spotlight" : "unpackage/res/icons/40x40.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png"
+                    },
+                    "iphone" : {
+                        "app@2x" : "unpackage/res/icons/120x120.png",
+                        "app@3x" : "unpackage/res/icons/180x180.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png",
+                        "notification@3x" : "unpackage/res/icons/60x60.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "settings@3x" : "unpackage/res/icons/87x87.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png",
+                        "spotlight@3x" : "unpackage/res/icons/120x120.png"
+                    }
+                }
             }
         },
         "uniStatistics" : {

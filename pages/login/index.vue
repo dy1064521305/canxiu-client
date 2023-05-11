@@ -214,21 +214,6 @@
 							smsCode: app.code,
 						}).then(result => {
 							console.log(result.data);
-							getUserSig().then(res => {
-								uni.$TUIKit.login({
-									userID: result.data.clientId,
-									userSig: res.msg
-								}).then(function(imResponse) {
-									console.log('-----------1111111111111111111111'); // 登录成功
-									console.log(imResponse); // 登录成功
-									console.log('22222222222222222222222222222'); // 登录成功
-									if (imResponse.data.repeatLogin === true) {
-										// 标识帐号已登录，本次登录操作为重复登录。v2.5.1 起支持
-										console.log(imResponse.data.errorInfo);
-									}
-								}).catch((error) => {})
-							})
-							// this.wxIMLogin(result);
 							// #ifdef APP-PLUS
 							plus.push.getClientInfoAsync((info) => {
 									let cid = info["clientid"];
@@ -290,6 +275,20 @@
 									//	this.fileList.push({url:arr[0]})
 								})
 
+							getUserSig().then(res => {
+								uni.$TUIKit.login({
+									userID: result.data.clientId,
+									userSig: res.msg
+								}).then(function(imResponse) {
+									console.log('-----------1111111111111111111111'); // 登录成功
+									console.log(imResponse); // 登录成功
+									console.log('22222222222222222222222222222'); // 登录成功
+									if (imResponse.data.repeatLogin === true) {
+										// 标识帐号已登录，本次登录操作为重复登录。v2.5.1 起支持
+										console.log(imResponse.data.errorInfo);
+									}
+								}).catch((error) => {})
+							})
 
 						})
 						.catch(err => {})

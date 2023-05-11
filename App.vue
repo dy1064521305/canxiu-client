@@ -4,7 +4,6 @@
 		import TIM from 'tim-wx-sdk';
 		import COS from 'cos-wx-sdk-v5';
 	// #endif
-		
 		// #ifdef H5
 		import TIM from 'tim-js-sdk';
 		import TIMUploadPlugin from 'tim-upload-plugin'
@@ -31,6 +30,33 @@
 		onLaunch() {
 			// 加载系统信息
 			this.$store.dispatch('SystemInfo');
+			
+			// #ifdef APP-PLUS
+			plus.push.setAutoNotification(true); // 在程序运行时接收到的消息在系统消息中心显示
+			//监听接收透传消息事件
+			plus.push.addEventListener('receive', function(msg) {
+				// 在线消息
+				console.log('离线消息1', msg)
+				plus.runtime.setBadgeNumber(0); //清除app角标
+				plus.push.clear(); //清空通知栏
+				console.log('准备跳转111');
+				uni.switchTab({
+					url: '/pages/msg/index'
+				})
+				在线时创建本地通知栏图标消息
+				plus.push.createMessage(msg.content, msg, options);
+			}, false);
+			//监听系统通知栏消息点击事件
+			plus.push.addEventListener('click', function(msg) {
+				// 离线消息
+				console.log('离线消息2', msg)
+				plus.runtime.setBadgeNumber(0); //清除app角标
+				plus.push.clear(); //清空通知栏
+				console.log('准备跳转111');
+			}, false);
+			// #endif
+			
+			
 			// 监听推送
 			// uni.onPushMessage((res) => {
 			// 			console.log("收到推送消息：",res) //监听推送消息
@@ -71,9 +97,23 @@
 			uni.$TUIKit.on(uni.$TUIKitEvent.ERROR, this.onTIMError);
 			uni.$TUIKit.on(uni.$TUIKitEvent.NET_STATE_CHANGE, this.onNetStateChange);
 			uni.$TUIKit.on(uni.$TUIKitEvent.SDK_RELOAD, this.onSDKReload);
-			
 		},
-		onShow() {},
+		onShow() {
+			// #ifdef APP-PLUS
+			plus.runtime.setBadgeNumber(0); //清除app角标
+			// #endif
+			let totalUnreadCount = uni.$TUIKit.getTotalUnreadMessageCount();
+			if(totalUnreadCount > 0){
+				uni.setTabBarBadge({
+				  index: 3,
+				  text: totalUnreadCount+''
+				})
+			}else{
+				uni.removeTabBarBadge({
+					index: 3
+				})
+			}
+		},
 		onHide() {},
 		globalData: {
 			index: undefined ,// 默认参数 也可设置为空
@@ -87,7 +127,6 @@
 			SDKAppID: 1400802214
 		},
 		methods: {
-			
 			// TODO:
 			resetLoginData() {
 				this.globalData.expiresIn = '';
@@ -102,11 +141,9 @@
 				logger.log(`| app |  resetLoginData | globalData: ${this.globalData}`);
 			},
 			onTIMError() {},
-			onSDKReady({name}) {
-				  const isSDKReady = name === uni.$TUIKitEvent.SDK_READY ? true : false
-					uni.$emit('isSDKReady', {
-						isSDKReady: true
-					});
+			onSDKReady(event) {
+				  console.info(123132321321321)
+				  uni.$emit('totalUnreadCount',{msg:'tim准备就绪'})
 			},
 			onNetStateChange() {},
 			onSDKReload() {},
