@@ -80,6 +80,9 @@
 
 <script>
 	import * as service from '@/api/service.js'
+	import {
+		getCarNum
+	} from '@/utils/api.js'
 	export default {
 		data() {
 			return {
@@ -115,6 +118,12 @@
 					this.swichMenu(getApp().index)
 				})
 			}
+			getCarNum().then(res => {
+				uni.setTabBarBadge({
+					index: 2,
+					text: res
+				})
+			})
 
 		},
 		onHide() {
