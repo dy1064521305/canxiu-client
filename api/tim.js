@@ -16,3 +16,5 @@ export const adminMsgWithDraw = (params) => request.get('/tim/adminMsgWithDraw',
 // 设置单聊消息已读
 export const adminSetMsgRead = (params) => request.get('/tim/adminSetMsgRead',params)
 
+export const getC2cUnreadMsgNum = () => request.get('/tim/getC2cUnreadMsgNum')
+

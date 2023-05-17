@@ -115,6 +115,15 @@
 						setTimeout(function() {
 							uni.navigateBack()
 						}, 1000)
+						uni.$TUIKit.updateMyProfile({
+							nick: this.userInfo.clientName,
+							avatar: this.userInfo.avatarUrl,
+							selfSignature: ''
+						}).then(res => {
+							console.info(res);
+							console.info(res);
+							console.info(res);
+						})
 					}
 
 				})

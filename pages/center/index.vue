@@ -111,14 +111,14 @@
 				<view class="my">
 					<view class="title">我的服务</view>
 					<view class="main">
-						<view class="box">
+						<!-- <view class="box">
 							<view class='img'>
 								<image style="width: 54rpx;height: 46rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/bc5a61260236484e840a1ddb5090bace.png">
 								</image>
 							</view>
 							<text>优惠券</text>
-						</view>
+						</view> -->
 						<view class="box" @click="fuwuClick('address')">
 							<view class='img'>
 								<image style="width: 48rpx;height: 56rpx;"

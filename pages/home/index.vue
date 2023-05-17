@@ -159,7 +159,7 @@
 
 	import {
 		accountQueryState,
-		getUserSig
+		getUserSig,getC2cUnreadMsgNum
 	} from '@/api/tim.js'
 	import {
 		getLnglat
@@ -379,11 +379,23 @@
 				}
 			})
 
-
-
 			this.getCityName()
-
-
+			
+			uni.$on('totalUnreadCount',function(data){
+					console.log('监听到事件来自 update ，携带参数 msg 为：' + data.msg);
+					getC2cUnreadMsgNum().then(res => {
+						if(res.data.AllC2CUnreadMsgNum > 0){
+							uni.setTabBarBadge({
+							  index: 3,
+							  text: res.data.AllC2CUnreadMsgNum+''
+							})
+						}else{
+							uni.removeTabBarBadge({
+								index: 3
+							})
+						}
+					})
+				})
 		},
 		onHide() {
 			console.log('onhide');
@@ -400,6 +412,10 @@
 				key: 'AccessToken',
 				complete: (res) => {
 					this.getServiceSymptomsHandle()
+					this.isShowMoney = Boolean(res.data)
+					if (this.isShowMoney) {
+						this.queryState();
+					}
 				}
 			})
 
@@ -458,8 +474,6 @@
 
 				})
 			},
-
-
 			// 获取微信右上角胶囊高度
 			getHeight() {
 				let res = wx.getMenuButtonBoundingClientRect();

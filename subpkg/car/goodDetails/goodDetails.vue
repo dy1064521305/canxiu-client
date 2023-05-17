@@ -405,7 +405,7 @@
 			},
 			actionSelect(e) {
 				console.log(e);
-				let phonr = '19157668838'
+				let phone='19157668838'
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {

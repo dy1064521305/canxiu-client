@@ -75,7 +75,7 @@ export default {
 		// 登入后拉去会话列表
 		this.getConversationList();
 		uni.$TUIKit.on(uni.$TUIKitEvent.CONVERSATION_LIST_UPDATED, this.onConversationListUpdated);
-		
+		uni.$TUIKit.on(uni.$TUIKitEvent.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, this.onTotalUnreadMessageCountUpdated);
 	},
 
 	/**
@@ -138,6 +138,19 @@ export default {
 			this.setData({
 				conversationList: event.data
 			});
+		},
+		onTotalUnreadMessageCountUpdated(event) {
+			let totalUnreadCount = event.data;
+			if(totalUnreadCount > 0){
+				uni.setTabBarBadge({
+				  index: 3,
+				  text: totalUnreadCount+''
+				})
+			}else{
+				uni.removeTabBarBadge({
+					index: 3
+				})
+			}
 		},
 
 		getConversationList() {

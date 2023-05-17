@@ -121,7 +121,9 @@
 						// })
 					})
 					.catch(err => {})
-
+				uni.$TUIKit.logout().then(res => {
+					console.info(res)
+				})
 			},
 			cancel() {
 				this.showLoginOut = false
