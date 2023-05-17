@@ -1,10 +1,44 @@
 <template>
 	<view class="">
 		<view style="background-color: #fff;margin-top: 20rpx;">
-			<u-cell-group>
+			<a @click='goInfo'>
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/218734d44ff9424eb9d9ef890a54d97e.png"
+					style="width: 32rpx;height: 32rpx;"></image>
+				<text>个人信息</text>
+				<u-icon name="arrow-right" color="#909399"></u-icon>
+			</a>
+			<a @click='goAboutUs'>
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+					style="width: 32rpx;height: 32rpx;"></image>
+				<text>关于我们</text>
+				<u-icon name="arrow-right" color="#909399"></u-icon>
+			</a>
+			<a href="static/privacyAgreement.html">
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+					style="width: 32rpx;height: 32rpx;"></image>
+				<text>隐私政策</text>
+				<u-icon name="arrow-right" color="#909399"></u-icon>
+			</a>
+			<a href="static/registrationAgreement.html">
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+					style="width: 32rpx;height: 32rpx;"></image>
+				<text>注册协议</text>
+				<u-icon name="arrow-right" color="#909399"></u-icon>
+			</a>
+			<a @click='isCancellation=true'>
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+					style="width: 32rpx;height: 32rpx;"></image>
+				<text>注销账号</text>
+				<u-icon name="arrow-right" color="#909399"></u-icon>
+			</a>
+
+
+
+
+		<!-- 	<u-cell-group>
 				<u-cell
 					icon='http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/218734d44ff9424eb9d9ef890a54d97e.png'
-					title="个人信息" isLink @click="goInfo"></u-cell>
+					title="个人信息" isLink ></u-cell>
 				<u-cell
 					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
 					title="关于我们" isLink url="../aboutUs/aboutUs"></u-cell>
@@ -27,7 +61,7 @@
 					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
 					title="注销账号" isLink @click="isCancellation=true"></u-cell>
 			</u-cell-group>
-
+ -->
 
 			<view class="button" @click="showLoginOut=true">
 				退出登录
@@ -122,15 +156,20 @@
 						title: '注销成功',
 						duration: 800
 					});
-				uni.removeStorageSync("address_info")
-				 uni.removeStorageSync("AccessToken")
-				  uni.removeStorageSync("ClientId")
-							
+					uni.removeStorageSync("address_info")
+					uni.removeStorageSync("AccessToken")
+					uni.removeStorageSync("ClientId")
+
 					setTimeout(function() {
 						uni.switchTab({
 							url: '/pages/center/index'
 						})
 					}, 800)
+				})
+			},
+			goAboutUs(){
+				uni.navigateTo({
+					url: '../aboutUs/aboutUs'
 				})
 			}
 		}
@@ -144,6 +183,7 @@
 </style>
 <style lang="scss" scoped>
 	.button {
+	
 		width: 663rpx;
 		height: 91rpx;
 		background: #9FD6BA;
@@ -155,6 +195,7 @@
 		position: absolute;
 		bottom: 200rpx;
 		left: 43rpx;
+		
 	}
 
 	a {
@@ -164,7 +205,7 @@
 		border-bottom: 2rpx solid #f0f0f1;
 		padding: 18rpx 20rpx;
 		font-size: 25rpx;
-
+		align-items: center;
 		text {
 			margin-left: 10rpx;
 			display: inline-block;

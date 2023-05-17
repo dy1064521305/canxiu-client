@@ -14,10 +14,10 @@
 					<u-icon name="share" color="#72DAA4" size="28" @click="shareInfo"></u-icon>
 				</view>
 				<view>
-					<text>¥</text><text style="font-size: 40rpx;">{{goodInfo.mixPrice}}～{{goodInfo.maxPrice}}</text>/台起
+					<text>¥</text><text style="font-size: 40rpx;">{{Number(this.goodInfo.mixPrice).toFixed(0)}}～{{Number(this.goodInfo.maxPrice).toFixed(0)}}</text>/台起
 				</view>
 				<view style="font-size: 22rpx;color: #A5A7A7;margin-top: 10rpx;">
-					起步人工费{{goodInfo.initialLabor}}元起，维修费不足{{goodInfo.initialLabor}}元
+					起步人工费{{Number(this.goodInfo.initialLabor).toFixed(0)}}元起，维修费不足{{Number(this.goodInfo.initialLabor).toFixed(0)}}元时按照起步人工费收取
 				</view>
 
 			</view>
@@ -110,10 +110,13 @@
 					mode=""></image>
 				<text>客服</text>
 			</view>
-			<view style="display: flex;flex-direction: column;" @click="goCar">
+
+			<view style="display: flex;flex-direction: column;position: relative;" @click="goCar">
+				<u-badge type="error" max="99" :absolute="true" :offset="[-10,5]" :value="allNum"></u-badge>
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/722e9538b21641bba55896f3a2c96eea.png"
 					mode=""></image>
-				<text style="margin-left: 8rpx;">维修车</text>
+				<text style="margin-left: 8rpx;">维修车
+				</text>
 			</view>
 
 			<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/b0566d28d45d47b2bf4b94356337615b.png"
@@ -169,8 +172,8 @@
 				您还未登录,是否去登录
 			</view>
 		</u-modal>
-		
-		
+
+
 		<!-- 拨打电话 -->
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="actionList" :show="showPhone"></u-action-sheet>
@@ -194,7 +197,12 @@
 	import {
 		generateQrCode
 	} from '@/api/captcha.js'
-	import {callPhone} from '@/utils/phone.js'
+	import {
+		callPhone
+	} from '@/utils/phone.js'
+	import {
+			getCarNum
+		} from '@/utils/api.js'
 	var checkValues = [];
 	export default {
 		components: {
@@ -204,6 +212,7 @@
 		},
 		data() {
 			return {
+
 				actionList: [{
 						name: '19157668838'
 					},
@@ -243,6 +252,7 @@
 				types: '',
 				appraiseList: [],
 				qrCode: '', //二维码
+				allNum: 0, //购物车数量
 			}
 		},
 		onLoad(options) {
@@ -278,7 +288,11 @@
 		onShow() {
 			console.log(this.query);
 			this.isLogin = storage.get('AccessToken')
-
+			//获取购物车数量
+			getCarNum().then(res => {
+				
+				this.allNum = res
+			})
 		},
 		methods: {
 			otherFun(object) {
@@ -292,6 +306,8 @@
 				console.log(1111);
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
+					console.log();
+			
 					uni.setNavigationBarTitle({
 						title: this.goodInfo.serviceName
 					})
@@ -351,10 +367,10 @@
 						.goodInfo.remark.replace(/<img/gi, '<img style="width:100%;height:auto"')
 						.replace(/<section/g, '<div')
 						.replace(/\/section>/g, '\div>') : ''
-					console.log(this.goodInfo, '11111111111');
+						console.log(this.goodInfo, '11111111111372222222222');
+						
 				})
-
-
+			
 
 			},
 			//将钱替换为星号
@@ -393,12 +409,12 @@
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
-					
+
 					// #ifdef APP-PLUS
-					callPhone(phone,'app')
+					callPhone(phone, 'app')
 					// #endif
 					// #ifdef MP-WEIXIN
-					callPhone(phone,'wx')
+					callPhone(phone, 'wx')
 					// #endif
 					this.showPhone = false
 				}
@@ -501,7 +517,7 @@
 									fontSize: "27rpx",
 									position: 'absolute',
 									top: '730rpx',
-									left: '170rpx',
+									left: '200rpx',
 									color: '#EC5722',
 								}
 							}, {
@@ -634,6 +650,10 @@
 									title: '添加成功',
 									duration: 2000
 								});
+								//获取购物车数量
+								getCarNum().then(res => {
+									this.allNum = res
+								})
 								this.projectVoList = []
 								this.getInfo()
 							}
@@ -668,7 +688,7 @@
 			//其他页面改变数据
 			changeData(data) {
 				this.projectVoList.forEach((fu, index) => {
-					data.forEach(d=>{
+					data.forEach(d => {
 						if (fu.projectId == d.projectId) {
 							this.$set(this.projectVoList, index, d)
 							console.log(this.projectVoList, '....182');
@@ -678,7 +698,7 @@
 				this.$nextTick(() => {
 					this.$refs.proInfo.checkboxValue1 = checkValues
 					console.log(checkValues, 'checkValuescheckValuescheckValuescheckValues...', this.$refs
-					.proInfo);
+						.proInfo);
 				})
 			},
 			textConfirm(arr) {
@@ -808,6 +828,7 @@
 			font-size: 22rpx;
 			color: #3D3F3E;
 			text-align: center;
+			z-index: 100000;
 
 			image {
 				width: 30rpx;

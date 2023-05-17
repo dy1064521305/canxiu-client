@@ -172,7 +172,16 @@
 
 
 
-			]
+			    ,{
+                    "path" : "video-container/video-container",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "视频播放",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
 		},
 		{
 			"root": "subpkg/car",

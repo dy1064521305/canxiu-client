@@ -20,8 +20,8 @@
 						<u-search v-model="queryParams.projectName" @search="queryList" @clear="queryList"
 							placeholder="搜索订单" :clearabled="true" :showAction='false'></u-search>
 					</view>
-					<u-tabs :scrollable='false' style='margin-top: 20rpx;' :current='current' :list="list1"
-						@click="statusClick" lineColor='#72DAA4' lineWidth="50" lineHeight='8' :inactiveStyle="{
+					<u-tabs style='margin-top: 20rpx;' :current='current' :list="list1" @click="statusClick"
+						lineColor='#72DAA4' lineWidth="50" lineHeight='8' :inactiveStyle="{
 					        color: '#A5A7A7',
 					    }"></u-tabs>
 				</view>
@@ -30,7 +30,8 @@
 			<view class="orders" @click="orderDetail(item.orderId)" v-for='(item,index) in orderList' :key='index'>
 				<view class="main">
 					<view class="title">
-						<text :style="{'font-weight': 'bold','width':item.isUrgent==1?'53%':'65%'}">{{item.warrantyStore}}</text>
+						<text
+							:style="{'font-weight': 'bold','width':item.isUrgent==1?'53%':'65%'}">{{item.warrantyStore}}</text>
 						<text style="font-size: 25rpx;text-align: end;width:42%;">
 							<text>{{item.orderStatus}}</text>
 						</text>
@@ -66,10 +67,12 @@
 					<view class="btns">
 						<view @click.stop='backFix(item)' class="btn-white"
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view>
-						<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'" @click="handleRoute(item)">联系师傅</view>
+						<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
+							@click="handleRoute(item)">联系师傅</view>
 						<view @click.stop='appraise(item)' class="btn-green" v-if="item.orderStatus=='待评价'">去评价</view>
 						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
-						<view @click.stop='orderDetail(item.orderId)' class="btn-green" v-if="item.orderStatus=='服务中【审核通过】'">确认方案</view>
+						<view @click.stop='orderDetail(item.orderId)' class="btn-green"
+							v-if="item.orderStatus=='服务中【审核通过】'">确认方案</view>
 					</view>
 				</view>
 			</view>
@@ -151,7 +154,7 @@
 			</view>
 		</u-popup>
 
-			<u-toast ref="uToast"></u-toast>
+		<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 
@@ -169,7 +172,7 @@
 
 			return {
 				repairOrderShow: false,
-				repairInfo:{},
+				repairInfo: {},
 				activeTimes: '',
 				date: '年月日',
 				checkboxValue1: [],
@@ -182,20 +185,39 @@
 				type: 0,
 				list1: [{
 					name: '全部',
+					badge: {
+						value: 0,
+					}
 				}, {
 					name: '待接单',
+					badge: {
+						value: 0,
+					}
 				}, {
-					name: '待上门'
+					name: '待上门',
+					badge: {
+						value: 0,
+					}
 				}, {
-					name: '待验收'
+					name: '待验收',
+					badge: {
+						value: 0,
+					}
 				}, {
-					name: '待支付'
+					name: '待支付',
+					badge: {
+						value: 0,
+					}
 				}, {
-					name: '售后中'
+					name: '售后中',
+					badge: {
+						value: 0,
+					}
 				}],
 				times: ['最近三天', '最近7天', '最近15天', '近1月', '近2月', '近3月'],
 				orderList: [], //订单数据
 				current: 0, //当前选中的索引
+				currentIndex:0,
 				queryParams: {
 					pageSize: 10,
 					pageNum: 1,
@@ -223,6 +245,7 @@
 		},
 		onShow() {
 			this.getOrderlistHandle(1, 10)
+			this.getNum()
 		},
 		onLoad(option) {
 			console.log(option.item);
@@ -239,7 +262,7 @@
 			} else {
 				let item = JSON.parse(option.item)
 				//	this.$refs.paging.reload();
-				this.current = item.index
+				this.currentIndex = item.index
 				this.statusClick({
 					name: item.name
 				})
@@ -249,7 +272,7 @@
 		methods: {
 
 			handleRoute(item) {
-				let id = 'C2C'+item.workerId
+				let id = 'C2C' + item.workerId
 				const url = `../../../subpkgChat/TUI-Chat/chat?conversationID=${id}`;
 				uni.navigateTo({
 					url
@@ -257,7 +280,7 @@
 			},
 
 
-			show(){
+			show() {
 				console.log(11111);
 				this.showScreen = true
 			},
@@ -278,8 +301,9 @@
 					this.queryParams.orderStatus = ''
 					console.log(this.queryParams);
 					this.getOrderlistHandle(1, 10)
+				
 				}
-
+					
 			},
 			getOrderlistHandle(pageNo, pageSize) {
 				console.log(this.queryParams);
@@ -302,13 +326,31 @@
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})
 			},
+			getNum(){
+				this.list1.forEach(item => {
+					console.log(item.name,'3293293299*999999');
+					getOrderList({
+						pageSize:10,
+						pageNum:1,
+						clientId: storage.get('ClientId'),
+						orderStatus: item.name == '全部' ? '' : item.name
+					}).then(res => {
+					
+						console.log(res,'ressssssssss');
+						item.badge.value = res.total
+						this.current=this.currentIndex
+					})
+				})
+			},
 			//条件查询
 			queryList() {
 				console.log(this.queryParams);
+				this.getNum()
 				this.$refs.paging.reload();
 			},
 			refresh() {
 				this.reset()
+				this.getNum()
 				console.log(1111);
 				this.$refs.paging.reload();
 			},
@@ -343,11 +385,13 @@
 			},
 			bindDateChangeBegin: function(e) {
 				console.log(e.detail.value);
-				this.queryParams.beginTime = e.detail.value
+				this.activeTimes = ''
+				this.queryParams.beginTime = e.detail.value + ' 00:00:00'
 				this.beginTime = e.detail.value
 			},
 			bindDateChangeEnd: function(e) {
-				this.queryParams.endTime = e.detail.value
+				this.activeTimes = ''
+				this.queryParams.endTime = e.detail.value + ' 23:59:59'
 				this.endTime = e.detail.value
 			},
 			getDate(type) {
@@ -372,8 +416,8 @@
 				var list = formatter.getDateByCode(time)
 
 				console.log(list);
-				this.queryParams.beginTime = list.startTime
-				this.queryParams.endTime = list.endTime
+				this.queryParams.beginTime = list.startTime + ' 00:00:00'
+				this.queryParams.endTime = list.endTime + ' 23:59:59'
 			},
 			//评价
 			appraise(item) {
@@ -389,9 +433,9 @@
 					url: '../../car/pay/pay?item=' + encodeURIComponent(JSON.stringify(item))
 				})
 			},
-			backFix(item){
-				this.repairInfo=item
-				this.repairOrderShow=true
+			backFix(item) {
+				this.repairInfo = item
+				this.repairOrderShow = true
 			},
 			//申请返修
 			repairOrderHandle() {
@@ -402,8 +446,9 @@
 						type: 'error',
 						message: res.data.msg
 					});
-					this.repairOrderShow=false
+					this.repairOrderShow = false
 					this.getOrderlistHandle(1, 10)
+					this.getNum()
 				})
 			}
 

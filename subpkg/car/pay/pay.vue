@@ -84,22 +84,31 @@
 				} else if (this.currentIndex == 0) {
 					pay.weChatPay({
 						orderId: this.info.orderId,
-						tradeType:'APP'
+						tradeType: 'APP'
 					}).then(res => {
 						console.log(res);
-					
+
 					})
-				}else{
+				} else {
 					pay.alipay({
 						orderId: this.info.orderId,
 					}).then(res => {
-					//	console.log(res);
+						console.log(res);
 							console.log(res.data.orderStr);
 						uni.requestPayment({
 						    provider: 'alipay',
 						    orderInfo: res.data.orderStr, 
 						    success: function (res) {
-						        console.log('success:' + JSON.stringify(res));
+						       const pages = uni.$u.pages();
+						       
+						       if (pages.some(p => p.route.includes('accept'))) {
+						       	uni.navigateBack({
+						       		delta: 2, //返回上上一级注意这里要设置为2
+						       	})
+						       } else {
+						       	uni.navigateBack()
+						       }
+						       console.log(page);
 						    },
 						    fail: function (err) {
 						        console.log('fail:' + JSON.stringify(err));

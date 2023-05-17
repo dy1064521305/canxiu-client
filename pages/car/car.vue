@@ -2,7 +2,9 @@
 	<view class="page">
 		<!-- 未登录 -->
 		<view v-if="!isLogin" style="padding-top: 330rpx;">
-			<u-empty mode="permission" icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png" text="您还未登录">
+			<u-empty mode="permission"
+				icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
+				text="您还未登录">
 			</u-empty>
 			<view class="btns">
 				<view @click="quxiao">
@@ -71,7 +73,8 @@
 						@getDeleteUrlList='getDeleteUrlList' @textareaInput='textareaInput' />
 				</view>
 
-				<u-empty v-if="dataList.length==0" mode="car" icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/125e056702434056b9b3bc5f7768eb0a.png"
+				<u-empty v-if="dataList.length==0" mode="car"
+					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/125e056702434056b9b3bc5f7768eb0a.png"
 					text='维修车为空' marginTop='100' width="210px">
 				</u-empty>
 
@@ -89,8 +92,11 @@
 					</image>
 				</view>
 				<text style="font-size: 29rpx;color: #3D3F3E;">全选</text>
-				<text style="font-size: 22rpx;color: #A5A7A7;margin-left:123rpx;">合计(不含材料):</text>
-				<text style="font-size: 33rpx;color: #EC5722;margin:0 10rpx 0 10rpx;width:14%;">¥{{totalMoney}}</text>
+				<view style="width: 53%;text-align: end;">
+					<text style="font-size: 22rpx;color: #A5A7A7;">合计(不含材料):</text>
+					<text
+						style="font-size: 33rpx;color: #EC5722;margin:0 10rpx 0 10rpx;width:14%;">¥{{totalMoney.toFixed(0)}}</text>
+				</view>
 				<view v-if='isDelete' style="background: #EC5722;" class="btn" @click="deleteHandle">
 					删除所选({{checkedList.length}})
 				</view>
@@ -108,6 +114,9 @@
 	import storage from '@/utils/storage'
 	import proInfo from '@/components/proInfo/proInfo.vue'
 	import * as car from '@/api/car.js'
+	import {
+		getCarNum
+	} from '@/utils/api.js'
 	import {
 		getAddressList
 	} from "@/api/address.js"
@@ -153,6 +162,7 @@
 			}
 		},
 		onShow() {
+
 			// #ifdef APP-PLUS
 			this.tabbarHeight = uni.getSystemInfoSync().windowBottom
 			console.log();
@@ -163,6 +173,12 @@
 			// #endif	
 			this.getList()
 			this.isLogin = storage.get('AccessToken')
+			getCarNum().then(res => {
+				uni.setTabBarBadge({
+					index: 2,
+					text: res
+				})
+			})
 		},
 		onTabItemTap: function(item) {
 
@@ -173,6 +189,7 @@
 			}
 		},
 		methods: {
+
 			getDeleteUrlList(data) {
 				this.dataList.forEach((fu, index) => {
 					fu.children.forEach((son, ind) => {
@@ -183,6 +200,7 @@
 						})
 					})
 				})
+
 				console.log(this.dataList, '....185', data);
 			},
 			//其他页面改变数据
@@ -297,13 +315,15 @@
 				car.getCarList({
 					clientId: storage.get('ClientId')
 				}).then(res => {
-					console.log(res);
+					console.log(res, '3145455555>>>>>>>>>');
 					this.dataList = res.data
+
 					this.totalMoney = 0
 					this.dataList.forEach(item => {
 						this.allNum += item.children.length
 
 					})
+
 				})
 			},
 			showMask() {
@@ -443,7 +463,13 @@
 				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
 				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
-				console.log(this.dataList, '4224224224220',this.checkedList);
+				console.log(this.dataList, '4224224224220', this.checkedList);
+				getCarNum().then(res => {
+					uni.setTabBarBadge({
+						index: 2,
+						text: res
+					})
+				})
 			},
 			//取消登录
 			quxiao() {

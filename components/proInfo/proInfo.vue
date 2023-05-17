@@ -8,7 +8,8 @@
 						activeColor='#72daa4' @change='val=>checkChange(val,item)'>
 					</u-checkbox>
 					<u-image radius='10rpx' width="150rpx" height="150rpx" :src="item.imgList[0]"
-						@click="previewImage(item.imgList)">
+					>
+					<!-- 	@click="previewImage(item.imgList)" -->
 					</u-image>
 
 					<view class="info">
@@ -22,7 +23,7 @@
 							<view class="left">
 								<text v-if="!question"
 									style="font-size: 22rpx;color: #EC5722;margin-right: 10rpx;">预估费用:</text>
-								¥{{item.projectPrice}}
+								¥{{Number(item.projectPrice).toFixed(0)}}
 								<image @click='questionHandle(item)' v-if="question"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0b076ac258454779a88431fc8f26cb56.png"
 									mode=""></image>
@@ -134,25 +135,26 @@
 				immediate: true,
 				deep: true,
 				handler: function(n) {
+					console.log(n);
 					this.dataList = uni.$u.deepClone(n)
 					this.checkboxValue1 = n.filter(l => l.checked).map(l1 => l1.id)
-					console.log(this.checkboxValue1, 'this.checkboxValue1++++++++++++++140');
-					console.log(n);
-					console.log(this.dataList, this.isCar, 'this.dataListthis.dataList');
+					// console.log(this.checkboxValue1, 'this.checkboxValue1++++++++++++++140');
+					// console.log(n);
+					// console.log(this.dataList, this.isCar, 'this.dataListthis.dataList');
 					this.dataList.forEach(item => {
 						if (this.isCar) {
-							console.log('139......', item);
+						//	console.log('139......', item);
 							item.projectName = item.serviceProjectName ? item.serviceProjectName : item
 								.projectName
 						} else {
-							console.log(item, '.......147...');
+						//	console.log(item, '.......147...');
 							item.shuoming = item.remark
 							item.remark = item.remark || ''
 							item.projectNumber = (item.projectNumber === undefined || item.projectNumber ===
 								0) ? 1 : item.projectNumber
-							console.log(1111);
+					//		console.log(1111);
 						}
-						console.log(item);
+					//	console.log(item);
 						item.imgList = item.serviceProjectImg !== null ? item.serviceProjectImg.split(',') :
 						[],
 

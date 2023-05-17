@@ -22,7 +22,7 @@
 				</view>
 			</u-navbar>
 			<view class="content">
-				<view class="types">
+				<view class="types" >
 					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(index)'>
 						<image :src="item.iconUrl" mode=""></image>
 						<view class="">
@@ -30,7 +30,7 @@
 						</view>
 					</view>
 				</view>
-				<!-- <view class="project">
+				<view class="project" >
 					<view class="top">
 						<view class="title blod">
 							热门报修
@@ -66,8 +66,8 @@
 							暂无数据
 						</view>
 					</view>
-				</view> -->
-				<view class="fault-area">
+				</view>
+				<view class="fault-area" >
 					<view class="title blod">
 						故障区域
 					</view>
@@ -80,10 +80,11 @@
 							</view>
 						</view>
 					</view>
+					<view style="height: 30rpx;background-color: #F5F9FA;"></view>
 				</view>
 				<view class="home-bottom" id='bottom' :style="{minHeight:scrollHeight+'px'}">
 					<view class="tabs"
-						:style="{backgroundColor:tabsBg,position:tabsBg === '#fff'&&'sticky',zIndex:3,top:tabHeight+'px'}">
+						:style="{backgroundColor:tabsBg,position:'sticky',zIndex:3,top:tabHeight+'px'}">
 						<u-tabs :current="currentIndex" :list="serviceSymptomsName" lineWidth="60" lineHeight="7"
 							lineColor='linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);' :activeStyle="{
 							    color: '#303133',
@@ -143,9 +144,9 @@
 <script>
 	import storage from '@/utils/storage'
 	import goodCard from '../../components/goodCard/goodCard.vue'
-	// import {
-	// 	checkForAuthorization
-	// } from '@/utils/location.js'
+	import {
+		getCarNum
+	} from '@/utils/api.js'
 	var QQMapWX = require('@/utils/qqmap-wx-jssdk.js')
 	import {
 		getServiceType,
@@ -175,27 +176,89 @@
 				loaded: false, //是否展示 “已加载全部” 字样
 				titleHeight: 60, //小程序的搜索框顶部高度
 				typesList: [], //一级分类
-				iconList: [
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/dd229a61f282420dbd4834b7df8ff118.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/931927a4bfda4cce9ea6c8ddb6833fcb.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/41eb8bd3850d46eb8da998031132969b.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/d70cff4580e343d0b476d614e6060d34.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/b392af66086c48abb9fa0af498aed86d.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/1f949be9b75146899ac5163dfb724f6c.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/caf8ac6839ef4102a4fef58e623ae66b.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/f829573a5ff14a14aeb24cc29daccf42.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/aeb9f00486e74e2581ea821d3a62c7c5.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/919ae79b3192417387cbfe81c4f3d971.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/80da0c42b64b4503989c8ebf79ed3e6c.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/c9999ed56ab0408b9a8f81832c1a897a.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/fa9899041b4b43f1b98ce2f6cd4da8a1.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/96b3449ca2f04f0f904ae049069f69eb.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/e4e296ff88864e45877ff619b8588b0a.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/e3c94b4ad35b432ca9d808ebc2b9682f.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/2b6e994786e343ba9e2e97d178868732.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/4cb33e4d1a614bda86187d7fd7d1732e.png",
-					"http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/fc70dc01e62b410c86f0d7bcbc9e278a.png",
+				iconList: [{
+						name: '水管台盆',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/dd229a61f282420dbd4834b7df8ff118.png",
+					},
+					{
+						name: '线路电器',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/931927a4bfda4cce9ea6c8ddb6833fcb.png",
+					},
 
+					{
+						name: '门窗维修',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/d70cff4580e343d0b476d614e6060d34.png",
+					},
+					{
+						name: '家具维修',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/b392af66086c48abb9fa0af498aed86d.png",
+					},
+					{
+						name: '金属制品',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/1f949be9b75146899ac5163dfb724f6c.png",
+					},
+					{
+						name: '油漆涂料',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/caf8ac6839ef4102a4fef58e623ae66b.png",
+					},
+					{
+						name: '厨具设备',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/f829573a5ff14a14aeb24cc29daccf42.png",
+					},
+					{
+						name: '制冷设备',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/aeb9f00486e74e2581ea821d3a62c7c5.png",
+
+					},
+					{
+						name: '灯具维修',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/41eb8bd3850d46eb8da998031132969b.png",
+					},
+					{
+						name: '空调维修',
+						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/919ae79b3192417387cbfe81c4f3d971.png'
+
+					},
+					{
+						name: '新风排风',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/80da0c42b64b4503989c8ebf79ed3e6c.png",
+
+					},
+					{
+						name: '墙面维修',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/c9999ed56ab0408b9a8f81832c1a897a.png",
+
+					},
+					{
+						name: '地面维修',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/fa9899041b4b43f1b98ce2f6cd4da8a1.png",
+
+					},
+
+					{
+						name: '顶面维修',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/96b3449ca2f04f0f904ae049069f69eb.png",
+					},
+					{
+						name: '弱电设备',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/e4e296ff88864e45877ff619b8588b0a.png",
+					},
+					{
+						name: '景观维修',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/e3c94b4ad35b432ca9d808ebc2b9682f.png",
+					},
+					{
+						name: '软装配饰',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/2b6e994786e343ba9e2e97d178868732.png",
+					},
+					{
+						name: '广告招牌',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/4cb33e4d1a614bda86187d7fd7d1732e.png",
+					},
+					{
+						name: '保养清洗',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/fc70dc01e62b410c86f0d7bcbc9e278a.png",
+					}
 				],
 				hotServiceList: [], //热门报修
 				hotServiceListFour: [], //首页显示的四个
@@ -227,6 +290,7 @@
 				cityName: '获取位置中...',
 				locationStatus: '', //定位权限
 				timer: '',
+				promiseList: [false, false, false]
 			}
 		},
 		onReady() {
@@ -234,6 +298,39 @@
 			this.scrollHeight = uni.$u.sys().windowHeight - this.offsetTop
 
 
+		},
+		watch: {
+			promiseList: {
+				handler(n) {
+					console.log(n, '<<<0---------------n');
+					if(n.every(item=>item)){
+						this.$nextTick(()=>{
+							// 自定義組件模式下要使用in(this)
+								      const query = uni.createSelectorQuery().in(this); 
+								      query.select('.types').fields({ size: true})
+								      query.select('.project').fields({ size: true})
+								      query.select('.fault-area').fields({ size: true})
+								      query.exec((data) => {
+								        console.log(data)
+										this.scrollTop = data.reduce((p,c)=>p+c.height,0)
+										console.log(this.scrollTop,'<<<<<-------this.scrollTop------data');
+								      });
+							// uni.createSelectorQuery().in(this).select('#bottom')
+							// 	.boundingClientRect(data => {
+									this.tabHeight||uni.createSelectorQuery().in(this).select('.content')
+										.boundingClientRect(data1 => {
+											// console.log(data1, data);
+											// this.scrollTop = data.top - data1.top
+											// console.log(this.scrollTop, '<<<-----------------scrollTop----watch');
+											this.tabHeight = data1.top
+											console.log( data1.top);
+										}).exec();
+								// }).exec();
+						})
+					}
+				},
+				immediate: true
+			}
 		},
 		onPageScroll(e) {
 			// console.log((e.scrollTop).toFixed(0),(this.scrollTop).toFixed(0));
@@ -247,6 +344,12 @@
 				1) * 1)
 		},
 		onShow() {
+			getCarNum().then(res => {
+				uni.setTabBarBadge({
+					index: 2,
+					text: res
+				})
+			})
 			console.log('onshowinshow');
 			// #ifdef MP-WEIXIN
 			this.getHeight();
@@ -451,16 +554,6 @@
 								this.swiperHeight = data.reduce((p, c) => p >= c.height ? p : c.height,
 									0)
 							}).exec();
-						this.scrollTop || uni.createSelectorQuery().in(this).select('#bottom')
-							.boundingClientRect(data => {
-								uni.createSelectorQuery().in(this).select('.content')
-									.boundingClientRect(data1 => {
-										console.log(data1, data);
-										this.scrollTop = data.top - data1.top
-										this.tabHeight = data1.top
-									}).exec();
-
-							}).exec();
 					})
 				}).finally(() => {
 					uni.stopPullDownRefresh()
@@ -483,19 +576,25 @@
 				console.log(this.serviceSymptomsName);
 			},
 			getList() {
+				console.log('getList------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
 				//获取一级分类
+				this.promiseList.splice(0,1,false)
 				getServiceType().then(res => {
-					//console.log(res);
+					console.log(res, '<<<<<-----------------------------');
 					this.typesList = res.data
 					this.typesList.forEach((item, index) => {
 						this.iconList.forEach((icon, ii) => {
-							if (index == ii) {
-								item['iconUrl'] = icon
+							if (item.typeName == icon.name) {
+								item['iconUrl'] = icon.url
 							}
 
 						})
 					})
+				}).finally(() => {
+					console.log('580------>>>>');
+					this.promiseList.splice(0,1,true)
 				})
+				this.promiseList.splice(1,1,false)
 				//获取热门报修
 				getHotService().then(res => {
 					//	console.log(res, '1111111111111');
@@ -510,29 +609,33 @@
 					}
 					this.hotServiceList = res.data
 					this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
+				}).finally(() => {
+					this.promiseList.splice(1,1,true)
 				})
-
+				this.promiseList.splice(2,1,false)
 				//获取故障区域
 				getRegionService().then(res => {
 					console.log(res);
 					// .filter((i,index)=>{ return index<=3})
 					this.regionService = res.data
-					this.regionService.forEach(item => {
-						switch (item.regionName) {
-							case '前厅':
-								item.regionImage = this.regionImg[0]
-								break;
-							case '厨房':
-								item.regionImage = this.regionImg[1]
-								break;
-							case '包厢':
-								item.regionImage = this.regionImg[2]
-								break;
-							case '卫生间':
-								item.regionImage = this.regionImg[3]
-								break;
-						}
-					})
+					// this.regionService.forEach(item => {
+					// 	switch (item.regionName) {
+					// 		case '前厅':
+					// 			item.regionImage = this.regionImg[0]
+					// 			break;
+					// 		case '厨房':
+					// 			item.regionImage = this.regionImg[1]
+					// 			break;
+					// 		case '包厢':
+					// 			item.regionImage = this.regionImg[2]
+					// 			break;
+					// 		case '卫生间':
+					// 			item.regionImage = this.regionImg[3]
+					// 			break;
+					// 	}
+					// })
+				}).finally(() => {
+					this.promiseList.splice(2,1,true)
 				})
 
 
@@ -854,8 +957,8 @@
 			}
 
 			.project {
-				margin: 40rpx 20rpx 0 20rpx;
-
+				margin: 0rpx 20rpx;
+				padding: 40rpx 0;
 				.top {
 					display: flex;
 					justify-content: space-between;
@@ -925,8 +1028,7 @@
 			}
 
 			.fault-area {
-				margin: 40rpx 20rpx 0 20rpx;
-				//	height: 520rpx;
+				margin: 0rpx 20rpx;				//	height: 520rpx;
 				background: #FFFFFF;
 				box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.05);
 				border-radius: 14rpx;
@@ -970,7 +1072,6 @@
 			}
 
 			.home-bottom {
-				margin-top: 30rpx;
 				width: 100%;
 
 				.scroll-view {

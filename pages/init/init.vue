@@ -1,16 +1,11 @@
 <template>
 	<view>
-		
+
 	</view>
 </template>
 
 <script>
 	export default {
-		data() {
-			return {
-				
-			};
-		},
 		onLoad() {
 			const value = uni.getStorageSync('launchFlag');
 			if (value) {
@@ -29,6 +24,26 @@
 				});
 			}
 		},
+		methods: {
+			// getList() {
+			// 	//维修车列表
+			// 	getCarList({
+			// 		clientId: storage.get('ClientId')
+			// 	}).then(res => {
+			// 		console.log(res,'<<<<<<<<<<getCarList>>>>>>>>>>>',storage.get('ClientId'));
+
+			// 		let allNum = 0
+			// 		res.data.forEach(item => {
+			// 			allNum += item.children.length
+
+			// 		})
+			// 		uni.setTabBarBadge({ //显示数字
+			// 			index: 2, //tabbar下标
+			// 			text: String(allNum) //数字
+			// 		})
+			// 	})
+			// },
+		}
 	}
 </script>
 

@@ -18,7 +18,7 @@
 					<view @click="_changeTime(index)" :class="{ active: item.checked }"
 						v-for="(item, index) in activeTimeArr" :key="item.time">
 						{{ item.time }}{{ rangeType ? '-' + item.endtime : '' }}	
-						<image v-if="activeTimeArr.length>=5&&index<4&&isToday" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/2889ed6d29b441d9a6da3c69af618f96.png" style="width: 36rpx;height: 36rpx;"></image>
+						<image v-if="activeTimeArr.length>=2&&index<1&&isToday" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/6bfb10ff7ad7404699859bf0a72cb672.png" style="width: 60rpx;height: 36rpx;"></image>
 					</view>
 				
 				</view>
@@ -155,7 +155,7 @@
 			},
 			_changeTime(e) {
 				console.log(e);
-				this.isUrgent=this.activeTimeArr.length>=5&&e<4
+				this.isUrgent=this.activeTimeArr.length>=2&&e<1&&this.isToday
 				let _ind = e - 0;
 				let {
 					activeTimeArr
@@ -617,7 +617,7 @@
 		image{
 			position: absolute;
 			width: 36rpx;
-			left: 338rpx;
+			left: 315rpx;
 			 top: -2rpx;
 		}
 	}

@@ -26,8 +26,8 @@
 				<u--input v-model="userInfo.beInvitedCode" border="none" placeholder="请输入邀请码"></u--input>
 			</u-form-item>
 			<u-form-item label="门头图" ref="item1">
-
-				<uploadFile :fileListt="fileList" @getUrl='getUrl' :limit='1' types='image'/>
+				<div style='margin-top: 40rpx;'>	<uploadFile :fileListt="fileList" @getUrl='getUrl' :limit='1' types='image'/></div>
+			
 			</u-form-item>
 
 		</u--form>

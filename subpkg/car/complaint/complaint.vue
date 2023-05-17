@@ -74,7 +74,7 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 			tousu() {
 				this.query.complaintContent = this.value1
 				console.log(this.query);
-			 orderComplaint(query).then(res => {
+			 orderComplaint(this.query).then(res => {
 					console.log(res);
 					if (res.code == 200) {
 						this.show = true
@@ -135,9 +135,7 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 			color: #FFFFFF;
 			line-height: 91rpx;
 			text-align: center;
-			position: absolute;
-			bottom: 200rpx;
-			left: 43rpx;
+			margin: 150rpx auto;
 		}
 	}
 </style>
