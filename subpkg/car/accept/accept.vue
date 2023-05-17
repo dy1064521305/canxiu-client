@@ -9,7 +9,7 @@
 			<view v-if="info.name=='服务验收'" class="btn queren" @click="sign">
 				确认验收
 			</view>
-			<view v-if="info.type=='待支付'&&urlImg.length!=0" class="btn queren" @click="pay">
+			<view v-if="info.type=='待支付'" class="btn queren" @click="pay">
 				去支付
 			</view>
 		</view>

@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<u-navbar placeholder @leftClick='leftClick' title="填写订单" placeholder>
+		<u-navbar placeholder @leftClick='leftClick' title="填写订单" >
 
 		</u-navbar>
 		<view class="address" :style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'250rpx'}"
@@ -28,7 +28,7 @@
 		<view class="time" @click="isShow=true">
 			<text style="font-size: 33rpx;color: #3D3F3E;font-weight: bold;">选择上门时间</text>
 			<text
-				style='width: 63%;text-align: end;margin-right: 22rpx;'>{{info.expectTime==undefined?'时间':info.expectTime}}</text>
+				style='width: 65%;text-align: end;margin-right: 22rpx;'>{{info.expectTime==undefined?'时间':info.expectTime}}</text>
 			<image style="width: 14rpx;height: 25rpx;"
 				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
 				mode=""></image>
@@ -36,7 +36,7 @@
 
 		<view class="list">
 			<proInfo :list="submitList" :isCar='true' :submit='false' @getCheck='getCheck'
-				@getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
+				 @getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
 		</view>
 
 		<view class="bottom">
@@ -191,6 +191,17 @@
 					key: 'submit_order',
 					data: data,
 				})
+				console.log(data);
+				this.submitList.forEach((fu, index) => {
+				//	fu.children.forEach((son, ind) => {
+						data.forEach(d => {
+							if (d.id === fu.id) {
+								fu.projectImg=d.projectImg
+								fu.projectVideo=d.projectVideo
+							}
+						})
+				//	})
+				})
 			},
 			showMask() {
 				this.isShow = true;
@@ -200,11 +211,11 @@
 			handelClose(data) {
 				this.isShow = false;
 				console.log(data);
-				console.log(this.info.expectTime);
 				this.info.expectTime = data._date
 				this.info.isUrgent = data.isUrgent ? 1 : 0
 				this.dateRange = data._dateRange
 			},
+		
 			//下单
 			submitOrder() {
 				if (this.info.expectTime == undefined) {
@@ -315,7 +326,7 @@
 	.page {
 		.address {
 			padding: 0 34rpx;
-			width: 100%;
+		//	width: 100%;
 			//height: 286rpx;
 			background: #fff;
 			display: flex;
@@ -324,7 +335,7 @@
 				padding: 46rpx 0;
 				display: flex;
 				flex-direction: column;
-				width: 78%;
+				width: 82%;
 			}
 
 			.right {
@@ -346,7 +357,7 @@
 		.time {
 			margin-top: 20rpx;
 			padding: 0 25rpx;
-			width: 100%;
+		//	width: 100%;
 			height: 103rpx;
 			background: #fff;
 			display: flex;
@@ -370,7 +381,7 @@
 			display: flex;
 			align-items: center;
 			padding: 10rpx 30rpx;
-
+		
 			bottom: 0;
 
 			.btn {

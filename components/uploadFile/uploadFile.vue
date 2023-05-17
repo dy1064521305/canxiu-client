@@ -1,27 +1,35 @@
 <template>
 	<view>
 		<view class="bg-img">
+			<view v-if="types=='video'" v-for="(itemm, index) in billImgList" :key="index">
+				<view style="margin:5rpx;">
 
-			<view v-if="types=='video'" v-for="(item, index) in billImgList" :key="index">
-				<view style="position: relative;margin:5rpx;">
+					<view style="position: relative;width: 125rpx;height: 125rpx;">
 
-					<view style="width: 125rpx;height: 125rpx;">
-						<video style="width: 100%;height:100%" v-if="types=='video'" id="myVideo" :src="item"
-							:show-center-play-btn="true" :enable-play-gesture="true" controls loop class="p-video"
-							show-fullscreen-btn>
-						</video>
+						<image style="width: 100%;height:100%;"
+							:src="itemm+'?x-oss-process=video/snapshot,t_3210,f_jpg'" mode="">
+
+						</image>
+						<image style="position: absolute;top:30%; right: 30%;width: 54rpx;height: 54rpx;"
+							@click="imageClick(itemm)"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/05/10/ce99ac9d33214a1f958390f9a0d3345c.png" />
+						</image>
+						<image v-if="isDel" style="position: absolute;top: 0; right: 0;width: 40rpx;height: 40rpx;"
+							@tap.stop="billDelImg" :data-index="index"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/25/067d6e5b8f6a4b9c8362040b84e5a03a.png" />
+						</image>
+
+
 					</view>
 
-					<view v-if="isDel" style="position: absolute;top: 0; right: 0;">
-						<image style="width: 40rpx;height: 40rpx;" @tap.stop="billDelImg" :data-index="index"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/25/067d6e5b8f6a4b9c8362040b84e5a03a.png"
-							></image>
-					</view>
+					<!-- 	<view 
+ 						style="z-index: 100000;background-color: red;">
+ 					
+ 					</view> -->
 
 				</view>
 
 			</view>
-
 
 
 			<view v-if="types=='image'&&index<2" v-for="(item, index) in billImgList" :key="index" @tap="billViewImage"
@@ -32,8 +40,8 @@
 
 					<view v-if="isDel" style="position: absolute;top: 0; right: 0;">
 						<image style="width: 40rpx;height: 40rpx;" @tap.stop="billDelImg(index)" :data-index="index"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/25/067d6e5b8f6a4b9c8362040b84e5a03a.png"
-							></image>
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/25/067d6e5b8f6a4b9c8362040b84e5a03a.png">
+						</image>
 					</view>
 
 				</view>
@@ -62,19 +70,21 @@
 			</view>
 
 			<u-overlay opacity='1' :show="showsImg" @click="showsImg=false">
-				<view style="position: absolute;z-index: 9999;display: flex;top: 150rpx;align-items: center;width: 100%;">
-				
+				<view
+					style="position: absolute;z-index: 9999;display: flex;top: 150rpx;align-items: center;width: 100%;">
+
 					<view style="color:#fff;width: 41%;padding-left:370rpx;">
 						{{indexx+1}}/{{billImgList.length}}
 					</view>
 					<view @click.stop='billDelImg(indexx)' v-if='!isInfo'>
 						<u-icon name="trash" color="#ccc" size="28"></u-icon>
 					</view>
-					
+
 				</view>
 				<swiper @change='swiperChange' style="height: 100%;">
-					<swiper-item style="display: flex;align-items: center;" v-for="(item,index) in billImgList" :key="index">
-							<image style="width: 100%;" :src="item" mode='widthFix'></image>
+					<swiper-item style="display: flex;align-items: center;" v-for="(item,index) in billImgList"
+						:key="index">
+						<image style="width: 100%;" :src="item" mode='widthFix'></image>
 					</swiper-item>
 
 
@@ -91,7 +101,9 @@
 
 			<u-toast ref="uToast"></u-toast>
 		</view>
-
+		<video v-if="videoSrc" :id="'video-'+id" :ref="'video-'+id" :src="videoSrc" @fullscreenchange='fullscreenchange'
+			@loadedmetadata="canPlay" controls>
+		</video>
 	</view>
 </template>
 
@@ -126,17 +138,22 @@
 				default: false
 			},
 			//是否是详情就不显示删除按钮
-			isInfo:{
+			isInfo: {
 				type: Boolean,
 				default: false
 			}
 		},
 		data() {
 			return {
+				id: uni.$u.guid(),
+				videoEle: null,
+				videoSrc: '',
 				indexx: 0,
 				swiperHeight: '0px',
 				showsImg: false,
-				billImgList: [],
+				billImgList: [
+
+				],
 				urls: [],
 				//billImgList: [],
 				otherUrl: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/25/90db8b3c2cb341fca89284d3f08214f4.png',
@@ -156,6 +173,38 @@
 
 		},
 		methods: {
+			fullscreenchange(e) {
+				console.log(e);
+				if (!e.detail.fullScreen) {
+					this.videoSrc = undefined
+					this.videoEle.pause()
+					this.videoEle = null
+					console.log(this.videoEle);
+				}
+
+			},
+			canPlay() {
+				this.videoEle.play()
+			},
+			//显示全屏
+			imageClick(src) {
+				// #ifdef MP-WEIXIN
+				uni.navigateTo({
+					url:'/subpkg/home/video-container/video-container?src='+src
+				})
+				// #endif
+				// #ifdef APP
+				this.videoSrc = src
+				this.videoEle || (this.videoEle = uni.createVideoContext('video-' + this.id, this))
+				console.log(src);
+				this.$nextTick(() => {
+					this.videoEle.requestFullScreen()
+					this.videoEle.play()
+				})
+				// #endif
+				console.log(1111111111);
+			
+			},
 			swiperChange(e) {
 				console.log(e);
 				this.indexx = e.detail.current
@@ -173,7 +222,7 @@
 			},
 			billViewImage(e) {
 
-					this.showsImg = true
+				this.showsImg = true
 				// uni.previewImage({
 				// 	urls: this.billImgList,
 				// 	current: e.currentTarget.dataset.url,
@@ -182,7 +231,7 @@
 
 			},
 			billDelImg(e) {
-				console.log( this.billImgList);
+				console.log(this.billImgList);
 				uni.showModal({
 					title: '删除',
 					content: '确定要删除吗？',
@@ -190,7 +239,7 @@
 					confirmText: '取消',
 					success: res => {
 						if (res.cancel) {
-							let index =e.currentTarget!=undefined? e.currentTarget.dataset.index:e
+							let index = e.currentTarget != undefined ? e.currentTarget.dataset.index : e
 							let data = {}
 							data.url = this.billImgList[index]
 							if (data.url == undefined || data.url == null || data.url == '') {
@@ -210,14 +259,14 @@
 											duration: 2000
 										});
 										// 重新加载
-									
+
 										this.billImgList.splice(index, 1);
-										this.indexx-=this.indexx
-										if(this.billImgList.length==0){
-											this.showsImg=false
+										this.indexx -= this.indexx
+										if (this.billImgList.length == 0) {
+											this.showsImg = false
 										}
 										this.$emit('getUrl', {
-											type:this.types,
+											type: this.types,
 											urls: this.billImgList,
 											index: this.index,
 										})
@@ -346,7 +395,8 @@
 		color: #fff;
 		border-radius: 14rpx;
 	}
-	::v-deep.u-transition .u-fade-enter-to .u-fade-enter-active{
-		z-index:998 !important;
-		}
+
+	::v-deep.u-transition .u-fade-enter-to .u-fade-enter-active {
+		z-index: 998 !important;
+	}
 </style>

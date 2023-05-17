@@ -1,23 +1,26 @@
 <template>
 	<view class="service">
 		<view class="top" :style="'padding-top:'+(titleHeight+92)+'rpx'">
-			<view class="search">
+			<view class="search" @click="goSearch">
 				<!-- 	<view @click="choseCity" style="margin:0 18rpx 0 30rpx;">杭州</view>
 				<image @click="choseCity" class="triangle" src="../../static/img/home/triangle.png" mode=""></image>
 				<view class="line">|</view> -->
 				<image class="search-icon" src="../../static/img/home/search.png" mode=""></image>
-				<view style="width: 65%;">
-					<u--input @clear='input("clear")' @input='input("input")' clearable border='none' @confirm="search"
-						v-model="query.name" type="text" placeholder="请输入需要的服务" />
-				</view>
-				<view class="search-title" @click="search">搜索</view>
+			
+			<view style="width: 65%;color: #ccc;">
+					请输入需要的服务	
+				<!-- 		<u--input @clear='input("clear")' @input='input("input")' clearable border='none' @confirm="search"
+						v-model="query.name" type="text" placeholder="请输入需要的服务" />-->
+				</view> 
+				<view class="search-title"  >搜索</view>
 			</view>
 		</view>
 		<u-empty marginTop='70' text='没有找到该服务项目哦，换个关键词试一下吧' v-if="query.name!=''&&typesList.length==0&&isSearch"
 			icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/04/cb8a19a85cd14c86ad85b72b97ea2d1e.png">
 		</u-empty>
-		<view class="main" style="background: #fff;padding: 40rpx;display: flex;" v-if="typesList.length!=0&&isSearch">
-			<view class="thumb-box" style="width: 150rpx;" v-for="(item, index) in typesList" :key="index"
+		<view class="main" style="background: #fff;padding: 40rpx;display: flex;flex-wrap: wrap;"
+			v-if="typesList.length!=0&&isSearch">
+			<view class="thumb-box" style="width: 150rpx;margin:0 20px;" v-for="(item, index) in typesList" :key="index"
 				@click="featureC(item)">
 				<image v-if="item.url != ''" class="item-menu-image" :src="item.url" mode="">
 				</image>
@@ -120,8 +123,11 @@
 		},
 		methods: {
 			getList(type) {
-
+					this.typesList = []
 				console.log(type);
+				uni.showLoading({
+					title: '加载中...'
+				});
 				service.getService(this.query).then(res => {
 					if (type == 'search') {
 						console.log(111);
@@ -132,13 +138,17 @@
 								this.typesList.push(item)
 							}
 						})
+							console.log(this.typesList);
+							this.isSearch = true
+							uni.hideLoading()
 					} else {
 						console.log(11111);
-						this.typesList = []
+					
 						this.typesList = res.data
+						this.isSearch = false
 					}
 
-
+				
 					console.log(this.typesList);
 				})
 			},
@@ -292,18 +302,27 @@
 
 
 			},
+		
 			clear() {
 				this.query.name = ''
 				this.isSearch = false
+				this.typesList = []
 				this.getList()
 			},
 			input(type) {
-				uni.$u.debounce(this.toNext(type), 800)
+				this.typesList = []
+				uni.$u.debounce(this.toNext(type), 500)
 			},
-
+			//搜索
+			goSearch() {
+				uni.navigateTo({
+					url: '../../subpkg/home/search/search'
+				})
+			},
 			toNext(type) {
 				if (this.query.name != '' && type == 'input') {
-					this.isSearch = true
+					console.log(type);
+					
 					this.getList('search')
 				} else {
 					if (type == 'clear') {

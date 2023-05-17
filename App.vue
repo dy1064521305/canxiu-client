@@ -1,34 +1,35 @@
 <script>
 	// APP 和 小程序平台
 	// #ifdef  APP-PLUS || MP-WEIXIN   
-		import TIM from 'tim-wx-sdk';
-		import COS from 'cos-wx-sdk-v5';
+	import TIM from 'tim-wx-sdk';
+	import COS from 'cos-wx-sdk-v5';
 	// #endif
-		
-		// #ifdef H5
-		import TIM from 'tim-js-sdk';
-		import TIMUploadPlugin from 'tim-upload-plugin'
-		logger.error(' TUIKit 暂不支持 H5 / web ，请使用者自己完成兼容哦，页面刷新可能会导致报错，需要重新登录 ');
-		// #endif
-		
-		import logger from './utils/logger'; // app.js
-		// import storage from '@/utils/storage'
-		// import {
-		// 	genTestUserSig
-		// } from './debug/GenerateTestUserSig.js';
-		
-		// 首先需要通过 uni.requireNativePlugin("ModuleName") 获取 module
-		// #ifdef APP-PLUS
-		const TUICallKit = uni.requireNativePlugin('TencentCloud-TUICallKit');
-		logger.log(`| app |  TencentCloud-TUICallKit | TUICalling: ${TUICallKit}`);
-		if(typeof(TUICallKit) == 'undefined') {
-			logger.error('如果需要音视频功能，请集成原生插件，使用真机运行并且自定义基座调试哦～ 插件地址：https://ext.dcloud.net.cn/plugin?id=9035 , 调试地址：https://nativesupport.dcloud.net.cn/NativePlugin/use/use');
-		}
-		// #endif
-	
-	
+
+	// #ifdef H5
+	import TIM from 'tim-js-sdk';
+	import TIMUploadPlugin from 'tim-upload-plugin'
+	logger.error(' TUIKit 暂不支持 H5 / web ，请使用者自己完成兼容哦，页面刷新可能会导致报错，需要重新登录 ');
+	// #endif
+
+	import logger from './utils/logger'; // app.js
+	// import storage from '@/utils/storage'
+	// import {
+	// 	genTestUserSig
+	// } from './debug/GenerateTestUserSig.js';
+
+	// 首先需要通过 uni.requireNativePlugin("ModuleName") 获取 module
+	// #ifdef APP-PLUS
+	const TUICallKit = uni.requireNativePlugin('TencentCloud-TUICallKit');
+	logger.log(`| app |  TencentCloud-TUICallKit | TUICalling: ${TUICallKit}`);
+	if (typeof(TUICallKit) == 'undefined') {
+		logger.error(
+			'如果需要音视频功能，请集成原生插件，使用真机运行并且自定义基座调试哦～ 插件地址：https://ext.dcloud.net.cn/plugin?id=9035 , 调试地址：https://nativesupport.dcloud.net.cn/NativePlugin/use/use'
+		);
+	}
+	// #endif
 	export default {
 		onLaunch() {
+
 			// 加载系统信息
 			this.$store.dispatch('SystemInfo');
 			// 监听推送
@@ -47,9 +48,11 @@
 				'cos-wx-sdk': COS
 			});
 			// #endif
-			
+
 			// #ifdef H5
-			uni.$TUIKit.registerPlugin({ 'tim-upload-plugin':TIMUploadPlugin })
+			uni.$TUIKit.registerPlugin({
+				'tim-upload-plugin': TIMUploadPlugin
+			})
 			// #endif
 			// 将原生插件挂载在 uni 上
 			// #ifdef APP-PLUS
@@ -71,12 +74,11 @@
 			uni.$TUIKit.on(uni.$TUIKitEvent.ERROR, this.onTIMError);
 			uni.$TUIKit.on(uni.$TUIKitEvent.NET_STATE_CHANGE, this.onNetStateChange);
 			uni.$TUIKit.on(uni.$TUIKitEvent.SDK_RELOAD, this.onSDKReload);
-			
+
 		},
-		onShow() {},
 		onHide() {},
 		globalData: {
-			index: undefined ,// 默认参数 也可设置为空
+			index: undefined, // 默认参数 也可设置为空
 			// userInfo: userID userSig token phone
 			userInfo: null,
 			// 个人信息
@@ -87,7 +89,7 @@
 			SDKAppID: 1400802214
 		},
 		methods: {
-			
+
 			// TODO:
 			resetLoginData() {
 				this.globalData.expiresIn = '';
@@ -102,11 +104,13 @@
 				logger.log(`| app |  resetLoginData | globalData: ${this.globalData}`);
 			},
 			onTIMError() {},
-			onSDKReady({name}) {
-				  const isSDKReady = name === uni.$TUIKitEvent.SDK_READY ? true : false
-					uni.$emit('isSDKReady', {
-						isSDKReady: true
-					});
+			onSDKReady({
+				name
+			}) {
+				const isSDKReady = name === uni.$TUIKitEvent.SDK_READY ? true : false
+				uni.$emit('isSDKReady', {
+					isSDKReady: true
+				});
 			},
 			onNetStateChange() {},
 			onSDKReload() {},

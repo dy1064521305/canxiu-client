@@ -65,7 +65,7 @@
 			<view v-for="(item,index) in info.projectDataVoList" :key="index"
 				style="border-bottom: 2rpx solid  #F8F8F8;padding-bottom: 10rpx;margin-top: 20rpx;">
 				<view style="display: flex">
-					<image @tap="(e)=>billViewImage(e,item.projectUrl)"
+					<image
 						style="width: 156rpx;height: 156rpx;border-radius: 20rpx;" :src="item.projectUrl[0]">
 					</image>
 
@@ -122,7 +122,7 @@
 				<text v-if="info.servicePrice!=null" style="color: #EC5722;">¥{{info.servicePrice}}</text>
 			</view>
 			<view class="line">
-				<text class="ziduan">附加费</text>
+				<text class="ziduan">附加费(加急费)</text>
 				<text style="color: #EC5722;">¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
 			</view>
 			<view class="line">
@@ -140,7 +140,7 @@
 				</view>
 				<view v-for="(item,index) in newProject" :key="index"
 					style="display: flex;border-bottom: 2rpx solid  #F8F8F8;padding-bottom: 10rpx;margin-top: 20rpx;">
-					<image @tap="(e)=>billViewImage(e,item.img)"
+					<image 
 						style="width: 156rpx;height: 156rpx;border-radius: 20rpx;" :src="item.img[0]">
 					</image>
 
@@ -534,6 +534,9 @@
 			this.id = option.id
 			this.getList()
 		},
+		onShow() {
+				this.getList()
+		},
 		computed: {
 			newTotalPrice() {
 				let total1 = 0
@@ -541,7 +544,8 @@
 					return pre + Number(item.projectPrice) * Number(item.projectNumber)
 				}, 0)
 				let total2 = this.melTotal
-				return total1 + total2
+				let total = (total1 + total2).toFixed(2)
+				return total
 			}
 		},
 		methods: {

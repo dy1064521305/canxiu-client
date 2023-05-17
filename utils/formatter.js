@@ -17,8 +17,10 @@ export default {
 	* @returns { Object }
 	*/
 	 getDateByCode(code) {
-	  const date = new Date()+86400000;
+	  const date = new Date();
+	  console.log(date);
 	  let endTime = this.formatDate(date);
+	  console.log(endTime);
 	  let date1 = Date.parse(date);
 	  let start = '';
 	  let end = '';
@@ -92,7 +94,7 @@ export default {
 	      end.setYear(start.getFullYear() + 1)
 	      break;
 	  }
-	 //  console.log(endTime)
+	  console.log(end,endTime)
 	  return {
 	    startTime: this.formatDate(new Date(start)),
 	    endTime: end ? this.formatDate(new Date(end)) : endTime,
@@ -130,6 +132,7 @@ export default {
                 format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
             }
         }
+		console.log(format);
         return format;
     },
 

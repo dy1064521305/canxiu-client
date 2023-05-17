@@ -155,7 +155,7 @@
 		height: 100vh;
 
 		.button {
-			width: 663rpx;
+			//width: 663rpx;
 			height: 91rpx;
 			background: #9FD6BA;
 			border-radius: 45rpx;
@@ -163,9 +163,11 @@
 			color: #FFFFFF;
 			line-height: 91rpx;
 			text-align: center;
-			position: absolute;
-			bottom: 300rpx;
-			left: 43rpx;
+			margin:400rpx  30rpx 0 30rpx;
+			// position: absolute;
+			// bottom: 300rpx;
+			// left: 43rpx;
+			
 		}
 	}
 </style>
