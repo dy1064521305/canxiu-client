@@ -174,10 +174,12 @@
 			this.getList()
 			this.isLogin = storage.get('AccessToken')
 			getCarNum().then(res => {
+			if (res != 0) {
 				uni.setTabBarBadge({
 					index: 2,
 					text: res
 				})
+			}
 			})
 		},
 		onTabItemTap: function(item) {
@@ -465,10 +467,13 @@
 				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
 				console.log(this.dataList, '4224224224220', this.checkedList);
 				getCarNum().then(res => {
-					uni.setTabBarBadge({
-						index: 2,
-						text: res
-					})
+					
+					if (res != 0) {
+						uni.setTabBarBadge({
+							index: 2,
+							text: res
+						})
+					}
 				})
 			},
 			//取消登录
