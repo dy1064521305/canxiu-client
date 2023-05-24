@@ -40,7 +40,7 @@
 						最近访问
 					</view>
 					<view style="display: flex;flex-wrap: wrap;">
-						<view v-if="hList.length!=0" v-for="(item,index) in hList" :key="index" class="box">
+						<view v-if="hList.length!=0" v-for="(item,index) in hList" :key="index" class="box" @click="checkCity(item)">
 							{{item}}
 						</view>
 					</view>
@@ -440,7 +440,8 @@
 		}
 
 		.box {
-			width: 220rpx;
+			//width: 220rpx
+			padding: 0 40rpx;
 			height: 65rpx;
 			background: #FFFFFF;
 			box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.05);

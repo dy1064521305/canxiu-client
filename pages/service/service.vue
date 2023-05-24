@@ -119,10 +119,12 @@
 				})
 			}
 			getCarNum().then(res => {
-				uni.setTabBarBadge({
-					index: 2,
-					text: res
-				})
+				if (res != 0) {
+					uni.setTabBarBadge({
+						index: 2,
+						text: res
+					})
+				}
 			})
 
 		},

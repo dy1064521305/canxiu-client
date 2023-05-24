@@ -94,7 +94,8 @@
 							<image
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/b0615fa4f9774562bf1e8740d9e658f7.png"
 								mode="widthFix" @click.stop="shareLink" open-type="share"></image>
-							<button style="width: 100%;height: 100%;position: absolute;opacity: 0;top: 0;" open-type="share"></button>
+							<button style="width: 100%;height: 100%;position: absolute;opacity: 0;top: 0;"
+								open-type="share"></button>
 						</view>
 						<view>
 							<image
@@ -181,26 +182,26 @@
 					getInfoById(storage.get('ClientId')).then(async res => {
 						this.userInfo = res.data
 						console.log(this.userInfo);
-					//获取二维码
-					// #ifdef MP-WEIXIN
-					generateQrCode({
-						codeStatus: 'w',
-						page: 'subpkg/center/invited/invited',
-						 scene: this.userInfo.invitationCode
-					}).then(async res => {
-						console.log(res);
-						this.qrCode = await this.Tobase(res.msg)
-						console.log(this.qrCode);
-					})
-					// #endif
-					
-					
-				
-					
-					this.image = res.data.avatarUrl != null ? await this.Tobase(res.data.avatarUrl) :
-						await this.Tobase(
-							'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png'
-						)
+						//获取二维码
+						// #ifdef MP-WEIXIN
+						generateQrCode({
+							codeStatus: 'w',
+							page: 'subpkg/center/invited/invited',
+							scene: this.userInfo.invitationCode
+						}).then(async res => {
+							console.log(res);
+							this.qrCode = await this.Tobase(res.msg)
+							console.log(this.qrCode);
+						})
+						// #endif
+
+
+
+
+						this.image = res.data.avatarUrl != null ? await this.Tobase(res.data.avatarUrl) :
+							await this.Tobase(
+								'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png'
+							)
 						this.bigImg = await this.Tobase(
 							'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/10/17851f49252a48279a0903172c45033e.png'
 						)
@@ -253,18 +254,18 @@
 				}
 
 			},
-			codeStatus(type){
+			codeStatus(type) {
 				//app二维码
 				// #ifdef APP-PLUS
 				generateAppQrCode({
 					codeStatus: type
-				
+
 				}).then(async res => {
 					this.qrCode = await this.Tobase(res.msg)
 					// 	console.log(this.qrCode);
 				})
 				// #endif
-				this.shareInfo() 
+				this.shareInfo()
 			},
 			//分享
 			shareInfo() {
@@ -274,7 +275,7 @@
 						title: '卡片生成中'
 					});
 				}
-				if (!this.image || !this.bigImg||!this.qrCode) {
+				if (!this.image || !this.bigImg || !this.qrCode) {
 					return setTimeout(this.shareInfo, 888)
 				}
 				this.base = {
@@ -455,15 +456,31 @@
 			//分享链接
 			shareLink() {
 				console.log(11111);
-				wx.downloadFile({
-					url: this.imageUrl,
-					success: (res) => {
-						console.log(res);
-						wx.showShareImageMenu({
-							path: res.tempFilePath
+				// wx.downloadFile({
+				// 	url: this.imageUrl,
+				// 	success: (res) => {
+				// 		console.log(res);
+				// 		wx.showShareImageMenu({
+				// 			path: res.tempFilePath
+				// 		})
+				// 	}
+				// })
+				var pages = getCurrentPages() // 获取栈实例
+				let domain = 'http://121.41.107.68:8080/' //项目的域名
+				let currentRoute = pages[pages.length - 1].route; // 获取当前页面路由
+				let currentPage = domain + pages[pages.length - 1]['$page']['fullPath'] //当前页面路径(带参数)
+				uni.setClipboardData({
+					data: currentPage,
+					success: () => {
+						setTimeout(() => {
+							uni.showToast({
+								title: '已复制到粘贴板',
+								icon: 'none'
+							});
 						})
 					}
-				})
+				});
+				uni.hideToast();
 
 			},
 			//保存海报

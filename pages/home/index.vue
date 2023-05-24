@@ -22,7 +22,7 @@
 				</view>
 			</u-navbar>
 			<view class="content">
-				<view class="types" >
+				<view class="types">
 					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(index)'>
 						<image :src="item.iconUrl" mode=""></image>
 						<view class="">
@@ -30,7 +30,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="project" >
+				<view class="project">
 					<view class="top">
 						<view class="title blod">
 							热门报修
@@ -67,7 +67,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="fault-area" >
+				<view class="fault-area">
 					<view class="title blod">
 						故障区域
 					</view>
@@ -80,11 +80,10 @@
 							</view>
 						</view>
 					</view>
-					<view style="height: 30rpx;background-color: #F5F9FA;"></view>
 				</view>
 				<view class="home-bottom" id='bottom' :style="{minHeight:scrollHeight+'px'}">
 					<view class="tabs"
-						:style="{backgroundColor:tabsBg,position:'sticky',zIndex:3,top:tabHeight+'px'}">
+						:style="{backgroundColor:tabsBg,position:tabsBg === '#fff'&&'sticky',zIndex:3,top:tabHeight+'px'}">
 						<u-tabs :current="currentIndex" :list="serviceSymptomsName" lineWidth="60" lineHeight="7"
 							lineColor='linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);' :activeStyle="{
 							    color: '#303133',
@@ -259,6 +258,21 @@
 						name: '保养清洗',
 						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/fc70dc01e62b410c86f0d7bcbc9e278a.png",
 					}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 				],
 				hotServiceList: [], //热门报修
 				hotServiceListFour: [], //首页显示的四个
@@ -294,38 +308,26 @@
 			}
 		},
 		onReady() {
-			//	console.log(this.tabsBg, 'lllllllllllllllllllllllllllll---216');
 			this.scrollHeight = uni.$u.sys().windowHeight - this.offsetTop
-
-
 		},
 		watch: {
 			promiseList: {
 				handler(n) {
 					console.log(n, '<<<0---------------n');
-					if(n.every(item=>item)){
-						this.$nextTick(()=>{
-							// 自定義組件模式下要使用in(this)
-								      const query = uni.createSelectorQuery().in(this); 
-								      query.select('.types').fields({ size: true})
-								      query.select('.project').fields({ size: true})
-								      query.select('.fault-area').fields({ size: true})
-								      query.exec((data) => {
-								        console.log(data)
-										this.scrollTop = data.reduce((p,c)=>p+c.height,0)
-										console.log(this.scrollTop,'<<<<<-------this.scrollTop------data');
-								      });
-							// uni.createSelectorQuery().in(this).select('#bottom')
-							// 	.boundingClientRect(data => {
-									this.tabHeight||uni.createSelectorQuery().in(this).select('.content')
+					if (n.every(item => item)) {
+						this.$nextTick(() => {
+							uni.createSelectorQuery().in(this).select('#bottom')
+								.boundingClientRect(data => {
+									uni.createSelectorQuery().in(this).select('.content')
 										.boundingClientRect(data1 => {
-											// console.log(data1, data);
-											// this.scrollTop = data.top - data1.top
-											// console.log(this.scrollTop, '<<<-----------------scrollTop----watch');
+											console.log(data1, data);
+											this.scrollTop = data.top - data1.top
+											console.log(this.scrollTop,
+												'<<<-----------------scrollTop----watch');
 											this.tabHeight = data1.top
-											console.log( data1.top);
 										}).exec();
-								// }).exec();
+
+								}).exec();
 						})
 					}
 				},
@@ -344,12 +346,18 @@
 				1) * 1)
 		},
 		onShow() {
-			getCarNum().then(res => {
-				uni.setTabBarBadge({
-					index: 2,
-					text: res
+			if (storage.get('AccessToken')) {
+				getCarNum().then(res => {
+					if (res != 0) {
+						uni.setTabBarBadge({
+							index: 2,
+							text: res
+						})
+					}
+
 				})
-			})
+			}
+
 			console.log('onshowinshow');
 			// #ifdef MP-WEIXIN
 			this.getHeight();
@@ -394,8 +402,10 @@
 				}
 			})
 
+
+
 			this.getCityName()
-			
+
 			uni.$on('totalUnreadCount',function(data){
 					console.log('监听到事件来自 update ，携带参数 msg 为：' + data.msg);
 					getC2cUnreadMsgNum().then(res => {
@@ -414,7 +424,7 @@
 						})
 					})
 				})
-				
+
 		},
 		onHide() {
 			console.log('onhide');
@@ -493,6 +503,8 @@
 
 				})
 			},
+
+
 			// 获取微信右上角胶囊高度
 			getHeight() {
 				let res = wx.getMenuButtonBoundingClientRect();
@@ -573,6 +585,17 @@
 								this.swiperHeight = data.reduce((p, c) => p >= c.height ? p : c.height,
 									0)
 							}).exec();
+						this.scrollTop || uni.createSelectorQuery().in(this).select('#bottom')
+							.boundingClientRect(data => {
+								uni.createSelectorQuery().in(this).select('.content')
+									.boundingClientRect(data1 => {
+										console.log(data1, data);
+										this.scrollTop = data.top - data1.top
+										this.tabHeight = data1.top
+										console.log(this.scrollTop, data.top, data1.top);
+									}).exec();
+
+							}).exec();
 					})
 				}).finally(() => {
 					uni.stopPullDownRefresh()
@@ -595,11 +618,10 @@
 				console.log(this.serviceSymptomsName);
 			},
 			getList() {
-				console.log('getList------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+				this.promiseList.splice(0, 1, false)
 				//获取一级分类
-				this.promiseList.splice(0,1,false)
 				getServiceType().then(res => {
-					console.log(res, '<<<<<-----------------------------');
+					//console.log(res);
 					this.typesList = res.data
 					this.typesList.forEach((item, index) => {
 						this.iconList.forEach((icon, ii) => {
@@ -611,9 +633,9 @@
 					})
 				}).finally(() => {
 					console.log('580------>>>>');
-					this.promiseList.splice(0,1,true)
+					this.promiseList.splice(0, 1, true)
 				})
-				this.promiseList.splice(1,1,false)
+				this.promiseList.splice(1, 1, false)
 				//获取热门报修
 				getHotService().then(res => {
 					//	console.log(res, '1111111111111');
@@ -629,9 +651,10 @@
 					this.hotServiceList = res.data
 					this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
 				}).finally(() => {
-					this.promiseList.splice(1,1,true)
+					this.promiseList.splice(1, 1, true)
 				})
-				this.promiseList.splice(2,1,false)
+				this.promiseList.splice(2, 1, false)
+
 				//获取故障区域
 				getRegionService().then(res => {
 					console.log(res);
@@ -654,7 +677,7 @@
 					// 	}
 					// })
 				}).finally(() => {
-					this.promiseList.splice(2,1,true)
+					this.promiseList.splice(2, 1, true)
 				})
 
 
@@ -691,7 +714,7 @@
 								// that.position = res.result.address_component
 								// 	.city;
 								// let item = {
-								// 	cityName: 
+								// 	cityName:
 								// }
 								// that.back_city(item);
 							}
@@ -976,8 +999,8 @@
 			}
 
 			.project {
-				margin: 0rpx 20rpx;
-				padding: 40rpx 0;
+				margin: 40rpx 20rpx 0 20rpx;
+
 				.top {
 					display: flex;
 					justify-content: space-between;
@@ -1047,7 +1070,8 @@
 			}
 
 			.fault-area {
-				margin: 0rpx 20rpx;				//	height: 520rpx;
+				margin: 40rpx 20rpx 0 20rpx;
+				//	height: 520rpx;
 				background: #FFFFFF;
 				box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.05);
 				border-radius: 14rpx;
@@ -1091,6 +1115,7 @@
 			}
 
 			.home-bottom {
+				margin-top: 30rpx;
 				width: 100%;
 
 				.scroll-view {
@@ -1125,3 +1150,4 @@
 		margin: 50rpx auto;
 	}
 </style>
+
