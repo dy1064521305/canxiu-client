@@ -45,9 +45,9 @@
 						{{workerInfo.workerName}}
 						<img :src="workerInfo.levelIcon" style='width: 140rpx;height: 34rpx;margin-left: 20rpx;'>
 					</view>
-					<view style="font-size: 25rpx;color: #A5A7A7;">
+				<!-- 	<view style="font-size: 25rpx;color: #A5A7A7;">
 						{{workerInfo.workerPhone}}
-					</view>
+					</view> -->
 				</view>
 				<view class="back">
 					<image style="width:14rpx;height: 25rpx;"
