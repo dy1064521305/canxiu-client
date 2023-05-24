@@ -158,7 +158,7 @@
 
 	import {
 		accountQueryState,
-		getUserSig
+		getUserSig,getC2cUnreadMsgNum,queryUnreadNum
 	} from '@/api/tim.js'
 	import {
 		getLnglat
@@ -375,6 +375,21 @@
 					this.getList()
 					if (this.isShowMoney) {
 						this.queryState();
+						getC2cUnreadMsgNum().then(res => {
+							queryUnreadNum().then(ress => {
+								let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
+								if(num > 0){
+									uni.setTabBarBadge({
+									  index: 3,
+									  text: num+''
+									})
+								}else{
+									uni.removeTabBarBadge({
+										index: 3
+									})
+								}
+							})
+						})
 					}
 					const apps = getApp()
 					console.log(apps.type);
@@ -391,6 +406,24 @@
 
 			this.getCityName()
 
+			uni.$on('totalUnreadCount',function(data){
+					console.log('监听到事件来自 update ，携带参数 msg 为：' + data.msg);
+					getC2cUnreadMsgNum().then(res => {
+						queryUnreadNum().then(ress => {
+							let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
+							if(num > 0){
+								uni.setTabBarBadge({
+								  index: 3,
+								  text: num+''
+								})
+							}else{
+								uni.removeTabBarBadge({
+									index: 3
+								})
+							}
+						})
+					})
+				})
 
 		},
 		onHide() {
@@ -408,6 +441,10 @@
 				key: 'AccessToken',
 				complete: (res) => {
 					this.getServiceSymptomsHandle()
+					this.isShowMoney = Boolean(res.data)
+					if (this.isShowMoney) {
+						this.queryState();
+					}
 				}
 			})
 
@@ -677,7 +714,7 @@
 								// that.position = res.result.address_component
 								// 	.city;
 								// let item = {
-								// 	cityName: 
+								// 	cityName:
 								// }
 								// that.back_city(item);
 							}
@@ -1113,3 +1150,4 @@
 		margin: 50rpx auto;
 	}
 </style>
+
