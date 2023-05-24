@@ -23,7 +23,7 @@
 							<view class="left">
 								<text v-if="!question"
 									style="font-size: 22rpx;color: #EC5722;margin-right: 10rpx;">预估费用:</text>
-								¥{{Number(item.projectPrice).toFixed(0)}}
+								¥{{item.projectPrice}}
 								<image @click='questionHandle(item)' v-if="question"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0b076ac258454779a88431fc8f26cb56.png"
 									mode=""></image>

@@ -95,7 +95,7 @@
 				<view style="width: 53%;text-align: end;">
 					<text style="font-size: 22rpx;color: #A5A7A7;">合计(不含材料):</text>
 					<text
-						style="font-size: 33rpx;color: #EC5722;margin:0 10rpx 0 10rpx;width:14%;">¥{{totalMoney.toFixed(0)}}</text>
+						style="font-size: 33rpx;color: #EC5722;margin:0 10rpx 0 10rpx;width:14%;">¥{{totalMoney}}</text>
 				</view>
 				<view v-if='isDelete' style="background: #EC5722;" class="btn" @click="deleteHandle">
 					删除所选({{checkedList.length}})
@@ -173,14 +173,7 @@
 			// #endif	
 			this.getList()
 			this.isLogin = storage.get('AccessToken')
-			getCarNum().then(res => {
-			if (res != 0) {
-				uni.setTabBarBadge({
-					index: 2,
-					text: res
-				})
-			}
-			})
+			this.getCarNumHandle()
 		},
 		onTabItemTap: function(item) {
 
@@ -191,7 +184,21 @@
 			}
 		},
 		methods: {
-
+			getCarNumHandle(){
+				getCarNum().then(res => {
+				if (res != 0) {
+					uni.setTabBarBadge({
+						index: 2,
+						text: res
+					})
+				}else{
+					uni.removeTabBarBadge({
+						index:2
+					})
+				
+				}
+				})
+			},
 			getDeleteUrlList(data) {
 				this.dataList.forEach((fu, index) => {
 					fu.children.forEach((son, ind) => {
@@ -389,6 +396,7 @@
 									});
 									//this.getCarList()
 									this.deleteList(arr)
+									this.getCarNumHandle()
 								}
 							})
 						} else if (res.cancel) {
@@ -466,15 +474,7 @@
 				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
 				console.log(this.dataList, '4224224224220', this.checkedList);
-				getCarNum().then(res => {
-					
-					if (res != 0) {
-						uni.setTabBarBadge({
-							index: 2,
-							text: res
-						})
-					}
-				})
+				this.getCarNumHandle()
 			},
 			//取消登录
 			quxiao() {

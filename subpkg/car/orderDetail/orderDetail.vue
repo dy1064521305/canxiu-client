@@ -796,11 +796,14 @@
 			handles(type) {
 				switch (type) {
 					case '返修':
+					console.log(this.info);
 						order.repairOrder(this.info).then(res => {
+							console.log(res);
 							this.$refs.uToast.show({
 								type: 'error',
 								message: res.data.msg
 							});
+							this.repairOrderShow=false
 							this.getList()
 						})
 						break;
