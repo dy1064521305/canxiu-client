@@ -23,7 +23,8 @@
             "Camera" : {},
             "Payment" : {},
             "VideoPlayer" : {},
-            "Maps" : {}
+            "Maps" : {},
+            "Record" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -152,7 +153,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx59017962fdb24f69",
+        "appid" : "wx365a28a668734937",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,

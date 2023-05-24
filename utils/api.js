@@ -107,8 +107,8 @@ export async function cancellation(data, handleSuccess, handleFail) {
 	});
 }
 export const getCarNum = () => {
-	return getCarList({
-		clientId: storage.get('ClientId')
+	return getCarList({ 
+		clientId: storage.get('ClientId') == false ? 0 : storage.get('ClientId')
 	}).then(res => {
 		console.log(res, '<<<<<<<<<<<<getCarList>>>>>>>>', storage.get('ClientId'));
 

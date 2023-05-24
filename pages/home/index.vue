@@ -159,7 +159,7 @@
 
 	import {
 		accountQueryState,
-		getUserSig,getC2cUnreadMsgNum
+		getUserSig,getC2cUnreadMsgNum,queryUnreadNum
 	} from '@/api/tim.js'
 	import {
 		getLnglat
@@ -367,6 +367,21 @@
 					this.getList()
 					if (this.isShowMoney) {
 						this.queryState();
+						getC2cUnreadMsgNum().then(res => {
+							queryUnreadNum().then(ress => {
+								let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
+								if(num > 0){
+									uni.setTabBarBadge({
+									  index: 3,
+									  text: num+''
+									})
+								}else{
+									uni.removeTabBarBadge({
+										index: 3
+									})
+								}
+							})
+						})
 					}
 					const apps = getApp()
 					console.log(apps.type);
@@ -384,18 +399,22 @@
 			uni.$on('totalUnreadCount',function(data){
 					console.log('监听到事件来自 update ，携带参数 msg 为：' + data.msg);
 					getC2cUnreadMsgNum().then(res => {
-						if(res.data.AllC2CUnreadMsgNum > 0){
-							uni.setTabBarBadge({
-							  index: 3,
-							  text: res.data.AllC2CUnreadMsgNum+''
-							})
-						}else{
-							uni.removeTabBarBadge({
-								index: 3
-							})
-						}
+						queryUnreadNum().then(ress => {
+							let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
+							if(num > 0){
+								uni.setTabBarBadge({
+								  index: 3,
+								  text: num+''
+								})
+							}else{
+								uni.removeTabBarBadge({
+									index: 3
+								})
+							}
+						})
 					})
 				})
+				
 		},
 		onHide() {
 			console.log('onhide');

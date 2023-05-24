@@ -114,7 +114,16 @@
 						"navigationStyle": "custom"
 					}
 				}
-			]
+			    ,{
+                    "path" : "order-push-list/index",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "工单助手",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
 
 		},
 		{

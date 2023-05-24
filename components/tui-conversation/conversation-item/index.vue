@@ -61,12 +61,15 @@ export default {
 	methods: {
 		// 先查 remark；无 remark 查 (c2c)nick/(group)name；最后查 (c2c)userID/(group)groupID
 		getConversationName(conversation) {
+			console.info(conversation)
+			console.info(conversation)
+			console.info(conversation)
 			if (conversation.type === '@TIM#SYSTEM') {
 				return '系统通知';
 			}
 
 			if (conversation.type === 'C2C') {
-				return conversation.remark || conversation.userProfile.nick || conversation.userProfile.userID;
+				return conversation.userProfile.nick;
 			}
 
 			if (conversation.type === 'GROUP') {
