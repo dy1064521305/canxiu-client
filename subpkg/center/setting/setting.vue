@@ -13,13 +13,13 @@
 				<text>关于我们</text>
 				<u-icon name="arrow-right" color="#909399"></u-icon>
 			</a>
-			<a href="static/privacyAgreement.html">
+			<a  @click='goUrl(0)'>
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
 					style="width: 32rpx;height: 32rpx;"></image>
 				<text>隐私政策</text>
 				<u-icon name="arrow-right" color="#909399"></u-icon>
 			</a>
-			<a href="static/registrationAgreement.html">
+			<a @click='goUrl(1)'>
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
 					style="width: 32rpx;height: 32rpx;"></image>
 				<text>注册协议</text>
@@ -171,6 +171,19 @@
 				uni.navigateTo({
 					url: '../aboutUs/aboutUs'
 				})
+			},
+			goUrl(i){
+				if (i==1) {
+					uni.navigateTo({
+						url:'./registrationAgreement/registrationAgreement',
+					
+					})
+				} else{
+					uni.navigateTo({
+						url:'./privacyAgreement/privacyAgreement',
+					
+					})
+				}
 			}
 		}
 	}

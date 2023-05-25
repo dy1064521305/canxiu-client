@@ -190,7 +190,7 @@
 					},
 					{
 						name: '家具维修',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/b392af66086c48abb9fa0af498aed86d.png",
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/05/25/5c9d6721a9cc42d8b36055b44f44b3b1.png",
 					},
 					{
 						name: '金属制品',

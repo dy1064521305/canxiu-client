@@ -147,6 +147,7 @@
 				}
 			 
               
+               
             ]
 		},
 		{
@@ -356,6 +357,15 @@
 
 				},
 				{
+				    "path" : "setting/registrationAgreement/registrationAgreement",
+				    "style" :                                                                                    
+				{
+				    "navigationBarTitleText": "注册协议",
+				    "enablePullDownRefresh": false
+				}
+				
+				},
+				{
 					"path": "personalInfo/personalInfo",
 					"style": {
 						"navigationBarTitleText": "个人信息",
@@ -472,7 +482,16 @@
 					}
 
 				}
-			]
+			    ,{
+                    "path" : "setting/privacyAgreement/privacyAgreement",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "隐私政策",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
 		}
 	],
 	"tabBar": {
