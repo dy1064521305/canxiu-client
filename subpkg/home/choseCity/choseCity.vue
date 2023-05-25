@@ -221,9 +221,9 @@
 				let that = this
 				type == 'again' ? that.cityName = '重新定位中' : ''
 				uni.getLocation({
-					isHighAccuracy: true,
-					highAccuracyExpireTime: 1234,
-					type: 'gcj02',
+					// isHighAccuracy: true,
+					// highAccuracyExpireTime: 1234,
+					// type: 'gcj02',
 					success: (suc) => {
 						console.log(suc, '1812222222222222222');
 						// this.location.latitude = suc.latitude

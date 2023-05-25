@@ -14,10 +14,10 @@
 					<u-icon name="share" color="#72DAA4" size="28" @click="shareInfo"></u-icon>
 				</view>
 				<view>
-					<text>¥</text><text style="font-size: 40rpx;">{{Number(this.goodInfo.mixPrice).toFixed(0)}}～{{Number(this.goodInfo.maxPrice).toFixed(0)}}</text>/台起
+					<text>¥</text><text style="font-size: 40rpx;">{{this.goodInfo.mixPrice}}～{{this.goodInfo.maxPrice}}</text>/台起
 				</view>
 				<view style="font-size: 22rpx;color: #A5A7A7;margin-top: 10rpx;">
-					起步人工费{{Number(this.goodInfo.initialLabor).toFixed(0)}}元起，维修费不足{{Number(this.goodInfo.initialLabor).toFixed(0)}}元时按照起步人工费收取
+					起步人工费{{this.goodInfo.initialLabor}}元起，维修费不足{{this.goodInfo.initialLabor}}元时按照起步人工费收取
 				</view>
 
 			</view>

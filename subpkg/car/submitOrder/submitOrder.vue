@@ -126,7 +126,7 @@
 			// } catch (e) {
 			// 	// error
 			// }
-			this.info.orderPrice = this.submitList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
+			  this.info.orderPrice = this.submitList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 		},
 		methods: {
 			getList() {
