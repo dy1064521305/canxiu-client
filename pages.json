@@ -114,7 +114,8 @@
 						"navigationStyle": "custom"
 					}
 				}
-			    ,{
+			   ,
+				{
                     "path" : "order-push-list/index",
                     "style" :                                                                                    
                 {

@@ -1,5 +1,12 @@
 <template>
-	<view>
+	<view class="main">
+	<!-- 	<view class="btn"> -->
+			<view class="btns">
+				<u-button customStyle="margin-right:10rpx" size="small" text="放大" @click="fontSizeHandle('big')"></u-button>
+				<u-button size="small" type="primary" text=" 缩小" @click="fontSizeHandle('small')"></u-button>
+			</view>
+	<!-- 	</view> -->
+		<view :style="{'font-size':fontSize+'rpx'}">
 		<pre>
 餐修用户端用户注册协议
 
@@ -158,6 +165,8 @@
 
 2、因本协议产生之争议，应依照中华人民共和国法律予以处理。
 				</pre>
+					
+				</view>
 	</view>
 </template>
 
@@ -165,17 +174,41 @@
 	export default {
 		data() {
 			return {
-				
+				fontSize: 25
 			};
+		},
+		methods: {
+			fontSizeHandle(type) {
+				
+				if (type == 'big') {
+					this.fontSize = this.fontSize + 5
+				} else {
+					if(this.fontSize==5 )return
+					
+					this.fontSize = this.fontSize - 5
+				}
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	view {
+	.main {
 		width: 100%;
 		white-space: normal;
+		// .btn {
+		// 	width: 100%;
+		// 		    display: flex;
+		// 		    justify-content: end;
+			.btns {
+				display: flex;
+				width:30%;
+				justify-content: end;
+			}
+	//	}
 	}
+	
+
 
 	pre {
 		white-space: pre-wrap;

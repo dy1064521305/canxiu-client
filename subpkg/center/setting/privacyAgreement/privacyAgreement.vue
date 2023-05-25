@@ -1,6 +1,14 @@
 <template>
-	<view>
-		<pre>
+	<view class="main">
+
+		<view class="btn">
+			<view class="btns">
+				<u-button customStyle="margin-right:10rpx" size="small" text="放大" @click="fontSizeHandle('big')"></u-button>
+				<u-button size="small" type="primary" text=" 缩小" @click="fontSizeHandle('small')"></u-button>
+			</view>
+		</view>
+		<view :style="{'font-size':fontSize+'rpx'}">
+			<pre>
 餐修用户端用户隐私政策
 
 杭州餐修科技有限公司（以下简称“我们”）深知个人信息对您的重要性，并会尽全力保护您的个人信息安全可靠。同时，我们承诺，我们将按业界成熟的安全标准，采取相应的安全保护措施来保护您的个人信息。 请在使用我们的产品（或服务）前，仔细阅读并了解本《隐私权政策》。
@@ -383,6 +391,8 @@ QQ 互联（腾讯开放平台）
 一般情况下，我们将在七个工作日内回复您。
 该文档编辑于:2023年4月25日
 				</pre>
+		</view>
+
 	</view>
 </template>
 
@@ -390,16 +400,38 @@ QQ 互联（腾讯开放平台）
 	export default {
 		data() {
 			return {
-				
+				fontSize: 25
 			};
+		},
+		methods: {
+			fontSizeHandle(type) {
+				
+				if (type == 'big') {
+					this.fontSize = this.fontSize + 5
+				} else {
+					if(this.fontSize==5 )return
+					
+					this.fontSize = this.fontSize - 5
+				}
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	view {
+	.main {
 		width: 100%;
 		white-space: normal;
+	}
+
+	.btn {
+			    display: flex;
+			    justify-content: end;
+		.btns {
+			display: flex;
+			width:30%;
+			justify-content: end;
+		}
 	}
 
 	pre {
