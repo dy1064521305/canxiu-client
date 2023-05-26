@@ -30,7 +30,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="project">
+				<!-- 	<view class="project">
 					<view class="top">
 						<view class="title blod">
 							热门报修
@@ -66,7 +66,7 @@
 							暂无数据
 						</view>
 					</view>
-				</view>
+				</view> -->
 				<view class="fault-area">
 					<view class="title blod">
 						故障区域
@@ -102,7 +102,8 @@
 							<view class="scroll-view">
 								<view v-for="(item1,index1) in item.list" :key="index1">
 									<view v-if="item.list.length!=0">
-										<goodCard @getCityNameEmit='getCityName' :item='item1' :isLogin='isShowMoney' type='pro' />
+										<goodCard @getCityNameEmit='detailedName' :item='item1' :isLogin='isShowMoney'
+											type='pro' />
 									</view>
 									<!-- 	<view v-if="item.list.length!=0&&isShowMoney&&item1.servicePrice.indexOf('x')==-1">
 										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
@@ -158,7 +159,9 @@
 
 	import {
 		accountQueryState,
-		getUserSig,getC2cUnreadMsgNum,queryUnreadNum
+		getUserSig,
+		getC2cUnreadMsgNum,
+		queryUnreadNum
 	} from '@/api/tim.js'
 	import {
 		getLnglat
@@ -258,21 +261,6 @@
 						name: '保养清洗',
 						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/fc70dc01e62b410c86f0d7bcbc9e278a.png",
 					}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 				],
 				hotServiceList: [], //热门报修
 				hotServiceListFour: [], //首页显示的四个
@@ -304,7 +292,7 @@
 				cityName: '获取位置中...',
 				locationStatus: '', //定位权限
 				timer: '',
-				promiseList: [false, false, false]
+				promiseList: [false, false]
 			}
 		},
 		onReady() {
@@ -377,13 +365,14 @@
 						this.queryState();
 						getC2cUnreadMsgNum().then(res => {
 							queryUnreadNum().then(ress => {
-								let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
-								if(num > 0){
+								let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress
+									.data.num)
+								if (num > 0) {
 									uni.setTabBarBadge({
-									  index: 3,
-									  text: num+''
+										index: 3,
+										text: num + ''
 									})
-								}else{
+								} else {
 									uni.removeTabBarBadge({
 										index: 3
 									})
@@ -404,33 +393,33 @@
 
 
 
-			this.getCityName()
+			this.getCityName('unInit')
 
-			uni.$on('totalUnreadCount',function(data){
-					console.log('监听到事件来自 update ，携带参数 msg 为：' + data.msg);
-					getC2cUnreadMsgNum().then(res => {
-						queryUnreadNum().then(ress => {
-							let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
-							if(num > 0){
-								uni.setTabBarBadge({
-								  index: 3,
-								  text: num+''
-								})
-							}else{
-								uni.removeTabBarBadge({
-									index: 3
-								})
-							}
-						})
+			uni.$on('totalUnreadCount', function(data) {
+				console.log('监听到事件来自 update ，携带参数 msg 为：' + data.msg);
+				getC2cUnreadMsgNum().then(res => {
+					queryUnreadNum().then(ress => {
+						let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
+						if (num > 0) {
+							uni.setTabBarBadge({
+								index: 3,
+								text: num + ''
+							})
+						} else {
+							uni.removeTabBarBadge({
+								index: 3
+							})
+						}
 					})
 				})
+			})
 
 		},
 		onHide() {
 			console.log('onhide');
 			const apps = getApp()
 			apps.type = undefined
-			clearInterval(this.timer);
+			//	clearInterval(this.timer);
 		},
 		onLoad() {
 			console.log('onloadonload.......');
@@ -464,7 +453,7 @@
 		},
 
 		methods: {
-			getCityName() {
+			getCityName(type) {
 
 				var that = this
 				uni.getStorage({
@@ -474,12 +463,24 @@
 						that.cityName = res.data
 					},
 					fail(res) {
-						// #ifdef MP-WEIXIN
-						that.getLoction()
-						// #endif
-						// #ifdef APP-PLUS
-						that.getLoction()
-						// #endif
+						if (type != 'unInit') {
+							// #ifdef MP-WEIXIN
+							that.getLoction()
+							// #endif
+							// #ifdef APP-PLUS
+							that.getLoction()
+							// #endif
+							// this.timer = setInterval(() => {
+
+
+							// 	if (this.cityName != '获取位置中...') {
+							// 		clearInterval(this.timer);
+
+							// 	}
+							// }, 100)
+
+						}
+
 					}
 				});
 			},
@@ -635,56 +636,39 @@
 					console.log('580------>>>>');
 					this.promiseList.splice(0, 1, true)
 				})
-				this.promiseList.splice(1, 1, false)
+				//this.promiseList.splice(1, 1, false)
 				//获取热门报修
-				getHotService().then(res => {
-					//	console.log(res, '1111111111111');
+				// getHotService().then(res => {
+				// 	//	console.log(res, '1111111111111');
 
-					if (res.data != []) {
-						res.data.forEach(item => {
-							item.imgs = item.serviceImg.split(',')
-							item.servicePrice = !this.isShowMoney ? this.replaceMoney(item
-									.servicePrice) :
-								item.servicePrice
-						})
-					}
-					this.hotServiceList = res.data
-					this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
-				}).finally(() => {
-					this.promiseList.splice(1, 1, true)
-				})
-				this.promiseList.splice(2, 1, false)
+				// 	if (res.data != []) {
+				// 		res.data.forEach(item => {
+				// 			item.imgs = item.serviceImg.split(',')
+				// 			item.servicePrice = !this.isShowMoney ? this.replaceMoney(item
+				// 					.servicePrice) :
+				// 				item.servicePrice
+				// 		})
+				// 	}
+				// 	this.hotServiceList = res.data
+				// 	this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
+				// }).finally(() => {
+				// 	this.promiseList.splice(1, 1, true)
+				// })
+				this.promiseList.splice(1, 1, false)
 
 				//获取故障区域
 				getRegionService().then(res => {
 					console.log(res);
-					// .filter((i,index)=>{ return index<=3})
 					this.regionService = res.data
-					// this.regionService.forEach(item => {
-					// 	switch (item.regionName) {
-					// 		case '前厅':
-					// 			item.regionImage = this.regionImg[0]
-					// 			break;
-					// 		case '厨房':
-					// 			item.regionImage = this.regionImg[1]
-					// 			break;
-					// 		case '包厢':
-					// 			item.regionImage = this.regionImg[2]
-					// 			break;
-					// 		case '卫生间':
-					// 			item.regionImage = this.regionImg[3]
-					// 			break;
-					// 	}
-					// })
 				}).finally(() => {
-					this.promiseList.splice(2, 1, true)
+					this.promiseList.splice(1, 1, true)
 				})
 
 
 			},
 			getLoction() {
 				var that = this
-				console.log('2-----------------');
+				console.log('2-----------------222222222222222222222');
 				//获取地址
 				//	this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
 
@@ -692,8 +676,7 @@
 					isHighAccuracy: true,
 					highAccuracyExpireTime: 1234,
 					type: 'gcj02',
-					success: (suc) => {
-						console.log(suc, '1812222222222222222');
+					success: (suc) => { 
 						// this.location.latitude = suc.latitude
 						// this.location.longitude = suc.longitude
 						var demo = new QQMapWX({
@@ -809,7 +792,6 @@
 						},
 					});
 				}
-				console.log('22222222222222222');
 			},
 			//将钱替换为星号
 			replaceMoney(i) {
@@ -826,7 +808,14 @@
 			},
 			//更多报修
 			goMore(type, arr) {
+				this.timer = setInterval(() => {
 					this.getCityName()
+				
+					if (this.cityName != '获取位置中...') {
+						clearInterval(this.timer);
+				
+					}
+				},800)
 				arr.forEach(item => {
 					item.servicePrice = !this.isShowMoney ? this.replaceMoney(item.servicePrice) :
 						item.servicePrice
@@ -842,9 +831,26 @@
 						.stringify(infos))
 				})
 			},
+			detailedName(){
+				this.timer = setInterval(() => {
+					this.getCityName()
+				
+					if (this.cityName != '获取位置中...') {
+						clearInterval(this.timer);
+				
+					}
+				},800)
+			},
 			//详情
 			goDetailed(item) {
-				this.getCityName()
+				// this.timer = setInterval(() => {
+				// 	this.getCityName()
+				
+				// 	if (this.cityName != '获取位置中...') {
+				// 		clearInterval(this.timer);
+				
+				// 	}
+				// },100)
 				console.log(item);
 				uni.navigateTo({
 					url: '../../subpkg/car/goodDetails/goodDetails?serviceId=' + item.serviceId
@@ -859,43 +865,31 @@
 			//tab栏点击
 			tabClick(item, num) {
 				if (item.index === this.currentIndex) return
-				//	console.log(this.scrollTop);
-				// this.queryParams.pageNum = 1
-				// this.bottomNum = 1
-				console.log(this.scrollTop, '-----------------');
 				num != 1 &&
 					uni.pageScrollTo({
 						scrollTop: this.scrollTop
 					});
-				// this.queryParams.pageNum = 1
-				// if (item.init) return
-				// this.getServiceSymptomsHandle()
-				//		console.log(this.serviceSymptoms);
 				this.currentIndex = item.index
-				//	console.log(this.serviceSymptoms, '318---------------------------------');
-				// this.serviceSymptoms.forEach((ser, i) => {
-				// 	if (item.index == i) {
-				// 		console.log(ser);
-				// 		this.productVoList = ser.productVoList.records
-				// 		console.log(this.productVoList);
-				// 		if (this.productVoList.length == 0) {
-				// 			console.log('this.none------324', this.none, ser);
-				// 			this.none = true
-				// 			this.loaded = false
-				// 			this.loading = false
-				// 		}
-				// 	}
-				// })
+
 
 			},
 			//跳转服务页
 			goService(i) {
-				this.getCityName()
+
 				//		console.log(i);
+				this.timer = setInterval(() => {
+					this.getCityName()
+
+					if (this.cityName != '获取位置中...') {
+						clearInterval(this.timer);
+
+					}
+				},800)
 				getApp().index = i
 				uni.switchTab({
 					url: '/pages/service/service'
 				})
+
 			},
 			// app 更新
 		}
@@ -1153,4 +1147,3 @@
 		margin: 50rpx auto;
 	}
 </style>
-
