@@ -102,7 +102,7 @@
 							<view class="scroll-view">
 								<view v-for="(item1,index1) in item.list" :key="index1">
 									<view v-if="item.list.length!=0">
-										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
+										<goodCard @getCityNameEmit='getCityName' :item='item1' :isLogin='isShowMoney' type='pro' />
 									</view>
 									<!-- 	<view v-if="item.list.length!=0&&isShowMoney&&item1.servicePrice.indexOf('x')==-1">
 										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
@@ -450,14 +450,14 @@
 
 
 			console.log(this.cityName, '255555555555');
-			this.timer = setInterval(() => {
-				this.getCityName()
+			// //this.timer = setInterval(() => {
+			// 	this.getCityName()
 
-				if (this.cityName != '获取位置中...') {
-					clearInterval(this.timer);
+			// 	if (this.cityName != '获取位置中...') {
+			// 		clearInterval(this.timer);
 
-				}
-			}, 1000)
+			// 	}
+			// }, 1000)
 
 
 
@@ -826,6 +826,7 @@
 			},
 			//更多报修
 			goMore(type, arr) {
+					this.getCityName()
 				arr.forEach(item => {
 					item.servicePrice = !this.isShowMoney ? this.replaceMoney(item.servicePrice) :
 						item.servicePrice
@@ -843,6 +844,7 @@
 			},
 			//详情
 			goDetailed(item) {
+				this.getCityName()
 				console.log(item);
 				uni.navigateTo({
 					url: '../../subpkg/car/goodDetails/goodDetails?serviceId=' + item.serviceId
@@ -888,6 +890,7 @@
 			},
 			//跳转服务页
 			goService(i) {
+				this.getCityName()
 				//		console.log(i);
 				getApp().index = i
 				uni.switchTab({
