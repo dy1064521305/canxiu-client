@@ -46,15 +46,15 @@
 		},
 		watch: {
 			item: {
-			//	immediate: true,
+				//	immediate: true,
 				handler: function() {
-				//	console.log(this.info);
+					//	console.log(this.info);
 					this.info = this.item
 					if (this.info.serviceImg != null) {
 						this.info.serviceImg = Array.isArray(this.info.serviceImg) ? this.info.serviceImg[0] : this
 							.info.serviceImg.split(',')[0]
 					}
-					
+
 				}
 			}
 		},
@@ -73,17 +73,23 @@
 			goDetailed(itemm) {
 				console.log(itemm);
 				console.log(this.type);
-				this.type == 'pro' ? uni.navigateTo({
-					url: '../../subpkg/car/goodDetails/goodDetails?serviceId=' + itemm.serviceId,
-					fail(res) {
-						console.log(res);
-					}
-				}) : uni.navigateTo({
-					url: '../../../subpkg/car/goodDetails/goodDetails?serviceId=' + itemm.serviceId,
-					fail(res) {
-						console.log(res);
-					}
-				})
+
+				if (this.type == 'pro') {
+					this.$emit('getCityNameEmit')
+					uni.navigateTo({
+						url: '../../subpkg/car/goodDetails/goodDetails?serviceId=' + itemm.serviceId,
+						fail(res) {
+							console.log(res);
+						}
+					})
+				} else {
+					uni.navigateTo({
+						url: '../../../subpkg/car/goodDetails/goodDetails?serviceId=' + itemm.serviceId,
+						fail(res) {
+							console.log(res);
+						}
+					})
+				}
 
 			},
 		}
