@@ -55,6 +55,7 @@
 				queryParams: {
 					pageSize: 10,
 					pageNum: 1,
+					appraiseStatus:1
 				},
 				appraiseList: []
 			};
