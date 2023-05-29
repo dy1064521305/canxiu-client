@@ -316,6 +316,7 @@
 
 					order.appraiseList({
 						productId: this.goodInfo.serviceId,
+						appraiseStatus:1,
 						pageNum: 1,
 						pageSize: 10
 					}).then(res => {

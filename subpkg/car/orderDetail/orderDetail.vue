@@ -267,7 +267,7 @@
 			</view>
 		</view>
 
-		<view class="bg info" v-if="info.orderStatus=='已完成'">
+		<view class="bg info" v-if="info.orderStatus=='已完成'&&JSON.stringify(appraise) != '{}'">
 			<view class="title">
 				评价信息
 			</view>
@@ -612,13 +612,17 @@
 							order.appraiseList({
 								orderId: this.id,
 								pageNum: 1,
-								pageSize: 10
+								pageSize: 10,
+								appraiseStatus:1
 							}).then(res => {
 								console.log(res);
-								res.rows[0].imgs = res.rows[0].appraiseImg != null ? res.rows[0].appraiseImg
+								if (res.rows.length!=0) {
+										res.rows[0].imgs = res.rows[0].appraiseImg != null ? res.rows[0].appraiseImg
 									.split(
 										',') : []
 								this.appraise = res.rows[0]
+								}
+							
 								console.log(this.appraise);
 							})
 						}
