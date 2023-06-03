@@ -23,7 +23,7 @@
 			</u-navbar>
 			<view class="content">
 				<view class="types">
-					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(index)'>
+					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(item.typeName)'>
 						<image :src="item.iconUrl" mode=""></image>
 						<view class="">
 							{{item.typeName}}
@@ -166,6 +166,9 @@
 	import {
 		getLnglat
 	} from '@/utils/location.js'
+	import {
+		getService
+	} from '@/api/service.js'
 	export default {
 		components: {
 			goodCard,
@@ -173,6 +176,7 @@
 		},
 		data() {
 			return {
+				serviceTypesList: [],
 				isShowMoney: false, //未登录不显示金额
 				loading: false, //是否展示 “正在加载” 字样
 				loaded: false, //是否展示 “已加载全部” 字样
@@ -422,6 +426,7 @@
 			//	clearInterval(this.timer);
 		},
 		onLoad() {
+			this.getServiceTypesList()
 			console.log('onloadonload.......');
 			this.locationStatus = ''
 
@@ -453,6 +458,12 @@
 		},
 
 		methods: {
+			getServiceTypesList() {
+				getService().then(res => {
+					console.log(res);
+					this.serviceTypesList = res.data
+				})
+			},
 			getCityName(type) {
 
 				var that = this
@@ -622,7 +633,7 @@
 				this.promiseList.splice(0, 1, false)
 				//获取一级分类
 				getServiceType().then(res => {
-					//console.log(res);
+					console.log(res);
 					this.typesList = res.data
 					this.typesList.forEach((item, index) => {
 						this.iconList.forEach((icon, ii) => {
@@ -676,7 +687,7 @@
 					isHighAccuracy: true,
 					highAccuracyExpireTime: 1234,
 					type: 'gcj02',
-					success: (suc) => { 
+					success: (suc) => {
 						// this.location.latitude = suc.latitude
 						// this.location.longitude = suc.longitude
 						var demo = new QQMapWX({
@@ -810,12 +821,12 @@
 			goMore(type, arr) {
 				this.timer = setInterval(() => {
 					this.getCityName()
-				
+
 					if (this.cityName != '获取位置中...') {
 						clearInterval(this.timer);
-				
+
 					}
-				},800)
+				}, 800)
 				arr.forEach(item => {
 					item.servicePrice = !this.isShowMoney ? this.replaceMoney(item.servicePrice) :
 						item.servicePrice
@@ -831,24 +842,24 @@
 						.stringify(infos))
 				})
 			},
-			detailedName(){
+			detailedName() {
 				this.timer = setInterval(() => {
 					this.getCityName()
-				
+
 					if (this.cityName != '获取位置中...') {
 						clearInterval(this.timer);
-				
+
 					}
-				},800)
+				}, 800)
 			},
 			//详情
 			goDetailed(item) {
 				// this.timer = setInterval(() => {
 				// 	this.getCityName()
-				
+
 				// 	if (this.cityName != '获取位置中...') {
 				// 		clearInterval(this.timer);
-				
+
 				// 	}
 				// },100)
 				console.log(item);
@@ -874,7 +885,7 @@
 
 			},
 			//跳转服务页
-			goService(i) {
+			goService(name) {
 
 				//		console.log(i);
 				this.timer = setInterval(() => {
@@ -884,11 +895,18 @@
 						clearInterval(this.timer);
 
 					}
-				},800)
-				getApp().index = i
-				uni.switchTab({
-					url: '/pages/service/service'
+				}, 800)
+
+				this.serviceTypesList.forEach((item, indexx) => {
+					if (item.typeName == name) {
+						getApp().index = indexx
+						uni.switchTab({
+							url: '/pages/service/service'
+						})
+					}
 				})
+
+
 
 			},
 			// app 更新

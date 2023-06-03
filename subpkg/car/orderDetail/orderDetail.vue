@@ -544,7 +544,7 @@
 					return pre + Number(item.projectPrice) * Number(item.projectNumber)
 				}, 0)
 				let total2 = this.melTotal
-				let total = (total1 + total2).toFixed(2)
+				let total = (total1 + total2).toFixed(0)
 				return total
 			}
 		},
