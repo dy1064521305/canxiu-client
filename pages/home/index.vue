@@ -10,11 +10,11 @@
 						<view class="left">
 							<view @click.stop="choseCity" style="margin:0 10rpx 0 30rpx;font-size: 29rpx;">{{cityName}}
 							</view>
-							<image @click.stop="choseCity" class="triangle" src="../../static/img/home/triangle.png"
+							<image @click.stop="choseCity" class="triangle" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/f0c8bd76fe63450f9887dbddddb0bd9c.png"
 								mode="">
 							</image>
 							<view class="line">|</view>
-							<image class="search-icon" src="../../static/img/home/search.png" mode=""></image>
+							<image class="search-icon" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png" mode=""></image>
 							<input style="width: 0%;" type="text" disabled>
 						</view>
 						<view class="search-title" @click="goSearch">搜索</view>
@@ -1114,9 +1114,9 @@
 
 						.mask {
 							position: absolute;
-							bottom: 4rpx;
-							left: 4rpx;
-							width: 97%;
+							width: 100%;
+							bottom: 0rpx;
+							left: 0rpx;
 							height: 64rpx;
 							background: rgba(42, 42, 42, 0.6);
 							border-radius: 0 0 15rpx 15rpx;

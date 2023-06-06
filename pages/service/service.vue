@@ -5,7 +5,7 @@
 				<!-- 	<view @click="choseCity" style="margin:0 18rpx 0 30rpx;">杭州</view>
 				<image @click="choseCity" class="triangle" src="../../static/img/home/triangle.png" mode=""></image>
 				<view class="line">|</view> -->
-				<image class="search-icon" src="../../static/img/home/search.png" mode=""></image>
+				<image class="search-icon" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png" mode=""></image>
 			
 			<view style="width: 65%;color: #ccc;">
 					请输入需要的服务	

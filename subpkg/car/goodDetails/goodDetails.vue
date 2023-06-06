@@ -14,10 +14,10 @@
 					<u-icon name="share" color="#72DAA4" size="28" @click="shareInfo"></u-icon>
 				</view>
 				<view>
-					<text>¥</text><text style="font-size: 40rpx;">{{this.goodInfo.mixPrice}}～{{this.goodInfo.maxPrice}}</text>/台起
+					<text>¥</text><text style="font-size: 40rpx;">{{goodInfo.mixPrice}}～{{goodInfo.maxPrice}}</text>/台起
 				</view>
 				<view style="font-size: 22rpx;color: #A5A7A7;margin-top: 10rpx;">
-					起步人工费{{this.goodInfo.initialLabor}}元起，维修费不足{{this.goodInfo.initialLabor}}元时按照起步人工费收取
+					起步人工费{{goodInfo.initialLabor}}元起，维修费不足{{goodInfo.initialLabor}}元时按照起步人工费收取
 				</view>
 
 			</view>
@@ -304,9 +304,10 @@
 			//获取详细信息
 			getInfo() {
 				console.log(1111);
+				console.log(this.query,'queryqueryqueryqueryquery');
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
-					console.log();
+					console.log(this.goodInfo);
 			
 					uni.setNavigationBarTitle({
 						title: this.goodInfo.serviceName
