@@ -12,7 +12,7 @@
 				<header>
 					<view class="search">
 
-						<image src="../../../static/img/home/search.png"></image>
+						<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png"></image>
 						<view style="width: 85%;">
 							<u--input @clear='clear' clearable border='none' @confirm="history" v-model="searchCity" type="text"
 								placeholder="请输入城市名称"   />
@@ -27,7 +27,7 @@
 					</view>
 					<view v-if="!isSearch" class="bottom">
 						<view class="left">
-							<image src="../../../static/img/home/location.png" mode=""></image>
+							<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/4dcfbc3c78a44b7ab7298792dd209bfb.png" mode=""></image>
 							<text>{{cityName}}</text>
 							<text>当前定位</text>
 						</view>

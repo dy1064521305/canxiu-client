@@ -26,7 +26,7 @@
 				<u--input v-model="userInfo.beInvitedCode" border="none" placeholder="请输入邀请码"></u--input>
 			</u-form-item>
 			<u-form-item label="门头图" ref="item1">
-				<div style='margin-top: 40rpx;'>	<uploadFile :fileListt="fileList" @getUrl='getUrl' :limit='1' types='image'/></div>
+				<view class="imags" >	<uploadFile :fileListt="fileList" @getUrl='getUrl' :limit='1' types='image'/></view>
 			
 			</u-form-item>
 
@@ -166,7 +166,12 @@
 		::v-deep.u-form-item__body {
 			height: 70rpx;
 		}
-	
+		.imags{
+			/* #ifdef APP-PLUS */
+			margin-top: 40rpx;
+			/* #endif */
+			
+		}
 		.button {
 			width: 663rpx;
 			height: 91rpx;
