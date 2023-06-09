@@ -1,6 +1,6 @@
 <template>
 	<view :class="'audio-message ' + (isMine ? 'my-audio' : '')">
-		<image class="audio-icon" src="../../../../static/static/images/audio-msg.png"></image>
+		<image class="audio-icon" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/08/dee9ed4f2861409b8f9644c0d5b07794.png"></image>
 		<view class="audio " @click="handlePlayAudioMessage" :style="'width: ' + 120 + 'rpx'">{{ '" ' + message.payload.second }}</view>
 	</view>
 </template>

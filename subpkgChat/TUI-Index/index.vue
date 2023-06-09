@@ -6,7 +6,7 @@
 			<view class="counter-warp">
 				<view class="counter-main">
 					<view class="header-content">
-						<image src="/static/static/images/im.png" class="icon"></image>
+						<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/08/f9ea0d64e6d74417a69a4d7644281102.png" class="icon"></image>
 						<view class="text">
 							<view class="text-header">登录 · 即时通信</view>
 							<view class="text-content">体验群组聊天，视频对话等IM功能</view>

@@ -172,7 +172,12 @@
         },
         "uniStatistics" : {
             "enable" : true
-        }
+        },
+		 "optimization": {
+		
+		    "subPackages": true
+		
+		  }
     },
     "mp-alipay" : {
         "usingComponents" : true
