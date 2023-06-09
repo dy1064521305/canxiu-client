@@ -1,16 +1,15 @@
 <template>
 	<view :class="'video-box ' + (isMine ? 'my-video' : '')" @click="playerHander">
-		<image class="video-icon" src="../../../../static/static/images/video-play.png"></image>
+		<image class="video-icon" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/09/8497a3a9554a4271bc432a4bf491172a.png"></image>
 	</view>
 </template>
 
 <script>
-import videoIcon from '../../../../static/static/images/video-play.png';
 export default {
 	data() {
 		return {
 			isPlay: false,
-			videoIcon: videoIcon
+			videoIcon: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/09/8497a3a9554a4271bc432a4bf491172a.png'
 		};
 	},
 

@@ -196,7 +196,7 @@
 						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/d70cff4580e343d0b476d614e6060d34.png",
 					},
 					{
-						name: '家具维修',
+						name: '家俱维修',
 						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/05/25/5c9d6721a9cc42d8b36055b44f44b3b1.png",
 					},
 					{

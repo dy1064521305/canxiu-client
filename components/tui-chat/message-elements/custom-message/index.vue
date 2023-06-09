@@ -19,7 +19,7 @@
 			<view class="custom-content">
 				<view class="custom-content-title">{{ renderDom[0].title }}</view>
 				<view class="custom-content-score">
-					<image v-for="(item, index) in renderDom[0].score" :key="index" class="score-star" src="/static/static/images/star.png"></image>
+					<image v-for="(item, index) in renderDom[0].score" :key="index" class="score-star" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/08/d017a67522dc48e6adbaa422fb7dc671.png"></image>
 				</view>
 				<view class="custom-content-description">{{ renderDom[0].description }}</view>
 			</view>
