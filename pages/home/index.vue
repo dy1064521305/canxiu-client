@@ -305,7 +305,7 @@
 		watch: {
 			promiseList: {
 				handler(n) {
-					console.log(n, '<<<0---------------n');
+					console.log(n, '<<<0---------------n',this.tabHeight);
 					if (n.every(item => item)) {
 						this.$nextTick(() => {
 							uni.createSelectorQuery().in(this).select('#bottom')
@@ -314,9 +314,13 @@
 										.boundingClientRect(data1 => {
 											console.log(data1, data);
 											this.scrollTop = data.top - data1.top
+										  if (this.tabHeight==0) {
+											  console.log(1111111111111,'22222222222');
+										  	this.tabHeight = data1.top
+										  }
+											
 											console.log(this.scrollTop,
-												'<<<-----------------scrollTop----watch');
-											this.tabHeight = data1.top
+												'<<<-----------------scrollTop----watch',this.tabHeight);
 										}).exec();
 
 								}).exec();

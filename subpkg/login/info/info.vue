@@ -140,6 +140,8 @@
 					})
 					
 					this.reset()
+						const apps = getApp()
+					apps.type = 'login'
 					uni.switchTab({
 						url: '/pages/home/index'
 					})
