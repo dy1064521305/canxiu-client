@@ -30,7 +30,7 @@
 		created() {
 			var that=this
 			uni.request({
-				url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/b1a5bb8121c245ea96175a8c3bc36186.json',
+				url: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/6cfc99b225184b0eafbed58cd5c6ede5.json',
 				method: 'GET',
 				complete(res) {
 					 console.log('...res...', res);
