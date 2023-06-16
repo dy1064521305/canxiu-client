@@ -1,6 +1,6 @@
 <template>
 	<view class="agree-ment">
-		<rich-text :nodes="content"></rich-text>
+			<u-parse :content="content"></u-parse>
 	</view>
 </template>
 
@@ -16,7 +16,7 @@
 		},
 		onLoad(options) {
 			console.log(options);
-			this.content=options.remark
+			this.content=JSON.parse(decodeURIComponent(options.remark))
 		},
 		methods: {
 		}

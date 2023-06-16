@@ -204,16 +204,16 @@
 				<view class="title">
 					项目预估总价
 				</view>
-				<view class="line">
+			<!-- 	<view class="line">
 					<text class="ziduan">预估人工费</text>
 					<text style="color: #EC5722;">¥{{newTotalPrice}}</text>
 				</view>
 				<view class="line">
 					<text class="ziduan">加急费</text>
 					<text style="color: #EC5722;">¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
-				</view>
+				</view> -->
 				<view class="line">
-					<text class="ziduan">合计(不含材料)</text>
+					<text class="ziduan">合计</text>
 					<text style="color: #EC5722;">¥{{newTotalPrice}}</text>
 				</view>
 			</view>
@@ -687,13 +687,20 @@
 					let arr = []
 					arr = res.data
 					const map = new Map()
+					console.log(this.melTotal);
+					this.melTotal = arr.reduce((pre, item) => {
+						return pre +  Number(item.materialPrice)* Number(item.materialCount)
+					}, 0)
+					console.log(this.melTotal);
 					arr.forEach((item, index, arr) => {
-						this.melTotal += Number(item.materialPrice) * Number(item.materialCount)
+					//	console.log( Number(item.materialPrice) * Number(item.materialCount),'？？？？？？？');
+					//	this.melTotal =this.melTotal+ Number(item.materialPrice) * Number(item.materialCount)
+						//console.log(this.melTotal);
 						item.materialSpecsList = JSON.parse(item.materialSpecs)
 						listByIds(item.materialImg).then(res => {
 							// item.img = res.data[0].url
 							this.$set(arr[index], 'img', res.data[0].url)
-						})
+						}) 
 						if (!map.has(item.classifyId)) {
 							map.set(
 								item.classifyId,
