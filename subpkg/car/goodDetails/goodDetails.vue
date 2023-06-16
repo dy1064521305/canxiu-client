@@ -14,7 +14,7 @@
 					<u-icon name="share" color="#72DAA4" size="28" @click="shareInfo"></u-icon>
 				</view>
 				<view>
-					<text>¥</text><text style="font-size: 40rpx;">{{goodInfo.mixPrice}}～{{goodInfo.maxPrice}}</text>/台起
+					<text>¥</text><text style="font-size: 40rpx;">{{goodInfo.initialLabor}}</text>/台起
 				</view>
 				<view style="font-size: 22rpx;color: #A5A7A7;margin-top: 10rpx;">
 					起步人工费{{goodInfo.initialLabor}}元起，维修费不足{{goodInfo.initialLabor}}元时按照起步人工费收取

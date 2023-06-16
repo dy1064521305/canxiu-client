@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<u-navbar placeholder @leftClick='leftClick' title="填写订单" >
+		<u-navbar placeholder @leftClick='leftClick' title="填写订单">
 
 		</u-navbar>
 		<view class="address" :style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'250rpx'}"
@@ -36,14 +36,15 @@
 
 		<view class="list">
 			<proInfo :list="submitList" :isCar='true' :submit='false' @getCheck='getCheck'
-				 @getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
+				@getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
 		</view>
 
 		<view class="bottom">
 
 			<text style="font-size: 22rpx;color: #A5A7A7;margin-left:180rpx;">共{{submitList.length}}件 合计(不含材料):</text>
 			<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{info.orderPrice}}</text>
-			<view class="btn" @click="submitOrder">提交订单</view>
+			<view class="btn" @click.stop="submitOrder">提交订单</view>
+	
 		</view>
 
 
@@ -126,46 +127,46 @@
 			// } catch (e) {
 			// 	// error
 			// }
-			  this.info.orderPrice = this.submitList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
+			this.info.orderPrice = this.submitList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
 		},
 		methods: {
 			getList() {
 				if (storage.get('ClientId')) {
 					//查询门店名称
 					getInfoById(storage.get('ClientId')).then(res => {
-						console.log(res);
-						this.info.warrantyStore=res.data.clientName
-						//	this.fileList.push({url:arr[0]})
-					}),
-					//查询是否有地址
-					getAddressList({
-						clientId: storage.get('ClientId')
-					}).then(res => {
-						console.log(res);
-						this.addressList = res.rows
-						this.showModal = this.addressList.length == 0
-						try {
-							const value = uni.getStorageSync('address_info');
-							if (value) {
-								this.addressInfo = value
-								console.log(value);
-							} else {
-								this.addressList.forEach(item => {
-									if (item.isDefault == 0) {
-										this.addressInfo = item
-										console.log(111, '118111111111111111111');
-										uni.setStorage({
-											key: 'address_info',
-											data: item,
-										})
-									}
-								})
+							console.log(res);
+							this.info.warrantyStore = res.data.clientName
+							//	this.fileList.push({url:arr[0]})
+						}),
+						//查询是否有地址
+						getAddressList({
+							clientId: storage.get('ClientId')
+						}).then(res => {
+							console.log(res);
+							this.addressList = res.rows
+							this.showModal = this.addressList.length == 0
+							try {
+								const value = uni.getStorageSync('address_info');
+								if (value) {
+									this.addressInfo = value
+									console.log(value);
+								} else {
+									this.addressList.forEach(item => {
+										if (item.isDefault == 0) {
+											this.addressInfo = item
+											console.log(111, '118111111111111111111');
+											uni.setStorage({
+												key: 'address_info',
+												data: item,
+											})
+										}
+									})
+								}
+							} catch (e) {
+								// error
 							}
-						} catch (e) {
-							// error
-						}
 
-					})
+						})
 
 				}
 
@@ -193,14 +194,14 @@
 				})
 				console.log(data);
 				this.submitList.forEach((fu, index) => {
-				//	fu.children.forEach((son, ind) => {
-						data.forEach(d => {
-							if (d.id === fu.id) {
-								fu.projectImg=d.projectImg
-								fu.projectVideo=d.projectVideo
-							}
-						})
-				//	})
+					//	fu.children.forEach((son, ind) => {
+					data.forEach(d => {
+						if (d.id === fu.id) {
+							fu.projectImg = d.projectImg
+							fu.projectVideo = d.projectVideo
+						}
+					})
+					//	})
 				})
 			},
 			showMask() {
@@ -213,9 +214,10 @@
 				console.log(data);
 				this.info.expectTime = data._date
 				this.info.isUrgent = data.isUrgent ? 1 : 0
+			
 				this.dateRange = data._dateRange
 			},
-		
+
 			//下单
 			submitOrder() {
 				if (this.info.expectTime == undefined) {
@@ -237,9 +239,11 @@
 						item.projectVideo = this.toStrings(item.projectVideo)
 						item.projectImg = this.toStrings(item.projectImg)
 						item.shoppingCartStatus = 1
+						item.urgentPrice=this.info.isUrgent==1?item.urgentPrice:0
 					})
 					console.log(arr);
 					this.info.orderProjectBoList = arr
+					
 					console.log(this.info);
 					postOrder(this.info).then(res => {
 						console.log(res);
@@ -326,7 +330,7 @@
 	.page {
 		.address {
 			padding: 0 34rpx;
-		//	width: 100%;
+			//	width: 100%;
 			//height: 286rpx;
 			background: #fff;
 			display: flex;
@@ -357,7 +361,7 @@
 		.time {
 			margin-top: 20rpx;
 			padding: 0 25rpx;
-		//	width: 100%;
+			//	width: 100%;
 			height: 103rpx;
 			background: #fff;
 			display: flex;
@@ -369,8 +373,8 @@
 			width: 100%;
 			background-color: #fff;
 			bottom: 110rpx;
-			    position: relative;
-				top: 2rpx;
+			position: relative;
+			top: 2rpx;
 		}
 
 		.bottom {
@@ -381,7 +385,7 @@
 			display: flex;
 			align-items: center;
 			padding: 10rpx 30rpx;
-		
+			z-index: 999;
 			bottom: 0;
 
 			.btn {

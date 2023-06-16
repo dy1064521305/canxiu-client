@@ -214,6 +214,10 @@
 							smsCode: app.code,
 						}).then(result => {
 							console.log(result.data);
+							if (result.data.type=='Error') {
+								 uni.$u.toast(result.data.msg)
+								 return
+							}
 							// #ifdef APP-PLUS
 							plus.push.getClientInfoAsync((info) => {
 									let cid = info["clientid"];
@@ -300,7 +304,7 @@
 			goAgreement(item) {
 				console.log(item);
 				uni.navigateTo({
-					url: '../../subpkg/login/agreementDetailed/agreementDetailed?remark=' + item.remark
+					url: '../../subpkg/login/agreementDetailed/agreementDetailed?remark=' +encodeURIComponent(JSON.stringify(item.remark))
 				})
 			},
 			//未登录回到首页

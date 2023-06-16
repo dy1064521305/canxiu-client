@@ -46,14 +46,22 @@
 						<view style="display: flex">
 							<image style="width: 156rpx;height: 156rpx;" :src="pro.projectImg[0]">
 							</image>
-							<view style="width: 76%;">
-								<view style="display: flex;font-size: 29rpx;height: 100rpx;margin-left: 20rpx;">
+							<view style="width: 76%;display: flex;
+    flex-direction: column;
+    padding-left:20rpx;
+    justify-content: space-between;
+">
+								<view style="display: flex;font-size: 29rpx;">
 									<view style="width: 80%;color: #3D3F3E;font-weight: bold;">
 										{{pro.projectName}}
 									</view>
 									<view style="width: 20%;color: #A5A7A7;text-align: end;">
 										x{{pro.projectNumber}}
 									</view>
+								</view>
+								<view class="">
+										{{pro.typeName}}
+
 								</view>
 								<view style="font-size: 22rpx;color: #EC5722;text-align: end;">
 									<text style="font-size: 40rpx;">{{pro.projectPrice}}</text>元
@@ -62,7 +70,8 @@
 						</view>
 					</view>
 					<view class="time">
-						预约时间：{{item.expectTime}}
+						预约时间：{{item.expectTime}}<br />
+						下单时间：{{item.orderTime}}
 					</view>
 					<view class="btns">
 						<view @click.stop='backFix(item)' class="btn-white"
@@ -217,7 +226,7 @@
 				times: ['最近三天', '最近7天', '最近15天', '近1月', '近2月', '近3月'],
 				orderList: [], //订单数据
 				current: 0, //当前选中的索引
-				currentIndex:0,
+				currentIndex: 0,
 				queryParams: {
 					pageSize: 10,
 					pageNum: 1,
@@ -301,9 +310,9 @@
 					this.queryParams.orderStatus = ''
 					console.log(this.queryParams);
 					this.getOrderlistHandle(1, 10)
-				
+
 				}
-					
+
 			},
 			getOrderlistHandle(pageNo, pageSize) {
 				console.log(this.queryParams);
@@ -326,19 +335,19 @@
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})
 			},
-			getNum(){
+			getNum() {
 				this.list1.forEach(item => {
-					console.log(item.name,'3293293299*999999');
+					console.log(item.name, '3293293299*999999');
 					getOrderList({
-						pageSize:10,
-						pageNum:1,
+						pageSize: 10,
+						pageNum: 1,
 						clientId: storage.get('ClientId'),
 						orderStatus: item.name == '全部' ? '' : item.name
 					}).then(res => {
-					
-						console.log(res,'ressssssssss');
+
+						console.log(res, 'ressssssssss');
 						item.badge.value = res.total
-						this.current=this.currentIndex
+						this.current = this.currentIndex
 					})
 				})
 			},
