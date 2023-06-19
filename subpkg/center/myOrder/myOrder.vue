@@ -31,8 +31,8 @@
 				<view class="main">
 					<view class="title">
 						<text
-							:style="{'font-weight': 'bold','width':item.isUrgent==1?'53%':'65%'}">{{item.warrantyStore}}</text>
-						<text style="font-size: 25rpx;text-align: end;width:42%;">
+							:style="{'font-weight': 'bold','width':item.isUrgent==1?'61%':'65%'}">下单时间：{{item.orderTime}}</text>
+						<text style="font-size: 25rpx;text-align: end;width:38%;">
 							<text>{{item.orderStatus}}</text>
 						</text>
 						<view v-if="item.isUrgent==1" style="position: absolute;top: 0;right:0">
@@ -46,13 +46,10 @@
 						<view style="display: flex">
 							<image style="width: 156rpx;height: 156rpx;" :src="pro.projectImg[0]">
 							</image>
-							<view style="width: 76%;display: flex;
-    flex-direction: column;
-    padding-left:20rpx;
-    justify-content: space-between;
-">
-								<view style="display: flex;font-size: 29rpx;">
-									<view style="width: 80%;color: #3D3F3E;font-weight: bold;">
+							<view
+								style="width: 76%;display: flex;flex-direction: column; padding-left:20rpx;justify-content: space-between;">
+								<view style="display: flex;">
+									<view style="width: 80%;color: #3D3F3E;font-weight: bold;font-size: 35rpx;">
 										{{pro.projectName}}
 									</view>
 									<view style="width: 20%;color: #A5A7A7;text-align: end;">
@@ -60,18 +57,25 @@
 									</view>
 								</view>
 								<view class="">
-										{{pro.typeName}}
-
+										{{pro.typeName.split("/")[0]}}
 								</view>
-								<view style="font-size: 22rpx;color: #EC5722;text-align: end;">
-									<text style="font-size: 40rpx;">{{pro.projectPrice}}</text>元
+								<view class="">
+										{{pro.typeName}}
+								</view>
+								<view style="display: flex;justify-content: space-between;">
+									<text>工时：{{Number(pro.projectHours)*Number(pro.projectNumber)}}小时</text>
+									<text style="font-size: 30rpx">￥{{pro.projectPrice}}</text>
 								</view>
 							</view>
 						</view>
+
+					</view>
+					<view style="color: #EC5722;text-align: end;">
+						小计：￥{{item.orderPrice}}
 					</view>
 					<view class="time">
-						预约时间：{{item.expectTime}}<br />
-						下单时间：{{item.orderTime}}
+						服务时间：{{item.expectTime}}
+
 					</view>
 					<view class="btns">
 						<view @click.stop='backFix(item)' class="btn-white"
@@ -521,6 +525,7 @@
 					display: flex;
 					border-bottom: 2rpx solid #F8F8F8;
 					padding-bottom: 20rpx;
+					font-size: 26rpx;
 				}
 
 				.time {
