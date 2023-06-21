@@ -196,37 +196,53 @@
 				search: '',
 				menuButtonInfoWidth: 0,
 				type: 0,
-				list1: [{
-					name: '全部',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '待接单',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '待上门',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '待验收',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '待支付',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '售后中',
-					badge: {
-						value: 0,
-					}
-				}],
+			list1: [{
+				name: '全部',
+				badge: {
+					value: 0,
+				}
+			
+			},  {
+				name: '待接单',
+				badge: {
+					value: 0,
+				}
+			},{
+				name: '待上门',
+				badge: {
+					value: 0,
+				}
+			}, {
+				name: '服务中',
+				badge: {
+					value: 0,
+				}
+			}, {
+				name: '待验收',
+				badge: {
+					value: 0,
+				}
+			}, {
+				name: '待支付',
+				badge: {
+					value: 0,
+				}
+			}, {
+				name: '待评价',
+				badge: {
+					value: 0,
+				}
+			}, {
+				name: '已完成',
+				badge: {
+					value: 0,
+				}
+			}, {
+				name: '售后中',
+				badge: {
+					value: 0,
+				}
+			}],
 				times: ['最近三天', '最近7天', '最近15天', '近1月', '近2月', '近3月'],
 				orderList: [], //订单数据
 				current: 0, //当前选中的索引

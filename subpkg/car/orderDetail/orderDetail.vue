@@ -113,7 +113,7 @@
 
 		</view>
 
-		<view class="bg info">
+		<view class="bg info" style="margin-top: -20rpx;">
 			<view class="title">
 				项目预估总价
 			</view>
@@ -127,7 +127,7 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">合计(不含材料)</text>
-				<text style="color: #EC5722;">¥{{info.orderPrice}}</text>
+				<text style="color: #EC5722;">¥	{{info.additionalPrice!=null?Number(info.additionalPrice)+Number(info.servicePrice):info.servicePrice}}</text>
 			</view>
 		</view>
 
@@ -200,21 +200,21 @@
 				</view>
 
 			</view>
-			<view v-if="newProject.length!=0||showMelList.length!=0" style="margin-top: 20rpx;" class="info">
+			<view v-if="newProject.length!=0||showMelList.length!=0" style="margin-top: 30rpx;" class="info">
 				<view class="title">
 					项目预估总价
 				</view>
 			<!-- 	<view class="line">
 					<text class="ziduan">预估人工费</text>
 					<text style="color: #EC5722;">¥{{newTotalPrice}}</text>
-				</view>
+				</view>-->
 				<view class="line">
 					<text class="ziduan">加急费</text>
 					<text style="color: #EC5722;">¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
-				</view> -->
+				</view> 
 				<view class="line">
 					<text class="ziduan">合计</text>
-					<text style="color: #EC5722;">¥{{newTotalPrice}}</text>
+					<text style="color: #EC5722;">¥{{info.additionalPrice!=null?Number(info.additionalPrice)+Number(newTotalPrice):newTotalPrice}}</text>
 				</view>
 			</view>
 		</view>
