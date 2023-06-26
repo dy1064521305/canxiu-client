@@ -39,12 +39,21 @@
 				@getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
 		</view>
 
-		<view class="bottom">
+		<view class="bottom" :style="{'height':urgentPriceTotal!=0?'140rpx':'91rpx'}">
+			<view class="">
+				<view class="">
+					<text
+						style="font-size: 22rpx;color: #A5A7A7;margin-left:180rpx;">共{{submitList.length}}件合计(不含材料):</text>
+					<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{info.orderPrice}}</text>
+				</view>
+				<view v-if="urgentPriceTotal!=0">
+					<text style="font-size: 22rpx;color: #A5A7A7;margin-left:180rpx;">加急费:</text>
+					<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{urgentPriceTotal}}</text>
+				</view>
+			</view>
 
-			<text style="font-size: 22rpx;color: #A5A7A7;margin-left:180rpx;">共{{submitList.length}}件 合计(不含材料):</text>
-			<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{info.orderPrice}}</text>
 			<view class="btn" @click.stop="submitOrder">提交订单</view>
-	
+
 		</view>
 
 
@@ -56,6 +65,8 @@
 		<!-- 添加地址弹框 -->
 		<u-modal width="450rpx" :show="showModal" confirmColor='#72DAA4' confirmText='立即填写' showCancelButton
 			@cancel='showModal=false' title="新建服务地址" :content='content' @confirm="addAddress"></u-modal>
+
+		<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 <script>
@@ -95,7 +106,8 @@
 				info: {
 					orderPrice: ''
 				},
-				dateRange: ''
+				dateRange: '',
+				urgentPriceTotal: 0
 			};
 		},
 		onShow() {
@@ -179,6 +191,15 @@
 				console.log(id);
 				this.info.orderPrice = this.submitList.reduce((p, c) => p + (((c.id ? c.id : c.projectId) === id ? data.num
 					.value : c.projectNumber) * Number(c.projectPrice)), 0)
+				// this.urgentPriceTotal = this.info.isUrgent ? this.submitList.reduce((p, c) => p + (((c.id ? c.id : c
+				// 		.projectId) === id ? data.num
+				// 	.value : c.projectNumber) * Number(c.urgentPrice)), 0) : 0
+				this.submitList.forEach(item => {
+					if ((item.id ? item.id : item.projectId) === id) {
+						item.projectNumber = data.num.value
+					}
+				})
+				this.info.orderPrice = this.info.orderPrice + this.urgentPriceTotal
 				console.log(this.info.orderPrice);
 				const pages = uni.$u.pages()
 				pages[pages.length - 2].$vm.changeData([data.item])
@@ -214,8 +235,17 @@
 				console.log(data);
 				this.info.expectTime = data._date
 				this.info.isUrgent = data.isUrgent ? 1 : 0
-			
+				if (data.isUrgent) {
+					this.urgentPriceTotal = this.submitList.reduce((pre, item) => {
+						return pre + Number(item.urgentPrice)
+					}, 0)
+					this.info.orderPrice = this.info.orderPrice + this.urgentPriceTotal
+				} else {
+					this.info.orderPrice = this.info.orderPrice - this.urgentPriceTotal
+					this.urgentPriceTotal = 0
+				}
 				this.dateRange = data._dateRange
+				console.log(this.submitList);
 			},
 
 			//下单
@@ -226,47 +256,64 @@
 						duration: 2000,
 						icon: 'none'
 					});
-				} else {
-					console.log(this.addressInfo);
-					this.info.addressId = this.addressInfo.addressId
-					//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
-					this.info.clientId = storage.get('ClientId')
-					this.info.expectTime = this.info.expectTime + ':00'
-					console.log(this.submitList);
-					console.log(this.info);
-					let arr = JSON.parse(JSON.stringify(this.submitList))
-					arr.forEach(item => {
-						item.projectVideo = this.toStrings(item.projectVideo)
-						item.projectImg = this.toStrings(item.projectImg)
-						item.shoppingCartStatus = 1
-						item.urgentPrice=this.info.isUrgent==1?item.urgentPrice:0
-					})
-					console.log(arr);
-					this.info.orderProjectBoList = arr
-					
-					console.log(this.info);
-					postOrder(this.info).then(res => {
-						console.log(res);
-						if (res.code == 200) {
-							uni.removeStorage({
-								key: 'address_info'
-							})
-							uni.removeStorage({
-								key: 'submit_order'
-							})
-							let info = {
-								money: this.info.orderPrice,
-								time: this.dateRange,
-								orderId: res.data
-							}
-							console.log(info);
-							uni.redirectTo({
-								url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(info)
-							})
-						}
-					})
-
+					return
 				}
+
+				//else {
+				console.log(this.addressInfo);
+				this.info.addressId = this.addressInfo.addressId
+				//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
+				this.info.clientId = storage.get('ClientId')
+			
+				console.log(this.submitList);
+				console.log(this.info);
+				let arr = JSON.parse(JSON.stringify(this.submitList))
+				console.log(arr);
+				let num = 0
+				arr.forEach(item => {
+
+					item.projectVideo = this.toStrings(item.projectVideo)
+					item.projectImg = this.toStrings(item.projectImg)
+					if (item.projectVideo == '' && item.projectImg == '') {
+						num++
+					}
+					item.shoppingCartStatus = 1
+					item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
+				})
+				console.log(num);
+				if (num > 0) {
+					this.$refs.uToast.show({
+						type: 'error',
+						message: '每个项目都要上传图片或视频'
+					});
+				
+					return
+				}
+				this.info.orderProjectBoList = arr
+					this.info.expectTime = this.info.expectTime + ':00'
+				console.log(this.info);
+				postOrder(this.info).then(res => {
+					console.log(res);
+					if (res.code == 200) {
+						uni.removeStorage({
+							key: 'address_info'
+						})
+						uni.removeStorage({
+							key: 'submit_order'
+						})
+						let info = {
+							money: this.info.orderPrice,
+							time: this.dateRange,
+							orderId: res.data
+						}
+						console.log(info);
+						uni.redirectTo({
+							url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(info)
+						})
+					}
+				})
+
+					//}
 
 
 
@@ -372,14 +419,15 @@
 			margin-top: 20rpx;
 			width: 100%;
 			background-color: #fff;
-			bottom: 110rpx;
-			position: relative;
-			top: 2rpx;
+			// bottom: 110rpx;
+			// position: relative;
+			// top: 2rpx;
+			margin-bottom: 130rpx;
 		}
 
 		.bottom {
 			width: 100%;
-			height: 91rpx;
+			//height: 91rpx;
 			background: #fff;
 			position: fixed;
 			display: flex;
