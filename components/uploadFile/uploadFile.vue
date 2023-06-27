@@ -309,6 +309,15 @@
 			upLoadHandle(res) {
 				let that = this
 				console.log(res);
+				let size=res.size
+				if ((size/1048576)>=10) {
+					uni.showToast({
+						icon:'error',
+						title: '文件大小过大',
+						duration: 2000
+					});
+					return
+				}
 				let billImgList = that.billImgList;
 				uni.showLoading({
 					title: '上传中'

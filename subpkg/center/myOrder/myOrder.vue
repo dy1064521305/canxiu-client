@@ -43,11 +43,11 @@
 					</view>
 					<view v-if="item.projectDataVoList.length!=0" v-for="(pro,i) in item.projectDataVoList" :key="i"
 						style="margin: 20rpx 0;">
-						<view style="display: flex">
-							<image style="width: 156rpx;height: 156rpx;" :src="pro.projectImg[0]">
+						<view style="display: flex;height: 156rpx;">
+							<image style="width: 156rpx;height:100%;" :src="pro.projectImg[0]">
 							</image>
 							<view
-								style="width: 76%;display: flex;flex-direction: column; padding-left:20rpx;justify-content: space-between;">
+								style="width: 76%;display: flex;flex-direction: column; padding-left:20rpx;justify-content: space-between;height: 100%;font-size: 25rpx;">
 								<view style="display: flex;">
 									<view style="width: 80%;color: #3D3F3E;font-weight: bold;font-size: 35rpx;">
 										{{pro.projectName}}
