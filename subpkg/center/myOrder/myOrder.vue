@@ -32,7 +32,7 @@
 					<view class="title">
 						<text
 							:style="{'font-weight': 'bold','width':item.isUrgent==1?'61%':'65%'}">下单时间：{{item.orderTime}}</text>
-						<text style="font-size: 25rpx;text-align: end;width:38%;">
+						<text style="font-size: 25rpx;text-align: end;width:40%;">
 							<text>{{item.orderStatus}}</text>
 						</text>
 						<view v-if="item.isUrgent==1" style="position: absolute;top: 0;right:0">
