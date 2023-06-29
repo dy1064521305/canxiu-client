@@ -18,7 +18,7 @@
 					<view @click="_changeTime(index)" :class="{ active: item.checked }"
 						v-for="(item, index) in activeTimeArr" :key="item.time">
 						{{ item.time }}{{ rangeType ? '-' + item.endtime : '' }}	
-						<image v-if="activeTimeArr.length>=2&&index<1&&isToday" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/6bfb10ff7ad7404699859bf0a72cb672.png" style="width: 60rpx;height: 36rpx;"></image>
+						<image v-if="index<isUrgentIndex&&isToday" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/6bfb10ff7ad7404699859bf0a72cb672.png" style="width: 60rpx;height: 36rpx;"></image>
 					</view>
 				
 				</view>
@@ -35,6 +35,10 @@
 <script>
 	export default {
 		props: {
+			//显示加急的数量
+			isUrgentIndex:{
+				type: Number,
+			},
 			title: {
 				type: String,
 				default: '请选择预约时间'
@@ -155,7 +159,7 @@
 			},
 			_changeTime(e) {
 				console.log(e);
-				this.isUrgent=this.activeTimeArr.length>=2&&e<1&&this.isToday
+				this.isUrgent=e<this.isUrgentIndex&&this.isToday
 				let _ind = e - 0;
 				let {
 					activeTimeArr

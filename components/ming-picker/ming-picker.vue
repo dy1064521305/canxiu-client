@@ -69,13 +69,14 @@
 			changeHandler() {
 				let value1 = this.getAddress(...this.value),
 					value = this.getCode(...this.value)
+					console.log(value);
 				this.$emit("address", {
 					value1,
 					value,
 					data: {
-						[value[0]]: value[0],
-						[value[1]]: value[1],
-						[value[2]]: value[2],
+						[value1[0]]: value1[0],
+						[value1[1]]: value1[1],
+						[value1[2]]: value1[2],
 					}
 				})
 			},
@@ -91,9 +92,9 @@
 				return [province[p], city[c] || '', area[a] || ''];
 			},
 			getCode(p, c, a) {
-				let province = this.addressData.map(it => it.name),
-					city = this.addressData[p].children.map(it => it.name),
-					area = this.addressData[p].children[c].children.map(it => it.name)
+				let province = this.addressData.map(it => it.code),
+					city = this.addressData[p].children.map(it => it.code),
+					area = this.addressData[p].children[c].children.map(it => it.code)
 				return [province[p], city[c] || 0, area[a] || 0];
 			},
 			columnchange(e) {

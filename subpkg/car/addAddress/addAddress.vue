@@ -111,8 +111,9 @@
 		methods: {
 			addressHandle(e) {
 				console.log(e) //携带的参数
-				this.model1.address.addressRegion = e.value.toString().replace(/,/g, "/")
-				console.log(this.model1.address.addressRegion);
+				this.model1.address.addressRegion = e.value1.toString().replace(/,/g, "/")
+				this.model1.address.regionCode = e.value[2]
+				console.log(this.model1.address.regionCode);
 			},
 			addAndEditAddress() {
 				this.$refs.form1.validate().then(res => {
@@ -131,6 +132,7 @@
 							}
 						})
 					} else {
+						console.log(this.model1.address);
 						addAddress(this.model1.address).then(res => {
 							console.log(res);
 							if (res.code === 200) {

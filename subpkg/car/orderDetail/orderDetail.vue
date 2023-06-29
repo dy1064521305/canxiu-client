@@ -79,19 +79,28 @@
 							</view>
 						</view>
 						<view style="font-size: 22rpx;color: #EC5722;text-align: end;">
-							预估费用:<text style="font-size: 40rpx;">{{item.projectPrice}}</text>元
+							工时费:<text style="font-size: 40rpx;">{{item.projectPrice}}</text>元
 						</view>
 					</view>
 				</view>
-				<view v-if="item.projectVideo.length!=0" class="info-box">
+				<view class="info-box">
 					<view class="font">
-						视频
+						图片/视频
 					</view>
 					<view>
-						<upLoadFile :fileListt='item.projectVideo' types='video' :index='index' :isDel='false' />
+						<cl-upload  :listStyle="{
+						columnGap: '10rpx',
+						columns:'3',
+						rowGap:'10rpx'
+						}" :imageFormData="{
+							size:10
+						}" :videoFromData="{
+							size:10
+						}" :index='index' v-model="item.projectImg" :add="false" :remove="false"></cl-upload>
+						<!-- <upLoadFile :fileListt='item.projectVideo' types='video' :index='index' :isDel='false' /> -->
 					</view>
 				</view>
-				<view v-if="item.projectImg.length!=0" class="info-box">
+			<!-- 	<view v-if="item.projectImg.length!=0" class="info-box">
 					<view class="font">
 						图片
 					</view>
@@ -99,7 +108,7 @@
 						<upLoadFile :fileListt='item.projectImg' types='image' :index='index' :isDel='false'
 							:isInfo='true' />
 					</view>
-				</view>
+				</view> -->
 				<view v-if="item.remark!=''" class="info-box">
 					<view class="font">
 						订单备注
@@ -138,7 +147,7 @@
 							</view>
 						</view>
 						<view style="font-size: 22rpx;color: #EC5722;text-align: end;">
-							预估费用:<text style="font-size: 40rpx;">{{item.projectPrice}}</text>元
+							工时费:<text style="font-size: 40rpx;">{{item.projectPrice}}</text>元
 						</view>
 					</view>
 				</view>
@@ -207,7 +216,7 @@
 				项目预估总价
 			</view>
 			<view class="line">
-				<text class="ziduan">预估服务费</text>
+				<text class="ziduan">工时费</text>
 				<text v-if="info.servicePrice!=null" style="color: #EC5722;">¥{{info.servicePrice}}</text>
 			</view>
 			<view class="line">
@@ -656,7 +665,7 @@
 						//this.timeFn('2023-03-09 11:20:18')
 						this.info.projectDataVoList.forEach(item => {
 							item.projectImg = item.projectImg != '' ? item.projectImg.split(',') : []
-							item.projectVideo = item.projectVideo != '' ? item.projectVideo.split(',') : []
+							// item.projectVideo = item.projectVideo != '' ? item.projectVideo.split(',') : []
 							item.projectUrl = item.projectUrl != null ? item.projectUrl.split(',') : []
 						})
 					}),

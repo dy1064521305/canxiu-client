@@ -57,8 +57,8 @@
 		</view>
 
 
-		<hTimeAlert title="选择上门时间" rangeStartTime="7:00:00" rangeEndTime="22:00:00" defaultTime="2020/3/29 18:00:00"
-			intervalTime="60" dayStartIntTime="0" rangeDay="7" :isShow="isShow" :maskHide="maskHide"
+		<hTimeAlert title="选择上门时间" rangeStartTime="00:00:00" rangeEndTime="23:59:59" defaultTime="2020/3/29 18:00:00"
+			  rangeDay="7" :isShow="isShow" :maskHide="maskHide" :isUrgentIndex='4'
 			:rangeType="rangeType" :closeBtn="closeBtn" @closeAlert="handelClose">
 		</hTimeAlert>
 
@@ -219,7 +219,7 @@
 					data.forEach(d => {
 						if (d.id === fu.id) {
 							fu.projectImg = d.projectImg
-							fu.projectVideo = d.projectVideo
+							//fu.projectVideo = d.projectVideo
 						}
 					})
 					//	})
@@ -272,9 +272,9 @@
 				let num = 0
 				arr.forEach(item => {
 
-					item.projectVideo = this.toStrings(item.projectVideo)
+					//item.projectVideo = this.toStrings(item.projectVideo)
 					item.projectImg = this.toStrings(item.projectImg)
-					if (item.projectVideo == '' && item.projectImg == '') {
+					if ( item.projectImg == '') {
 						num++
 					}
 					item.shoppingCartStatus = 1
