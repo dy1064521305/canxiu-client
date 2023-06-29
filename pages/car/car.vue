@@ -184,22 +184,23 @@
 			}
 		},
 		methods: {
-			getCarNumHandle(){
+			getCarNumHandle() {
 				getCarNum().then(res => {
-				if (res != 0) {
-					uni.setTabBarBadge({
-						index: 2,
-						text: res
-					})
-				}else{
-					uni.removeTabBarBadge({
-						index:2
-					})
-				
-				}
+					if (res != 0) {
+						uni.setTabBarBadge({
+							index: 2,
+							text: res
+						})
+					} else {
+						uni.removeTabBarBadge({
+							index: 2
+						})
+
+					}
 				})
 			},
 			getDeleteUrlList(data) {
+				console.log(this.dataList);
 				this.dataList.forEach((fu, index) => {
 					fu.children.forEach((son, ind) => {
 						data.forEach(d => {
@@ -411,14 +412,20 @@
 			submitOrder() {
 				console.log('374.。。。', this.checkedList);
 				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
-				this.checkedList.length == 0 ? uni.showToast({
-					title: '请选择商品',
-					duration: 2000,
-					icon: 'none'
-				}) : uni.navigateTo({
-					url: '../../subpkg/car/submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(this
-						.checkedList))
-				})
+				if (this.checkedList.length == 0) {
+					uni.showToast({
+						title: '请选择商品',
+						duration: 2000,
+						icon: 'none'
+					})
+				} else {
+					console.log(this.checkedList);
+					uni.navigateTo({
+						url: '../../subpkg/car/submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(
+							this
+							.checkedList))
+					})
+				}
 			},
 			//查看我的地址
 			myAddress() {

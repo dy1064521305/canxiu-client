@@ -24,11 +24,12 @@
 		</view>
 
 		<view class="services bgf">
+			<!-- :submit="projectVoList.length>1" -->
 			<proInfo :list='projectVoList' :isCar='false' :isJoinCar='isJoinCar' :question='true'
 				@joinCarHandle='joinCarHandle' :types='types' @textareaInput='textConfirm' ref="proInfo" />
 		</view>
 
-		<view class="price bgf">
+		<!-- <view class="price bgf">
 			<view style="font-size: 36rpx;color: #3D3F3E;margin-top:10rpx;">
 				收费标准
 			</view>
@@ -48,7 +49,7 @@
 
 				</u-collapse>
 			</view>
-		</view>
+		</view> -->
 
 		<view class="comment bgf">
 			<view class="title">
@@ -177,6 +178,8 @@
 		<!-- 拨打电话 -->
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="actionList" :show="showPhone"></u-action-sheet>
+			
+			<u-toast ref="uToast"></u-toast>
 	</view>
 
 
@@ -201,8 +204,8 @@
 		callPhone
 	} from '@/utils/phone.js'
 	import {
-			getCarNum
-		} from '@/utils/api.js'
+		getCarNum
+	} from '@/utils/api.js'
 	var checkValues = [];
 	export default {
 		components: {
@@ -290,7 +293,7 @@
 			this.isLogin = storage.get('AccessToken')
 			//获取购物车数量
 			getCarNum().then(res => {
-				
+
 				this.allNum = res
 			})
 		},
@@ -304,11 +307,11 @@
 			//获取详细信息
 			getInfo() {
 				console.log(1111);
-				console.log(this.query,'queryqueryqueryqueryquery');
+				console.log(this.query, 'queryqueryqueryqueryquery');
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
 					console.log(this.goodInfo);
-			
+
 					uni.setNavigationBarTitle({
 						title: this.goodInfo.serviceName
 					})
@@ -317,7 +320,7 @@
 
 					order.appraiseList({
 						productId: this.goodInfo.serviceId,
-						appraiseStatus:1,
+						appraiseStatus: 1,
 						pageNum: 1,
 						pageSize: 10
 					}).then(res => {
@@ -369,10 +372,10 @@
 						.goodInfo.remark.replace(/<img/gi, '<img style="width:100%;height:auto"')
 						.replace(/<section/g, '<div')
 						.replace(/\/section>/g, '\div>') : ''
-						console.log(this.goodInfo, '11111111111372222222222');
-						
+					console.log(this.goodInfo, '11111111111372222222222');
+
 				})
-			
+
 
 			},
 			//将钱替换为星号
@@ -407,7 +410,7 @@
 			},
 			actionSelect(e) {
 				console.log(e);
-				let phone='19157668838'
+				let phone = '19157668838'
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
@@ -626,9 +629,22 @@
 				console.log(query);
 				let arr = query.list
 				if (arr.length != 0) {
-
+					let num = 0
+					arr.forEach(item => {
+						if (item.projectImg == '') {
+							num++
+						}
+					})
+					if (num > 0) {
+						this.$refs.uToast.show({
+							type: 'error',
+							message: '选中项目都要上传图片/视频'
+						});
+						return
+					}
 					if (query.type == 'car') {
 						let carArr = []
+					
 						arr.forEach(item => {
 							carArr.push({
 								clientId: storage.get('ClientId'),
@@ -639,11 +655,12 @@
 								projectImg: item.projectImg == [] ? undefined : item.projectImg.toString(),
 								remark: item.remark,
 								shoppingCartStatus: 0,
-								projectVideo: item.projectVideo != [] ? item.projectVideo.toString() :
-									undefined,
+								// projectVideo: item.projectVideo != [] ? item.projectVideo.toString() :
+								// 	undefined,
 								workerType: this.goodInfo.workerType
 							})
 						})
+
 						console.log(carArr);
 						car.joinCar(carArr).then(res => {
 							console.log(res);

@@ -15,3 +15,6 @@ export const addOrderProject = (data) => request.post('/client/orderProject',dat
 
 //客户提交订单
 export const postOrder = (data) => request.post('/client/order',data)
+
+//删除报修图片/视频
+export const delCarUrl = (data) => request.put('/client/orderProject/delUrl',data)

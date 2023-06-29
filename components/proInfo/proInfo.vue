@@ -7,9 +7,8 @@
 					<u-checkbox v-if="submit" shape="circle" :name="item.id?item.id:item.projectId"
 						activeColor='#72daa4' @change='val=>checkChange(val,item)'>
 					</u-checkbox>
-					<u-image radius='10rpx' width="150rpx" height="150rpx" :src="item.imgList[0]"
-					>
-					<!-- 	@click="previewImage(item.imgList)" -->
+					<u-image radius='10rpx' width="150rpx" height="150rpx" :src="item.imgList[0]">
+						<!-- 	@click="previewImage(item.imgList)" -->
 					</u-image>
 
 					<view class="info">
@@ -34,22 +33,33 @@
 						</view>
 					</view>
 				</view>
+				<!--  ||!submit-->
 				<view class="remark" v-if="checkboxValue1.includes(item.id?item.id:item.projectId)||isCar">
 					<view>
-						<text style="margin-right: 30rpx;">上传图片</text>
+						<text style="color: red">*</text><text style="margin:0 30rpx 0 10rpx;">图片/视频</text>
 
-						<view style="width: 78%;">
-							<upLoadFile :fileListt='item.projectImg' :limit='9' types='image' @getUrl='getUrl'
-								:index='index' />
+						<view style="width: 66%;">
+							<cl-upload  :listStyle="{
+							columnGap: '10rpx',
+							columns:'3',
+							rowGap:'10rpx'
+							}" :imageFormData="{
+								size:10
+							}" :videoFromData="{
+								size:10
+							}" :index='index' v-model="item.projectImg" :headers="headers" :action="action" @onSuccess="onSuccesss"
+								@input='onInput'  :carId='item.id'></cl-upload>
+							<!-- <upLoadFile :fileListt='item.projectImg' :limit='9' types='image' @getUrl='getUrl'
+								:index='index' /> -->
 						</view>
 					</view>
-					<view>
+					<!-- 	<view>
 						<text style="margin-right: 30rpx;">上传视频</text>
 						<view style="width: 78%;">
 							<upLoadFile :fileListt='item.projectVideo' :limit='9' types='video' @getUrl='getUrl'
 								:index='index' />
 						</view>
-					</view>
+					</view> -->
 					<view style="align-items: center;">
 						<view style="margin-right: 10rpx;">订单备注</view>
 						<view style='width: 80%'>
@@ -85,6 +95,9 @@
 	import {
 		login
 	} from '../../api/login';
+	const {
+		environment
+	} = require('../../config/environment')
 	export default {
 		components: {
 			upLoadFile
@@ -103,6 +116,7 @@
 				type: Boolean,
 				default: true
 			},
+			//是否显示问号
 			question: {
 				type: Boolean,
 				default: false
@@ -121,6 +135,10 @@
 		},
 		data() {
 			return {
+				action: environment.baseURL + '/system/oss/upload',
+				headers: {
+					token: storage.get('AccessToken')
+				},
 				accept: 'video',
 				showQestion: false,
 				checkboxValue1: [],
@@ -143,28 +161,28 @@
 					// console.log(this.dataList, this.isCar, 'this.dataListthis.dataList');
 					this.dataList.forEach(item => {
 						if (this.isCar) {
-						//	console.log('139......', item);
+							//	console.log('139......', item);
 							item.projectName = item.serviceProjectName ? item.serviceProjectName : item
 								.projectName
 						} else {
-						//	console.log(item, '.......147...');
+							//	console.log(item, '.......147...');
 							item.shuoming = item.remark
 							item.remark = item.remark || ''
 							item.projectNumber = (item.projectNumber === undefined || item.projectNumber ===
 								0) ? 1 : item.projectNumber
-					//		console.log(1111);
+							//		console.log(1111);
 						}
-					//	console.log(item);
+						//	console.log(item);
 						item.imgList = item.serviceProjectImg !== null ? item.serviceProjectImg.split(',') :
 						[],
 
 							item.projectImg = item.projectImg != '' && !Array.isArray(item.projectImg) ? item
-							.projectImg.split(',') : Array.isArray(item.projectImg) ? item.projectImg : [],
-							console.log(item.projectVideo);
-						item.projectVideo = item.projectVideo != '' && item.projectVideo != undefined && !Array
-							.isArray(item.projectVideo) ?
-							item.projectVideo.split(',') : Array.isArray(item.projectVideo) ? item
-							.projectVideo : []
+							.projectImg.split(',') : Array.isArray(item.projectImg) ? item.projectImg : []
+						//console.log(item.projectVideo);
+						// item.projectVideo = item.projectVideo != '' && item.projectVideo != undefined && !Array
+						// 	.isArray(item.projectVideo) ?
+						// 	item.projectVideo.split(',') : Array.isArray(item.projectVideo) ? item
+						// 	.projectVideo : []
 					})
 
 
@@ -224,23 +242,34 @@
 				})
 
 			},
-			//预览图片
-			previewImage(list) {
-				uni.previewImage({
-					urls: list,
-					current: 0
-				});
-			},
-
-			getUrl(val) {
-				console.log(val, '.....val......227');
-				val.type == 'video' ? this.dataList[val.index].projectVideo = val.urls : this.dataList[val.index]
-					.projectImg = val
-					.urls
-				//this.isCar ? this.$emit('submitOrder', this.list) : ''
-				console.log(this.dataList, '.......230');
+			// //预览图片
+			// previewImage(list) {
+			// 	uni.previewImage({
+			// 		urls: list,
+			// 		current: 0
+			// 	});
+			// },
+			onSuccesss(reslut) {
+				console.log(reslut);
+				let index = reslut.data.index
+				console.log(this.dataList[index].projectImg);
+				this.dataList[index].projectImg.push(reslut.data.url)
 				this.$emit('getDeleteUrlList', this.dataList)
 			},
+			onInput(data) {
+				console.log(data);
+				this.dataList[data.index].projectImg = data.list
+				this.$emit('getDeleteUrlList', this.dataList)
+			},
+			// getUrl(val) {
+			// 	console.log(val, '.....val......227');
+			// 	val.type == 'video' ? this.dataList[val.index].projectVideo = val.urls : this.dataList[val.index]
+			// 		.projectImg = val
+			// 		.urls
+			// 	//this.isCar ? this.$emit('submitOrder', this.list) : ''
+			// 	console.log(this.dataList, '.......230');
+			// 	this.$emit('getDeleteUrlList', this.dataList)
+			// },
 			//删除
 			deleteById(id) {
 				uni.showModal({
@@ -272,6 +301,7 @@
 				});
 
 			},
+
 			//问题
 			questionHandle(item) {
 				this.remark = {
@@ -283,7 +313,7 @@
 			},
 			textareaInput() {
 				uni.$u.debounce(() => this.$emit('textareaInput', this.dataList), 200)
-			}
+			},
 
 
 		}
