@@ -155,7 +155,7 @@
 			<view v-if="showMelList.length!=0" class="info">
 				<view class="mel-title">
 					<text>配件</text>
-					<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text>
+				<!-- 	<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text> -->
 				</view>
 				<view v-for="(mel,mi) in showMelList" :key="mi">
 					<view style="font-weight: bold;margin-top: 20rpx;">
@@ -223,9 +223,13 @@
 				<text class="ziduan">加急费</text>
 				<text style="color: #EC5722;">¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
 			</view>
+			<view v-if="info.materialPrice!=null" class="line">
+				<text class="ziduan">材料费</text>
+				<text style="color: #EC5722;">¥{{info.materialPrice}}</text>
+			</view>
 			<view class="line">
-				<text class="ziduan">合计(不含材料)</text>
-				<text style="color: #EC5722;">¥	{{info.additionalPrice!=null?Number(info.additionalPrice)+Number(info.servicePrice):info.servicePrice}}</text>
+				<text class="ziduan">合计</text>
+				<text style="color: #EC5722;">¥{{info.orderPrice}}</text>
 			</view>
 		</view>
 		<view v-if="info.deliveryVo" class="bg project">
