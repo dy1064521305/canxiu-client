@@ -31,8 +31,8 @@
 
 			</view>
 
-
-			<view v-if="types=='image'&&index<2" v-for="(item, index) in billImgList" :key="index" @tap="billViewImage"
+<!--&&index<2  -->
+			<view v-if="types=='image'" v-for="(item, index) in billImgList" :key="index" @tap="billViewImage"
 				:data-url="billImgList[index]">
 				<view style="position: relative;margin-right:10rpx;">
 					<image style="width: 125rpx;border-radius:14rpx;height: 125rpx;" :src="item">
@@ -48,11 +48,11 @@
 			</view>
 
 			<!-- :style="{ background: `url(${billImgList[1]})`,width:'125rpx',height:'125rpx',borderRadius:'14rpx' }" -->
-			<view style="position:relative;" v-if="types=='image'&&billImgList.length > 2">
+		<!-- 	<view style="position:relative;" v-if="types=='image'&&billImgList.length > 2"> -->
 				<!-- 	<view style="text-align: center;padding-top: 80rpx;">
 					+{{ billImgList.length - 1 }}
 				</view> -->
-				<image style="width: 125rpx;border-radius:14rpx;height: 125rpx;" :src="billImgList[2]">
+			<!-- 	<image style="width: 125rpx;border-radius:14rpx;height: 125rpx;" :src="billImgList[2]">
 					<view class="mask" @tap="billViewImage" :data-url="billImgList[2]">
 						<view style="padding-left:44rpx">
 							+{{ billImgList.length - 2 }}
@@ -60,7 +60,7 @@
 					</view>
 				</image>
 
-			</view>
+			</view> -->
 
 
 			<view @tap="billChooseImage" v-if="billImgList.length < limit">
