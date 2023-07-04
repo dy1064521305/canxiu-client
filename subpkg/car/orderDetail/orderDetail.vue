@@ -352,14 +352,14 @@
 			</view>
 		</view>
 
-		<view v-if="info.orderStatus=='待评价'" class="btns">
-			<view style="width:281rpx" class="btn-white" @click="report('待评价')">
+		<view class="btns">
+			<view style="width:281rpx" v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'"  class="btn-white" @click="report('待评价')">
 				生成维修报告
 			</view>
-			<view style="width:205rpx" class="btn-white" @click="repairOrderShow=true">
+			<view style="width:205rpx" v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'"  class="btn-white" @click="repairOrderShow=true">
 				申请返修
 			</view>
-			<view style="width:163rpx" class="btn-green" @click="appraiseHandle">
+			<view style="width:163rpx" v-if="info.orderStatus=='待评价'"  class="btn-green" @click="appraiseHandle">
 				评价
 			</view>
 		</view>
