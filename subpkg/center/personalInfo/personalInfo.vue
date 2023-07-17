@@ -130,7 +130,7 @@
 			},
 			address(e) {
 				console.log(e) //携带的参数
-				this.userInfo.region = e.value.toString().replace(/,/g, "/")
+				this.userInfo.region = e.value1.toString().replace(/,/g, "/")
 				this.region = this.userInfo.region
 				console.log(this.userInfo.region);
 			},
