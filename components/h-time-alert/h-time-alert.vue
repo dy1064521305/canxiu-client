@@ -15,17 +15,29 @@
 					</view>
 				</view>
 				<view class="right_box">
-					<view @click="_changeTime(index)" :class="{ active: item.checked }"
+					<view v-if="index>2&&isToday" @click="_changeTime(index)" :class="{ active: item.checked }"
 						v-for="(item, index) in activeTimeArr" :key="item.time">
-						{{ item.time }}{{ rangeType ? '-' + item.endtime : '' }}	
-						<image v-if="index<isUrgentIndex&&isToday" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/6bfb10ff7ad7404699859bf0a72cb672.png" style="width: 60rpx;height: 36rpx;"></image>
+						<!-- 	{{ item.time }}{{ rangeType ? '-' + item.endtime : '' }} -->
+						{{item.endtime}}
+						<image v-if="index<=isUrgentIndex&&isToday&&!isCar"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/6bfb10ff7ad7404699859bf0a72cb672.png"
+							style="width: 60rpx;height: 36rpx;"></image>
 					</view>
-				
+					<view v-if="!isToday" @click="_changeTime(index)" :class="{ active: item.checked }"
+						v-for="(item, index) in activeTimeArr" :key="item.time">
+						<!-- 	{{ item.time }}{{ rangeType ? '-' + item.endtime : '' }} -->
+						{{item.endtime}}
+						<image v-if="index<=isUrgentIndex&&isToday"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/6bfb10ff7ad7404699859bf0a72cb672.png"
+							style="width: 60rpx;height: 36rpx;"></image>
+					</view>
 				</view>
 			</view>
 			<view class="btns">
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/ad16c6307fde47ac963bfc974da2d8e8.png" mode="" @click='_closeAlert'></image>
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/402e416c70cc49ca9907f91fe6e5e731.png" mode="" @click="ok"></image>
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/ad16c6307fde47ac963bfc974da2d8e8.png"
+					mode="" @click='_closeAlert'></image>
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/402e416c70cc49ca9907f91fe6e5e731.png"
+					mode="" @click="ok"></image>
 			</view>
 		</view>
 
@@ -36,7 +48,7 @@
 	export default {
 		props: {
 			//显示加急的数量
-			isUrgentIndex:{
+			isUrgentIndex: {
 				type: Number,
 			},
 			title: {
@@ -100,7 +112,12 @@
 			disabled: {
 				type: [String, Array],
 				default: () => []
-			}
+			},
+			//是从购物车下单还是立即下单
+			isCar: {
+				type: Boolean,
+				default: false
+			},
 		},
 		data() {
 			return {
@@ -110,8 +127,8 @@
 				selectTime: '',
 				selectEndime: '',
 				activeTimeArr: [],
-				isUrgent:false,
-				isToday:true,
+				isUrgent: false,
+				isToday: true,
 			};
 		},
 		beforeMount() {
@@ -141,7 +158,7 @@
 				this.$emit('closeAlert', data);
 			},
 			_changeDay(e) {
-				
+
 				let _ind = e - 0;
 				let {
 					timeList
@@ -155,11 +172,11 @@
 				this.selectDateStr = timeList[_ind].dateStr;
 				this.select_dateStr = timeList[_ind]._dateStr;
 				this.activeTimeArr = timeList[_ind].timeArr;
-				this.isToday=e==0
+				this.isToday = e == 0
 			},
 			_changeTime(e) {
 				console.log(e);
-				this.isUrgent=e<this.isUrgentIndex&&this.isToday
+				this.isUrgent = e <= this.isUrgentIndex && this.isToday&&!this.isCar
 				let _ind = e - 0;
 				let {
 					activeTimeArr
@@ -172,7 +189,7 @@
 				this.selectTime = timeArr[_ind].time;
 				this.selectEndime = timeArr[_ind].endtime;
 				this.activeTimeArr = timeArr;
-				
+
 			},
 			_handleData() {
 				let _data = {};
@@ -187,7 +204,8 @@
 				_data.dateRange = selectDateStr + ' ' + selectTime + '-' + selectEndime;
 				_data._dateRange = select_dateStr + ' ' + selectTime + '-' + selectEndime;
 				_data.timeStamp = new Date(selectDateStr + ' ' + selectTime).getTime();
-				_data.isUrgent=this.isUrgent
+				_data.isUrgent = this.isUrgent
+				_data.endDate = select_dateStr + ' ' + selectEndime;
 				return _data;
 			},
 			_initDay() {
@@ -298,8 +316,8 @@
 				date1.setDate(date.getDate() + num);
 				let name = '',
 					dateStr = '';
-				let month=(date1.getMonth()+1)<10?'0'+(date1.getMonth()+1):(date1.getMonth()+1)
-				let day=date1.getDate()<10?'0'+date1.getDate():date1.getDate()
+				let month = (date1.getMonth() + 1) < 10 ? '0' + (date1.getMonth() + 1) : (date1.getMonth() + 1)
+				let day = date1.getDate() < 10 ? '0' + date1.getDate() : date1.getDate()
 				name = date1.getMonth() - 0 + 1 + '月' + date1.getDate() + '日(' + weekday[date1.getDay()] + ')';
 				dateStr = date1.getFullYear() + '/' + month + '/' + day;
 				if (num == 0) {
@@ -433,7 +451,7 @@
 					}
 				}
 			},
-			ok(){
+			ok() {
 				let _data = this._handleData();
 				this._closeAlert(_data);
 			}
@@ -618,11 +636,12 @@
 		flex: 1;
 		background-color: #fff;
 		text-align: center;
-		image{
+
+		image {
 			position: absolute;
 			width: 36rpx;
 			left: 315rpx;
-			 top: -2rpx;
+			top: -2rpx;
 		}
 	}
 
@@ -654,10 +673,11 @@
 		border-width: 0 3rpx 5rpx 0;
 		transform: rotate(45deg);
 	} */
-	.btns{
+	.btns {
 		margin-bottom: 20rpx;
 		display: flex;
-		image{
+
+		image {
 			width: 337rpx;
 			height: 72rpx;
 			margin: 0 20rpx;

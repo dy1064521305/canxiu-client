@@ -1,6 +1,6 @@
 <template>
 	<view class="complaint">
-		<view v-for="(item,index) in info.projectDataVoList" :key="index" class="box">
+		<view v-for="(item,index) in projectData" :key="index" class="box">
 			<view class="">
 				<image style="width: 130rpx;height: 130rpx;margin: 20rpx;
 border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
@@ -8,18 +8,17 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 			<view style="display: flex;flex-direction: column;margin-top:41rpx;height: 100%;width: 100%;">
 				<view style="display: flex;">
 					<view style="color: #3D3F3E;font-weight: 600;width: 90%;">
-						{{item.projectName}}
+						{{item.name}}
 					</view>
-					<view style="color: #A5A7A7;">
+					<!-- 	<view style="color: #A5A7A7;">
 						x{{item.projectNumber}}
-					</view>
+					</view> -->
+
 				</view>
-				<!-- 	<view style="color: #A5A7A7;">
-					订单编号：20222251250251
-				</view> -->
 			</view>
 		</view>
 		<view class="main">
+			<text style="margin: 20rpx;">订单编号：{{info.orderNumber}}</text>
 			<view class="content">
 				<u--textarea confirmType='done' height='70' v-model="value1" border='none'
 					placeholder="请详细描述您所投诉的内容，方便工作人员核查"></u--textarea>
@@ -57,6 +56,7 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 				info: {},
 				query: {},
 				show: false,
+				projectData: [],
 				content: '我们已经收到您的投诉并会尽快处理，请耐心等待客服与您联系'
 			};
 		},
@@ -64,17 +64,24 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 			this.info = JSON.parse(option.item)
 			console.log(this.info);
 			this.query.orderId = this.info.orderId
+			this.projectData = this.info.newProject.length != 0 ? this.info.newProject : this.info.projectDataVoList
+			this.projectData.forEach(item => {
+				item.name = this.info.newProject.length != 0 ? item.serviceProductName : item.productName
+				item.projectUrl = this.info.newProject.length != 0 ? item.projectImg.split(
+					',') : item.img
+			})
+			console.log(this.projectData);
 		},
 		methods: {
 			getUrl(val) {
 				console.log(val);
 				let str = val.urls.toString()
-			 this.query.complaintImg = str
+				this.query.complaintImg = str
 			},
 			tousu() {
 				this.query.complaintContent = this.value1
 				console.log(this.query);
-			 orderComplaint(this.query).then(res => {
+				orderComplaint(this.query).then(res => {
 					console.log(res);
 					if (res.code == 200) {
 						this.show = true

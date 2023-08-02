@@ -1,6 +1,241 @@
 <template>
 	<view class="accept">
-		<image v-for="(item,index) in urlImg " :key="index" @click="billViewImage(item)" :src="item"></image>
+		<!-- <image v-for="(item,index) in urlImg " :key="index" @click="billViewImage(item)" :src="item"></image> -->
+		<view class="bg info">
+			<view class="title">
+				服务信息
+			</view>
+			<view class="line">
+				<text class="ziduan">报修门店</text>
+				<text>{{info.info.warrantyStore}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">预约上门时间</text>
+				<text>{{info.info.expectTime}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">服务地址</text>
+				<text>{{info.info.addressVo.addressRegion}}{{info.info.addressVo.addressDetailed}}</text>
+
+			</view>
+			<view class="line">
+				<text class="ziduan"></text>
+				<text>{{info.info.addressVo.contact}} {{info.info.addressVo.phone}}</text>
+
+			</view>
+		</view>
+
+
+		<view class="bg info">
+			<view class="title">
+				订单信息
+			</view>
+			<view class="line">
+				<text class="ziduan">订单编号</text>
+				<text>{{info.info.orderNumber}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">订单类型</text>
+				<text>维修</text>
+			</view>
+
+			<view class="line">
+				<text class="ziduan">下单时间</text>
+				<text>{{info.info.orderTime}}</text>
+			</view>
+		</view>
+
+		<view class="project bg">
+			<view v-if="JSON.stringify(info.newProject)!='[]'" style="font-size: 33rpx;font-weight: bold;">
+				原维修方案
+			</view>
+			<view v-for="(item,index) in info.info.projectDataVoList" :key="index" style="margin: 15rpx 0;">
+				<project-card :pro='item' />
+				<view class="info-box">
+					<view class="font">
+						图片/视频
+					</view>
+					<view>
+						<cl-upload :listStyle="{
+					columnGap: '10rpx',
+					columns:'3',
+					rowGap:'10rpx'
+					}" :imageFormData="{
+						size:10
+					}" :videoFromData="{
+						size:10
+					}" :index='index' v-model="item.projectImg" :add="false" :remove="false"></cl-upload>
+						<!-- <upLoadFile :fileListt='item.projectVideo' types='video' :index='index' :isDel='false' /> -->
+					</view>
+				</view>
+				<view v-if="item.remark!=''" class="info-box">
+					<view class="font">
+						订单备注
+					</view>
+					<view class="right" style="color: #707271;">
+						{{item.remark}}
+					</view>
+				</view>
+			</view>
+
+
+		</view>
+
+		<view v-if="JSON.stringify(info.newProject)!='[]'||JSON.stringify(info.showMelList)!='[]'" class="bg">
+			<view v-if="JSON.stringify(info.newProject)!='[]'" class="projec">
+				<view style="font-size: 33rpx;font-weight: bold;">
+					变更后服务项<image style="width: 62rpx;height: 27rpx;margin-left: 20rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/02/2657cdc6a3624dc58270db3fb924ff47.png">
+					</image>
+				</view>
+				<!--  -->
+				<view style="margin: 15rpx 0;" v-for="(item,index) in info.newProject" :key="index">
+					<project-card :pro='item' />
+				</view>
+			</view>
+			<view v-if="JSON.stringify(info.showMelList)!='[]'" class="info">
+				<view class="mel-title">
+					<text>维修材料</text>
+					<!-- 	<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text> -->
+				</view>
+				<view v-for="(mel,mi) in info.showMelList" :key="mi">
+					<view style="font-weight: bold;margin-top: 20rpx;">
+						{{mel[0].classifyName}}
+					</view>
+					<view v-for="(chi,chii) in mel" :key="chii">
+						<view style="display: flex;margin-top: 20rpx;">
+							<u-image v-if="chi.img" radius='10rpx' width="140rpx" height="100%" :src="chi.img">
+							</u-image>
+							<view
+								style="height: 100%;display: flex;flex-direction: column;justify-content: space-evenly;width: 100%;margin-left: 20rpx;">
+								<view style="width: 100%;">
+									<view>
+										{{chi.materialName}}
+									</view>
+									<view
+										style="display: flex;justify-content: space-between;color: #A5A7A7;margin-top: 10rpx;">
+										<text v-if="chi.materialSpecsList==null" style="margin-right: 10rpx;">无</text>
+										<text v-else style="margin-right: 10rpx;"
+											v-for="(gui,gi) in chi.materialSpecsList" :key="gi">{{gui}}</text>
+										<text> x{{chi.materialCount}}</text>
+									</view>
+								</view>
+								<view
+									style="width: 100%;display: flex;justify-content: space-between;margin-top: 10rpx;">
+									<view>
+										¥{{chi.salePrice?chi.salePrice:chi.materialPrice}}</view>
+									<view>
+										小计：¥{{Number(chi.salePrice?chi.salePrice:chi.materialPrice)*Number(chi.materialCount)}}
+									</view>
+								</view>
+
+
+							</view>
+						</view>
+
+
+					</view>
+				</view>
+
+			</view>
+		</view>
+		<view class="bg info" style="margin-top: -20rpx;">
+			<view class="title" style="display: flex;justify-content: space-between;align-items: center;">
+				<view class="">
+					订单费用
+				</view>
+				<view class="img"
+					v-if="Number(info.info.startingFree)-(info.info.additionalPrice!=null?Number(info.info.orderPrice)-Number(info.info.additionalPrice):Number(info.info.orderPrice))>=0">
+					<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
+					未达标按起步价收取
+				</view>
+				<view
+					v-if="Number(info.info.startingFree)-(info.info.additionalPrice!=null?Number(info.info.orderPrice)-Number(info.info.additionalPrice):Number(info.info.orderPrice))<0"
+					class="img">
+					<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+					</image>已达到起步价
+				</view>
+			</view>
+			<view class="line">
+				<text class="ziduan">起步价</text>
+				<text v-if="info.info.startingFree!=null">¥{{info.info.startingFree}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">工时费</text>
+				<text style="text-decoration:line-through"
+					v-if="info.info.servicePrice!=null">¥{{info.info.servicePrice}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">加急费</text>
+				<text>¥{{info.info.additionalPrice!=null?info.info.additionalPrice:0}}</text>
+			</view>
+			<view v-if="info.info.materialPrice!=null" class="line">
+				<text class="ziduan">材料费</text>
+				<text>¥{{info.info.materialPrice}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">小计：</text>
+
+				<text
+					style="color: #EC5722;">¥{{(info.info.additionalPrice!=null?Number(info.info.additionalPrice):0)+(info.info.materialPrice!=null?Number(info.info.materialPrice):0)+Number(info.info.servicePrice)}}</text>
+			</view>
+			<view v-if="info.info.favorablePrice!=0&&info.info.favorablePrice!=null"
+				style="margin-left: 20rpx;color: #A5A7A7;" class="line">
+				<text class="ziduan">品牌折扣：</text>
+				<text style="color: #EC5722;">-¥{{info.info.favorablePrice}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">合计</text>
+				<!-- info.additionalPrice!=null?Number(info.additionalPrice)+Number(info.preferentialPrice):Number(info.preferentialPrice) -->
+				<text style="color: #EC5722;">¥{{info.info.orderPrice}}</text>
+			</view>
+		</view>
+		<view v-if="info.info.deliveryVo" class="bg project">
+			<view class="title">
+				维修详情
+			</view>
+			<view class="info-box">
+				<view class="font">
+					图片
+				</view>
+				<view>
+					<upLoadFile
+						:fileListt='info.info.deliveryVo.deliveryImg!=null?info.info.deliveryVo.deliveryImg.split(",") : []'
+						types='image' :isDel='false' :isInfo='true' />
+				</view>
+			</view>
+			<view class="info-box">
+				<view class="font">
+					订单备注
+				</view>
+				<view>
+					{{info.info.deliveryVo.remark}}
+				</view>
+			</view>
+		</view>
+
+		<view v-if="signUrl!=''&&signUrl!=null" class=" title"
+			style="display: flex;background-color: #fff;padding: 10rpx 28rpx;justify-content: space-between;">
+			<view style="width: 25%;">
+				客户签名：
+			</view>
+			<view style="width: 70%;">
+
+				<img :style="{'transform':'rotate(-90deg)','width':big?'100%':'14%','height':big?'477rpx':'121rpx'}"
+					:src="signUrl" alt="">
+			</view>
+			<view @click="big=!big">
+				<img style='width:50rpx ;height: 50rpx;' v-if="big"
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/09/4497ca4f26e54c58871233a2170aa148.png"
+					alt="">
+				<img style='width:50rpx ;height: 50rpx;' v-else
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/09/83c8f89a91b442d8bdcf0358466df5e7.png"
+					alt="">
+			</view>
+		</view>
+
+
 
 		<view class="btn-box">
 			<view v-if="info.name=='服务验收'" class="btn quxiao" @click="back">
@@ -12,7 +247,14 @@
 			<view v-if="info.type=='待支付'" class="btn queren" @click="pay">
 				去支付
 			</view>
+			<view v-if="info.name=='维修报告'" class="btn queren" @click="showDownLoad=true">
+				下载
+			</view>
 		</view>
+
+		<!-- 下载 -->
+		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
+			:actions="actionList" :show="showDownLoad"></u-action-sheet>
 
 		<!-- 验收 -->
 		<u-popup :show="showAccept" @close="popupClose" closeable>
@@ -49,12 +291,27 @@
 		generateReports,
 		acceptance
 	} from '@/api/order.js'
+	import projectCard from '@/components/projectCard/projectCard.vue'
+	import upLoadFile from '../../../components/uploadFile/uploadFile.vue'
 	const {
 		environment
 	} = require('../../../config/environment')
 	export default {
+		components: {
+			projectCard,
+			upLoadFile
+		},
 		data() {
 			return {
+				actionList: [{
+						name: '图片'
+					},
+					{
+						name: '取消'
+					},
+				], //拨打电话
+				showDownLoad: false,
+				big: false, //签名放大
 				urlImg: [],
 				info: {},
 				popHeight: 100,
@@ -71,16 +328,18 @@
 				lineSize: 5, // 笔记倍数
 				item: undefined,
 				count: undefined,
-				
+				signUrl: '', //签字图片
 			};
 		},
 		onLoad(option) {
 			this.info = JSON.parse(option.info)
+			console.log(this.info);
+			this.signUrl = this.info.info.sign
 			uni.setNavigationBarTitle({
 				title: this.info.name
 			})
 			uni.showLoading({
-				title:'生成中',
+				title: '生成中',
 				mask: true
 			});
 			generateReports(this.info.id).then(res => {
@@ -205,6 +464,8 @@
 									let data = JSON.parse(res.data);
 									if (data.code == 200) {
 										console.log(data);
+										that.signUrl = data.data.url
+										console.log();
 										acceptance({
 											sign: data.data.url,
 											orderId: that.info.id
@@ -243,18 +504,114 @@
 					url: '../pay/pay?item=' + encodeURIComponent(JSON.stringify(this.info.info))
 				})
 			},
+			//下载
+			actionSelect(e) {
+				console.log(e);
+				let phone = '19157668838'
+				if (e.name == '取消') {
+					this.showDownLoad = false
+				} else {
+					console.log(this.urlImg);
+					let that=this
+					that.urlImg.forEach((img,index) => {
+						uni.saveImageToPhotosAlbum({
+							filePath: img,
+							success: function() {
+								if ((index+1)==that.urlImg.length) {
+									uni.showToast({
+										title: '保存成功',
+										duration: 2000,
+										icon: 'success'
+									});
+								}
+								console.log('save success');
+							}
+						});
+					})
+
+					that.showDownLoad = false
+				}
+			},
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.accept {
-		padding: 20rpx;
+		// padding: 20rpx;
 
-		image {
-			width: 100%;
-			height: 80vh;
+		.bg {
+			background: #FFFFFF;
+			padding: 20rpx 30rpx;
+			margin-top: 20rpx;
 		}
+
+		.title {
+			font-size: 31rpx;
+			color: #3D3F3E;
+			font-weight: bold;
+
+			.img {
+				align-items: center;
+				display: flex;
+				font-size: 24rpx;
+
+			}
+		}
+
+		.project {
+			.info-box {
+				margin-top: 20rpx;
+				display: flex;
+
+				.font {
+					width: 20%;
+					font-size: 29rpx;
+					font-weight: bold;
+					color: #3D3F3E;
+				}
+
+				.right {
+					width: 80%;
+				}
+			}
+
+		}
+
+
+		.info {
+			.mel-title {
+				height: 72rpx;
+				line-height: 72rpx;
+				font-weight: bold;
+				background: rgba(159, 214, 186, 0.2);
+				padding: 0 20rpx;
+			}
+
+			.line {
+				margin-top: 15rpx;
+				font-size: 29rpx;
+				color: #3D3F3E;
+
+				text:first-child {
+					width: 28%;
+					display: inline-block;
+				}
+
+				text:nth-child(2) {
+					width: 72%;
+					display: inline-block;
+					text-align: end;
+					color: #A5A7A7;
+					vertical-align: text-top;
+				}
+			}
+		}
+
+		// image {
+		// 	width: 100%;
+		// 	height: 80vh;
+		// }
 
 		.btn-box {
 			display: flex;

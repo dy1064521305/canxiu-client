@@ -1,17 +1,17 @@
 <template>
 	<view class="appraise">
-		<view v-for="(item,index) in info.projectDataVoList" class="box">
+		<view v-for="(item,index) in projectData" class="box">
 			<view class="">
 				<image style="width: 130rpx;height: 130rpx;margin: 20rpx;
 border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 			</view>
 			<view style="display: flex;flex-direction: column;margin-top:41rpx;height: 100%;width: 100%;">
-				<view style="display: flex;">
-					<view style="color: #3D3F3E;font-weight: 600;width: 90%;">
-						{{item.projectName}}
+				<view style="display: flex;justify-content: space-between;">
+					<view style="color: #3D3F3E;font-weight: 600;">
+						{{item.name}}
 					</view>
 					<view style="color: #A5A7A7;">
-						x{{item.projectNumber}}
+						¥{{item.projectPrice}}起
 					</view>
 				</view>
 				<!-- 	<view style="color: #A5A7A7;">
@@ -64,26 +64,43 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 					technicalScore: '0',
 					productIdList: []
 				},
-				id: ''
+				id: '',
+				projectData: []
 			};
 		},
 		onLoad(option) {
-			this.id = option.id
+			this.info = JSON.parse(decodeURIComponent(option.info))
 			this.getList()
 		},
 		methods: {
 			getList() {
-				order.getOrderInfo(this.id).then(res => {
-					console.log(res);
-					this.query.orderId = res.data.orderId
-					this.query.clientId = res.data.clientId
-					this.query.workerId = res.data.workerId
-					console.log(res.data.projectDataVoList);
-					this.query.productIdList = res.data.projectDataVoList.map(item => {
-						return item.productId
-					})
-					console.log(this.query.productIdList);
+				console.log(this.info);
+				this.query.orderId = this.info.orderId
+				this.query.clientId = this.info.clientId
+				this.query.workerId = this.info.workerId
+				this.projectData = this.info.newProject.length != 0 ? this.info.newProject : this.info.projectDataVoList
+				this.query.productIdList = this.projectData.map(item => {
+					return item.productId
 				})
+				this.projectData.forEach(item => {
+					item.name = this.info.newProject.length != 0 ? item.serviceProductName : item.productName
+					item.projectUrl = this.info.newProject.length != 0 ? item.projectImg.split(
+						',') : item.img
+				})
+				// order.getOrderInfo(this.id).then(res => {
+				// 	console.log(res);
+				// 	this.info= res.data
+				// 	res.data.projectDataVoList.forEach(item=>{
+				// 		item.projectUrl=item.projectUrl.split(
+				// 			',')
+				// 	})
+
+				// 	console.log(res.data.projectDataVoList);
+				// 	this.query.productIdList = res.data.projectDataVoList.map(item => {
+				// 		return item.productId
+				// 	})
+				// 	console.log(this.query.productIdList);
+				// })
 			},
 			getUrl(val) {
 				console.log(val);

@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<u-navbar placeholder @leftClick='leftClick' title="填写订单">
+		<u-navbar  placeholder @leftClick='leftClick' title="填写订单">
 
 		</u-navbar>
 		<view class="address" :style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'250rpx'}"
@@ -25,7 +25,7 @@
 			</view>
 		</view>
 
-		<view class="time" @click="isShow=true">
+		<!-- <view class="time" @click="isShow=true">
 			<text style="font-size: 33rpx;color: #3D3F3E;font-weight: bold;">选择上门时间</text>
 			<text
 				style='width: 65%;text-align: end;margin-right: 22rpx;'>{{info.expectTime==undefined?'时间':info.expectTime}}</text>
@@ -33,24 +33,113 @@
 				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
 				mode=""></image>
 		</view>
-
+ -->
 		<view class="list">
-			<proInfo :list="submitList" :isCar='true' :submit='false' @getCheck='getCheck'
-				@getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
-		</view>
-
-		<view class="bottom" :style="{'height':urgentPriceTotal!=0?'140rpx':'91rpx'}">
-			<view class="">
-				<view class="">
-					<text
-						style="font-size: 22rpx;color: #A5A7A7;margin-left:180rpx;">共{{submitList.length}}件合计(不含材料):</text>
-					<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{info.orderPrice}}</text>
+			<view v-for="(item,index) in showListByType" :key="index" style="margin-bottom: 10rpx;">
+				<view
+					style="display: flex;justify-content: space-between;align-items: center;background-color: #f5f9fa;">
+					<text v-if="isCar"
+						style="font-size: 34rpx;font-weight: bold;margin-left: 13rpx;">{{item.list[0].workerType.replace('人工','师傅')}}</text>
+					<view :style="{'width':isCar?'74%':'100%'}" class="time-two" @click="timeShowHandle(index)">
+						<text
+							style="font-size: 31rpx;color: #3D3F3E;font-weight: bold;padding-left: 15rpx;">预约上门时间</text>
+						<view class="">
+							<text
+								style='text-align: end;margin-right: 22rpx;'>{{item.expectTime==undefined?'时间':item.expectTime}}</text>
+							<image style="width: 14rpx;height: 25rpx;    margin-right: 20rpx;"
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
+								mode=""></image>
+						</view>
+					</view>
 				</view>
-				<view v-if="urgentPriceTotal!=0">
-					<text style="font-size: 22rpx;color: #A5A7A7;margin-left:180rpx;">加急费:</text>
-					<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{urgentPriceTotal}}</text>
+
+				<view class="">
+					<proInfo :list="item.list" :isCar='true' :submit='false' @getCheck='getCheck'
+						@getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
 				</view>
 			</view>
+
+		</view>
+
+		<view class="priceList">
+			<view style="background-color: #fff;margin-bottom: 20rpx;width: 100%;"
+				v-for="(item,index) in showListByType" :key="index">
+				<view class="line">
+					<view style="font-size: 34rpx;font-weight: bold;">
+						{{isCar?item.list[0].workerType.replace('人工','师傅'):'订单明细'}}
+					</view>
+					<view class="img"
+						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>=0">
+						<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
+						未达标按起步价收取
+					</view>
+					<view v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<0" class="img">
+						<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+						</image>已达到起步价
+					</view>
+
+
+				</view>
+				<view  class="line">
+					<view class="">
+						起步价：
+					</view>
+					<view class="">
+						¥{{item.list[0].startingFreeDiscount}}
+					</view>
+				</view>
+				<view class="line">
+					<view class="">
+						工时费：
+					</view>
+					<view style="color:  #EC5722;">
+						¥{{item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0)}}
+					</view>
+				</view>
+				<view v-if="!isCar" class="line">
+					<view class="">
+						加急费：
+					</view>
+					<view style="color:  #EC5722;">
+						¥{{urgentPriceTotal}}
+					</view>
+				</view>
+				<view v-if="item.list.reduce((p, c) => p + ((Number(c.projectPrice)*Number(c.projectNumber))-(Number(c.discountPrice)*Number(c.projectNumber))), 0)!=0"
+					class="line" style="margin-left: 20rpx;font-size: 26rpx;">
+					<view style="color: #A5A7A7;">
+						品牌折扣：
+					</view>
+					<view style="color:  #EC5722;">
+						¥{{item.list.reduce((p, c) => p + ((Number(c.projectPrice)*Number(c.projectNumber))-(Number(c.discountPrice)*Number(c.projectNumber))), 0)}}
+					</view>
+				</view>
+				<view class="line">
+					<view class="">
+						{{isCar?'小计':'合计'}}：
+					</view>
+					<view style="color:  #EC5722;">
+						¥{{(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))+urgentPriceTotal}}
+					</view>
+				</view>
+			</view>
+		</view>
+
+		<view style="height: 122rpx;">
+
+		</view>
+
+		<view class="bottom">
+			<!-- 	<view class=""> -->
+			<view class="">
+				<text style="font-size: 22rpx;color: #A5A7A7;">合计费用:</text>
+				<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{info.orderPrice}}</text>
+			</view>
+			<!-- 	<view v-if="urgentPriceTotal!=0">
+					<text style="font-size: 22rpx;color: #A5A7A7;margin-left:180rpx;">加急费:</text>
+					<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{urgentPriceTotal}}</text>
+				</view> -->
+			<!-- 	</view> -->
 
 			<view class="btn" @click.stop="submitOrder">提交订单</view>
 
@@ -58,8 +147,8 @@
 
 
 		<hTimeAlert title="选择上门时间" rangeStartTime="00:00:00" rangeEndTime="23:59:59" defaultTime="2020/3/29 18:00:00"
-			  rangeDay="7" :isShow="isShow" :maskHide="maskHide" :isUrgentIndex='4'
-			:rangeType="rangeType" :closeBtn="closeBtn" @closeAlert="handelClose">
+			rangeDay="7" :isShow="isShow" :maskHide="maskHide" :isUrgentIndex='3' :rangeType="rangeType" :isCar='isCar'
+			:closeBtn="closeBtn" @closeAlert="handelClose">
 		</hTimeAlert>
 
 		<!-- 添加地址弹框 -->
@@ -107,7 +196,10 @@
 					orderPrice: ''
 				},
 				dateRange: '',
-				urgentPriceTotal: 0
+				urgentPriceTotal: 0,
+				showListByType: [],
+				timeIndex: undefined,
+				isCar: false, //是从购物车下单还是立即下单
 			};
 		},
 		onShow() {
@@ -115,9 +207,13 @@
 
 		},
 		onLoad(option) {
-			//	console.log(decodeURIComponent(option.item));
-			this.submitList = JSON.parse(decodeURIComponent(option.item))
-			console.log(JSON.parse(decodeURIComponent(option.item)), this.submitList, '.........103');
+			console.log(decodeURIComponent(option.item));
+			let item = JSON.parse(decodeURIComponent(option.item))
+			this.submitList = item.checkedList
+			this.isCar = item.isCar
+			this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
+			console.log(this.showListByType, this.submitList, '.........103');
+
 			//console.log(this.submitList );
 			// try {
 			// 	const value = uni.getStorageSync('submit_order');
@@ -139,9 +235,49 @@
 			// } catch (e) {
 			// 	// error
 			// }
-			this.info.orderPrice = this.submitList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
+			this.info.orderPrice = this.submitList.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
 		},
 		methods: {
+			groupBy(array, f) {
+
+				let groups = {};
+
+				array.forEach(function(o) {
+
+					var group = JSON.stringify(f(o));
+
+					groups[group] = groups[group] || [];
+
+					groups[group].push(o);
+
+				});
+
+				return Object.keys(groups).map(function(group) {
+
+					return groups[group];
+
+				});
+
+			},
+
+			arrayGroupBy(list, groupId) {
+
+				let sorted = this.groupBy(list, function(item) {
+
+					return [item[groupId]];
+
+				});
+				sorted.forEach((item, index) => {
+					sorted[index] = {
+						list: item,
+						expectTime: undefined,
+						isUrgent: undefined
+					}
+				})
+				return sorted;
+
+			},
+
 			getList() {
 				if (storage.get('ClientId')) {
 					//查询门店名称
@@ -190,7 +326,7 @@
 				let id = data.item.id ? data.item.id : data.item.projectId
 				console.log(id);
 				this.info.orderPrice = this.submitList.reduce((p, c) => p + (((c.id ? c.id : c.projectId) === id ? data.num
-					.value : c.projectNumber) * Number(c.projectPrice)), 0)
+					.value : c.projectNumber) * Number(c.discountPrice)), 0)
 				// this.urgentPriceTotal = this.info.isUrgent ? this.submitList.reduce((p, c) => p + (((c.id ? c.id : c
 				// 		.projectId) === id ? data.num
 				// 	.value : c.projectNumber) * Number(c.urgentPrice)), 0) : 0
@@ -229,12 +365,16 @@
 				this.isShow = true;
 				console.log(this.isShow);
 			},
-
+			timeShowHandle(i) {
+				this.isShow = true
+				this.timeIndex = i
+			},
 			handelClose(data) {
 				this.isShow = false;
 				console.log(data);
-				this.info.expectTime = data._date
-				this.info.isUrgent = data.isUrgent ? 1 : 0
+				this.showListByType[this.timeIndex].expectTime = data.endDate
+				console.log(this.showListByType);
+				this.info.isUrgent = data.isUrgent && !this.isCar ? 1 : 0
 				if (data.isUrgent) {
 					this.urgentPriceTotal = this.submitList.reduce((pre, item) => {
 						return pre + Number(item.urgentPrice)
@@ -244,13 +384,17 @@
 					this.info.orderPrice = this.info.orderPrice - this.urgentPriceTotal
 					this.urgentPriceTotal = 0
 				}
-				this.dateRange = data._dateRange
+				//this.dateRange = data._dateRange
 				console.log(this.submitList);
 			},
 
 			//下单
 			submitOrder() {
-				if (this.info.expectTime == undefined) {
+				let bool = this.showListByType.some(item => {
+					return item.expectTime == undefined
+				})
+				console.log(bool);
+				if (bool) {
 					uni.showToast({
 						title: '请选择上门时间',
 						duration: 2000,
@@ -258,39 +402,47 @@
 					});
 					return
 				}
-
 				//else {
 				console.log(this.addressInfo);
 				this.info.addressId = this.addressInfo.addressId
 				//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
 				this.info.clientId = storage.get('ClientId')
-			
-				console.log(this.submitList);
+
+				console.log(this.showListByType);
 				console.log(this.info);
 				let arr = JSON.parse(JSON.stringify(this.submitList))
 				console.log(arr);
-				let num = 0
-				arr.forEach(item => {
 
-					//item.projectVideo = this.toStrings(item.projectVideo)
-					item.projectImg = this.toStrings(item.projectImg)
-					if ( item.projectImg == '') {
-						num++
-					}
-					item.shoppingCartStatus = 1
-					item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
+				let bool1 = arr.some(item => {
+					return item.projectImg.length == 0
 				})
-				console.log(num);
-				if (num > 0) {
+				console.log(bool1);
+				if (bool1) {
 					this.$refs.uToast.show({
 						type: 'error',
 						message: '每个项目都要上传图片或视频'
 					});
-				
+
 					return
 				}
+				
+				arr.forEach(item => {
+					//item.projectVideo = this.toStrings(item.projectVideo)
+					item.projectImg = this.toStrings(item.projectImg)
+					item.shoppingCartStatus = 1
+					item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
+				})
+				let timeObj = {}
+				let startingFree={}
+				this.showListByType.forEach(item => {
+					timeObj[item.list[0].workerType] = item.expectTime+':00'
+					startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount
+				})
+				console.log(timeObj,startingFree);
 				this.info.orderProjectBoList = arr
-					this.info.expectTime = this.info.expectTime + ':00'
+				this.info.startingFreeMap=startingFree
+				this.info.timeMap=timeObj
+				//this.info.expectTime = this.info.expectTime + ':00'
 				console.log(this.info);
 				postOrder(this.info).then(res => {
 					console.log(res);
@@ -303,7 +455,7 @@
 						})
 						let info = {
 							money: this.info.orderPrice,
-							time: this.dateRange,
+							time:timeObj,
 							orderId: res.data
 						}
 						console.log(info);
@@ -313,7 +465,7 @@
 					}
 				})
 
-					//}
+				
 
 
 
@@ -415,6 +567,15 @@
 			align-items: center;
 		}
 
+		.time-two {
+			height: 85rpx;
+			//width: 74%;
+			background: #fff;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
 		.list {
 			margin-top: 20rpx;
 			width: 100%;
@@ -422,19 +583,35 @@
 			// bottom: 110rpx;
 			// position: relative;
 			// top: 2rpx;
-			margin-bottom: 130rpx;
+		}
+
+		.priceList {
+			width: 100%;
+
+			.line {
+				display: flex;
+				justify-content: space-between;
+				padding: 10rpx 20rpx;
+
+				.img {
+					align-items: center;
+					display: flex;
+					font-size: 24rpx;
+
+				}
+			}
 		}
 
 		.bottom {
 			width: 100%;
-			//height: 91rpx;
+			height: 100rpx;
 			background: #fff;
 			position: fixed;
 			display: flex;
 			align-items: center;
-			padding: 10rpx 30rpx;
 			z-index: 999;
 			bottom: 0;
+			justify-content: flex-end;
 
 			.btn {
 				width: 199rpx;
@@ -445,6 +622,7 @@
 				color: #FFFFFF;
 				line-height: 69rpx;
 				text-align: center;
+				margin-right: 20rpx;
 			}
 		}
 	}

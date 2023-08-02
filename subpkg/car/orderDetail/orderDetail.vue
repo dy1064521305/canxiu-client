@@ -36,16 +36,24 @@
 				本单维修师
 			</view>
 			<view class="info">
-				<image v-if="workerInfo.avatarUrl==null" style="width:98rpx;height: 98rpx;"
-					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/05/2b752f2fa84446d8867149d48996ec45.png">
-				</image>
-				<image v-else style="width:98rpx;height: 98rpx;" :src="workerInfo.avatarUrl"></image>
+				<view style="display: flex;    flex-direction: column;
+    width: 21%;
+    align-items: center;">
+					<image v-if="workerInfo.avatarUrl==null" style="width:98rpx;height: 98rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/05/2b752f2fa84446d8867149d48996ec45.png">
+					</image>
+					<image v-else style="width:98rpx;height: 98rpx;" :src="workerInfo.avatarUrl"></image>
+					<view class="">
+						{{info.projectDataVoList[0].workerType.replace('人工','师傅')}}
+					</view>
+				</view>
+
 				<view style="margin-left:14rpx ;width: 85%;">
 					<view style="font-size: 31rpx;color: #3D3F3E;font-weight: bold;margin: 10rpx 0;">
 						{{workerInfo.workerName}}
 						<img :src="workerInfo.levelIcon" style='width: 140rpx;height: 34rpx;margin-left: 20rpx;'>
 					</view>
-				<!-- 	<view style="font-size: 25rpx;color: #A5A7A7;">
+					<!-- 	<view style="font-size: 25rpx;color: #A5A7A7;">
 						{{workerInfo.workerPhone}}
 					</view> -->
 				</view>
@@ -62,33 +70,14 @@
 			<view v-if="newProject.length!=0" style="font-size: 33rpx;font-weight: bold;">
 				原维修方案
 			</view>
-			<view v-for="(item,index) in info.projectDataVoList" :key="index"
-				style="border-bottom: 2rpx solid  #F8F8F8;padding-bottom: 10rpx;margin-top: 20rpx;">
-				<view style="display: flex">
-					<image
-						style="width: 156rpx;height: 156rpx;border-radius: 20rpx;" :src="item.projectUrl[0]">
-					</image>
-
-					<view style="width: 76%;">
-						<view style="display: flex;font-size: 29rpx;height: 100rpx;margin-left: 20rpx;">
-							<view style="width: 80%;color: #3D3F3E;font-weight: bold;">
-								{{item.projectName}}
-							</view>
-							<view style="width: 20%;color: #A5A7A7;text-align: end;">
-								x{{item.projectNumber}}
-							</view>
-						</view>
-						<view style="font-size: 22rpx;color: #EC5722;text-align: end;">
-							工时费:<text style="font-size: 40rpx;">{{item.projectPrice}}</text>元
-						</view>
-					</view>
-				</view>
+			<view v-for="(item,index) in info.projectDataVoList" :key="index" style="margin: 15rpx 0;">
+				<project-card :pro='item' />
 				<view class="info-box">
 					<view class="font">
 						图片/视频
 					</view>
 					<view>
-						<cl-upload  :listStyle="{
+						<cl-upload :listStyle="{
 						columnGap: '10rpx',
 						columns:'3',
 						rowGap:'10rpx'
@@ -100,15 +89,6 @@
 						<!-- <upLoadFile :fileListt='item.projectVideo' types='video' :index='index' :isDel='false' /> -->
 					</view>
 				</view>
-			<!-- 	<view v-if="item.projectImg.length!=0" class="info-box">
-					<view class="font">
-						图片
-					</view>
-					<view>
-						<upLoadFile :fileListt='item.projectImg' types='image' :index='index' :isDel='false'
-							:isInfo='true' />
-					</view>
-				</view> -->
 				<view v-if="item.remark!=''" class="info-box">
 					<view class="font">
 						订单备注
@@ -127,35 +107,19 @@
 		<view v-if="newProject.length!=0||showMelList.length!=0" class="bg">
 			<view v-if="newProject.length!=0" class="projec">
 				<view style="font-size: 33rpx;font-weight: bold;">
-					现维修方案<image style="width: 62rpx;height: 27rpx;margin-left: 20rpx;"
+					变更后服务项<image style="width: 62rpx;height: 27rpx;margin-left: 20rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/02/2657cdc6a3624dc58270db3fb924ff47.png">
 					</image>
 				</view>
-				<view v-for="(item,index) in newProject" :key="index"
-					style="display: flex;border-bottom: 2rpx solid  #F8F8F8;padding-bottom: 10rpx;margin-top: 20rpx;">
-					<image 
-						style="width: 156rpx;height: 156rpx;border-radius: 20rpx;" :src="item.img[0]">
-					</image>
-
-					<view style="width: 76%;">
-						<view style="display: flex;font-size: 29rpx;height: 100rpx;margin-left: 20rpx;">
-							<view style="width: 80%;color: #3D3F3E;font-weight: bold;">
-								{{item.projectName}}
-							</view>
-							<view style="width: 20%;color: #A5A7A7;text-align: end;">
-								x{{item.projectNumber}}
-							</view>
-						</view>
-						<view style="font-size: 22rpx;color: #EC5722;text-align: end;">
-							工时费:<text style="font-size: 40rpx;">{{item.projectPrice}}</text>元
-						</view>
-					</view>
+				<!--  -->
+				<view style="margin: 15rpx 0;" v-for="(item,index) in newProject" :key="index">
+					<project-card :pro='item' />
 				</view>
 			</view>
 			<view v-if="showMelList.length!=0" class="info">
 				<view class="mel-title">
-					<text>配件</text>
-				<!-- 	<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text> -->
+					<text>维修材料</text>
+					<!-- 	<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text> -->
 				</view>
 				<view v-for="(mel,mi) in showMelList" :key="mi">
 					<view style="font-weight: bold;margin-top: 20rpx;">
@@ -163,24 +127,28 @@
 					</view>
 					<view v-for="(chi,chii) in mel" :key="chii">
 						<view style="display: flex;margin-top: 20rpx;">
-							<u-image v-if="chi.img" radius='10rpx' width="110rpx" height="110rpx" :src="chi.img">
+							<u-image v-if="chi.img" radius='10rpx' width="140rpx" height="100%" :src="chi.img">
 							</u-image>
 							<view
 								style="height: 100%;display: flex;flex-direction: column;justify-content: space-evenly;width: 100%;margin-left: 20rpx;">
 								<view style="width: 100%;">
-									<view>{{chi.materialName}}</view>
 									<view>
-										规格：
+										{{chi.materialName}}
+									</view>
+									<view
+										style="display: flex;justify-content: space-between;color: #A5A7A7;margin-top: 10rpx;">
 										<text v-if="chi.materialSpecsList==null" style="margin-right: 10rpx;">无</text>
 										<text v-else style="margin-right: 10rpx;"
 											v-for="(gui,gi) in chi.materialSpecsList" :key="gi">{{gui}}</text>
+										<text> x{{chi.materialCount}}</text>
 									</view>
 								</view>
-								<view style="width: 100%;display: flex;justify-content: space-between">
-									<view style="color: #EC5722;font-weight: bold;">
+								<view
+									style="width: 100%;display: flex;justify-content: space-between;margin-top: 10rpx;">
+									<view>
 										¥{{chi.salePrice?chi.salePrice:chi.materialPrice}}</view>
 									<view>
-										数量：{{chi.materialCount}}
+										小计：¥{{Number(chi.salePrice?chi.salePrice:chi.materialPrice)*Number(chi.materialCount)}}
 									</view>
 								</view>
 
@@ -212,23 +180,53 @@
 			</view>-->
 		</view>
 		<view class="bg info" style="margin-top: -20rpx;">
-			<view class="title">
-				项目预估总价
+			<view class="title" style="display: flex;justify-content: space-between;align-items: center;">
+				<view class="">
+					订单费用
+				</view>
+				<view class="img"
+					v-if="Number(info.startingFree)-(info.additionalPrice!=null?Number(info.orderPrice)-Number(info.additionalPrice):Number(info.orderPrice))>=0">
+					<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
+					未达标按起步价收取
+				</view>
+				<view
+					v-if="Number(info.startingFree)-(info.additionalPrice!=null?Number(info.orderPrice)-Number(info.additionalPrice):Number(info.orderPrice))<0"
+					class="img">
+					<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+					</image>已达到起步价
+				</view>
+			</view>
+			<view class="line">
+				<text class="ziduan">起步价</text>
+				<text v-if="info.startingFree!=null">¥{{info.startingFree}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">工时费</text>
-				<text v-if="info.servicePrice!=null" style="color: #EC5722;">¥{{info.servicePrice}}</text>
+				<text style="text-decoration:line-through" v-if="info.servicePrice!=null">¥{{info.servicePrice}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">加急费</text>
-				<text style="color: #EC5722;">¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
+				<text>¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
 			</view>
 			<view v-if="info.materialPrice!=null" class="line">
 				<text class="ziduan">材料费</text>
-				<text style="color: #EC5722;">¥{{info.materialPrice}}</text>
+				<text>¥{{info.materialPrice}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">小计：</text>
+
+				<text
+					style="color: #EC5722;">¥{{(info.additionalPrice!=null?Number(info.additionalPrice):0)+(info.materialPrice!=null?Number(info.materialPrice):0)+Number(info.servicePrice)}}</text>
+			</view>
+			<view v-if="info.favorablePrice!=0&&info.favorablePrice!=null" style="margin-left: 20rpx;color: #A5A7A7;"
+				class="line">
+				<text class="ziduan">品牌折扣：</text>
+				<text style="color: #EC5722;">-¥{{info.favorablePrice}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">合计</text>
+				<!-- info.additionalPrice!=null?Number(info.additionalPrice)+Number(info.preferentialPrice):Number(info.preferentialPrice) -->
 				<text style="color: #EC5722;">¥{{info.orderPrice}}</text>
 			</view>
 		</view>
@@ -256,29 +254,6 @@
 			</view>
 		</view>
 
-		<view class="bg info">
-			<view class="title">
-				服务信息
-			</view>
-			<!-- 	<view class="line">
-				<text class="ziduan">报修门店</text>
-				<text>外婆家西湖店</text>
-			</view> -->
-			<view class="line">
-				<text class="ziduan">预约时间</text>
-				<text>{{info.expectTime}}</text>
-			</view>
-			<view class="line">
-				<text class="ziduan">服务地址</text>
-				<text>{{addressVo.addressRegion}}{{addressVo.addressDetailed}}</text>
-
-			</view>
-			<view class="line">
-				<text class="ziduan"></text>
-				<text>{{addressVo.contact}} {{addressVo.phone}}</text>
-
-			</view>
-		</view>
 
 		<view class="bg info" v-if="info.orderStatus=='已完成'&&JSON.stringify(appraise) != '{}'">
 			<view class="title">
@@ -314,7 +289,107 @@
 			</view>
 		</view>
 
-		<view class="bg info">
+		<view class="info" style="background-color: #fff;margin-top: 20rpx;">
+			<u-collapse>
+				<u-collapse-item title="服务信息" name="Docs guide">
+					<view style="margin:-10rpx 0;">
+						<view class="line">
+							<text class="ziduan">报修门店</text>
+							<text>{{info.warrantyStore}}</text>
+						</view>
+						<!-- 	<view class="line">
+							<text class="ziduan">下单人</text>
+							<text>{{info.warrantyStore}}</text>
+						</view> -->
+						<view class="line">
+							<text class="ziduan">预约上门时间</text>
+							<text>{{info.expectTime}}</text>
+						</view>
+						<view class="line">
+							<text class="ziduan">服务地址</text>
+							<text>{{addressVo.addressRegion}}{{addressVo.addressDetailed}}</text>
+
+						</view>
+						<view class="line">
+							<text class="ziduan"></text>
+							<text>{{addressVo.contact}} {{addressVo.phone}}</text>
+
+						</view>
+					</view>
+
+				</u-collapse-item>
+
+
+			</u-collapse>
+		</view>
+
+		<view class="info" style="background-color: #fff;margin: 20rpx 0 40rpx;">
+			<u-collapse>
+				<u-collapse-item title="订单信息" name="Docs guide">
+					<view style="margin:-10rpx 0;">
+						<view class="line">
+							<text class="ziduan">订单编号</text>
+							<text>{{info.orderNumber}}</text>
+						</view>
+						<view class="line">
+							<text class="ziduan">订单类型</text>
+							<text>维修</text>
+						</view>
+						<!-- 	<view class="line">
+							<text class="ziduan">订单优先级</text>
+							<text>{{info.isUrgent=='0'?'不加急':info.isUrgent=='1'?'客户加急':'实际加急'}}</text>
+						</view> -->
+						<view class="line">
+							<text class="ziduan">下单时间</text>
+							<text>{{info.orderTime}}</text>
+						</view>
+					</view>
+				</u-collapse-item>
+
+
+			</u-collapse>
+		</view>
+		
+		<view v-if="info.sign!=null&&info.sign!=''" class="title" style="display: flex;background-color: #fff;padding: 10rpx 28rpx;justify-content: space-between;">
+			<view style="width: 25%;">
+				客户签名：
+			</view>
+			<view style="width: 70%;">
+				
+					<img :style="{'transform':'rotate(-90deg)','width':big?'100%':'14%','height':big?'477rpx':'121rpx'}" :src="info.sign" alt="">
+			</view>
+			<view  @click="big=!big">
+				<img style='width:50rpx ;height: 50rpx;' v-if="big" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/09/4497ca4f26e54c58871233a2170aa148.png" alt="">
+				<img style='width:50rpx ;height: 50rpx;' v-else src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/09/83c8f89a91b442d8bdcf0358466df5e7.png" alt="">
+			</view>
+		</view>
+
+		<!--<view class="bg info">
+			<view class="title">
+				服务信息
+			</view>
+			 	<view class="line">
+				<text class="ziduan">报修门店</text>
+				<text>外婆家西湖店</text>
+			</view> 
+			<view class="line">
+				<text class="ziduan">预约时间</text>
+				<text>{{info.expectTime}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">服务地址</text>
+				<text>{{addressVo.addressRegion}}{{addressVo.addressDetailed}}</text>
+
+			</view>
+			<view class="line">
+				<text class="ziduan"></text>
+				<text>{{addressVo.contact}} {{addressVo.phone}}</text>
+
+			</view>
+		</view>-->
+
+
+		<!-- <view class="bg info">
 			<view class="title">
 				订单信息
 			</view>
@@ -334,62 +409,68 @@
 				<text class="ziduan">创建时间</text>
 				<text>{{info.orderTime}}</text>
 			</view>
-		</view>
+		</view> -->
 
 
-		<view @click="showPhone=true"
+		<!-- <view @click="showPhone=true"
 			style="width:100%;margin:0 auto;color: #3398F3; text-align: center; margin:22rpx 0;">
 			有疑问？联系客服
-		</view>
+		</view> -->
 
 		<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待接单'||info.orderStatus=='待服务'" class="btns">
-			<view style="width: 335rpx;" class="btn-white" @click="show=true">
+			<view class="btn-white" @click="show=true">
 				取消订单
 			</view>
-			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="handleRoute()" style="width: 335rpx;"
-				class="btn-green">
+			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="handleRoute()" class="btn-green">
 				联系维修师
+			</view>
+			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="showPhone=true" class="btn-green">
+				联系客服
 			</view>
 		</view>
 
-		<view class="btns">
-			<view style="width:281rpx" v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'"  class="btn-white" @click="report('待评价')">
+		<view class="btns" v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'">
+			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="report('待评价')">
 				生成维修报告
 			</view>
-			<view style="width:205rpx" v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'"  class="btn-white" @click="repairOrderShow=true">
+			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white"
+				@click="repairOrderShow=true">
 				申请返修
 			</view>
-			<view style="width:163rpx" v-if="info.orderStatus=='待评价'"  class="btn-green" @click="appraiseHandle">
+			<view v-if="info.orderStatus=='待评价'" class="btn-green" @click="appraiseHandle">
 				评价
 			</view>
 		</view>
 
 		<view v-if="info.orderStatus=='待支付'" class="btns">
-			<view style="width:335rpx" class="btn-white" @click="report('待支付')">
+			<view class="btn-white" @click="report('待支付')">
 				生成维修报告
 			</view>
-			<view style="width: 335rpx;" class="btn-green" @click='pay'>
+			<view class="btn-green" @click='pay'>
 				去支付
 			</view>
 		</view>
 
 		<view v-if="info.orderStatus=='待验收'" class="btns">
-			<view style="width: 335rpx;" class="btn-white" @click='complaint'>
+			<view style="width:166rpx;" class="btn-white" @click='complaint'>
 				投诉
 			</view>
-			<view style="width: 335rpx;" class="btn-green" @click='report("验收")'>
+			<view style="width:166rpx;" class="btn-white" @click='resultShowModal=true'>
+				驳回
+			</view>
+			<view style="width: 166rpx;" class="btn-green" @click='report("验收")'>
 				验收
 			</view>
 		</view>
 
 		<view v-if="info.orderStatus=='服务中【审核通过】'" class="btns">
-			<view style="padding: 0 40rpx;" class="btn-white" @click="rejectShowModal=true">
+			<view class="btn-white" @click="rejectShowModal=true">
 				驳回
 			</view>
-			<view style="padding: 0 40rpx;" class="btn-white" @click="show=true">
+			<view class="btn-white" @click="show=true">
 				取消订单
 			</view>
-			<view style="padding: 0 40rpx;" class="btn-green" @click="handles('确认')">
+			<view class="btn-green" @click="handles('确认')">
 				确认维修方案
 			</view>
 		</view>
@@ -449,12 +530,44 @@
 				<u--textarea v-model="reason" placeholder="请输入驳回理由"></u--textarea>
 			</view>
 		</u-modal>
+
+
+		<!-- 维修结果确认驳回 -->
+		<u-modal :show="resultShowModal" width="600rpx" title="驳回原因" showCancelButton confirmColor='#9FD6BA'
+			@cancel="resultShowModal=false" @confirm="resultBackHandle()">
+			<view style="width: 100%;display: flex;flex-direction: column;">
+				<u--textarea v-model="reason" placeholder="请输入内容"></u--textarea>
+				<view style="margin-top: 20rpx;">
+					<view class="">
+						<text style="color: red;">*</text> 视频/图片
+					</view>
+					<cl-upload :listStyle="{
+				columnGap: '10rpx',
+				columns:'3',
+				rowGap:'10rpx'
+				}" :imageFormData="{
+					size:10
+				}" :videoFromData="{
+					size:10
+				}" :index='index' v-model="bohuiUrl" :headers="headers" :action="action" @onSuccess="onSuccesss" @input='onDelete'>
+					</cl-upload>
+				</view>
+
+			</view>
+		</u-modal>
+		
+		<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 
 <script>
+	const {
+		environment
+	} = require('@/config/environment')
+	import storage from '@/utils/storage'
 	import * as order from '@/api/order.js'
 	import upLoadFile from '../../../components/uploadFile/uploadFile.vue'
+	import projectCard from '@/components/projectCard/projectCard.vue'
 	import {
 		callPhone
 	} from '@/utils/phone.js'
@@ -466,10 +579,17 @@
 	} from '@/api/oss.js'
 	export default {
 		components: {
-			upLoadFile
+			upLoadFile,
+			projectCard
 		},
 		data() {
 			return {
+				big:false,
+				bohuiUrl: [],
+				action: environment.baseURL + '/system/oss/upload',
+				headers: {
+					token: storage.get('AccessToken')
+				},
 				actionList: [{
 						name: '19157668838'
 					},
@@ -482,6 +602,7 @@
 				], //拨打电话
 				showPhone: false, //底部电话显示
 				rejectShowModal: false, //驳回理由弹出框
+				resultShowModal: false, //维修结果确认驳回
 				reason: '', //驳回理由
 				repairOrderShow: false, //返修
 				loadingText: '',
@@ -548,7 +669,7 @@
 			this.getList()
 		},
 		onShow() {
-				this.getList()
+			this.getList()
 		},
 		computed: {
 			newTotalPrice() {
@@ -626,16 +747,17 @@
 								orderId: this.id,
 								pageNum: 1,
 								pageSize: 10,
-								appraiseStatus:1
+								appraiseStatus: 1
 							}).then(res => {
 								console.log(res);
-								if (res.rows.length!=0) {
-										res.rows[0].imgs = res.rows[0].appraiseImg != null ? res.rows[0].appraiseImg
-									.split(
-										',') : []
-								this.appraise = res.rows[0]
+								if (res.rows.length != 0) {
+									res.rows[0].imgs = res.rows[0].appraiseImg != null ? res.rows[0]
+										.appraiseImg
+										.split(
+											',') : []
+									this.appraise = res.rows[0]
 								}
-							
+
 								console.log(this.appraise);
 							})
 						}
@@ -670,7 +792,7 @@
 						this.info.projectDataVoList.forEach(item => {
 							item.projectImg = item.projectImg != '' ? item.projectImg.split(',') : []
 							// item.projectVideo = item.projectVideo != '' ? item.projectVideo.split(',') : []
-							item.projectUrl = item.projectUrl != null ? item.projectUrl.split(',') : []
+							item.img = item.projectUrl != null ? item.projectUrl.split(',') : []
 						})
 					}),
 
@@ -702,18 +824,19 @@
 					const map = new Map()
 					console.log(this.melTotal);
 					this.melTotal = arr.reduce((pre, item) => {
-						return pre +  Number(item.materialPrice)* Number(item.materialCount)
+						return pre + Number(item.materialPrice) * Number(item.materialCount)
 					}, 0)
 					console.log(this.melTotal);
 					arr.forEach((item, index, arr) => {
-					//	console.log( Number(item.materialPrice) * Number(item.materialCount),'？？？？？？？');
-					//	this.melTotal =this.melTotal+ Number(item.materialPrice) * Number(item.materialCount)
+						//	console.log( Number(item.materialPrice) * Number(item.materialCount),'？？？？？？？');
+						//	this.melTotal =this.melTotal+ Number(item.materialPrice) * Number(item.materialCount)
 						//console.log(this.melTotal);
 						item.materialSpecsList = JSON.parse(item.materialSpecs)
 						listByIds(item.materialImg).then(res => {
 							// item.img = res.data[0].url
+							console.log(res, 'imgggggggggggg');
 							this.$set(arr[index], 'img', res.data[0].url)
-						}) 
+						})
 						if (!map.has(item.classifyId)) {
 							map.set(
 								item.classifyId,
@@ -727,15 +850,18 @@
 			},
 			//评价
 			appraiseHandle() {
+				console.log(this.info);
+				this.info.newProject=this.newProject
 				uni.navigateTo({
-					url: '../appraise/appraise?id=' + this.id
+					url: '../appraise/appraise?info=' +  encodeURIComponent(JSON.stringify(this.info))
 				})
 			},
 			//投诉
 			complaint() {
 				console.log(this.info);
+				this.info.newProject=this.newProject
 				uni.navigateTo({
-					url: '../complaint/complaint?item=' + JSON.stringify(this.info)
+					url: '../complaint/complaint?item=' + encodeURIComponent(JSON.stringify(this.info))
 				})
 			},
 			//支付
@@ -790,14 +916,20 @@
 
 			//生成维修报告
 			report(type) {
+				console.log(this.newProject);
 				let name = type == '待评价' || type == '待支付' ? '维修报告' : '服务验收'
+				this.info.addressVo=this.addressVo
+				
 				let info = {
 					name: name,
 					type: type,
 					id: this.info.orderId,
-					info: this.info
+					info: this.info,
+					newProject:this.newProject,
+					showMelList:this.showMelList
 				}
 				console.log(info);
+				
 				uni.navigateTo({
 					url: '../accept/accept?info=' + JSON.stringify(info)
 				})
@@ -820,14 +952,14 @@
 			handles(type) {
 				switch (type) {
 					case '返修':
-					console.log(this.info);
+						console.log(this.info);
 						order.repairOrder(this.info).then(res => {
 							console.log(res);
 							this.$refs.uToast.show({
 								type: 'error',
 								message: res.data.msg
 							});
-							this.repairOrderShow=false
+							this.repairOrderShow = false
 							this.getList()
 						})
 						break;
@@ -843,18 +975,55 @@
 					case '驳回':
 
 						this.info.reason = this.reason
+						this.overruleScenarioApi()
+						this.rejectShowModal = false
 						console.log(this.info);
-						order.overruleScenario(this.info).then(res => {
-							uni.showToast({
-								title: '驳回成功',
-								duration: 500
-							});
-							this.rejectShowModal = false
-							this.getList()
-						})
+
 						break;
 				}
-			}
+			},
+			//驳回
+			overruleScenarioApi() {
+				console.log(this.info);
+
+				order.overruleScenario(this.info).then(res => {
+					uni.showToast({
+						title: '驳回成功',
+						duration: 1000
+					});
+
+					this.getList()
+				})
+			},
+			//维修结果驳回
+			resultBackHandle() {
+				console.log(this.bohuiUrl.length == 0);
+				if (this.bohuiUrl.length == 0) {
+					uni.showToast({
+						icon:'error',
+						title: '请传图片/视频',
+						duration: 1000
+					});
+					return
+				}
+				this.info.reason=this.reason
+				this.info.url=this.bohuiUrl.toString()
+				this.repairOrderShow = false
+				this.overruleScenarioApi()
+				
+			},
+			onSuccesss(reslut) {
+				console.log(reslut)
+				this.bohuiUrl.push(reslut.data.url)
+				//this.url=reslut.data.url
+
+			},
+			onDelete(reslut) {
+				console.log(reslut)
+				this.bohuiUrl = reslut.list
+				//this.url=reslut.data.url
+
+			},
 
 
 		}
@@ -871,7 +1040,7 @@
 	.order-detail {
 		.bg {
 			background: #FFFFFF;
-			padding: 30rpx;
+			padding: 20rpx 30rpx;
 			margin-top: 20rpx;
 		}
 
@@ -879,6 +1048,13 @@
 			font-size: 31rpx;
 			color: #3D3F3E;
 			font-weight: bold;
+
+			.img {
+				align-items: center;
+				display: flex;
+				font-size: 24rpx;
+
+			}
 		}
 
 		.status {
@@ -974,6 +1150,7 @@
 			text-align: center;
 			line-height: 85rpx;
 			font-size: 36rpx;
+			padding: 0 40rpx;
 		}
 
 		.btn-white {
@@ -991,6 +1168,7 @@
 			display: flex;
 			justify-content: space-evenly;
 			height: 150rpx;
+			margin-top: 55rpx;
 		}
 
 		.step {
