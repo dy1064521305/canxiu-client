@@ -10,8 +10,8 @@
 		<view style="font-size: 54rpx;color: #EA6F2F;margin-top: 11rpx;;font-weight: bold"  >
 			¥{{info.money}}
 		</view>
-		<view class="font" style="margin-top: 11rpx;">
-			预约服务时间：{{info.time}}
+		<view v-for="(item,index) in info.time" :key="index" class="font" style="margin-top: 11rpx;">
+			{{index}}预约服务时间：{{item}}
 		</view>
 		<view style="margin-top: 80rpx;">
 			<image @click="backHome" class="watch" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/02/4c18b6e3b5054a35b4a9af7a16fc744f.png" mode="widthFix"></image>
@@ -24,12 +24,17 @@
 	export default {
 		data() {
 			return {
-				info:{}
+				info:{},
 			};
 		},
 		onLoad(option) {
+			console.log(this.info);
 			console.log(JSON.parse(option.info));
 			this.info=JSON.parse(option.info)
+			console.log(this.info);
+		},
+		onBackPress(e){
+			return true
 		},
 		onHide() {
 			console.log('hidehide');

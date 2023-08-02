@@ -37,7 +37,7 @@
 				</view>
 
 			</u-navbar>
-			<view class="address" @click="myAddress"
+			<!-- 	<view class="address" @click="myAddress"
 				:style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'200rpx'}">
 				<view class="left" v-if="addressList.length!=0">
 					<view style="font-size: 36rpx;color: #3D3F3E;font-weight: bold;">
@@ -58,26 +58,64 @@
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
 						mode=""></image>
 				</view>
-			</view>
+			</view> -->
 
 
 
 			<view class="list">
-				<view style="background-color: #fff;margin-bottom: 20rpx;" v-for="(item,index) in dataList"
-					:key="index">
-					<view style="padding: 20rpx;font-weight: bold;color: #3D3F3E;">
-						工种：{{item.workerType}}
+				<u-checkbox-group v-model="checkboxValue1" placement="column">
+					<view style="background-color: #fff;margin-bottom: 20rpx;" v-for="(item,index) in dataList"
+						:key="index">
+						<view style="padding: 20rpx 14rpx;display: flex;justify-content: space-between;">
+							<!-- 	<view > -->
+
+							<view style="display: flex;align-items: center;">
+								<u-checkbox shape="circle" :name="item.workerType" activeColor='#72daa4'
+									@change='val=>typeCheckChange(val,item,index)'>
+								</u-checkbox>
+								<text
+									style="font-size:38rpx;font-weight: bold;color: #3D3F3E;">{{item.workerType}}</text>
+								<text
+									style="font-size: 26rpx;margin-left: 10rpx;">起步价:{{item.startingFreeDiscount}}元</text>
+
+							</view>
+							<view
+								v-if="Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))>0"
+								style="align-items: center;display: flex;">
+								<text style="font-size: 24rpx;">
+									还差<text 
+										style="color:#2E8FF4 ;">{{Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))}}</text>元达到起步价<text
+										@click="coudanHandle(item.workerType)"
+										style="color:#2E8FF4 ;margin-left: 5rpx;display:">去凑单></text>
+								</text>
+							</view>
+							<view v-else style="align-items: center;display: flex;font-size: 24rpx;">
+								<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+								</image>已达到起步价
+							</view>
+
+							<!-- 	</view> -->
+							<!-- 	<view style="font-size: 24rpx;display: flex;align-items: flex-end">
+							
+							</view> -->
+							<!-- <view class="">
+							
+							</view> -->
+							<!--  -->
+						</view>
+						<proInfo :list="item.children" :isCar='true' :isDelete='isDelete' @getCarList='getCarList'
+							@getCheck='getCheck' @check_change="checkChange" @deleteCarList="deleteList"
+							@getDeleteUrlList='getDeleteUrlList' @textareaInput='textareaInput' />
 					</view>
-					<proInfo :list="item.children" :isCar='true' :isDelete='isDelete' @getCarList='getCarList'
-						@getCheck='getCheck' @check_change="checkChange" @deleteCarList="deleteList"
-						@getDeleteUrlList='getDeleteUrlList' @textareaInput='textareaInput' />
-				</view>
+				</u-checkbox-group>
 
 				<u-empty v-if="dataList.length==0" mode="car"
 					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/125e056702434056b9b3bc5f7768eb0a.png"
 					text='维修车为空' marginTop='100' width="210px">
 				</u-empty>
-
+				
+				
 			</view>
 
 
@@ -93,7 +131,7 @@
 				</view>
 				<text style="font-size: 29rpx;color: #3D3F3E;">全选</text>
 				<view style="width: 53%;text-align: end;">
-					<text style="font-size: 22rpx;color: #A5A7A7;">合计(不含材料):</text>
+					<text style="font-size: 22rpx;color: #A5A7A7;">合计:</text>
 					<text
 						style="font-size: 33rpx;color: #EC5722;margin:0 10rpx 0 10rpx;width:14%;">¥{{totalMoney}}</text>
 				</view>
@@ -108,12 +146,27 @@
 		</view>
 
 
+		<!-- 凑单弹框 -->
+		<u-popup :show="coudanShow" closeable @close="coudanShow=false">
+			<view class="cou-dan">
+				<view class="title">服务橱窗</view>
+				<view class="main">
+					<view v-for="(item,index) in coudanList" :key="index">
+						<good-card type='coudan' :item='item' />
+					</view>
+
+				</view>
+
+			</view>
+		</u-popup>
+
 	</view>
 </template>
 <script>
 	import storage from '@/utils/storage'
 	import proInfo from '@/components/proInfo/proInfo.vue'
 	import * as car from '@/api/car.js'
+		import goodCard from '@/components/goodCard/goodCard.vue'
 	import {
 		getCarNum
 	} from '@/utils/api.js'
@@ -123,12 +176,16 @@
 	export default {
 		name: 'test',
 		components: {
-			proInfo
+			proInfo,
+			goodCard
 		},
 		mixins: [],
 		props: {},
 		data() {
 			return {
+				coudanList: [], //凑单列表
+				coudanShow: false, //凑单弹框
+				checkboxValue1: [],
 				allCheck: false, //全选
 				isShow: false,
 				maskHide: false,
@@ -171,19 +228,23 @@
 			this.tabbarHeight = uni.getSystemInfoSync().windowBottom
 			console.log(uni.getSystemInfoSync().windowBottom);
 			// #endif	
-			this.getList()
+			//this.getList()
 			this.isLogin = storage.get('AccessToken')
 			this.getCarNumHandle()
 		},
 		onTabItemTap: function(item) {
-
+			
 			if (storage.get('AccessToken')) {
 				this.getCarList()
 				this.allNum = 0
 				this.checkedList = []
 			}
 		},
+		onHide() {
+			this.coudanShow=false
+		},
 		methods: {
+
 			getCarNumHandle() {
 				getCarNum().then(res => {
 					if (res != 0) {
@@ -213,6 +274,15 @@
 
 				console.log(this.dataList, '....185', data);
 			},
+			getTotalMoney(){
+				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
+			},
+			getCheckList(){
+				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
+			},
+			getAllNum(){
+				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
+			},
 			//其他页面改变数据
 			changeData(data) {
 				console.log(data[0]);
@@ -228,10 +298,9 @@
 				})
 				console.log(this.dataList, '....186');
 				this.$nextTick(() => {
-					this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 =>
-						c2)
-					this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
-					this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
+					this.getCheckList()
+					this.getAllNum()
+					this.getTotalMoney()
 				})
 			},
 			//单个复选框勾选或不勾选事件回调
@@ -254,10 +323,16 @@
 						}
 					})
 				})
-				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
+				this.fatherCheckout()
+				this.getCheckList()
 				console.log(this.checkedList);
-				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
-				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
+				this.getAllNum()
+				this.getTotalMoney()
+			},
+			//父级勾选框组回显
+			fatherCheckout() {
+				this.checkboxValue1 = this.dataList.filter(d => d.children.every(child => child.checked)).map(d1 => d1
+					.workerType)
 			},
 			getList() {
 				if (storage.get('ClientId')) {
@@ -326,12 +401,15 @@
 					clientId: storage.get('ClientId')
 				}).then(res => {
 					console.log(res, '3145455555>>>>>>>>>');
-					this.dataList = res.data
 
+					this.dataList = res.data
+					this.checkboxValue1 = []
 					this.totalMoney = 0
 					this.dataList.forEach(item => {
 						this.allNum += item.children.length
-
+						item.children.forEach(chil => {
+							chil.startingFreeDiscount = item.startingFreeDiscount
+						})
 					})
 
 				})
@@ -361,7 +439,7 @@
 					console.log(this.dataList);
 					this.checkedList = this.dataList.map(c => c.children).flatMap(c1 => c1)
 					console.log('277,.', this.checkedList);
-					this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
+					this.getTotalMoney()
 				} else {
 					this.checkedList = []
 					this.totalMoney = 0
@@ -374,10 +452,11 @@
 						})
 					})
 				})
-
+				this.fatherCheckout()
 			},
 			//删除
 			deleteHandle() {
+				
 				let arr = this.checkedList.map(item => item.id)
 				//	this.deleteList(arr)
 				uni.showModal({
@@ -398,6 +477,8 @@
 									//this.getCarList()
 									this.deleteList(arr)
 									this.getCarNumHandle()
+									this.checkboxValue1=[]
+								
 								}
 							})
 						} else if (res.cancel) {
@@ -420,10 +501,13 @@
 					})
 				} else {
 					console.log(this.checkedList);
+					let info = {
+						checkedList: this.checkedList,
+						isCar: true
+					}
 					uni.navigateTo({
 						url: '../../subpkg/car/submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(
-							this
-							.checkedList))
+							info))
 					})
 				}
 			},
@@ -447,7 +531,7 @@
 				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
 				console.log(this.dataList, '.....346', this.checkedList);
 				this.totalMoney = this.checkedList.reduce((p, c) => p + ((c.id === data.item.id ? data.num.value : c
-					.projectNumber) * c.projectPrice), 0)
+					.projectNumber) * c.discountPrice), 0)
 			},
 			//
 			deleteList(arr) {
@@ -477,10 +561,13 @@
 				}))
 				console.log(this.dataList, '417417417');
 				this.dataList = this.dataList.filter(d => d.children && d.children.length > 0)
-				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
-				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.projectPrice), 0)
-				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
-				console.log(this.dataList, '4224224224220', this.checkedList);
+				this.getCheckList()
+				this.getTotalMoney()
+				this.getAllNum()
+				this.fatherCheckout()
+				console.log(this.dataList);
+				console.log(this.checkedList, '4224224224220');
+					console.log(this.checkboxValue1,'delelelelelelelelel');
 				this.getCarNumHandle()
 			},
 			//取消登录
@@ -503,7 +590,34 @@
 						}
 					})
 				})
-			}
+			},
+			//工种全选
+			typeCheckChange(val, item, i) {
+				console.log(val, item);
+				this.dataList[i].children.forEach((car1, index1) => {
+					this.$set(this.dataList[i].children, index1, {
+						...car1,
+						checked: val
+					})
+				})
+				this.getCheckList()
+				console.log('277,.', this.checkedList, this.dataList.map(c => c.children.filter(c1 => c1.checked)), this
+					.dataList);
+				this.getTotalMoney()
+			},
+			//凑单列表
+			coudanHandle(name) {
+				
+				//获取凑单列表
+				car.listByWorkerType({
+					clientId: storage.get('ClientId'),
+					type: name
+				}).then(res => {
+					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
+					this.coudanList = res.data
+					this.coudanShow=true
+				})
+			},
 		}
 	};
 </script>
@@ -583,7 +697,7 @@
 		}
 
 		.list {
-			margin-top: 20rpx;
+			margin-bottom: 20rpx;
 			width: 100%;
 			//background-color: #fff;
 		}
@@ -596,6 +710,7 @@
 			display: flex;
 			align-items: center;
 			padding: 10rpx 30rpx;
+			z-index: 9999;
 
 			image,
 			.check {
@@ -624,6 +739,21 @@
 				color: #FFFFFF;
 				line-height: 69rpx;
 				text-align: center;
+			}
+		}
+		
+		.cou-dan {
+			height: 88vh;
+		
+			.title {
+				margin: 20rpx;
+				font-size: 37rpx;
+				text-align: center;
+			}
+		
+			.main {
+				height: 90%;
+				overflow-y: scroll;
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 <template>
-	<view class="serviceInfo" ref="target">
+	<scroll-view class="serviceInfo" ref="target" :scroll-y="true">
 		<!-- 服务详情 -->
 		<view class="top">
 			<u-swiper height='746rpx' :list="serviceImgList" @change="e => currentNum = e.current" :autoplay="false"
@@ -9,24 +9,27 @@
 				</view>
 			</u-swiper>
 			<view class="info bgf">
-				<view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;">
-					{{goodInfo.serviceName}}
-					<u-icon name="share" color="#72DAA4" size="28" @click="shareInfo"></u-icon>
-				</view>
-				<view>
+				<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
+				<text style="font-weight: bold;">{{goodInfo.serviceName}}</text><text
+					style="font-size: 25rpx;margin:0 10rpx;">服务起步价：¥{{goodInfo.startingFreeDiscount==null?0:goodInfo.startingFreeDiscount}}</text>
+				<text v-if="goodInfo.startingFreeDiscount!=goodInfo.startingFree"
+					style="font-size: 25rpx;text-decoration:line-through">¥{{goodInfo.startingFree}}</text>
+				<!-- <u-icon name="share" color="#72DAA4" size="28" @click="shareInfo"></u-icon> -->
+				<!-- 	</view> -->
+				<!-- <view>
 					<text>¥</text><text style="font-size: 40rpx;">{{goodInfo.initialLabor}}</text>/台起
 				</view>
 				<view style="font-size: 22rpx;color: #A5A7A7;margin-top: 10rpx;">
 					起步人工费{{goodInfo.initialLabor}}元起，维修费不足{{goodInfo.initialLabor}}元时按照起步人工费收取
-				</view>
+				</view> -->
 
 			</view>
 		</view>
 
 		<view class="services bgf">
 			<!-- :submit="projectVoList.length>1" -->
-			<proInfo :list='projectVoList' :isCar='false' :isJoinCar='isJoinCar' :question='true'
-				@joinCarHandle='joinCarHandle' :types='types' @textareaInput='textConfirm' ref="proInfo" />
+			<proInfo :list='projectVoList' :isCar='false' :isJoinCar='isJoinCar' :question='true' @getCheck='getCheck'
+				:types='types' @textareaInput='textConfirm' ref="proInfo" @getDeleteUrlList='getDeleteUrlList'/>
 		</view>
 
 		<!-- <view class="price bgf">
@@ -99,31 +102,59 @@
 			color: #3D3F3E;">
 				服务详情
 			</view>
-			<rich-text :nodes="goodInfo.remark"></rich-text>
+			<rich-text v-if="goodInfo.remark!=null&&goodInfo.remark!=''" :nodes="goodInfo.remark"></rich-text>
+			<view v-if="goodInfo.remark==null||goodInfo.remark==''" style="margin-top: 15rpx;">
+				暂无详情
+			</view>
 		</view>
-		<view class="bgf" style="height:150rpx;">
+		<view class="bgf" style="height:212rpx;">
 		</view>
 
 
-		<view class="bottom">
-			<view style="display: flex;flex-direction: column;" @click="showPhone=true">
+		<view class="bottom" v-if="preferentialShow==false&&coudanShow==false">
+			<!-- 	<view style="display: flex;flex-direction: column;" @click="showPhone=true">
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/425df36a57004f1e8bd6c525a58bcd5a.png"
 					mode=""></image>
 				<text>客服</text>
+			</view> -->
+			<view class="bottom-top">
+				<view v-if="Number(priceDifference)>0" class="coudan">
+					<u-icon name="info-circle-fill" color="#faad14" size="20"></u-icon>
+					<view style="margin-left: 10rpx;">
+						还差<text style="color:#1989fa">{{priceDifference}}</text>元达到起步价<text @click="coudanShow=true"
+							style="color:#1989fa;margin-left: 10rpx;">去凑单></text>
+					</view>
+				</view>
+				<u-alert v-else title="已达到起步价" type="success" :show-icon="true"></u-alert>
+			</view>
+			<view class="bottom-bottom">
+				<view style="display: flex;flex-direction: column;position: relative;align-items: center;width:17%"
+					@click="goCar">
+					<u-badge type="error" max="99" :absolute="true" :offset="[-10,13]" :value="allNum"></u-badge>
+					<image
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/722e9538b21641bba55896f3a2c96eea.png"
+						mode=""></image>
+					<text style="margin-left: 8rpx;">维修车
+					</text>
+				</view>
+				<view class="detail-price">
+
+					<text
+						style="font-size: 30rpx;">¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}</text>
+					<text
+						v-if="projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)!=0"
+						style="color:#1989fa ;margin-left: 5rpx;font-size: 25rpx;"
+						@click="preferentialShow=true">品牌优惠¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}></text>
+
+				</view>
+
+				<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/b0566d28d45d47b2bf4b94356337615b.png"
+				mode="" @click="joinCar('car')"></image> -->
+				<image style="width: 220rpx;height: 69rpx;"
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/dddcfdd8b2954673ae8d63397355ce95.png"
+					mode="" @click="getOrderHandle"></image>
 			</view>
 
-			<view style="display: flex;flex-direction: column;position: relative;" @click="goCar">
-				<u-badge type="error" max="99" :absolute="true" :offset="[-10,5]" :value="allNum"></u-badge>
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/722e9538b21641bba55896f3a2c96eea.png"
-					mode=""></image>
-				<text style="margin-left: 8rpx;">维修车
-				</text>
-			</view>
-
-			<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/b0566d28d45d47b2bf4b94356337615b.png"
-				mode="" @click="joinCar('car')"></image>
-			<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/dddcfdd8b2954673ae8d63397355ce95.png"
-				mode="" @click="joinCar('submit')"></image>
 
 		</view>
 
@@ -178,9 +209,54 @@
 		<!-- 拨打电话 -->
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="actionList" :show="showPhone"></u-action-sheet>
-			
-			<u-toast ref="uToast"></u-toast>
-	</view>
+
+		<u-toast ref="uToast"></u-toast>
+		<!-- 凑单弹框 -->
+		<u-popup :show="coudanShow" closeable @close="coudanShow=false">
+			<view class="cou-dan">
+				<view class="title">服务橱窗</view>
+				<view class="main">
+					<view v-for="(item,index) in coudanList" :key="index">
+						<good-card type='coudan' :item='item' />
+					</view>
+
+				</view>
+
+			</view>
+		</u-popup>
+		<!-- 品牌优惠弹框 -->
+		<u-popup :show="preferentialShow" closeable @close="preferentialShow=false">
+			<view class="preferential">
+				<view class="title">优惠明细</view>
+				<view class="main">
+					<view class="line">
+						<text>服务合计(不含材料费)</text>
+						<text>¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.projectPrice)), 0)}}</text>
+					</view>
+					<view class="line">
+						<text>优惠合计(已下单为准)</text>
+						<text>-¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}</text>
+					</view>
+					<view style="margin-left: 20rpx;" class="line">
+						<text><text class="vip">会员</text>品牌会员优惠</text>
+						<text>¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}</text>
+					</view>
+
+				</view>
+				<view class="line">
+					<text>合计</text>
+					<text>¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}</text>
+				</view>
+				<view class="btn" @click="preferentialShow=false">
+					知道啦
+				</view>
+			</view>
+		</u-popup>
+
+
+
+
+	</scroll-view>
 
 
 
@@ -190,6 +266,7 @@
 	import storage from '@/utils/storage'
 	import proInfo from '@/components/proInfo/proInfo.vue'
 	import lPainter from '@/components/lime-painter/components/l-painter/l-painter.vue'
+	import goodCard from '@/components/goodCard/goodCard.vue'
 	import * as car from '@/api/car.js'
 	import {
 		getServiceInfo,
@@ -210,12 +287,14 @@
 	export default {
 		components: {
 			lPainter,
-
+			goodCard,
 			proInfo
 		},
 		data() {
 			return {
-
+				coudanList: [],
+				preferentialShow: false,
+				coudanShow: false,
 				actionList: [{
 						name: '19157668838'
 					},
@@ -232,13 +311,6 @@
 				shows: false,
 				cardShow: false, //卡片的显示
 				imageUrl: '',
-				imgList: [
-					'https://cdn.uviewui.com/uview/album/1.jpg',
-					'https://cdn.uviewui.com/uview/album/1.jpg',
-					'https://cdn.uviewui.com/uview/album/1.jpg',
-					'https://cdn.uviewui.com/uview/album/1.jpg',
-					'https://cdn.uviewui.com/uview/album/1.jpg',
-				],
 				count: 5,
 				value: 2,
 				path: '',
@@ -256,11 +328,13 @@
 				appraiseList: [],
 				qrCode: '', //二维码
 				allNum: 0, //购物车数量
+				priceDifference: 0 //起步价差价
 			}
 		},
 		onLoad(options) {
 			console.log(this.isLogin);
 			console.log(options);
+			this.query.clientId = storage.get('ClientId')
 			if (options.typeId) {
 				this.query.typeId = options.typeId
 			} else {
@@ -292,12 +366,50 @@
 			console.log(this.query);
 			this.isLogin = storage.get('AccessToken')
 			//获取购物车数量
-			getCarNum().then(res => {
-
-				this.allNum = res
-			})
+			this.getCarList()
 		},
 		methods: {
+			getCarList() {
+				getCarNum().then(res => {
+
+					this.allNum = res
+					//计算起步价差价	
+
+					car.getCarList({
+						clientId: storage.get('ClientId')
+					}).then(res => {
+						console.log(res.data.length, 'carrrrrrrrrr');
+						if (res.data.length != 0) {
+							let bool = res.data.some(item => {
+								return item.workerType == this.goodInfo.workerType
+							})
+							if (bool) {
+								res.data.forEach(item => {
+									if (item.workerType == this.goodInfo.workerType) {
+										let money = 0
+										money = Number(this.goodInfo.startingFreeDiscount) - item
+											.children
+											.reduce((p, c) => p + (Number(c.projectNumber) *
+												Number(c
+													.discountPrice)), 0)
+										this.priceDifference = money
+										console.log(this.priceDifference);
+									}
+								})
+
+							} else {
+								this.priceDifference = this.goodInfo.startingFreeDiscount
+							}
+
+						} else {
+							console.log(this.goodInfo.startingFreeDiscount);
+							this.priceDifference = this.goodInfo.startingFreeDiscount
+						}
+
+						console.log(this.priceDifference);
+					})
+				})
+			},
 			otherFun(object) {
 				if (object) {
 					console.log(object, 'objectobjectobject')
@@ -310,14 +422,22 @@
 				console.log(this.query, 'queryqueryqueryqueryquery');
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
-					console.log(this.goodInfo);
+					console.log(this.goodInfo, 'goodInfogoodInfogoodInfo');
 
 					uni.setNavigationBarTitle({
 						title: this.goodInfo.serviceName
 					})
 					console.log(this.goodInfo);
+					this.getCarList()
+					//获取凑单列表
+					car.listByWorkerType({
+						clientId: storage.get('ClientId'),
+						type: this.goodInfo.workerType
+					}).then(res => {
+						console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
+						this.coudanList = res.data
+					})
 					//获取评论
-
 					order.appraiseList({
 						productId: this.goodInfo.serviceId,
 						appraiseStatus: 1,
@@ -375,6 +495,7 @@
 					console.log(this.goodInfo, '11111111111372222222222');
 
 				})
+
 
 
 			},
@@ -614,95 +735,114 @@
 				})
 				this.isShowLogin = false
 			},
-			//是否是加入维修车
-			joinCar(types) {
+			// //是否是加入维修车
+			// joinCar(types) {
 
-				this.types = types
-				if (this.isLogin) {
-					this.isJoinCar++
-				} else {
-					this.isShowLogin = true
-				}
-			},
-			//加入维修车和下单
-			joinCarHandle(query) {
-				console.log(query);
-				let arr = query.list
-				if (arr.length != 0) {
-					let num = 0
-					arr.forEach(item => {
-						if (item.projectImg == '') {
-							num++
-						}
-					})
-					if (num > 0) {
-						this.$refs.uToast.show({
-							type: 'error',
-							message: '选中项目都要上传图片/视频'
+			// 	this.types = types
+			// 	if (this.isLogin) {
+			// 		this.isJoinCar++
+			// 	} else {
+			// 		this.isShowLogin = true
+			// 	}
+			// },
+		
+			getCheck(item) {
+				console.log(item, 'itrwmmmmmmmmm');
+				item.item.projectNumber = item.num.value
+				
+				this.projectVoList[0] = item.item
+				let carArr = []
+				carArr.push({
+					clientId: storage.get('ClientId'),
+					flag: item.flag,
+					productId: this.goodInfo.serviceId,
+					projectPrice: this.projectVoList[0].projectPrice,
+					projectNumber: 1,
+					projectId: this.projectVoList[0].projectId,
+					projectImg: this.projectVoList[0].projectImg == [] ? undefined : this.projectVoList[0]
+						.projectImg.toString(),
+					remark: this.projectVoList[0].remark,
+					shoppingCartStatus: 0,
+					discountPrice: this.projectVoList[0].discountPrice,
+					// projectVideo: item.projectVideo != [] ? item.projectVideo.toString() :
+					// 	undefined,
+					workerType: this.goodInfo.workerType
+				})
+
+				console.log(carArr);
+				car.joinCar(carArr).then(res => {
+					console.log(res);
+					if (res.code == 200) {
+						uni.showToast({
+							title: '操作成功',
+							duration: 2000
 						});
-						return
-					}
-					if (query.type == 'car') {
-						let carArr = []
-					
-						arr.forEach(item => {
-							carArr.push({
-								clientId: storage.get('ClientId'),
-								productId: this.goodInfo.serviceId,
-								projectId: item.projectId,
-								projectPrice: item.projectPrice,
-								projectNumber: item.projectNumber,
-								projectImg: item.projectImg == [] ? undefined : item.projectImg.toString(),
-								remark: item.remark,
-								shoppingCartStatus: 0,
-								// projectVideo: item.projectVideo != [] ? item.projectVideo.toString() :
-								// 	undefined,
-								workerType: this.goodInfo.workerType
-							})
-						})
+						//获取购物车数量
+						this.getCarList()
 
-						console.log(carArr);
-						car.joinCar(carArr).then(res => {
-							console.log(res);
-							if (res.code == 200) {
-								uni.showToast({
-									title: '添加成功',
-									duration: 2000
-								});
-								//获取购物车数量
-								getCarNum().then(res => {
-									this.allNum = res
-								})
-								this.projectVoList = []
-								this.getInfo()
-							}
-						})
-					} else {
-						console.log(query.list);
-						console.log(this.goodInfo, this.$refs.proInfo, '.......610');
-						checkValues = this.$refs.proInfo.checkboxValue1
-						let newSetArray = [] //新数组
-						query.list.map((item, index) => { //setArray是老数组
-							newSetArray.push(Object.assign({}, item, {
-								clientId: storage.get('ClientId'),
-								workerType: this.goodInfo.workerType
-							}, {
-								productId: this.goodInfo.serviceId
-							}))
-						})
-						console.log(newSetArray);
-						uni.navigateTo({
-							url: '../submitOrder/submitOrder?item=' + JSON.stringify(newSetArray)
-						})
 					}
-
-				} else {
-					uni.showToast({
-						title: '请选择项目',
-						duration: 2000,
-						icon: 'none'
+				})
+				console.log(this.projectVoList);
+			},
+			getDeleteUrlList(list){
+				console.log(list);
+				this.projectVoList[0].projectImg=list[0].projectImg
+			},
+			//下单
+			getOrderHandle() {
+				console.log(this.projectVoList[0].projectNumber==0);
+				console.log(!this.projectVoList[0].projectNumber||this.projectVoList[0].projectNumber==0);
+				if (!this.projectVoList[0].projectNumber||this.projectVoList[0].projectNumber==0) {
+					this.$refs.uToast.show({
+						type: 'error',
+						message: '请选择数量'
 					});
+					return
 				}
+				console.log(this.projectVoList);
+				if (this.projectVoList[0].projectImg==''||this.projectVoList[0].projectImg.length==0) {
+					this.$refs.uToast.show({
+						type: 'error',
+						message: '请上传图片/视频'
+					});
+					return
+				}
+			
+				// console.log(query.list);
+				// console.log(this.goodInfo, this.$refs.proInfo, '.......610');
+				// checkValues = this.$refs.proInfo.checkboxValue1
+				let newSetArray = [] //新数组
+				this.projectVoList.map((item, index) => {
+					newSetArray.push(Object.assign({}, item, {
+						clientId: storage.get('ClientId'),
+						workerType: this.goodInfo.workerType,
+						projectNumber: item.projectNumber ? item.projectNumber : 1,
+						startingFreeDiscount: this.goodInfo.startingFreeDiscount,
+						serviceTime: item.projectHours,
+						serviceProjectName: item.projectName,
+					}, {
+						productId: this.goodInfo.serviceId
+					}))
+				})
+				//console.log(this.projectVoList);
+				console.log(newSetArray);
+				let info = {
+					checkedList: newSetArray,
+					isCar: false
+				}
+				uni.navigateTo({
+					url: '../submitOrder/submitOrder?item=' + JSON.stringify(info)
+				})
+
+
+				//} 
+				// else {
+				// 	uni.showToast({
+				// 		title: '请选择项目',
+				// 		duration: 2000,
+				// 		icon: 'none'
+				// 	});
+				// }
 			},
 			//其他页面改变数据
 			changeData(data) {
@@ -720,9 +860,10 @@
 						.proInfo);
 				})
 			},
+
 			textConfirm(arr) {
 				console.log(arr);
-				this.submitList = arr
+				this.projectVoList[0].remark = arr[0].remark
 			},
 
 		}
@@ -736,7 +877,7 @@
 </style>
 <style lang="scss" scoped>
 	.serviceInfo {
-		overflow: hidden;
+		height: 100vh;
 
 		.bgf {
 			background: #FFFFFF;
@@ -760,21 +901,20 @@
 
 			.info {
 				display: flex;
-				flex-direction: column;
-				height: 200rpx;
-				margin-top: -10rpx;
-				padding: 0 25rpx;
+				padding: 25rpx;
+				font-size: 36rpx;
+				color: #3D3F3E;
+				align-items: baseline;
+				// view:nth-child(1) {
+				// 	display: flex;
+				// 	justify-content: space-between;
+				// }
 
-				view:nth-child(1) {
-					display: flex;
-					justify-content: space-between;
-				}
-
-				view:nth-child(2) {
-					font-size: 27rpx;
-					color: #EC5722;
-					margin-top: 15rpx;
-				}
+				// view:nth-child(2) {
+				// 	font-size: 27rpx;
+				// 	color: #EC5722;
+				// 	margin-top: 15rpx;
+				// }
 
 
 
@@ -836,40 +976,57 @@
 		}
 
 		.bottom {
+
 			width: 100%;
-			height: 120rpx;
-			background: #fff;
 			position: fixed;
 			bottom: 0;
-			display: flex;
-			align-items: center;
-			padding: 0 20rpx;
 			font-size: 22rpx;
-			color: #3D3F3E;
-			text-align: center;
 			z-index: 100000;
 
-			image {
-				width: 30rpx;
-				height: 30rpx;
+			.bottom-top {
+				width: 100%;
+
+				.coudan {
+					display: flex;
+					font-size: 25rpx;
+					height: 55rpx;
+					line-height: 55rpx;
+					padding-left: 20rpx;
+					width: 100%;
+					background-color: #fffbe6;
+					border: 2rpx solid #ffe58f;
+				}
 			}
 
-			image:first-child,
-			image:nth-child(2) {
-				width: 47rpx;
-				height: 43rpx;
-				margin: 0 20rpx;
+			.bottom-bottom {
+				height: 120rpx;
+				width: 100%;
+				display: flex;
+				color: #3D3F3E;
+				text-align: center;
+				align-items: center;
+				background: #fff;
+
+				image {
+					width: 30rpx;
+					height: 30rpx;
+				}
+
+				image:first-child {
+					width: 47rpx;
+					height: 43rpx;
+					margin: 0 30rpx;
+				}
+
+				.detail-price {
+					width: 50%;
+					text-align: start;
+					font-size: 30rpx;
+				}
 			}
 
-			image:nth-child(3) {
-				margin: 0 30rpx 0 60rpx;
-			}
 
-			image:nth-child(3),
-			image:nth-child(4) {
-				width: 220rpx;
-				height: 69rpx;
-			}
+
 		}
 
 		.rect {
@@ -885,6 +1042,60 @@
 				image {
 					width: 116rpx;
 				}
+			}
+		}
+
+		.preferential {
+			height: 700rpx;
+
+			.title {
+				margin: 20rpx;
+				font-size: 37rpx;
+				text-align: center;
+			}
+
+			.main {
+				height: 61%;
+
+			}
+
+			.line {
+				display: flex;
+				justify-content: space-between;
+				padding: 20rpx;
+
+				.vip {
+					padding: 0rpx 9rpx;
+					border: 2rpx solid #999999;
+					color: #999999;
+					margin-right: 10rpx;
+				}
+			}
+
+			.btn {
+				margin: 0 20rpx;
+				height: 75rpx;
+				background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);
+				border-radius: 34rpx;
+				font-size: 29rpx;
+				color: #FFFFFF;
+				line-height: 75rpx;
+				text-align: center;
+			}
+		}
+
+		.cou-dan {
+			height: 88vh;
+
+			.title {
+				margin: 20rpx;
+				font-size: 37rpx;
+				text-align: center;
+			}
+
+			.main {
+				height: 90%;
+				overflow-y: scroll;
 			}
 		}
 	}

@@ -5,20 +5,28 @@
 		</view>
 		<view class="right">
 			<view class="top">
-				<view class="title blod">
+				<view v-if="type!='coudan'" class="title blod">
 					{{info.serviceName}}
 				</view>
-				<view class="small">
+				<view v-if="type=='coudan'" class="title blod">
+					{{info.serviceProductName}}
+				</view>
+				<view v-if="type!='coudan'" class="small">
 					{{info.serviceTypeName}}
 				</view>
 			</view>
 			<view class="bottom">
-				<text style="color: #EC5722;width: 65%;display: inline-block;">
-					<text style="font-size: 22rpx;">¥</text>
-					<text style="display:inline-block;margin: 0 12rpx;" class="blod">{{info.servicePrice}}</text>
+				<text style="width: 65%;display: inline-block;">
+					<text v-if="type!='coudan'" style="color: #EC5722;display:inline-block;margin: 0 12rpx;" class="blod">¥{{info.servicePrice}}</text>
+					<text v-if="type=='coudan'" style="color: #EC5722;font-size: 34rpx;margin-right: 20rpx;">¥{{info.discountPrice}}</text>
+					<text v-if="type=='coudan'&&info.discountPrice!=info.projectPrice" style="font-size: 25rpx;text-decoration:line-through">¥{{info.projectPrice}}</text>
 				</text>
 				<!-- 		<text style="font-size: 22rpx;color: #A5A7A7;width: 52%;display: inline-block;">9999+人付款</text> -->
-				<text class="btn">立即下单</text>
+				<view v-if="type=='coudan'" >
+					<u-icon name="plus-circle-fill" color="#78d9a7" size="27"></u-icon>
+				</view>
+				<text v-else class="btn">立即下单</text>
+			
 			</view>
 		</view>
 
@@ -32,8 +40,10 @@
 			item: {
 				type: Object
 			},
+			//师傅是登录状态
 			isLogin: {
-				type: Boolean
+				type: Boolean,
+				default:true
 			},
 			type: {
 				type: String
@@ -48,8 +58,9 @@
 			item: {
 				//	immediate: true,
 				handler: function() {
-					//	console.log(this.info);
+						console.log(this.item);
 					this.info = this.item
+					this.info.serviceImg= this.item.serviceImg?this.item.serviceImg:this.item.serviceProjectImg
 					if (this.info.serviceImg != null) {
 						this.info.serviceImg = Array.isArray(this.info.serviceImg) ? this.info.serviceImg[0] : this
 							.info.serviceImg.split(',')[0]
@@ -61,6 +72,7 @@
 		created() {
 			//console.log(this.item);
 			this.info = this.item
+				this.info.serviceImg= this.item.serviceImg?this.item.serviceImg:this.item.serviceProjectImg
 			if (this.info.serviceImg != null) {
 				this.info.serviceImg = Array.isArray(this.info.serviceImg) ? this.info.serviceImg[0] : this
 					.info.serviceImg.split(',')[0]
@@ -82,7 +94,16 @@
 							console.log(res);
 						}
 					})
-				} else {
+				}else if(this.type == 'coudan'){
+					console.log(itemm.serviceId);
+					uni.navigateTo({
+						url: '/subpkg/car/coudanDetail/coudanDetail?serviceId=' + itemm.productId,
+						fail(res) {
+							console.log(res);
+						}
+					})
+				}
+				 else {
 					uni.navigateTo({
 						url: '../../../subpkg/car/goodDetails/goodDetails?serviceId=' + itemm.serviceId,
 						fail(res) {
@@ -139,8 +160,9 @@
 			.bottom {
 				display: flex;
 				height: 30%;
-				display: inline;
-
+				//display: inline;
+				align-items: center;
+				justify-content: space-between;
 				.btn {
 					display: inline-block;
 					width: 163rpx;

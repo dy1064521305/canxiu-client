@@ -285,11 +285,13 @@
 		},
 		computed: {
 			previewList() {
-				return this.FileList.map(item => {
+				return this.moveZero(this.FileList).map(item => {
 					return {
 						path: item.path || item,
-						poster: item.poster || ''
+						poster: item.poster || '',
+
 					}
+
 				})
 			},
 			listRowStyle() {
@@ -323,6 +325,19 @@
 			}
 		},
 		methods: {
+			//视频在最前面
+			moveZero(arr) {
+				let list = arr
+				for (var i = 0; i < arr.length; i++) {
+					const item = list[i]
+					if (['mp4', 'webm', 'mov', 'm4v', '3gp', 'avi', 'm3u8', ''].some(c => c == item.substring(item
+							.lastIndexOf(".") + 1))) {
+						list.unshift(arr.splice(i, 1)[0]);
+					}
+				}
+				return list; //返回操作后的原数组
+			},
+
 			/**
 			 * 删除已选择文件
 			 * @param {object} item 文件信息
@@ -981,7 +996,7 @@
 					height: 50rpx;
 					width: 50rpx;
 					border-bottom-left-radius: 200rpx;
-					z-index: 97;
+					z-index: 10;
 
 					.image {
 						width: 20rpx;

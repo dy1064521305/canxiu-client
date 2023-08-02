@@ -18,3 +18,6 @@ export const postOrder = (data) => request.post('/client/order',data)
 
 //删除报修图片/视频
 export const delCarUrl = (data) => request.put('/client/orderProject/delUrl',data)
+
+//根据工种类型查询服务项目列表
+export const listByWorkerType = (params) => request.get('/client/orderProject/listByWorkerType',params)

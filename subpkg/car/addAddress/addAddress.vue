@@ -9,13 +9,14 @@
 				<u--input v-model="model1.address.phone" border="none" placeholder="请输入手机号"></u--input>
 			</u-form-item>
 			<u-form-item label="地区" borderBottom label-align="center">
-				<pickers @address="addressHandle">
+				<pickers v-if="!isSubmit" @address="addressHandle">
 					<view v-if="model1.address.addressRegion!=''">{{model1.address.addressRegion}}</view>
 					<view v-else style="color: rgb(192, 196, 204);">请选择地区</view>
 				</pickers>
+				<u--input v-if="isSubmit" disabled v-model="model1.address.addressRegion" border="none" ></u--input>
 			</u-form-item>
 			<u-form-item label="详细地址" prop="address.addressDetailed" borderBottom ref="item1">
-				<u--input v-model="model1.address.addressDetailed" border="none" placeholder="请输入详细地址"></u--input>
+				<u--input :disabled='isSubmit' v-model="model1.address.addressDetailed" border="none" placeholder="请输入详细地址"></u--input>
 			</u-form-item>
 		</u--form>
 
@@ -87,11 +88,16 @@
 					]
 				},
 				showAddress: false,
-				id: ''
+				id: '',
+				isSubmit:false
 			}
 		},
 		onLoad(option) {
 			console.log(option);
+			
+				const pages = uni.$u.pages();
+				this.isSubmit=pages.some(p => {return p.route.includes('submitOrder')||p.route.includes('goosDetails')})
+				console.log(pages);
 			uni.setNavigationBarTitle({
 				title: option.id ? '修改地址' : '添加地址'
 			})
@@ -183,6 +189,9 @@
 		// bottom: 300rpx;
 		// left: 43rpx;
 		
+	}
+	/deep/.u-input__content__field-wrapper__field{
+		background-color: #fff;
 	}
 	}
 </style>
