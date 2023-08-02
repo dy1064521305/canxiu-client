@@ -285,6 +285,14 @@
 						"enablePullDownRefresh": false
 					}
 
+				},
+				{
+					"path": "coudanDetail/coudanDetail",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+				
 				}
 			]
 		},
