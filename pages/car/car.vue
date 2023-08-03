@@ -83,7 +83,7 @@
 								v-if="Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))>0"
 								style="align-items: center;display: flex;">
 								<text style="font-size: 24rpx;">
-									还差<text 
+									还差<text
 										style="color:#2E8FF4 ;">{{Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))}}</text>元达到起步价<text
 										@click="coudanHandle(item.workerType)"
 										style="color:#2E8FF4 ;margin-left: 5rpx;display:">去凑单></text>
@@ -114,8 +114,8 @@
 					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/125e056702434056b9b3bc5f7768eb0a.png"
 					text='维修车为空' marginTop='100' width="210px">
 				</u-empty>
-				
-				
+
+
 			</view>
 
 
@@ -166,7 +166,7 @@
 	import storage from '@/utils/storage'
 	import proInfo from '@/components/proInfo/proInfo.vue'
 	import * as car from '@/api/car.js'
-		import goodCard from '@/components/goodCard/goodCard.vue'
+	import goodCard from '@/components/goodCard/goodCard.vue'
 	import {
 		getCarNum
 	} from '@/utils/api.js'
@@ -233,7 +233,7 @@
 			this.getCarNumHandle()
 		},
 		onTabItemTap: function(item) {
-			
+
 			if (storage.get('AccessToken')) {
 				this.getCarList()
 				this.allNum = 0
@@ -241,7 +241,7 @@
 			}
 		},
 		onHide() {
-			this.coudanShow=false
+			this.coudanShow = false
 		},
 		methods: {
 
@@ -274,13 +274,62 @@
 
 				console.log(this.dataList, '....185', data);
 			},
-			getTotalMoney(){
-				this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
+			groupBy(array, f) {
+
+				let groups = {};
+
+				array.forEach(function(o) {
+
+					var group = JSON.stringify(f(o));
+
+					groups[group] = groups[group] || [];
+
+					groups[group].push(o);
+
+				});
+
+				return Object.keys(groups).map(function(group) {
+
+					return groups[group];
+
+				});
+
 			},
-			getCheckList(){
+
+			arrayGroupBy(list, groupId) {
+
+				let sorted = this.groupBy(list, function(item) {
+
+					return [item[groupId]];
+
+				});
+				// sorted.forEach((item, index) => {
+				// 	item
+				// })
+				return sorted;
+
+			},
+			getTotalMoney() {
+				let arr = this.arrayGroupBy(this.checkedList, 'workerType');
+				console.log(arr, 'checkedListcheckedListcheckedListcheckedListcheckedList');
+			
+				 this.totalMoney=0
+				 arr.forEach((item,index)=>{
+					 console.log(item);
+					 let all=item.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
+					 let money2=all<Number(item[0].startingFreeDiscount)?Number(item[0].startingFreeDiscount):all
+					this.totalMoney+=money2
+				
+				
+				 })
+				 
+				 
+				//this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
+			},
+			getCheckList() {
 				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
 			},
-			getAllNum(){
+			getAllNum() {
 				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
 			},
 			//其他页面改变数据
@@ -456,7 +505,7 @@
 			},
 			//删除
 			deleteHandle() {
-				
+
 				let arr = this.checkedList.map(item => item.id)
 				//	this.deleteList(arr)
 				uni.showModal({
@@ -477,8 +526,8 @@
 									//this.getCarList()
 									this.deleteList(arr)
 									this.getCarNumHandle()
-									this.checkboxValue1=[]
-								
+									this.checkboxValue1 = []
+
 								}
 							})
 						} else if (res.cancel) {
@@ -530,8 +579,9 @@
 				})
 				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
 				console.log(this.dataList, '.....346', this.checkedList);
-				this.totalMoney = this.checkedList.reduce((p, c) => p + ((c.id === data.item.id ? data.num.value : c
-					.projectNumber) * c.discountPrice), 0)
+				this.getTotalMoney()
+				// this.totalMoney = this.checkedList.reduce((p, c) => p + ((c.id === data.item.id ? data.num.value : c
+				// 	.projectNumber) * c.discountPrice), 0)
 			},
 			//
 			deleteList(arr) {
@@ -567,7 +617,7 @@
 				this.fatherCheckout()
 				console.log(this.dataList);
 				console.log(this.checkedList, '4224224224220');
-					console.log(this.checkboxValue1,'delelelelelelelelel');
+				console.log(this.checkboxValue1, 'delelelelelelelelel');
 				this.getCarNumHandle()
 			},
 			//取消登录
@@ -607,7 +657,7 @@
 			},
 			//凑单列表
 			coudanHandle(name) {
-				
+
 				//获取凑单列表
 				car.listByWorkerType({
 					clientId: storage.get('ClientId'),
@@ -615,7 +665,7 @@
 				}).then(res => {
 					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
 					this.coudanList = res.data
-					this.coudanShow=true
+					this.coudanShow = true
 				})
 			},
 		}
@@ -741,16 +791,16 @@
 				text-align: center;
 			}
 		}
-		
+
 		.cou-dan {
 			height: 88vh;
-		
+
 			.title {
 				margin: 20rpx;
 				font-size: 37rpx;
 				text-align: center;
 			}
-		
+
 			.main {
 				height: 90%;
 				overflow-y: scroll;

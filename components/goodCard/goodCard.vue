@@ -58,7 +58,7 @@
 			item: {
 				//	immediate: true,
 				handler: function() {
-						console.log(this.item);
+					//	console.log(this.item);
 					this.info = this.item
 					this.info.serviceImg= this.item.serviceImg?this.item.serviceImg:this.item.serviceProjectImg
 					if (this.info.serviceImg != null) {
@@ -95,7 +95,7 @@
 						}
 					})
 				}else if(this.type == 'coudan'){
-					console.log(itemm.serviceId);
+					console.log( itemm.productId);
 					uni.navigateTo({
 						url: '/subpkg/car/coudanDetail/coudanDetail?serviceId=' + itemm.productId,
 						fail(res) {
@@ -119,7 +119,7 @@
 
 <style lang="scss" scoped>
 	.box {
-		height: 217rpx;
+		//height: 217rpx;
 		background: #FFFFFF;
 		box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.05);
 		border-radius: 14rpx;
@@ -128,11 +128,11 @@
 
 		.img {
 			width: 30%;
-
+			padding: 18rpx;
 			image {
-				width: 90%;
-				height: 90%;
-				padding: 10rpx;
+				width: 100%;
+				height: 100%;
+				//padding: 10rpx;
 			}
 		}
 
@@ -141,7 +141,7 @@
 			flex-direction: column;
 			padding: 10rpx;
 			width: 70%;
-
+			height: 161rpx;
 			.top {
 				height: 68%;
 
