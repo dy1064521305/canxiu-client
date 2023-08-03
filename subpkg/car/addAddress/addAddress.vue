@@ -2,21 +2,21 @@
 	<view class="address">
 		<u--form labelPosition="left" :labelStyle='labelStyle' :model="model1" :rules="rules" ref="form1"
 			labelWidth='180rpx'>
-			<u-form-item label="联系人姓名" prop="address.contact" borderBottom ref="item1">
-				<u--input v-model="model1.address.contact" border="none" placeholder="请输入联系人姓名"></u--input>
+			<u-form-item label="联系人" prop="address.contact" borderBottom ref="item1">
+				<u--input v-model="model1.address.contact" border="none" placeholder="请输入联系人"></u--input>
 			</u-form-item>
 			<u-form-item label="手机号" prop="address.phone" borderBottom ref="item1">
 				<u--input v-model="model1.address.phone" border="none" placeholder="请输入手机号"></u--input>
 			</u-form-item>
 			<u-form-item label="地区" borderBottom label-align="center">
-				<pickers v-if="!isSubmit" @address="addressHandle">
+				<pickers v-if="!isSubmit||id==''" @address="addressHandle">
 					<view v-if="model1.address.addressRegion!=''">{{model1.address.addressRegion}}</view>
 					<view v-else style="color: rgb(192, 196, 204);">请选择地区</view>
 				</pickers>
-				<u--input v-if="isSubmit" disabled v-model="model1.address.addressRegion" border="none" ></u--input>
+				<u--input v-if="isSubmit&&id!=''" disabled v-model="model1.address.addressRegion" border="none" ></u--input>
 			</u-form-item>
 			<u-form-item label="详细地址" prop="address.addressDetailed" borderBottom ref="item1">
-				<u--input :disabled='isSubmit' v-model="model1.address.addressDetailed" border="none" placeholder="请输入详细地址"></u--input>
+				<u--input :disabled='isSubmit&&id!=""' v-model="model1.address.addressDetailed" border="none" placeholder="请输入详细地址"></u--input>
 			</u-form-item>
 		</u--form>
 
@@ -59,7 +59,7 @@
 					'address.contact': {
 						type: 'string',
 						required: true,
-						message: '请填写姓名',
+						message: '请填写联系人',
 						trigger: ['blur', 'change']
 					},
 					'address.addressDetailed': {
@@ -109,6 +109,7 @@
 					this.model1.address = res.data
 				})
 			}
+			console.log(this.id);
 		},
 		onReady() {
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
