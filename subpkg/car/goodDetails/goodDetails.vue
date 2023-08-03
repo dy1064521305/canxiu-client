@@ -109,8 +109,6 @@
 		</view>
 		<view class="bgf" style="height:212rpx;">
 		</view>
-
-
 		<view class="bottom" v-if="preferentialShow==false&&coudanShow==false">
 			<!-- 	<view style="display: flex;flex-direction: column;" @click="showPhone=true">
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/425df36a57004f1e8bd6c525a58bcd5a.png"
@@ -150,9 +148,16 @@
 
 				<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/b0566d28d45d47b2bf4b94356337615b.png"
 				mode="" @click="joinCar('car')"></image> -->
-				<image style="width: 220rpx;height: 69rpx;"
+				<view v-if="projectNumber==1" style="padding: 0 50rpx;" class="btn-green" @click="getOrderHandle">
+					立即下单
+				</view>
+				<view v-if="projectNumber!=1" style="padding: 0 50rpx;" class="btn-green" @click="goCar">
+					去购物车
+				</view>
+			
+			<!-- 	<image style="width: 220rpx;height: 69rpx;"
 					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/dddcfdd8b2954673ae8d63397355ce95.png"
-					mode="" @click="getOrderHandle"></image>
+					mode="" @click="getOrderHandle"></image> -->
 			</view>
 
 
@@ -247,7 +252,7 @@
 					<text>合计</text>
 					<text>¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}</text>
 				</view>
-				<view class="btn" @click="preferentialShow=false">
+				<view class="btn btn-green" @click="preferentialShow=false">
 					知道啦
 				</view>
 			</view>
@@ -328,7 +333,8 @@
 				appraiseList: [],
 				qrCode: '', //二维码
 				allNum: 0, //购物车数量
-				priceDifference: 0 //起步价差价
+				priceDifference: 0 ,//起步价差价
+				projectNumber:1
 			}
 		},
 		onLoad(options) {
@@ -748,7 +754,7 @@
 		
 			getCheck(item) {
 				console.log(item, 'itrwmmmmmmmmm');
-				item.item.projectNumber = item.num.value
+				item.item.projectNumber =this.projectNumber= item.num.value
 				
 				this.projectVoList[0] = item.item
 				let carArr = []
@@ -757,7 +763,7 @@
 					flag: item.flag,
 					productId: this.goodInfo.serviceId,
 					projectPrice: this.projectVoList[0].projectPrice,
-					projectNumber: 1,
+					projectNumber: item.item.projectNumber,
 					projectId: this.projectVoList[0].projectId,
 					projectImg: this.projectVoList[0].projectImg == [] ? undefined : this.projectVoList[0]
 						.projectImg.toString(),
@@ -790,15 +796,15 @@
 			},
 			//下单
 			getOrderHandle() {
-				console.log(this.projectVoList[0].projectNumber==0);
-				console.log(!this.projectVoList[0].projectNumber||this.projectVoList[0].projectNumber==0);
-				if (!this.projectVoList[0].projectNumber||this.projectVoList[0].projectNumber==0) {
-					this.$refs.uToast.show({
-						type: 'error',
-						message: '请选择数量'
-					});
-					return
-				}
+				// console.log(this.projectVoList[0].projectNumber==0);
+				// console.log(!this.projectVoList[0].projectNumber||this.projectVoList[0].projectNumber==0);
+				// if (!this.projectVoList[0].projectNumber||this.projectVoList[0].projectNumber==0) {
+				// 	this.$refs.uToast.show({
+				// 		type: 'error',
+				// 		message: '请选择数量'
+				// 	});
+				// 	return
+				// }
 				console.log(this.projectVoList);
 				if (this.projectVoList[0].projectImg==''||this.projectVoList[0].projectImg.length==0) {
 					this.$refs.uToast.show({
@@ -816,7 +822,8 @@
 					newSetArray.push(Object.assign({}, item, {
 						clientId: storage.get('ClientId'),
 						workerType: this.goodInfo.workerType,
-						projectNumber: item.projectNumber ? item.projectNumber : 1,
+						remark:item.remark?item.remark:'',
+						projectNumber:1,
 						startingFreeDiscount: this.goodInfo.startingFreeDiscount,
 						serviceTime: item.projectHours,
 						serviceProjectName: item.projectName,
@@ -878,7 +885,16 @@
 <style lang="scss" scoped>
 	.serviceInfo {
 		height: 100vh;
-
+		.btn-green {
+			height: 75rpx;
+			background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);
+			border-radius: 34rpx;
+			font-size: 29rpx;
+			color: #FFFFFF;
+			line-height: 75rpx;
+			text-align: center;
+		}
+		
 		.bgf {
 			background: #FFFFFF;
 		}
@@ -1023,6 +1039,7 @@
 					text-align: start;
 					font-size: 30rpx;
 				}
+			
 			}
 
 
@@ -1074,13 +1091,7 @@
 
 			.btn {
 				margin: 0 20rpx;
-				height: 75rpx;
-				background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);
-				border-radius: 34rpx;
-				font-size: 29rpx;
-				color: #FFFFFF;
-				line-height: 75rpx;
-				text-align: center;
+			
 			}
 		}
 

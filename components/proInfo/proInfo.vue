@@ -56,7 +56,7 @@
 							<!-- 	<image @click="deleteById(item.id)" v-if="isDelete" style="width: 145rpx;height: 69rpx;"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/94862fc485714c92b1cff30a2bf71425.png">
 							</image> -->
-							<u-number-box :min='isCoudan?1:0' 
+							<u-number-box min='1' 
 							disabledInput
 								v-model="item.projectNumber" class='number' button-size="27" color="#ffffff"
 								bgColor="#72DAA4" :asyncChange="true" @change='val=>numChange(item,val,index)'
