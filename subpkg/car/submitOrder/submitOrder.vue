@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<u-navbar  placeholder @leftClick='leftClick' title="填写订单">
+		<u-navbar placeholder @leftClick='leftClick' title="填写订单">
 
 		</u-navbar>
 		<view class="address" :style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'250rpx'}"
@@ -73,7 +73,9 @@
 						<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
 						未达标按起步价收取
 					</view>
-					<view v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<0" class="img">
+					<view
+						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<0"
+						class="img">
 						<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
 						</image>已达到起步价
@@ -81,7 +83,7 @@
 
 
 				</view>
-				<view  class="line">
+				<view class="line">
 					<view class="">
 						起步价：
 					</view>
@@ -105,7 +107,8 @@
 						¥{{urgentPriceTotal}}
 					</view>
 				</view>
-				<view v-if="item.list.reduce((p, c) => p + ((Number(c.projectPrice)*Number(c.projectNumber))-(Number(c.discountPrice)*Number(c.projectNumber))), 0)!=0"
+				<view
+					v-if="item.list.reduce((p, c) => p + ((Number(c.projectPrice)*Number(c.projectNumber))-(Number(c.discountPrice)*Number(c.projectNumber))), 0)!=0"
 					class="line" style="margin-left: 20rpx;font-size: 26rpx;">
 					<view style="color: #A5A7A7;">
 						品牌折扣：
@@ -119,7 +122,8 @@
 						{{isCar?'小计':'合计'}}：
 					</view>
 					<view style="color:  #EC5722;">
-						¥{{(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))+urgentPriceTotal}}
+
+						¥{{item.allMoney+urgentPriceTotal}}
 					</view>
 				</view>
 			</view>
@@ -133,7 +137,8 @@
 			<!-- 	<view class=""> -->
 			<view class="">
 				<text style="font-size: 22rpx;color: #A5A7A7;">合计费用:</text>
-				<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{info.orderPrice}}</text>
+				<text
+					style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{info.orderPrice}}</text>
 			</view>
 			<!-- 	<view v-if="urgentPriceTotal!=0">
 					<text style="font-size: 22rpx;color: #A5A7A7;margin-left:180rpx;">加急费:</text>
@@ -211,10 +216,10 @@
 			let item = JSON.parse(decodeURIComponent(option.item))
 			this.submitList = item.checkedList
 			this.isCar = item.isCar
-			this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
+		//	this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
 			console.log(this.showListByType, this.submitList, '.........103');
-
-			//console.log(this.submitList );
+			this.getMoney()
+			console.log(this.showListByType);
 			// try {
 			// 	const value = uni.getStorageSync('submit_order');
 			// 	console.log(value);
@@ -235,7 +240,7 @@
 			// } catch (e) {
 			// 	// error
 			// }
-			this.info.orderPrice = this.submitList.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
+			//this.info.orderPrice = this.submitList.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
 		},
 		methods: {
 			groupBy(array, f) {
@@ -319,23 +324,38 @@
 				}
 
 			},
+			
 			//计算总钱数
+			getMoney(){
+				this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
+				this.showListByType.forEach((item, index) => {
+					console.log(item);
+					let all = item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)),
+						0)
+					console.log(all);
+					item.allMoney = all < Number(item.list[0].startingFreeDiscount) ? Number(item.list[0]
+						.startingFreeDiscount) : all
+				
+				})
+				this.info.orderPrice = this.showListByType.reduce((p, c) => p + c.allMoney,0)+ this.urgentPriceTotal
+			},
 			getCheck(data) {
 				console.log(data);
 				console.log(this.submitList);
+				
 				let id = data.item.id ? data.item.id : data.item.projectId
-				console.log(id);
-				this.info.orderPrice = this.submitList.reduce((p, c) => p + (((c.id ? c.id : c.projectId) === id ? data.num
-					.value : c.projectNumber) * Number(c.discountPrice)), 0)
-				// this.urgentPriceTotal = this.info.isUrgent ? this.submitList.reduce((p, c) => p + (((c.id ? c.id : c
-				// 		.projectId) === id ? data.num
-				// 	.value : c.projectNumber) * Number(c.urgentPrice)), 0) : 0
-				this.submitList.forEach(item => {
-					if ((item.id ? item.id : item.projectId) === id) {
-						item.projectNumber = data.num.value
-					}
-				})
-				this.info.orderPrice = this.info.orderPrice + this.urgentPriceTotal
+				//console.log(id);
+				this.submitList.forEach(item=>{item.projectNumber=(item.id ? item.id : item.projectId) === id ? data.num.value : item.projectNumber})
+				// this.info.orderPrice = this.submitList.reduce((p, c) => p + (((c.id ? c.id : c.projectId) === id ? data.num.value : c.projectNumber) * Number(c.discountPrice)), 0)
+				// // this.urgentPriceTotal = this.info.isUrgent ? this.submitList.reduce((p, c) => p + (((c.id ? c.id : c
+				// // 		.projectId) === id ? data.num
+				// // 	.value : c.projectNumber) * Number(c.urgentPrice)), 0) : 0
+				// this.submitList.forEach(item => {
+				// 	if ((item.id ? item.id : item.projectId) === id) {
+				// 		item.projectNumber = data.num.value
+				// 	}
+				// })
+			this.getMoney()
 				console.log(this.info.orderPrice);
 				const pages = uni.$u.pages()
 				pages[pages.length - 2].$vm.changeData([data.item])
@@ -425,7 +445,7 @@
 
 					return
 				}
-				
+
 				arr.forEach(item => {
 					//item.projectVideo = this.toStrings(item.projectVideo)
 					item.projectImg = this.toStrings(item.projectImg)
@@ -433,15 +453,15 @@
 					item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
 				})
 				let timeObj = {}
-				let startingFree={}
+				let startingFree = {}
 				this.showListByType.forEach(item => {
-					timeObj[item.list[0].workerType] = item.expectTime+':00'
+					timeObj[item.list[0].workerType] = item.expectTime + ':00'
 					startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount
 				})
-				console.log(timeObj,startingFree);
+				console.log(timeObj, startingFree);
 				this.info.orderProjectBoList = arr
-				this.info.startingFreeMap=startingFree
-				this.info.timeMap=timeObj
+				this.info.startingFreeMap = startingFree
+				this.info.timeMap = timeObj
 				//this.info.expectTime = this.info.expectTime + ':00'
 				console.log(this.info);
 				postOrder(this.info).then(res => {
@@ -455,7 +475,7 @@
 						})
 						let info = {
 							money: this.info.orderPrice,
-							time:timeObj,
+							time: timeObj,
 							orderId: res.data
 						}
 						console.log(info);
@@ -465,7 +485,7 @@
 					}
 				})
 
-				
+
 
 
 

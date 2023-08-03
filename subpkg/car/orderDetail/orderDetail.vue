@@ -205,7 +205,7 @@
 				<text class="ziduan">工时费</text>
 				<text style="text-decoration:line-through" v-if="info.servicePrice!=null">¥{{info.servicePrice}}</text>
 			</view>
-			<view class="line">
+			<view v-if="info.additionalPrice!=null&&info.additionalPrice!=0" class="line">
 				<text class="ziduan">加急费</text>
 				<text>¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
 			</view>
@@ -215,9 +215,9 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">小计：</text>
-
+	
 				<text
-					style="color: #EC5722;">¥{{(info.additionalPrice!=null?Number(info.additionalPrice):0)+(info.materialPrice!=null?Number(info.materialPrice):0)+Number(info.servicePrice)}}</text>
+					style="color: #EC5722;">¥{{info.favorablePrice!=0&&info.favorablePrice!=null?Number(info.orderPrice)+Number(info.favorablePrice):Number(info.orderPrice)}}</text>
 			</view>
 			<view v-if="info.favorablePrice!=0&&info.favorablePrice!=null" style="margin-left: 20rpx;color: #A5A7A7;"
 				class="line">
