@@ -152,13 +152,15 @@
 				chargeList: [], //收费标准
 				types: '',
 				appraiseList: [],
+				goodOptionInfo: {}
 			}
 		},
 		onLoad(options) {
 			console.log(this.isLogin);
-			console.log(options);
+			let item = JSON.parse(decodeURIComponent(options.info))
+			this.goodOptionInfo = item.goodInfo
 			this.query.clientId = storage.get('ClientId')
-			this.query.serviceId = options.serviceId
+			this.query.serviceId = item.serviceId
 
 			this.$nextTick(() => {
 				this.getInfo()
@@ -194,8 +196,7 @@
 			},
 			//获取详细信息
 			getInfo() {
-				console.log(1111);
-				console.log(this.query, 'queryqueryqueryqueryquery');
+				//console.log(this.query, 'queryqueryqueryqueryquery');
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
 					console.log(this.goodInfo, 'goodInfogoodInfogoodInfo');
@@ -203,7 +204,7 @@
 					uni.setNavigationBarTitle({
 						title: this.goodInfo.serviceName
 					})
-					console.log(this.goodInfo);
+					//console.log(this.goodInfo);
 					//获取评论
 					order.appraiseList({
 						productId: this.goodInfo.serviceId,
@@ -211,7 +212,6 @@
 						pageNum: 1,
 						pageSize: 10
 					}).then(res => {
-						console.log(res);
 						res.rows.forEach(item => {
 							let num = (Number(item.attitudeScore) + Number(item.technicalScore) +
 								Number(item.velocityScore)) / 3
@@ -234,9 +234,10 @@
 					})
 					this.projectVoList.forEach(item => {
 						item.serviceProjectImg = item.projectImg,
-							item.projectImg = ''
+							item.projectImg = '',
+							item.productId = this.goodInfo.serviceId
 					})
-					console.log(this.projectVoList);
+					//	console.log(this.projectVoList);
 					if (!this.isLogin) {
 						this.projectVoList.forEach(item => {
 							item.projectPrice = this.replaceMoney(item.projectPrice)
@@ -249,7 +250,7 @@
 						.goodInfo.remark.replace(/<img/gi, '<img style="width:100%;height:auto"')
 						.replace(/<section/g, '<div')
 						.replace(/\/section>/g, '\div>') : ''
-					console.log(this.goodInfo, '11111111111372222222222');
+					// console.log(this.goodInfo, '11111111111372222222222');
 
 				})
 
@@ -324,22 +325,27 @@
 					});
 					return
 				}
+
+				console.log(this.goodOptionInfo);
+
+				let projectVoListCopy = []
+				projectVoListCopy =JSON.parse(JSON.stringify(this.projectVoList))
+				if (!this.goodOptionInfo.projectNumber) projectVoListCopy.push(this.goodOptionInfo)
 				let carArr = []
-				console.log(this.projectVoList[0].remark);
-				carArr.push({
-					clientId: storage.get('ClientId'),
-					flag: 1,
-					productId: this.goodInfo.serviceId,
-					projectPrice: this.projectVoList[0].projectPrice,
-					projectNumber: 1,
-					projectId: this.projectVoList[0].projectId,
-					projectImg: this.projectVoList[0].projectImg.toString(),
-					remark: this.projectVoList[0].remark==null?'':this.projectVoList[0].remark,
-					shoppingCartStatus: 0,
-					discountPrice: this.projectVoList[0].discountPrice,
-					// projectVideo: item.projectVideo != [] ? item.projectVideo.toString() :
-					// 	undefined,
-					workerType: this.goodInfo.workerType,
+				projectVoListCopy.forEach(item => {
+					carArr.push({
+						clientId: storage.get('ClientId'),
+						flag: 1,
+						productId: item.productId,
+						projectPrice: item.projectPrice,
+						projectNumber: !item.projectNumber ? 1 : item.projectNumber,
+						projectId: item.projectId,
+						projectImg: item.projectImg.toString(),
+						remark: item.remark == null ? '' : item.remark,
+						shoppingCartStatus: 0,
+						discountPrice: item.discountPrice,
+						workerType: item.workerType,
+					})
 				})
 
 				console.log(carArr);

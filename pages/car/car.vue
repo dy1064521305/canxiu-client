@@ -572,6 +572,7 @@
 			},
 			//计算总钱数
 			getCheck(data) {
+				console.log(data);
 				this.dataList.forEach(ele1 => {
 					ele1.children.forEach(ele2 => {
 						if (ele2.id === data.item.id) ele2.projectNumber = data.num.value
@@ -580,6 +581,11 @@
 				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
 				console.log(this.dataList, '.....346', this.checkedList);
 				this.getTotalMoney()
+				car.editCar({
+					id:data.item.id,
+					projectNumber:data.item.projectNumber
+				}).then(res=>{
+				})
 				// this.totalMoney = this.checkedList.reduce((p, c) => p + ((c.id === data.item.id ? data.num.value : c
 				// 	.projectNumber) * c.discountPrice), 0)
 			},
