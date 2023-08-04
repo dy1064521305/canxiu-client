@@ -152,7 +152,7 @@
 					立即下单
 				</view>
 				<view v-if="projectNumber!=1" style="padding: 0 50rpx;" class="btn-green" @click="goCar">
-					去购物车
+					去维修车
 				</view>
 			
 			<!-- 	<image style="width: 220rpx;height: 69rpx;"
