@@ -330,7 +330,7 @@
 
 				let projectVoListCopy = []
 				projectVoListCopy =JSON.parse(JSON.stringify(this.projectVoList))
-				if (!this.goodOptionInfo.projectNumber) projectVoListCopy.push(this.goodOptionInfo)
+				if (this.goodOptionInfo&&!this.goodOptionInfo.projectNumber) projectVoListCopy.push(this.goodOptionInfo)
 				let carArr = []
 				projectVoListCopy.forEach(item => {
 					carArr.push({

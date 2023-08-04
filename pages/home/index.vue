@@ -262,7 +262,7 @@
 						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/4cb33e4d1a614bda86187d7fd7d1732e.png",
 					},
 					{
-						name: '保养清洗',
+						name: '清洗服务',
 						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/fc70dc01e62b410c86f0d7bcbc9e278a.png",
 					}
 				],

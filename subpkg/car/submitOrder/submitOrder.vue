@@ -69,12 +69,12 @@
 						{{isCar?item.list[0].workerType.replace('人工','师傅'):'订单明细'}}
 					</view>
 					<view class="img"
-						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>=0">
+						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0">
 						<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
 						未达标按起步价收取
 					</view>
 					<view
-						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<0"
+						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0"
 						class="img">
 						<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
