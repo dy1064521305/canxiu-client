@@ -222,7 +222,7 @@
 				<view class="title">服务橱窗</view>
 				<view class="main">
 					<view v-for="(item,index) in coudanList" :key="index">
-						<good-card type='coudan' :item='item' />
+						<good-card type='coudan' :item='item' :goodInfo='projectVoList[0]'/>
 					</view>
 
 				</view>
@@ -483,7 +483,8 @@
 					})
 					this.projectVoList.forEach(item => {
 						item.serviceProjectImg = item.projectImg,
-							item.projectImg = ''
+							item.projectImg = '',
+							item.productId= this.goodInfo.serviceId
 					})
 					console.log(this.projectVoList);
 					if (!this.isLogin) {
@@ -853,6 +854,7 @@
 			},
 			//其他页面改变数据
 			changeData(data) {
+				this.projectNumber=this.projectVoList[0].projectNumber
 				this.projectVoList.forEach((fu, index) => {
 					data.forEach(d => {
 						if (fu.projectId == d.projectId) {

@@ -185,12 +185,12 @@
 					订单费用
 				</view>
 				<view class="img"
-					v-if="Number(info.startingFree)-(info.additionalPrice!=null?Number(info.orderPrice)-Number(info.additionalPrice):Number(info.orderPrice))>=0">
+					v-if="isGet">
 					<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
 					未达标按起步价收取
 				</view>
 				<view
-					v-if="Number(info.startingFree)-(info.additionalPrice!=null?Number(info.orderPrice)-Number(info.additionalPrice):Number(info.orderPrice))<0"
+					v-else
 					class="img">
 					<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
@@ -199,11 +199,11 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">起步价</text>
-				<text v-if="info.startingFree!=null">¥{{info.startingFree}}</text>
+				<text :style="{'text-decoration':!isGet?'line-through':''}" v-if="info.startingFree!=null">¥{{info.startingFree}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">工时费</text>
-				<text style="text-decoration:line-through" v-if="info.servicePrice!=null">¥{{info.servicePrice}}</text>
+				<text :style="{'text-decoration':isGet?'line-through':''}" v-if="info.servicePrice!=null">¥{{info.servicePrice}}</text>
 			</view>
 			<view v-if="info.additionalPrice!=null&&info.additionalPrice!=0" class="line">
 				<text class="ziduan">加急费</text>
@@ -364,54 +364,7 @@
 			</view>
 		</view>
 
-		<!--<view class="bg info">
-			<view class="title">
-				服务信息
-			</view>
-			 	<view class="line">
-				<text class="ziduan">报修门店</text>
-				<text>外婆家西湖店</text>
-			</view> 
-			<view class="line">
-				<text class="ziduan">预约时间</text>
-				<text>{{info.expectTime}}</text>
-			</view>
-			<view class="line">
-				<text class="ziduan">服务地址</text>
-				<text>{{addressVo.addressRegion}}{{addressVo.addressDetailed}}</text>
-
-			</view>
-			<view class="line">
-				<text class="ziduan"></text>
-				<text>{{addressVo.contact}} {{addressVo.phone}}</text>
-
-			</view>
-		</view>-->
-
-
-		<!-- <view class="bg info">
-			<view class="title">
-				订单信息
-			</view>
-			<view class="line">
-				<text class="ziduan">订单编号</text>
-				<text>{{info.orderNumber}}</text>
-			</view>
-			<view class="line">
-				<text class="ziduan">订单类型</text>
-				<text>维修</text>
-			</view>
-			<view class="line">
-				<text class="ziduan">订单优先级</text>
-				<text>{{info.isUrgent=='0'?'不加急':info.isUrgent=='1'?'客户加急':'实际加急'}}</text>
-			</view>
-			<view class="line">
-				<text class="ziduan">创建时间</text>
-				<text>{{info.orderTime}}</text>
-			</view>
-		</view> -->
-
-
+	
 		<!-- <view @click="showPhone=true"
 			style="width:100%;margin:0 auto;color: #3398F3; text-align: center; margin:22rpx 0;">
 			有疑问？联系客服
@@ -660,7 +613,8 @@
 				id: '', //订单id
 				newProject: [], //新项目列表
 				showMelList: [], //显示的材料格式
-				melTotal: 0, //材料总钱数
+				melTotal: 0, //材料总钱数,
+				isGet:false,//是否达到起步价
 			};
 		},
 		onLoad(option) {
@@ -702,14 +656,14 @@
 				var dateEnd = new Date(); //获取当前时间
 				var dateDiff = dateEnd.getTime() - dateBegin.getTime(); //时间差的毫秒数
 				//var dateDiff=1000000
-				console.log(dateDiff);
+			//	console.log(dateDiff);
 				if (dateDiff > 900000) {
 					this.dateDiff = 0
 					this.pipeiStatus = true
 				} else {
 					this.dateDiff = Number((dateDiff - 900000).toString().substring(1))
 				}
-				console.log(Number((dateDiff - 900000).toString().substring(1)));
+				//console.log(Number((dateDiff - 900000).toString().substring(1)));
 			},
 			getList() {
 				//详情
@@ -723,6 +677,8 @@
 						}
 
 						this.info = res.data
+						this.isGet=Number(this.info.startingFree)-(this.info.additionalPrice!=null?Number(this.info.orderPrice)-Number(this.info.additionalPrice):Number(this.info.orderPrice))>=0
+					console.log(this.isGet,'6811111111111111');
 						this.statusInfo.forEach(item => {
 							if (this.info.orderStatus == item.orderStatus) {
 								console.log(this.info.orderStatus == item.orderStatus, item.orderStatus);

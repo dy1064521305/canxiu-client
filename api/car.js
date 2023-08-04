@@ -21,3 +21,6 @@ export const delCarUrl = (data) => request.put('/client/orderProject/delUrl',dat
 
 //根据工种类型查询服务项目列表
 export const listByWorkerType = (params) => request.get('/client/orderProject/listByWorkerType',params)
+
+//修改客户下单项目
+export const editCar = (data) => request.put('/client/orderProject',data)

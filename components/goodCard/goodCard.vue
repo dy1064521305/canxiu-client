@@ -47,6 +47,9 @@
 			},
 			type: {
 				type: String
+			},
+			goodInfo:{
+				type:Object
 			}
 		},
 		data() {
@@ -96,8 +99,12 @@
 					})
 				}else if(this.type == 'coudan'){
 					console.log( itemm.productId);
+					let info={
+						serviceId:itemm.productId,
+						goodInfo:this.goodInfo
+					}
 					uni.navigateTo({
-						url: '/subpkg/car/coudanDetail/coudanDetail?serviceId=' + itemm.productId,
+						url: '/subpkg/car/coudanDetail/coudanDetail?info=' +encodeURIComponent(JSON.stringify(info)),
 						fail(res) {
 							console.log(res);
 						}
