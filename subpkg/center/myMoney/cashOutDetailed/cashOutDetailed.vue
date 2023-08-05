@@ -9,7 +9,7 @@
 
 			<view v-for="(item,index) in dataList" :key="index" class="main"
 				style="border-bottom: 2rpx solid  #F8F8F8;">
-				<text class='box'  style="font-size: 25rpx;color: #A5A7A7;text-align: center;">2022-11-15 22:25:12</text>
+				<text class='box'  style="font-size: 25rpx;color: #A5A7A7;text-align: center;">{{item.askTime}}</text>
 				<text class='box' >¥{{item.amount}}</text>
 				<text class='box' >¥{{item.commission==null?0:item.commission}}</text>
 				<text class='box' :style="{'color':item.status=='审核中'?'#EC5722':''}">{{item.status}}</text>

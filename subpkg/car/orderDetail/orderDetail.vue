@@ -677,7 +677,7 @@
 						}
 
 						this.info = res.data
-						this.isGet=Number(this.info.startingFree)-(this.info.additionalPrice!=null?Number(this.info.orderPrice)-Number(this.info.additionalPrice):Number(this.info.orderPrice))>=0
+						this.isGet=Number(this.info.startingFree)-(this.info.additionalPrice!=null?Number(this.info.orderPrice)-Number(this.info.additionalPrice):Number(this.info.orderPrice))>0
 					console.log(this.isGet,'6811111111111111');
 						this.statusInfo.forEach(item => {
 							if (this.info.orderStatus == item.orderStatus) {
