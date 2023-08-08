@@ -226,7 +226,7 @@
 
 					},
 					{
-						name: '新风排风',
+						name: '油烟排风',
 						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/80da0c42b64b4503989c8ebf79ed3e6c.png",
 
 					},
@@ -263,7 +263,7 @@
 					},
 					{
 						name: '清洗服务',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/fc70dc01e62b410c86f0d7bcbc9e278a.png",
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/07/8812ed60654c4087a5b1ca4d50932a06.png",
 					}
 				],
 				hotServiceList: [], //热门报修

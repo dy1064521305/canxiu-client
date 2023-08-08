@@ -12,7 +12,7 @@
 				<text class='box'  style="font-size: 25rpx;color: #A5A7A7;text-align: center;">{{item.askTime}}</text>
 				<text class='box' >¥{{item.amount}}</text>
 				<text class='box' >¥{{item.commission==null?0:item.commission}}</text>
-				<text class='box' :style="{'color':item.status=='审核中'?'#EC5722':''}">{{item.status}}</text>
+				<text class='box' :style="{'color':item.status=='待审核'?'#EC5722':''}">{{item.status}}</text>
 			</view>
 		</z-paging>
 	</view>

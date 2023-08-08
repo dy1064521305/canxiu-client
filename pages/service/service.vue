@@ -30,6 +30,7 @@
 				<view class="item-menu-name">{{item.typeName}}</view>
 			</view>
 		</view>
+		<u-loading-page :loading="loading"></u-loading-page>
 		<view v-if="!isSearch" class="main">
 			<view class="u-wrap">
 				<view class="u-menu-wrap">
@@ -86,6 +87,7 @@
 	export default {
 		data() {
 			return {
+				loading:false,
 				scrollTop: 0, //tab标题的滚动条位置
 				oldScrollTop: 0, // tab标题的滚动条旧位置
 				current: 0, // 预设当前项的值
@@ -108,7 +110,7 @@
 			this.getHeight();
 			// #endif
 			//this.getMenuItemTop()
-			this.getList()
+		
 
 
 		},
@@ -126,6 +128,7 @@
 					})
 				}
 			})
+				this.getList()
 
 		},
 		onHide() {
@@ -136,9 +139,10 @@
 			getList(type) {
 					this.typesList = []
 				console.log(type);
-				uni.showLoading({
-					title: '加载中...'
-				});
+				// uni.showLoading({
+				// 	title: '加载中...'
+				// });
+				this.loading=true
 				service.getService(this.query).then(res => {
 					if (type == 'search') {
 						console.log(111);
@@ -151,7 +155,8 @@
 						})
 							console.log(this.typesList);
 							this.isSearch = true
-							uni.hideLoading()
+							//uni.hideLoading()
+							this.loading=false
 					} else {
 						console.log(11111);
 					
@@ -360,7 +365,7 @@
 			//height: 190rpx;
 			background-color: #fff;
 			position: relative;
-
+			z-index: 99999;
 			.search {
 				align-items: center;
 				display: flex;
