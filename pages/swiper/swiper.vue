@@ -39,7 +39,7 @@
 					slogin:'一键下单，快速响应'
 				},
 				{
-					image:'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/07/88fc5182f43a4e749cd15777bb8aa8b0.png',
+					image:'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/30/09c98427e1e64637a22949729c981869.png',
 					title:'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/07/6427686bffe94313b9a8dd4628e61af0.png',
 					slogin:'全国直营，就近上门'
 				},

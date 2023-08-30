@@ -90,13 +90,13 @@
 
 					</view>
 					<view class="btn" v-if="imageUrl!=''">
-						<view style="position: relative;">
+					<!-- 	<view style="position: relative;">
 							<image
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/b0615fa4f9774562bf1e8740d9e658f7.png"
 								mode="widthFix" @click.stop="shareLink" open-type="share"></image>
 							<button style="width: 100%;height: 100%;position: absolute;opacity: 0;top: 0;"
 								open-type="share"></button>
-						</view>
+						</view> -->
 						<view>
 							<image
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/625202a5c24344e7bcb630079764172e.png"
@@ -433,17 +433,17 @@
 									left: '390rpx',
 								}
 							},
-							{
-								type: 'text',
-								text: '打开微信扫一扫',
-								css: {
-									position: 'absolute',
-									top: '905rpx',
-									left: '390rpx',
-									fontSize: "22rpx",
-									color: '#3D3F3E'
-								}
-							},
+							// {
+							// 	type: 'text',
+							// 	text: '打开微信扫一扫',
+							// 	css: {
+							// 		position: 'absolute',
+							// 		top: '905rpx',
+							// 		left: '390rpx',
+							// 		fontSize: "22rpx",
+							// 		color: '#3D3F3E'
+							// 	}
+							// },
 
 						]
 
