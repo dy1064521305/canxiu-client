@@ -264,6 +264,18 @@
 					{
 						name: '清洗服务',
 						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/07/8812ed60654c4087a5b1ca4d50932a06.png",
+					},
+					{
+						name: '装修维修',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/29/c47d79d25ff342b08afdb70e5eef7224.png",
+					},
+					{
+						name: '燃气设备',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/29/f92abc90e9ba4f17ad0443a2509a3c6c.png",
+					},
+					{
+						name: '电器设备',
+						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/29/69fa6dc417e446f08cb77b85a37d6198.png",
 					}
 				],
 				hotServiceList: [], //热门报修
