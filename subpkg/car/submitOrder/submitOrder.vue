@@ -87,15 +87,15 @@
 					<view class="">
 						起步价：
 					</view>
-					<view class="">
-						¥{{item.list[0].startingFreeDiscount}}
+					<view :style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'#EC5722':'','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'line-through':''}">
+						¥{{item.list[0].startingFree}}
 					</view>
 				</view>
 				<view class="line">
 					<view class="">
 						工时费：
 					</view>
-					<view style="color:  #EC5722;">
+					<view :style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'#EC5722':'','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'line-through':''}">
 						¥{{item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0)}}
 					</view>
 				</view>
@@ -103,7 +103,7 @@
 					<view class="">
 						加急费：
 					</view>
-					<view style="color:  #EC5722;">
+					<view :style="{'color': urgentPriceTotal!=0?'#EC5722':''}">
 						¥{{urgentPriceTotal}}
 					</view>
 				</view>
@@ -113,7 +113,12 @@
 					<view style="color: #A5A7A7;">
 						品牌折扣：
 					</view>
-					<view style="color:  #EC5722;">
+					<!-- 未达到起步价 -->
+					<view v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0" style="color:  #EC5722;">
+						-¥{{Number(item.list[0].startingFree)-Number(item.list[0].startingFreeDiscount)}}
+					</view>
+					<!-- 达到起步价 -->
+					<view v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0" style="color:  #EC5722;">
 						¥{{item.list.reduce((p, c) => p + ((Number(c.projectPrice)*Number(c.projectNumber))-(Number(c.discountPrice)*Number(c.projectNumber))), 0)}}
 					</view>
 				</view>
@@ -454,14 +459,17 @@
 				})
 				let timeObj = {}
 				let startingFree = {}
+				let beforeStartingFree={}
 				this.showListByType.forEach(item => {
 					timeObj[item.list[0].workerType] = item.expectTime + ':00'
-					startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount
+					startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount,
+					beforeStartingFree[item.list[0].workerType] = item.list[0].startingFree
 				})
 				console.log(timeObj, startingFree);
 				this.info.orderProjectBoList = arr
 				this.info.startingFreeMap = startingFree
 				this.info.timeMap = timeObj
+				this.info.beforeStartingFreeMap=beforeStartingFree
 				//this.info.expectTime = this.info.expectTime + ':00'
 				console.log(this.info);
 				postOrder(this.info).then(res => {

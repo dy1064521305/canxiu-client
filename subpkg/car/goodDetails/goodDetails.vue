@@ -826,6 +826,7 @@
 						remark:item.remark?item.remark:'',
 						projectNumber:1,
 						startingFreeDiscount: this.goodInfo.startingFreeDiscount,
+						startingFree: this.goodInfo.startingFree,
 						serviceTime: item.projectHours,
 						serviceProjectName: item.projectName,
 					}, {
