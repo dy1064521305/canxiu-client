@@ -85,7 +85,7 @@
 							size:10
 						}" :videoFromData="{
 							size:10
-						}" :index='index' v-model="item.projectImg" :add="false" :remove="false"></cl-upload>
+						}"  v-model="item.projectImg" :add="false" :remove="false"></cl-upload>
 						<!-- <upLoadFile :fileListt='item.projectVideo' types='video' :index='index' :isDel='false' /> -->
 					</view>
 				</view>
@@ -199,15 +199,15 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">起步价</text>
-				<text :style="{'text-decoration':!isGet?'line-through':''}" v-if="info.startingFree!=null">¥{{info.startingFree}}</text>
+				<text :style="{'text-decoration':!isGet?'line-through':'','color':!isGet?'#A5A7A7':'#EC5722'}" v-if="info.beforeStartingFree!=null">¥{{info.beforeStartingFree}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">工时费</text>
-				<text :style="{'text-decoration':isGet?'line-through':''}" v-if="info.servicePrice!=null">¥{{info.servicePrice}}</text>
+				<text  :style="{'text-decoration':isGet?'line-through':'','color':isGet?'#A5A7A7':'#EC5722'}" v-if="info.servicePrice!=null">¥{{info.servicePrice}}</text>
 			</view>
 			<view v-if="info.additionalPrice!=null&&info.additionalPrice!=0" class="line">
 				<text class="ziduan">加急费</text>
-				<text>¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
+				<text style="color: #EC5722;">¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
 			</view>
 			<view v-if="info.materialPrice!=null" class="line">
 				<text class="ziduan">材料费</text>
@@ -502,7 +502,7 @@
 					size:10
 				}" :videoFromData="{
 					size:10
-				}" :index='index' v-model="bohuiUrl" :headers="headers" :action="action" @onSuccess="onSuccesss" @input='onDelete'>
+				}"  v-model="bohuiUrl" :headers="headers" :action="action" @onSuccess="onSuccesss" @input='onDelete'>
 					</cl-upload>
 				</view>
 
@@ -677,7 +677,7 @@
 						}
 
 						this.info = res.data
-						this.isGet=Number(this.info.startingFree)-(this.info.additionalPrice!=null?Number(this.info.orderPrice)-Number(this.info.additionalPrice):Number(this.info.orderPrice))>0
+						this.isGet=Number(this.info.startingFree)>Number(this.info.preferentialPrice)
 					console.log(this.isGet,'6811111111111111');
 						this.statusInfo.forEach(item => {
 							if (this.info.orderStatus == item.orderStatus) {
