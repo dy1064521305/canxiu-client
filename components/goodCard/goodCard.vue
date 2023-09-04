@@ -23,7 +23,7 @@
 				</text>
 				<!-- 		<text style="font-size: 22rpx;color: #A5A7A7;width: 52%;display: inline-block;">9999+人付款</text> -->
 				<view v-if="type=='coudan'" >
-					<u-icon name="plus-circle-fill" color="#78d9a7" size="27"></u-icon>
+					<u-icon name="plus-circle-fill" color="#A4D091" size="27"></u-icon>
 				</view>
 				<text v-else class="btn">立即下单</text>
 			
@@ -174,7 +174,7 @@
 					display: inline-block;
 					width: 163rpx;
 					height: 54rpx;
-					background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);
+					background: #A4D091;
 					border-radius: 27rpx;
 					color: #FFFFFF;
 					font-size: 25rpx;

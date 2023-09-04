@@ -385,7 +385,7 @@
 				.search-title {
 					width: 125rpx;
 					height: 57rpx;
-					background: #9FD6BA;
+					background: #A4D091;
 					border-radius: 29rpx;
 					color: #FFFFFF;
 					line-height: 58rpx;
@@ -426,7 +426,7 @@
 				width: 100%;
 				text-align: center;
 				display: inline-block;
-				background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);
+				background:linear-gradient(270deg, #A4D091 0%, #769D71 100%);;
 				border-radius: 30rpx;
 
 				height: 60rpx;

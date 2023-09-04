@@ -70,7 +70,7 @@
 							<!-- 	<view > -->
 
 							<view style="display: flex;align-items: center;">
-								<u-checkbox shape="circle" :name="item.workerType" activeColor='#72daa4'
+								<u-checkbox shape="circle" :name="item.workerType" activeColor='#A4D091'
 									@change='val=>typeCheckChange(val,item,index)'>
 								</u-checkbox>
 								<text
@@ -91,7 +91,7 @@
 							</view>
 							<view v-else style="align-items: center;display: flex;font-size: 24rpx;">
 								<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 								</image>已达到起步价
 							</view>
 
@@ -126,7 +126,7 @@
 				</view>
 				<view v-if="checkedList.length === allNum&&checkedList.length!=0" @click="allCheckHandle(false)">
 					<image style="width: 43rpx;height: 43rpx;"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 					</image>
 				</view>
 				<text style="font-size: 29rpx;color: #3D3F3E;">全选</text>
@@ -138,7 +138,7 @@
 				<view v-if='isDelete' style="background: #EC5722;" class="btn" @click="deleteHandle">
 					删除所选({{checkedList.length}})
 				</view>
-				<view v-else class="btn" style="background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);"
+				<view v-else class="btn" style="background:linear-gradient(270deg, #A4D091 0%, #769D71 100%);"
 					@click="submitOrder">去下单({{checkedList.length}})</view>
 			</view>
 		</view>

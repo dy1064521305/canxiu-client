@@ -2,31 +2,31 @@
 	<view class="">
 		<view style="background-color: #fff;margin-top: 20rpx;">
 			<a @click='goInfo'>
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/218734d44ff9424eb9d9ef890a54d97e.png"
+				<image src="../../../static/center/info.png"
 					style="width: 32rpx;height: 32rpx;"></image>
 				<text>个人信息</text>
 				<u-icon name="arrow-right" color="#909399"></u-icon>
 			</a>
 			<a @click='goAboutUs'>
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+				<image src="../../../static/center/aboutUs.png"
 					style="width: 32rpx;height: 32rpx;"></image>
 				<text>关于我们</text>
 				<u-icon name="arrow-right" color="#909399"></u-icon>
 			</a>
 			<a  @click='goUrl(0)'>
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+				<image src="../../../static/center/zc.png"
 					style="width: 32rpx;height: 32rpx;"></image>
 				<text>隐私政策</text>
 				<u-icon name="arrow-right" color="#909399"></u-icon>
 			</a>
 			<a @click='goUrl(1)'>
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+				<image src="../../../static/center/xieyi.png"
 					style="width: 32rpx;height: 32rpx;"></image>
 				<text>注册协议</text>
 				<u-icon name="arrow-right" color="#909399"></u-icon>
 			</a>
 			<a @click='isCancellation=true'>
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
+				<image src="../../../static/center/reset.png"
 					style="width: 32rpx;height: 32rpx;"></image>
 				<text>注销账号</text>
 				<u-icon name="arrow-right" color="#909399"></u-icon>
@@ -67,7 +67,7 @@
 				退出登录
 			</view>
 
-			<u-modal :show="showLoginOut" confirmColor='#8dd8b1' @cancel='cancel' @confirm="loginOut" title="提示"
+			<u-modal :show="showLoginOut" confirmColor='#A4D091' @cancel='cancel' @confirm="loginOut" title="提示"
 				showCancelButton>
 				<view class="slot-content" style="text-align: center;">
 					确定退出账号？
@@ -75,7 +75,7 @@
 
 			</u-modal>
 
-			<u-modal :show="isCancellation" confirmColor='#8dd8b1' @cancel='isCancellation=false'
+			<u-modal :show="isCancellation" confirmColor='#A4D091' @cancel='isCancellation=false'
 				@confirm="cancellation" title="提示" showCancelButton>
 				<view class="slot-content" style="text-align: center;">
 					确定注销账号？
@@ -199,7 +199,7 @@
 	
 		width: 663rpx;
 		height: 91rpx;
-		background: #9FD6BA;
+		background: #A4D091;
 		border-radius: 45rpx;
 		font-size: 36rpx;
 		color: #FFFFFF;

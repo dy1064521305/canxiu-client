@@ -77,7 +77,7 @@
 						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0"
 						class="img">
 						<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 						</image>已达到起步价
 					</view>
 
@@ -87,7 +87,7 @@
 					<view class="">
 						起步价：
 					</view>
-					<view :style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'#EC5722':'','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'line-through':''}">
+					<view :style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'line-through':''}">
 						¥{{item.list[0].startingFree}}
 					</view>
 				</view>
@@ -95,7 +95,7 @@
 					<view class="">
 						工时费：
 					</view>
-					<view :style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'#EC5722':'','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'line-through':''}">
+					<view :style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'line-through':''}">
 						¥{{item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0)}}
 					</view>
 				</view>
@@ -103,7 +103,7 @@
 					<view class="">
 						加急费：
 					</view>
-					<view :style="{'color': urgentPriceTotal!=0?'#EC5722':''}">
+					<view :style="{'color': urgentPriceTotal!=0?'#EC5722':'#A5A7A7'}">
 						¥{{urgentPriceTotal}}
 					</view>
 				</view>
@@ -644,7 +644,7 @@
 			.btn {
 				width: 199rpx;
 				height: 69rpx;
-				background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);
+				background: linear-gradient(270deg, #A4D091 0%, #769D71 100%);
 				border-radius: 34rpx;
 				font-size: 29rpx;
 				color: #FFFFFF;
