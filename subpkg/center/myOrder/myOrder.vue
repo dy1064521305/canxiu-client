@@ -21,7 +21,7 @@
 							placeholder="搜索项目名称" :clearabled="true" :showAction='false'></u-search>
 					</view>
 					<u-tabs style='margin-top: 20rpx;' :current='current' :list="list1" @click="statusClick"
-						lineColor='#72DAA4' lineWidth="50" lineHeight='8' :inactiveStyle="{
+						lineColor='#A4D091' lineWidth="50" lineHeight='8' :inactiveStyle="{
 					        color: '#A5A7A7',
 					    }"></u-tabs>
 				</view>
@@ -183,7 +183,7 @@
 					</view>
 
 					<view class="btn">
-
+					
 						<image
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/c804038468f4457a9f3cfddaceca81f8.png"
 							@click="refresh"></image>
@@ -638,15 +638,15 @@
 					.btn-white {
 						height: 55rpx;
 						background: #FFFFFF;
-						border: 4rpx solid #9FD6BA;
-						color: #9FD6BA;
+						border: 4rpx solid #A4D091;
+						color: #A4D091;
 						line-height: 55rpx;
 					}
 
 					.btn-green {
 						line-height: 60rpx;
 						height: 60rpx;
-						background: #9FD6BA;
+						background: #A4D091;
 						color: #fff;
 					}
 				}
@@ -690,7 +690,7 @@
 
 			.time-active {
 				background: #f0fbf5;
-				border: 2rpx solid #79d9a7;
+				border: 2rpx solid #A4D091;
 			}
 
 			.time {

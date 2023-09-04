@@ -511,7 +511,7 @@
 				text-align: center;
 				line-height: 85rpx;
 				font-size: 36rpx;
-				background: #9FD6BA;
+				background: #A4D091;
 				color: #fff;
 				margin: 20rpx 39rpx 49rpx 39rpx;
 			}

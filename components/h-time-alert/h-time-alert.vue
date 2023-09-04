@@ -34,11 +34,21 @@
 				</view>
 			</view>
 			<view class="btns">
+				<view class="btn-white" @click='_closeAlert'>
+					取消
+				</view>
+				<view class="btn-green" @click="ok">
+					确认上门时间
+				</view>
+
+			</view>
+			<!-- 	<view class="btns">
+				
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/ad16c6307fde47ac963bfc974da2d8e8.png"
 					mode="" @click='_closeAlert'></image>
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/402e416c70cc49ca9907f91fe6e5e731.png"
 					mode="" @click="ok"></image>
-			</view>
+			</view> -->
 		</view>
 
 	</view>
@@ -176,7 +186,7 @@
 			},
 			_changeTime(e) {
 				console.log(e);
-				this.isUrgent = e <= this.isUrgentIndex && this.isToday&&!this.isCar
+				this.isUrgent = e <= this.isUrgentIndex && this.isToday && !this.isCar
 				let _ind = e - 0;
 				let {
 					activeTimeArr
@@ -650,8 +660,8 @@
 	.alertTimebox .right_box .active {
 		position: relative;
 		background: rgba(114, 218, 164, 0.1);
-		border: 2rpx solid #72DAA4;
-		color: #72DAA4;
+		border: 2rpx solid #A4D091;
+		color: #A4D091;
 	}
 
 	.alertTimebox .left_box .active {
@@ -673,14 +683,38 @@
 		border-width: 0 3rpx 5rpx 0;
 		transform: rotate(45deg);
 	} */
-	.btns {
-		margin-bottom: 20rpx;
-		display: flex;
 
-		image {
-			width: 337rpx;
-			height: 72rpx;
-			margin: 0 20rpx;
+
+	.btns {
+		margin: 20rpx 0;
+		display: flex;
+		width: 100%;
+		justify-content: space-around;
+
+		// image {
+		// 	width: 337rpx;
+		// 	height: 72rpx;
+		// 	margin: 0 20rpx;
+		// }
+		.btn-white,
+		.btn-green {
+			height: 85rpx;
+			border-radius: 45rpx;
+			text-align: center;
+			line-height: 85rpx;
+			font-size: 36rpx;
+			width: 300rpx;
+		}
+
+		.btn-white {
+			background: #FFFFFF;
+			border: 4rpx solid #A4D091;
+			color: #A4D091;
+		}
+
+		.btn-green {
+			background: #A4D091;
+			color: #fff;
 		}
 	}
 </style>

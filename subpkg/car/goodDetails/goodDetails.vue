@@ -116,14 +116,19 @@
 				<text>客服</text>
 			</view> -->
 			<view class="bottom-top">
-				<view v-if="Number(priceDifference)>0" class="coudan">
-					<u-icon name="info-circle-fill" color="#faad14" size="20"></u-icon>
-					<view style="margin-left: 10rpx;">
-						还差<text style="color:#1989fa">{{priceDifference}}</text>元达到起步价<text @click="coudanShow=true"
-							style="color:#1989fa;margin-left: 10rpx;">去凑单></text>
+				<view style="display: flex; justify-content: space-between; width: 100%;"
+					v-if="Number(priceDifference)>0">
+					<view class="coudan">
+						<u-icon name="info-circle" color="#fff" size="20"></u-icon>
+						<text style="margin-left: 20rpx;">还差{{priceDifference}}元达到起步价</text>
+					</view>
+					<view @click="coudanShow=true">
+						去凑单>
 					</view>
 				</view>
-				<u-alert v-else title="已达到起步价" type="success" :show-icon="true"></u-alert>
+				<view v-else>
+					已达到起步价
+				</view>
 			</view>
 			<view class="bottom-bottom">
 				<view style="display: flex;flex-direction: column;position: relative;align-items: center;width:17%"
@@ -138,10 +143,10 @@
 				<view class="detail-price">
 
 					<text
-						style="font-size: 30rpx;">¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}</text>
+						style="font-size: 30rpx;font-weight: bold;color:#EC5722 ;">¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}</text>
 					<text
 						v-if="projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)!=0"
-						style="color:#1989fa ;margin-left: 5rpx;font-size: 25rpx;"
+						style="color:#A4D091 ;margin-left: 5rpx;font-size: 25rpx;"
 						@click="preferentialShow=true">品牌优惠¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}></text>
 
 				</view>
@@ -890,7 +895,7 @@
 		height: 100vh;
 		.btn-green {
 			height: 75rpx;
-			background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);
+			background: #A4D091;
 			border-radius: 34rpx;
 			font-size: 29rpx;
 			color: #FFFFFF;
@@ -1003,17 +1008,18 @@
 			z-index: 100000;
 
 			.bottom-top {
-				width: 100%;
+				color: #fff;
+				justify-content: space-between;
+				background: linear-gradient(270deg, #A4D091 0%, #769D71 100%);
+				border-radius: 14rpx 14rpx 1rpx 1rpx;
+				display: flex;
+				font-size: 25rpx;
+				height: 55rpx;
+				line-height: 55rpx;
+				padding: 0 20rpx;
 
 				.coudan {
-					display: flex;
-					font-size: 25rpx;
-					height: 55rpx;
-					line-height: 55rpx;
-					padding-left: 20rpx;
-					width: 100%;
-					background-color: #fffbe6;
-					border: 2rpx solid #ffe58f;
+						display: flex;
 				}
 			}
 

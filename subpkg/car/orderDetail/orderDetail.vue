@@ -193,7 +193,7 @@
 					v-else
 					class="img">
 					<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 					</image>已达到起步价
 				</view>
 			</view>
@@ -430,7 +430,7 @@
 
 
 		<!-- 取消原因 -->
-		<u-picker :show="show" :columns="columns" confirmColor='#9FD6BA' :closeOnClickOverlay='true'
+		<u-picker :show="show" :columns="columns" confirmColor='#A4D091' :closeOnClickOverlay='true'
 			@close='show = false' @cancel='show = false' @confirm='cancelReason'></u-picker>
 
 		<!-- 进度 -->
@@ -464,7 +464,7 @@
 		</u-popup>
 
 		<!-- 返修 -->
-		<u-modal :show="repairOrderShow" title="温馨提示" showCancelButton confirmColor='#9FD6BA'
+		<u-modal :show="repairOrderShow" title="温馨提示" showCancelButton confirmColor='#A4D091'
 			@cancel="repairOrderShow=false" @confirm="handles('返修')">
 			<view style="width: 100%;text-align: center;">
 				是否确认申请返修?
@@ -476,7 +476,7 @@
 			:actions="actionList" :show="showPhone"></u-action-sheet>
 
 		<!-- 驳回理由 -->
-		<u-modal :show="rejectShowModal" width="600rpx" title="驳回理由" showCancelButton confirmColor='#9FD6BA'
+		<u-modal :show="rejectShowModal" width="600rpx" title="驳回理由" showCancelButton confirmColor='#A4D091'
 			@cancel="rejectShowModal=false" @confirm="handles('驳回')">
 			<view style="width: 100%;display: flex;">
 				驳回理由：
@@ -486,7 +486,7 @@
 
 
 		<!-- 维修结果确认驳回 -->
-		<u-modal :show="resultShowModal" width="600rpx" title="驳回原因" showCancelButton confirmColor='#9FD6BA'
+		<u-modal :show="resultShowModal" width="600rpx" title="驳回原因" showCancelButton confirmColor='#A4D091'
 			@cancel="resultShowModal=false" @confirm="resultBackHandle()">
 			<view style="width: 100%;display: flex;flex-direction: column;">
 				<u--textarea v-model="reason" placeholder="请输入内容"></u--textarea>
@@ -1111,12 +1111,12 @@
 
 		.btn-white {
 			background: #FFFFFF;
-			border: 4rpx solid #9FD6BA;
-			color: #9FD6BA;
+			border: 4rpx solid #A4D091;
+			color: #A4D091;
 		}
 
 		.btn-green {
-			background: #9FD6BA;
+			background: #A4D091;
 			color: #fff;
 		}
 
@@ -1147,14 +1147,14 @@
 					.circle {
 						width: 29rpx;
 						height: 29rpx;
-						border: 1px solid #9FD6BA;
+						border: 1px solid #A4D091;
 
 					}
 
 					.circle-green {
 						width: 32rpx;
 						height: 32rpx;
-						background: #9FD6BA;
+						background: #A4D091;
 					}
 
 					.line,
@@ -1165,12 +1165,12 @@
 
 					.line {
 
-						border-right: 2rpx solid #9FD6BA;
+						border-right: 2rpx solid #A4D091;
 
 					}
 
 					.line-xu {
-						border-right: 2rpx dashed #9FD6BA;
+						border-right: 2rpx dashed #A4D091;
 					}
 				}
 
@@ -1198,7 +1198,7 @@
 					}
 
 					.green {
-						color: #9FD6BA;
+						color: #A4D091;
 					}
 				}
 			}

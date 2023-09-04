@@ -13,10 +13,19 @@
 		<view v-for="(item,index) in info.time" :key="index" class="font" style="margin-top: 11rpx;">
 			{{index}}预约服务时间：{{item}}
 		</view>
-		<view style="margin-top: 80rpx;">
+		<view class="btns">
+			<view class="btn-white" @click="backHome">
+				回到首页
+			</view>
+			<view class="btn-green" @click="goDetailed">
+				查看订单
+			</view>
+		
+		</view>
+	<!-- 	<view style="margin-top: 80rpx;">
 			<image @click="backHome" class="watch" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/02/4c18b6e3b5054a35b4a9af7a16fc744f.png" mode="widthFix"></image>
 			<image @click="goDetailed" class="back" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/02/bf2684db43f6419cae1dd0a2e75d0c51.png" mode="widthFix"></image>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -80,6 +89,38 @@
 	.font{
 		font-size: 29rpx;
 		color: #3D3F3E
+	}
+	.btns {
+		margin: 20rpx 0;
+		display: flex;
+		width: 100%;
+		justify-content: space-around;
+	
+		// image {
+		// 	width: 337rpx;
+		// 	height: 72rpx;
+		// 	margin: 0 20rpx;
+		// }
+		.btn-white,
+		.btn-green {
+			height: 85rpx;
+			border-radius: 45rpx;
+			text-align: center;
+			line-height: 85rpx;
+			font-size: 36rpx;
+			width: 300rpx;
+		}
+	
+		.btn-white {
+			background: #FFFFFF;
+			border: 4rpx solid #A4D091;
+			color: #A4D091;
+		}
+	
+		.btn-green {
+			background: #A4D091;
+			color: #fff;
+		}
 	}
 }
 </style>

@@ -5,7 +5,7 @@
 
 				<view class="check">
 					<u-checkbox v-if="submit&&isCar" shape="circle" :name="item.id?item.id:item.projectId"
-						activeColor='#72daa4' @change='val=>checkChange(val,item)'>
+						activeColor='#A4D091' @change='val=>checkChange(val,item)'>
 					</u-checkbox>
 					<u-image v-if="isCar" radius='10rpx' width="144rpx" height="100%" :src="item.imgList[0]">
 						<!-- 	@click="previewImage(item.imgList)" -->
@@ -34,7 +34,7 @@
 							<view class="right">
 								<u-number-box min='1' 
 									v-model="item.projectNumber" class='number' button-size="26px" color="#ffffff"
-									bgColor="#72DAA4" @change='val=>numChange(item,val,index)' iconStyle="color: #fff">
+									bgColor="#A4D091" @change='val=>numChange(item,val,index)' iconStyle="color: #fff">
 								</u-number-box>
 							</view>
 						</view>
@@ -59,25 +59,31 @@
 							<u-number-box min='1' 
 							disabledInput
 								v-model="item.projectNumber" class='number' button-size="27" color="#ffffff"
-								bgColor="#72DAA4" :asyncChange="true" @change='val=>numChange(item,val,index)'
+								bgColor="#A4D091" :asyncChange="true" @change='val=>numChange(item,val,index)'
 								iconStyle="color: #fff">
 							</u-number-box>
 						</view>
 						<view class="bottom">
-							<view class="left">
-								<!-- 
-								<text v-if="!question"
-									style="font-size: 22rpx;color: #EC5722;margin-right: 10rpx;">预估费用:</text> -->
-								¥{{item.discountPrice}}
-								<image @click='questionHandle(item)' v-if="question"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0b076ac258454779a88431fc8f26cb56.png"
-									mode=""></image>
+						<view class="left">
+							<!-- 
+							<text v-if="!question"
+								style="font-size: 22rpx;color: #EC5722;margin-right: 10rpx;">预估费用:</text> -->
+							<text style="font-size:27rpx;">¥</text>
+							<text
+								style="	font-weight: bold;font-size: 38rpx;margin: 0 10rpx;">{{item.discountPrice}}</text>
+						
+							<view @click='questionHandle(item)' v-if="question" style="color:#A5A7A7 ;">
+								...
 							</view>
+							<!-- 	<image 
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0b076ac258454779a88431fc8f26cb56.png"
+								mode=""></image> -->
+						</view>
 							<view class="price-info" v-if="item.preferentialPrice!=0">
 								<view style="position: absolute;
     top: -20rpx;
     left: 17rpx;">
-									<u-icon name="arrow-up-fill" color="#1890ff" size="18"></u-icon>
+									<u-icon name="arrow-up-fill" color="#A4D091" size="18"></u-icon>
 								</view>
 								<view class="bottom">
 
@@ -460,13 +466,13 @@
 
 						.one {
 
-							background-color: #1890ff;
+							background-color: #A4D091;
 							color: #fff;
 						}
 
 						.two {
-							color: #1890ff;
-							border: 2rpx solid #1890ff;
+							color: #A4D091;
+							border: 2rpx solid #A4D091;
 						}
 					}
 

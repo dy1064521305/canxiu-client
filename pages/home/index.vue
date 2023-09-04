@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view v-if="locationStatus=='authorized'||locationStatus==''" class="home">
-			<u-navbar :height="navHeight" placeholder :bgColor="'RGBA(153, 212, 182,'+opacity+')'">
+			<u-navbar :height="navHeight" placeholder :bgColor="'RGBA(147, 189, 134, '+opacity+')'">
 				<view slot='left'>
 
 				</view>
@@ -85,7 +85,7 @@
 					<view class="tabs"
 						:style="{backgroundColor:tabsBg,position:tabsBg === '#fff'&&'sticky',zIndex:3,top:tabHeight+'px'}">
 						<u-tabs :current="currentIndex" :list="serviceSymptomsName" lineWidth="60" lineHeight="7"
-							lineColor='linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);' :activeStyle="{
+							lineColor='#A4D091' :activeStyle="{
 							    color: '#303133',
 							    fontWeight: 'bold',
 								fontSize:'35rpx',
@@ -936,7 +936,7 @@
 	.home {
 		position: relative;
 		// min-height: 100vh;
-		background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/ca035aa5eca34c0b819e34aec5e77071.png) no-repeat;
+		background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png) no-repeat;
 		background-size: 100% auto;
 
 		// overflow: unset;
@@ -987,7 +987,7 @@
 			.search-title {
 				width: 127rpx;
 				height: 58rpx;
-				background: #9FD6BA;
+				background: #A4D091;
 				border-radius: 29rpx;
 				color: #FFFFFF;
 				line-height: 58rpx;
@@ -1154,7 +1154,7 @@
 				}
 
 				::v-deep.u-tabs__wrapper__nav__line {
-					background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);
+					background:#A4D091;
 				}
 
 				.btns {
@@ -1176,8 +1176,8 @@
 		line-height: 60rpx;
 		font-size: 28rpx;
 		background: #FFFFFF;
-		border: 4rpx solid #9FD6BA;
-		color: #9FD6BA;
+		border: 4rpx solid #A4D091;
+		color: #A4D091;
 		margin: 50rpx auto;
 	}
 </style>

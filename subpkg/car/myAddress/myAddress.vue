@@ -18,7 +18,7 @@
 						<view style="width: 92%;">
 							<view v-if="item.isDefault==0" class="moren">
 								<image style="width: 32rpx;margin-right: 11rpx;height: 32rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 								</image>已设为默认
 							</view>
 							<view v-else class="un" @click.stop="morenHandle(item)">
@@ -246,7 +246,7 @@
 			}
 
 			.moren {
-				color: #9FD6BA;
+				color: #A4D091;
 			}
 
 			.un {
@@ -267,7 +267,7 @@
 		.btn {
 			width: 663rpx;
 			height: 91rpx;
-			background: #9FD6BA;
+			background: #A4D091;
 			border-radius: 45rpx;
 			font-size: 36rpx;
 			color: #FFFFFF;

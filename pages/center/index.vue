@@ -16,7 +16,7 @@
 		</view>
 		<view v-else class="">
 			<image class="bg"
-				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/dd030ac5793a487190364bdb95fe5fc3.png">
+				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png">
 			</image>
 
 			<view class="center">
@@ -109,16 +109,16 @@
 					</view>
 				</view> -->
 				<view class="my">
-					<view class="title">我的服务</view>
+					<!--	<view class="title">我的服务</view>
 					<view class="main">
-						<!-- <view class="box">
+						 <view class="box">
 							<view class='img'>
 								<image style="width: 54rpx;height: 46rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/bc5a61260236484e840a1ddb5090bace.png">
 								</image>
 							</view>
 							<text>优惠券</text>
-						</view> -->
+						</view>
 						<view class="box" @click="fuwuClick('address')">
 							<view class='img'>
 								<image style="width: 48rpx;height: 56rpx;"
@@ -159,8 +159,47 @@
 							</view>
 							<text style="margin-left:-3rpx;">设置</text>
 						</view>
-					</view>
+					</view> -->
+					<u-cell-group :border='false'>
 
+						<u-cell size='large' isLink url="../../subpkg/car/myAddress/myAddress">
+							<view slot="title" style="display: flex;align-items: center;">
+								<image src="../../static/center/address.png"></image>
+								<view class="title">
+									我的地址
+								</view>
+							</view>
+
+						</u-cell>
+						<u-cell size='large' isLink url="../../subpkg/center/invite/invite">
+							<view slot="title" style="display: flex;align-items: center;">
+								<image src="../../static/center/invite.png"></image>
+								<view class="title">
+									邀请奖励
+								</view>
+							</view>
+
+						</u-cell>
+						<u-cell size='large' isLink url="../../subpkg/center/myInvoice/myInvoice">
+							<view slot="title" style="display: flex;align-items: center;">
+								<image src="../../static/center/invoice.png"></image>
+								<view class="title">
+									我的发票
+								</view>
+							</view>
+
+						</u-cell>
+						<u-cell size='large' isLink url="../../subpkg/center/setting/setting">
+							<view slot="title" style="display: flex;align-items: center;">
+								<image src="../../static/center/setting.png"></image>
+								<view class="title">
+									设置
+								</view>
+							</view>
+
+						</u-cell>
+
+					</u-cell-group>
 				</view>
 			</view>
 		</view>
@@ -174,7 +213,9 @@
 
 <script>
 	import storage from '@/utils/storage'
-		import {getUserWallet} from '@/api/money.js'
+	import {
+		getUserWallet
+	} from '@/api/money.js'
 	import {
 		getOrderList
 	} from '@/api/order.js'
@@ -182,11 +223,13 @@
 		getInfoById,
 		queryMyInfo
 	} from '@/api/user.js'
-	import {callPhone} from '@/utils/phone.js'
+	import {
+		callPhone
+	} from '@/utils/phone.js'
 	export default {
 		data() {
 			return {
-				balance:'',//账户余额
+				balance: '', //账户余额
 				actionList: [{
 						name: '19157668838'
 					},
@@ -201,27 +244,27 @@
 				isLogin: false,
 				userInfo: {}, //用户信息
 				orderList: [{
-						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/ba33dff2a22d43678ae63810449a2433.png',
+						url: '../../static/center/daijiedan.png',
 						name: '待接单',
 						num: undefined
 					},
 					{
-						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/10/2173827600e44de3b84103911dbbb81f.png',
+						url: '../../static/center/daishangmen.png',
 						name: '待上门',
 						num: undefined
 					},
 					{
-						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0ea2f116fc694918a0f43648c2d29886.png',
+						url: '../../static/center/daiyanshou.png',
 						name: '待验收',
 						num: undefined
 					},
 					{
-						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/ca1bc8d48d3d4c119034e8a24e6fefbb.png',
+						url: '../../static/center/daizhifu.png',
 						name: '待支付',
 						num: undefined
 					},
 					{
-						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/e73a896cc7f94092b5a0c17fab5587c7.png',
+						url: '../../static/center/shouhouzhong.png',
 						name: '售后中',
 						num: undefined
 					},
@@ -246,7 +289,7 @@
 					getInfoById(storage.get('ClientId')).then(res => {
 						console.log(res);
 						this.userInfo = res.data
-					//	let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
+						//	let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 						this.userInfo.phone = this.geTel(this.userInfo.phoneNumber)
 						//	this.fileList.push({url:arr[0]})
 					})
@@ -264,9 +307,9 @@
 					})
 					getUserWallet({
 						userId: storage.get('ClientId'),
-						userType:'c'
-					}).then(res=>{
-						this.balance=res.data.balance
+						userType: 'c'
+					}).then(res => {
+						this.balance = res.data.balance
 					})
 
 				}
@@ -350,15 +393,15 @@
 			},
 			actionSelect(e) {
 				console.log(e);
-				let phone='19157668838'
+				let phone = '19157668838'
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
 					// #ifdef APP-PLUS
-					callPhone(phone,'app')
+					callPhone(phone, 'app')
 					// #endif
 					// #ifdef MP-WEIXIN
-					callPhone(phone,'wx')
+					callPhone(phone, 'wx')
 					// #endif
 					this.showPhone = false
 				}
@@ -539,44 +582,61 @@
 			}
 		}
 
+		// .my {
+		// 	margin-top: 18rpx;
+		// 	height: 380rpx;
+		// 	background: #FFFFFF;
+
+		// 	.title {
+		// 		padding: 22rpx;
+
+		// 		font-size: 33rpx;
+		// 		color: #3D3F3E;
+		// 		font-weight: bold;
+		// 		width: 80%;
+		// 	}
+
+		// 	.main {
+		// 		margin-top: 10rpx;
+		// 		display: flex;
+		// 		flex-wrap: wrap;
+
+		// 		.box {
+		// 			width: 25%;
+		// 			display: flex;
+		// 			flex-direction: column;
+		// 			align-items: center;
+		// 			margin-bottom: 34rpx;
+
+		// 			.img {
+		// 				height: 60rpx;
+		// 				display: flex;
+		// 				align-items: center;
+		// 			}
+
+		// 			text {
+		// 				margin-top: 14rpx;
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+
 		.my {
-			margin-top: 18rpx;
-			height: 380rpx;
+			margin-top: 20rpx;
 			background: #FFFFFF;
+			border-radius: 14rpx;
+
+			image {
+				width: 56rpx;
+				height: 56rpx;
+			}
 
 			.title {
-				padding: 22rpx;
-
-				font-size: 33rpx;
-				color: #3D3F3E;
 				font-weight: bold;
-				width: 80%;
-			}
-
-			.main {
-				margin-top: 10rpx;
-				display: flex;
-				flex-wrap: wrap;
-
-				.box {
-					width: 25%;
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					margin-bottom: 34rpx;
-
-					.img {
-						height: 60rpx;
-						display: flex;
-						align-items: center;
-					}
-
-					text {
-						margin-top: 14rpx;
-					}
-				}
+				margin-left: 20rpx;
+				font-size: 30rpx;
 			}
 		}
-
 	}
 </style>

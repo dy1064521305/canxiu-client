@@ -13,10 +13,12 @@
 					<view v-if="model1.address.addressRegion!=''">{{model1.address.addressRegion}}</view>
 					<view v-else style="color: rgb(192, 196, 204);">请选择地区</view>
 				</pickers>
-				<u--input v-if="isSubmit&&id!=''" disabled v-model="model1.address.addressRegion" border="none" ></u--input>
+				<u--input v-if="isSubmit&&id!=''" disabled v-model="model1.address.addressRegion" border="none">
+				</u--input>
 			</u-form-item>
 			<u-form-item label="详细地址" prop="address.addressDetailed" borderBottom ref="item1">
-				<u--input :disabled='isSubmit&&id!=""' v-model="model1.address.addressDetailed" border="none" placeholder="请输入详细地址"></u--input>
+				<u--input :disabled='isSubmit&&id!=""' v-model="model1.address.addressDetailed" border="none"
+					placeholder="请输入详细地址"></u--input>
 			</u-form-item>
 		</u--form>
 
@@ -30,6 +32,7 @@
 
 <script>
 	import storage from '@/utils/storage'
+	var QQMapWX = require('@/utils/qqmap-wx-jssdk.js')
 	import {
 		getAddressInfo,
 		editAddress,
@@ -52,6 +55,8 @@
 						addressDetailed: '',
 						addressRegion: '',
 						clientId: storage.get('ClientId'),
+						longitude: '',
+						latitude: ''
 					}
 				},
 
@@ -89,19 +94,21 @@
 				},
 				showAddress: false,
 				id: '',
-				isSubmit:false
+				isSubmit: false
 			}
 		},
 		onLoad(option) {
 			console.log(option);
-			
-				const pages = uni.$u.pages();
-				this.isSubmit=pages.some(p => {return p.route.includes('submitOrder')||p.route.includes('goosDetails')})
-				console.log(pages);
+
+			const pages = uni.$u.pages();
+			this.isSubmit = pages.some(p => {
+				return p.route.includes('submitOrder') || p.route.includes('goosDetails')
+			})
+			console.log(pages);
 			uni.setNavigationBarTitle({
 				title: option.id ? '修改地址' : '添加地址'
 			})
-			if (option.id ) {
+			if (option.id) {
 				this.id = option.id
 				console.log('2222222222');
 				getAddressInfo(this.id).then(res => {
@@ -122,37 +129,54 @@
 				this.model1.address.regionCode = e.value[2]
 				console.log(this.model1.address.regionCode);
 			},
+
 			addAndEditAddress() {
-				this.$refs.form1.validate().then(res => {
-					console.log(this.model1.address);
-					if (this.id != '') {
-						editAddress(this.model1.address).then(res => {
+				let that=this
+				that.$refs.form1.validate().then(res => {
+					var demo = new QQMapWX({
+						key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
+					})
+					let address = that.model1.address.addressRegion.replace(/\//g, "") + that.model1.address
+						.addressDetailed;
+					console.log(address);
+					demo.geocoder({
+						address: address,
+						success: function(res) { //成功后的回调
 							console.log(res);
-							if (res.code === 200) {
-								uni.showToast({
-									title: '编辑成功',
-									duration: 2000,
-								});
-								setTimeout(function() {
-									uni.navigateBack()
-								}, 1000)
+							that.model1.address.longitude = res.result.location.lng
+							that.model1.address.latitude = res.result.location.lat
+							if (that.id != '') {
+								editAddress(that.model1.address).then(res => {
+									console.log(res);
+									if (res.code === 200) {
+										uni.showToast({
+											title: '编辑成功',
+											duration: 2000,
+										});
+										setTimeout(function() {
+											uni.navigateBack()
+										}, 1000)
+									}
+								})
+							} else {
+								console.log(that.model1.address);
+								addAddress(that.model1.address).then(res => {
+									console.log(res);
+									if (res.code === 200) {
+										uni.showToast({
+											title: '添加成功',
+											duration: 2000
+										});
+										setTimeout(function() {
+											uni.navigateBack()
+										}, 1000)
+									}
+								})
 							}
-						})
-					} else {
-						console.log(this.model1.address);
-						addAddress(this.model1.address).then(res => {
-							console.log(res);
-							if (res.code === 200) {
-								uni.showToast({
-									title: '添加成功',
-									duration: 2000
-								});
-							setTimeout(function() {
-								uni.navigateBack()
-							}, 1000)
-							}
-						})
-					}
+
+						}
+					})
+
 
 				}).catch(errors => {
 					uni.$u.toast('校验失败')
@@ -176,23 +200,24 @@
 		padding: 30rpx 20rpx;
 		height: 100vh;
 
-	.button {
-		//width: 663rpx;
-		height: 91rpx;
-		background: #9FD6BA;
-		border-radius: 45rpx;
-		font-size: 36rpx;
-		color: #FFFFFF;
-		line-height: 91rpx;
-		text-align: center;
-		margin: 500rpx  30rpx 0 30rpx;
-		// position: absolute;
-		// bottom: 300rpx;
-		// left: 43rpx;
-		
-	}
-	/deep/.u-input__content__field-wrapper__field{
-		background-color: #fff;
-	}
+		.button {
+			//width: 663rpx;
+			height: 91rpx;
+			background: #A4D091;
+			border-radius: 45rpx;
+			font-size: 36rpx;
+			color: #FFFFFF;
+			line-height: 91rpx;
+			text-align: center;
+			margin: 500rpx 30rpx 0 30rpx;
+			// position: absolute;
+			// bottom: 300rpx;
+			// left: 43rpx;
+
+		}
+
+		/deep/.u-input__content__field-wrapper__field {
+			background-color: #fff;
+		}
 	}
 </style>
