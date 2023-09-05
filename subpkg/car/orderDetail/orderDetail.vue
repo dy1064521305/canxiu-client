@@ -49,9 +49,11 @@
 				</view>
 
 				<view style="margin-left:14rpx ;width: 85%;">
-					<view style="font-size: 31rpx;color: #3D3F3E;font-weight: bold;margin: 10rpx 0;">
-						{{workerInfo.workerName}}
-						<img :src="workerInfo.levelIcon" style='width: 140rpx;height: 34rpx;margin-left: 20rpx;'>
+					<view style="font-size: 31rpx;color: #3D3F3E;font-weight: bold;margin: 10rpx 0;display: flex;">
+					<text style="margin-right: 20rpx;">	{{workerInfo.workerName}}</text>
+						<!-- 	<img :src="workerInfo.levelIcon" style='width: 140rpx;height: 34rpx;margin-left: 20rpx;'> -->
+
+						<u-rate count="5" v-model="workerInfo.value" activeColor='#ec9322' size='32rpx' readonly ></u-rate>
 					</view>
 					<!-- 	<view style="font-size: 25rpx;color: #A5A7A7;">
 						{{workerInfo.workerPhone}}
@@ -85,7 +87,7 @@
 							size:10
 						}" :videoFromData="{
 							size:10
-						}"  v-model="item.projectImg" :add="false" :remove="false"></cl-upload>
+						}" v-model="item.projectImg" :add="false" :remove="false"></cl-upload>
 						<!-- <upLoadFile :fileListt='item.projectVideo' types='video' :index='index' :isDel='false' /> -->
 					</view>
 				</view>
@@ -184,14 +186,11 @@
 				<view class="">
 					订单费用
 				</view>
-				<view class="img"
-					v-if="isGet">
+				<view class="img" v-if="isGet">
 					<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
 					未达标按起步价收取
 				</view>
-				<view
-					v-else
-					class="img">
+				<view v-else class="img">
 					<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 					</image>已达到起步价
@@ -199,11 +198,13 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">起步价</text>
-				<text :style="{'text-decoration':!isGet?'line-through':'','color':!isGet?'#A5A7A7':'#EC5722'}" v-if="info.beforeStartingFree!=null">¥{{info.beforeStartingFree}}</text>
+				<text :style="{'text-decoration':!isGet?'line-through':'','color':!isGet?'#A5A7A7':'#EC5722'}"
+					v-if="info.beforeStartingFree!=null">¥{{info.beforeStartingFree}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">工时费</text>
-				<text  :style="{'text-decoration':isGet?'line-through':'','color':isGet?'#A5A7A7':'#EC5722'}" v-if="info.servicePrice!=null">¥{{info.servicePrice}}</text>
+				<text :style="{'text-decoration':isGet?'line-through':'','color':isGet?'#A5A7A7':'#EC5722'}"
+					v-if="info.servicePrice!=null">¥{{info.servicePrice}}</text>
 			</view>
 			<view v-if="info.additionalPrice!=null&&info.additionalPrice!=0" class="line">
 				<text class="ziduan">加急费</text>
@@ -215,7 +216,7 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">小计：</text>
-	
+
 				<text
 					style="color: #EC5722;">¥{{info.favorablePrice!=0&&info.favorablePrice!=null?Number(info.orderPrice)+Number(info.favorablePrice):Number(info.orderPrice)}}</text>
 			</view>
@@ -349,22 +350,28 @@
 
 			</u-collapse>
 		</view>
-		
-		<view v-if="info.sign!=null&&info.sign!=''" class="title" style="display: flex;background-color: #fff;padding: 10rpx 28rpx;justify-content: space-between;">
+
+		<view v-if="info.sign!=null&&info.sign!=''" class="title"
+			style="display: flex;background-color: #fff;padding: 10rpx 28rpx;justify-content: space-between;">
 			<view style="width: 25%;">
 				客户签名：
 			</view>
 			<view style="width: 70%;">
-				
-					<img :style="{'transform':'rotate(-90deg)','width':big?'100%':'14%','height':big?'477rpx':'121rpx'}" :src="info.sign" alt="">
+
+				<img :style="{'transform':'rotate(-90deg)','width':big?'100%':'14%','height':big?'477rpx':'121rpx'}"
+					:src="info.sign" alt="">
 			</view>
-			<view  @click="big=!big">
-				<img style='width:50rpx ;height: 50rpx;' v-if="big" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/09/4497ca4f26e54c58871233a2170aa148.png" alt="">
-				<img style='width:50rpx ;height: 50rpx;' v-else src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/09/83c8f89a91b442d8bdcf0358466df5e7.png" alt="">
+			<view @click="big=!big">
+				<img style='width:50rpx ;height: 50rpx;' v-if="big"
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/09/4497ca4f26e54c58871233a2170aa148.png"
+					alt="">
+				<img style='width:50rpx ;height: 50rpx;' v-else
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/09/83c8f89a91b442d8bdcf0358466df5e7.png"
+					alt="">
 			</view>
 		</view>
 
-	
+
 		<!-- <view @click="showPhone=true"
 			style="width:100%;margin:0 auto;color: #3398F3; text-align: center; margin:22rpx 0;">
 			有疑问？联系客服
@@ -502,13 +509,13 @@
 					size:10
 				}" :videoFromData="{
 					size:10
-				}"  v-model="bohuiUrl" :headers="headers" :action="action" @onSuccess="onSuccesss" @input='onDelete'>
+				}" v-model="bohuiUrl" :headers="headers" :action="action" @onSuccess="onSuccesss" @input='onDelete'>
 					</cl-upload>
 				</view>
 
 			</view>
 		</u-modal>
-		
+
 		<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
@@ -537,7 +544,7 @@
 		},
 		data() {
 			return {
-				big:false,
+				big: false,
 				bohuiUrl: [],
 				action: environment.baseURL + '/system/oss/upload',
 				headers: {
@@ -614,7 +621,7 @@
 				newProject: [], //新项目列表
 				showMelList: [], //显示的材料格式
 				melTotal: 0, //材料总钱数,
-				isGet:false,//是否达到起步价
+				isGet: false, //是否达到起步价
 			};
 		},
 		onLoad(option) {
@@ -656,7 +663,7 @@
 				var dateEnd = new Date(); //获取当前时间
 				var dateDiff = dateEnd.getTime() - dateBegin.getTime(); //时间差的毫秒数
 				//var dateDiff=1000000
-			//	console.log(dateDiff);
+				//	console.log(dateDiff);
 				if (dateDiff > 900000) {
 					this.dateDiff = 0
 					this.pipeiStatus = true
@@ -677,8 +684,8 @@
 						}
 
 						this.info = res.data
-						this.isGet=Number(this.info.startingFree)>Number(this.info.preferentialPrice)
-					console.log(this.isGet,'6811111111111111');
+						this.isGet = Number(this.info.startingFree) > Number(this.info.preferentialPrice)
+						console.log(this.isGet, '6811111111111111');
 						this.statusInfo.forEach(item => {
 							if (this.info.orderStatus == item.orderStatus) {
 								console.log(this.info.orderStatus == item.orderStatus, item.orderStatus);
@@ -692,8 +699,25 @@
 						}
 						//师傅信息
 						this.info.workerId != null && order.getWorkerInfo(this.info.workerId).then(res => {
-							console.log(res);
+							console.log(res, '6955555555555');
 							this.workerInfo = res.data
+							switch (this.workerInfo.levelName) {
+								case '一星匠人':
+									this.workerInfo.value = 1
+									break;
+								case '二星匠人':
+									this.workerInfo.value = 2
+									break;
+								case '三星匠人':
+									this.workerInfo.value = 3
+									break;
+								case '四星匠人':
+									this.workerInfo.value = 4
+									break;
+								case '五星匠人':
+									this.workerInfo.value = 5
+									break;
+							}
 						})
 						console.log(this.info.orderStatus);
 						if (this.info.orderStatus == '已完成') {
@@ -807,15 +831,15 @@
 			//评价
 			appraiseHandle() {
 				console.log(this.info);
-				this.info.newProject=this.newProject
+				this.info.newProject = this.newProject
 				uni.navigateTo({
-					url: '../appraise/appraise?info=' +  encodeURIComponent(JSON.stringify(this.info))
+					url: '../appraise/appraise?info=' + encodeURIComponent(JSON.stringify(this.info))
 				})
 			},
 			//投诉
 			complaint() {
 				console.log(this.info);
-				this.info.newProject=this.newProject
+				this.info.newProject = this.newProject
 				uni.navigateTo({
 					url: '../complaint/complaint?item=' + encodeURIComponent(JSON.stringify(this.info))
 				})
@@ -874,18 +898,18 @@
 			report(type) {
 				console.log(this.newProject);
 				let name = type == '待评价' || type == '待支付' ? '维修报告' : '服务验收'
-				this.info.addressVo=this.addressVo
-				
+				this.info.addressVo = this.addressVo
+
 				let info = {
 					name: name,
 					type: type,
 					id: this.info.orderId,
 					info: this.info,
-					newProject:this.newProject,
-					showMelList:this.showMelList
+					newProject: this.newProject,
+					showMelList: this.showMelList
 				}
 				console.log(info);
-				
+
 				uni.navigateTo({
 					url: '../accept/accept?info=' + JSON.stringify(info)
 				})
@@ -956,17 +980,17 @@
 				console.log(this.bohuiUrl.length == 0);
 				if (this.bohuiUrl.length == 0) {
 					uni.showToast({
-						icon:'error',
+						icon: 'error',
 						title: '请传图片/视频',
 						duration: 1000
 					});
 					return
 				}
-				this.info.reason=this.reason
-				this.info.url=this.bohuiUrl.toString()
+				this.info.reason = this.reason
+				this.info.url = this.bohuiUrl.toString()
 				this.repairOrderShow = false
 				this.overruleScenarioApi()
-				
+
 			},
 			onSuccesss(reslut) {
 				console.log(reslut)

@@ -72,13 +72,14 @@
 						故障区域
 					</view>
 					<view class="boxs">
-						<view class="box" v-for="(item,index) in regionService" :key='index'
+						<view  class="box" v-for="(item,index) in regionService" :key='index'
 							@click="goMore(item.regionName,item.productVoList)">
 							<image style="height: 100%;width: 100%;" :src="item.regionImage"></image>
 							<view class="mask">
 								{{item.regionName}}
 							</view>
 						</view>
+					
 					</view>
 				</view>
 				<view class="home-bottom" id='bottom' :style="{minHeight:scrollHeight+'px'}">
@@ -595,12 +596,14 @@
 						name: d.symptomsName,
 						list: this.queryParams.pageNum === 1 ? d.productVoList.records.map(rec => ({
 								...rec,
-								servicePrice: !this.isShowMoney ? this.replaceMoney(rec
+								servicePrice: !this.isShowMoney&&rec
+									.servicePrice!=null ? this.replaceMoney(rec
 									.servicePrice) : rec.servicePrice
 							})) : this
 							.serviceSymptomsName[i].list.concat(d.productVoList.records.map(rec => ({
 								...rec,
-								servicePrice: !this.isShowMoney ? this.replaceMoney(rec
+								servicePrice: !this.isShowMoney&&rec
+									.servicePrice!=null ? this.replaceMoney(rec
 									.servicePrice) : rec.servicePrice
 							}))),
 						total: d.productVoList.total
@@ -630,14 +633,14 @@
 				})
 			},
 			getServiceSymptoms() {
-				//	console.log(this.serviceSymptomsName);
+					console.log(this.serviceSymptomsName);
 				this.loading = true
 
 				this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
 					name: d.name,
 					list: d.list.map(rec => ({
 						...rec,
-						servicePrice: !this.isShowMoney ? this.replaceMoney(rec
+						servicePrice: !this.isShowMoney&&rec.servicePrice!=null ? this.replaceMoney(rec
 							.servicePrice) : rec.servicePrice
 					})),
 					total: d.total
@@ -743,65 +746,7 @@
 
 
 			},
-			checkForAuthorization(scope, jurisdiction) {
-				let that = this
-				return new Promise((resolve, reject) => {
-					const appAuthorizeSetting = uni.getAppAuthorizeSetting();
-					//	console.log(appAuthorizeSetting[jurisdiction]);
-
-					if (appAuthorizeSetting[jurisdiction] === "denied") {
-						that.locationStatus = appAuthorizeSetting[jurisdiction]
-						uni.showModal({
-								title: "服务未开启",
-								content: "请在手机设置“设置->应用权限”中打开微信位置权限!",
-								showCancel: false,
-								confirmText: "我知道了",
-							})
-							.then((res) => {
-								if (res[1]["confirm"]) {
-									reject();
-									uni.openAppAuthorizeSetting()
-								}
-							});
-					} else {
-						uni.authorize({
-							scope: scope,
-							success() {
-								console.log('yes')
-								that.locationStatus = ''
-								resolve();
-							},
-							fail(err) {
-								err = err["errMsg"];
-								that.locationStatus = 'errMsg'
-								console.log(that.locationStatus);
-								uni.showModal({
-									title: "温馨提示",
-									content: "为享受智能小程序，您必须授权!",
-									confirmText: "确认授权",
-								}).then((res) => {
-									if (res[1]["confirm"]) {
-										uni.openSetting({
-											success(res) {
-												if (res.errMsg.includes(
-														'ok')) {
-													resolve('ok')
-												}
-											},
-										});
-
-									} else {
-										reject();
-									}
-								});
-							},
-						});
-					}
-
-
-
-				})
-			},
+		
 			//设置定位权限
 			setting() {
 				console.log(this.locationStatus, 'this.locationStatus');
@@ -844,7 +789,7 @@
 					}
 				}, 800)
 				arr.forEach(item => {
-					item.servicePrice = !this.isShowMoney ? this.replaceMoney(item.servicePrice) :
+					item.servicePrice = !this.isShowMoney&&item.servicePrice!=null ? this.replaceMoney(item.servicePrice) :
 						item.servicePrice
 				})
 				let infos = {

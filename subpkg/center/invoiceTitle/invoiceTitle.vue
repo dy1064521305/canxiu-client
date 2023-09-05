@@ -153,7 +153,7 @@
 
 
 			.moren {
-				color: #9FD6BA;
+				color: #A4D091;
 			}
 
 			.un {
@@ -174,7 +174,7 @@
 		.btn {
 			width: 663rpx;
 			height: 91rpx;
-			background: #9FD6BA;
+			background: #A4D091;
 			border-radius: 45rpx;
 			font-size: 36rpx;
 			color: #FFFFFF;

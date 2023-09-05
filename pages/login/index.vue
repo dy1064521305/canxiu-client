@@ -1,7 +1,7 @@
 <template>
 	<view class="login">
 
-		<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/1cabf1cc977e4cc29a33272885693202.png" mode="">
+		<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/24/b9b58da181d544c8b95ab226eb3d0259.png" mode="">
 		</image>
 
 		<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/75537c81465d49b3916abd1ee8694e1f.png" mode="">
@@ -22,10 +22,11 @@
 			<view class="fonts">
 				<view style="margin-top:3rpx;">
 					<view v-if="!checked" class="check" @click="check"></view>
-					<view v-else style="width: 26rpx;height: 26rpx;" @click="check">
-						<image style="width: 100%;height: 100%;"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
-						</image>
+					<view v-else @click="check">
+						<!-- 	<image style="width: 100%;height: 100%;"
+											src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+										</image> -->
+						<u-icon name="checkmark-circle-fill" color="#A4D091" size="27rpx"></u-icon>
 					</view>
 
 				</view>
@@ -138,7 +139,7 @@
 		methods: {
 			getList() {
 				getAgreement({
-					type:'用户端'
+					type: '用户端'
 				}).then(res => {
 					console.log(res);
 					this.agreementList = res.data
@@ -207,16 +208,16 @@
 				let valid = app.validItem();
 				const apps = getApp()
 				if (valid) {
-				
+
 					//	app.isLoading = true
 					app.$store.dispatch('Login', {
 							phonenumber: app.phone,
 							smsCode: app.code,
 						}).then(result => {
 							console.log(result.data);
-							if (result.data.type=='Error') {
-								 uni.$u.toast(result.data.msg)
-								 return
+							if (result.data.type == 'Error') {
+								uni.$u.toast(result.data.msg)
+								return
 							}
 							// #ifdef APP-PLUS
 							plus.push.getClientInfoAsync((info) => {
@@ -304,7 +305,8 @@
 			goAgreement(item) {
 				console.log(item);
 				uni.navigateTo({
-					url: '../../subpkg/login/agreementDetailed/agreementDetailed?remark=' +encodeURIComponent(JSON.stringify(item.remark))
+					url: '../../subpkg/login/agreementDetailed/agreementDetailed?remark=' + encodeURIComponent(JSON
+						.stringify(item.remark))
 				})
 			},
 			//未登录回到首页

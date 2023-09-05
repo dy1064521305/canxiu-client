@@ -162,7 +162,7 @@
 		</hTimeAlert>
 
 		<!-- 添加地址弹框 -->
-		<u-modal width="450rpx" :show="showModal" confirmColor='#72DAA4' confirmText='立即填写' showCancelButton
+		<u-modal width="450rpx" :show="showModal" confirmColor='#A4D091' confirmText='立即填写' showCancelButton
 			@cancel='showModal=false' title="新建服务地址" :content='content' @confirm="addAddress"></u-modal>
 
 		<u-toast ref="uToast"></u-toast>

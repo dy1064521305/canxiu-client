@@ -118,7 +118,7 @@
 
 			.view-active {
 				color: #fff;
-				background: #9FD6BA;
+				background: #A4D091;
 			}
 
 			.view-unactive {
@@ -129,7 +129,7 @@
 		.btn {
 			width: 663rpx;
 			height: 91rpx;
-			background: #9FD6BA;
+			background: #A4D091;
 			border-radius: 45rpx;
 			margin: 0 auto;
 			color: #fff;

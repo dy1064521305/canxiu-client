@@ -437,14 +437,14 @@
 		}
 
 		view:first-child {
-			background: #9FD6BA;
+			background: #A4D091;
 			color: #fff;
 		}
 
 		view:nth-child(2) {
 			background: #FFFFFF;
-			border: 4rpx solid #9FD6BA;
-			color: #9FD6BA;
+			border: 4rpx solid #A4D091;
+			color: #A4D091;
 		}
 	}
 

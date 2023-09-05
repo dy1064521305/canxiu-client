@@ -223,7 +223,7 @@
 		.button {
 			width: 663rpx;
 			height: 91rpx;
-			background: #9FD6BA;
+			background: #A4D091;
 			border-radius: 45rpx;
 			font-size: 36rpx;
 			color: #FFFFFF;
@@ -241,7 +241,7 @@
 			.btn {
 				margin: 80rpx 30rpx 0 30rpx;
 				height: 91rpx;
-				background: #9FD6BA;
+				background: #A4D091;
 				border-radius: 45rpx;
 				color: #fff;
 				font-size: 36rpx;

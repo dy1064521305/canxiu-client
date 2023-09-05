@@ -122,7 +122,7 @@
 
 
 		<!-- 返修 -->
-		<u-modal :show="repairOrderShow" title="温馨提示" showCancelButton confirmColor='#9FD6BA'
+		<u-modal :show="repairOrderShow" title="温馨提示" showCancelButton confirmColor='#A4D091'
 			@cancel="repairOrderShow=false" @confirm="repairOrderHandle">
 			<view style="width: 100%;text-align: center;">
 				是否确认申请返修?
