@@ -99,7 +99,7 @@
 				uni.showModal({
 					title: '提示',
 					content: '是否删除此银行卡？',
-					confirmColor: '#9FD6BA',
+					confirmColor: '#A4D091',
 					success: function(res) {
 						if (res.confirm) {
 							card.deleteBankCard(id).then(res => {
@@ -176,7 +176,7 @@
 		.btn {
 			width: 663rpx;
 			height: 91rpx;
-			background: #9FD6BA;
+			background: #A4D091;
 			border-radius: 45rpx;
 			font-size: 36rpx;
 			color: #FFFFFF;

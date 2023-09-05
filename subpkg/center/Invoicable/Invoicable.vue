@@ -240,7 +240,7 @@
 
 
 			.moren {
-				color: #9FD6BA;
+				color: #A4D091;
 			}
 
 			.un {
@@ -290,7 +290,7 @@
 			.btn {
 				width: 199rpx;
 				height: 69rpx;
-				background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);
+				background: linear-gradient(90deg, #72DAA4 0%, #A4D091 100%);
 				border-radius: 34rpx;
 				font-size: 29rpx;
 				color: #FFFFFF;

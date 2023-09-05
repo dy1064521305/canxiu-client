@@ -150,7 +150,7 @@
 				uni.showModal({
 					title: '提示',
 					content: '是否删除此地址？',
-					confirmColor: '#9FD6BA',
+					confirmColor: '#A4D091',
 					success: function(res) {
 						if (res.confirm) {
 

@@ -103,7 +103,7 @@
 				.line {
 					width: 109rpx;
 					height: 14rpx;
-					background: linear-gradient(90deg, #72DAA4 0%, #9FD6BA 100%);
+					background: linear-gradient(90deg, #72DAA4 0%, #A4D091 100%);
 					border-radius: 7rpx;
 					margin: 0 auto;
 				}

@@ -1,7 +1,7 @@
 <template>
 	<view class="worker">
 		<image style="height:543rpx ;width: 100%;"
-			src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/0e5d1d17ab0d4e379f0919441fc177f0.png"></image>
+			src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png"></image>
 
 		<view class="main">
 			<z-paging ref="paging" v-model="appraiseList" @query="getList">
@@ -17,7 +17,7 @@
 							<view style="font-size: 36rpx;font-weight: bold;">
 								{{workerInfo.workerName}}
 							</view>
-							<img :src="workerInfo.levelIcon" style='width: 140rpx;height: 34rpx;'>
+							<u-rate count="5" v-model="workerInfo.value" inactiveColor='#fff' activeColor='#ec9322' size='35rpx' readonly > </u-rate>
 						</view>
 					</view>
 

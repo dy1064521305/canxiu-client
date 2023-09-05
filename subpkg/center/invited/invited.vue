@@ -20,8 +20,8 @@
 			<view style="display: flex;">
 				<text>验证码</text>
 				<input style="width: 60%;" v-model="code" type="text" placeholder="请输入验证码">
-				<text v-if="countDownNum==0" style="color: #9FD6BA;" @click="getCode">获取验证码</text>
-				<text style="color: #9FD6BA;margin-left:50rpx;" v-if="countDownNum!=0">{{countDownNum}}s</text>
+				<text v-if="countDownNum==0" style="color: #A4D091;" @click="getCode">获取验证码</text>
+				<text style="color: #A4D091;margin-left:50rpx;" v-if="countDownNum!=0">{{countDownNum}}s</text>
 			</view>
 		</view>
 		<view class="btn" @click="xiazai()">
@@ -197,7 +197,7 @@
 		.btn {
 			width: 663rpx;
 			height: 91rpx;
-			background: #9FD6BA;
+			background: #A4D091;
 			border-radius: 45rpx;
 			color: #fff;
 			line-height: 91rpx;
@@ -224,7 +224,7 @@
 			}
 
 			text {
-				color: #9FD6BA;
+				color: #A4D091;
 			}
 		}
 	}

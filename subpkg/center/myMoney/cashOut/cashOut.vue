@@ -27,7 +27,7 @@
 					<text style="font-size: 60rpx;color: #3D3F3E;margin-right: 20rpx;">¥</text>
 					<input v-model="amount" type="number" :placeholder="'可提现金额' +withdrawal+ '元'">
 				</view>
-				<view @click="getAllMoney" style="color: #9FD6BA;">
+				<view @click="getAllMoney" style="color: #A4D091;">
 					全部
 				</view>
 			</view>
@@ -171,7 +171,7 @@
 		.button {
 			width: 663rpx;
 			height: 91rpx;
-			background: #9FD6BA;
+			background: #A4D091;
 			border-radius: 45rpx;
 			font-size: 36rpx;
 			color: #FFFFFF;

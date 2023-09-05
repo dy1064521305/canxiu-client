@@ -20,10 +20,10 @@
 
 						<view class="date">
 							<view class="date-class"
-								:style="{'border-bottom':beginTime!=''?'2rpx solid #9FD6BA':'2rpx solid #D8DCDB'}">
+								:style="{'border-bottom':beginTime!=''?'2rpx solid #A4D091':'2rpx solid #D8DCDB'}">
 								<picker class="picker" mode="date" :value="date1" :start="startDate" :end="endDate"
 									@change="bindDateChangeBegin">
-									<text v-if="beginTime!=''" style="color: #9FD6BA;">{{beginTime}}</text>
+									<text v-if="beginTime!=''" style="color: #A4D091;">{{beginTime}}</text>
 									<text v-else style="color:#A5A7A7  ;">开始时间</text>
 								</picker>
 								<!-- 	<view style="   display: flex;align-items: center;" @click="dateClear('begin')">
@@ -32,10 +32,10 @@
 							</view>
 							<text style="color: #A5A7A7;">至</text>
 							<view class="date-class"
-								:style="{'border-bottom':endTime!=''?'2rpx solid #9FD6BA':'2rpx solid #D8DCDB'}">
+								:style="{'border-bottom':endTime!=''?'2rpx solid #A4D091':'2rpx solid #D8DCDB'}">
 								<picker class="picker" mode="date" :value="date2" :start="startDate" :end="endDate"
 									@change="bindDateChangeEnd">
-									<text v-if="endTime!=''" style="color: #9FD6BA;">{{endTime}}</text>
+									<text v-if="endTime!=''" style="color: #A4D091;">{{endTime}}</text>
 									<text v-else style="color:#A5A7A7  ;">结束时间</text>
 								</picker>
 								<!-- 	<view style=" display: flex;align-items: center;" @click="dateClear('end')">

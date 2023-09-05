@@ -634,13 +634,13 @@
 
 			.quxiao {
 
-				border: 4rpx solid #9FD6BA;
+				border: 4rpx solid #A4D091;
 				background: #FFFFFF;
-				color: #9FD6BA;
+				color: #A4D091;
 			}
 
 			.queren {
-				background: #9FD6BA;
+				background: #A4D091;
 				color: #FFFFFF;
 			}
 		}
@@ -704,7 +704,7 @@
 				font-weight: 500;
 				width: 663rpx;
 				height: 91rpx;
-				background: #9FD6BA;
+				background: #A4D091;
 				border-radius: 45rpx;
 				text-align: center;
 				line-height: 91rpx;

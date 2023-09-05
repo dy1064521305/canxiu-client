@@ -1,6 +1,6 @@
 <template>
 	<view class="swiper-container">
-		<swiper indicator-active-color='#9FD6BA' class="swiper" :current="current" @change="swiperChange">
+		<swiper indicator-active-color='#A4D091' class="swiper" :current="current" @change="swiperChange">
 			<swiper-item v-for="(item,index) in swiperArr" :key="index">
 				<view class="swiper-item ">
 					<view style="height: 23vh;">
@@ -100,7 +100,7 @@
 
 				.current {
 					width: 40rpx;
-					background-color: #9FD6BA;
+					background-color: #A4D091;
 				}
 			}
 		}

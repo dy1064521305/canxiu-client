@@ -86,7 +86,7 @@
 		</view>
 
 		<!-- 手机号说明 -->
-		<u-modal :show="showPhoneMotal" width="500rpx" title="手机号说明" confirmColor='#9FD6BA'
+		<u-modal :show="showPhoneMotal" width="500rpx" title="手机号说明" confirmColor='#A4D091'
 			@confirm="showPhoneMotal=false">
 			<view style="width: 100%;text-align: center;">
 				手机号为银行预留手机号即办理该银行卡时所填写的手机号，如没有预留、忘记手机号码或已经停用，可联系银行客服更新处理。
@@ -291,12 +291,12 @@
 
 		.btn-white {
 			background: #FFFFFF;
-			border: 4rpx solid #9FD6BA;
-			color: #9FD6BA;
+			border: 4rpx solid #A4D091;
+			color: #A4D091;
 		}
 
 		.btn-green {
-			background: #9FD6BA;
+			background: #A4D091;
 			color: #fff;
 			height: 90rpx;
 		}
