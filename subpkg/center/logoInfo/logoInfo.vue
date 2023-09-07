@@ -10,7 +10,7 @@
 			</view>
 		</u-navbar>
 		<view style="height: 86vh;display: flex;align-items: center;">
-			<image v-if="userInfo.avatarUrl!=null" style="width: 100%;" :src="userInfo.avatarUrl"
+			<image v-if="userInfo.storeImg!=null" style="width: 100%;" :src="userInfo.storeImg"
 				mode="widthFix"></image>
 			<image v-else style="width: 100%;height: 700rpx;"
 				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
@@ -69,7 +69,7 @@
 								let data = JSON.parse(res.data);
 								if (data.code == 200) {
 									console.log(data);
-									this.userInfo.avatarUrl = data.data.url
+									this.userInfo.storeImg = data.data.url
 									uni.hideLoading();
 								}
 							}

@@ -8,10 +8,10 @@
 				<view style="display: flex;align-items: center;width: 100%;" @click="goLogoInfo">
 					<view style="width: 89%;">
 
-						<image v-if="userInfo.avatarUrl==null" style="width: 100rpx;height: 100rpx;"
+						<image v-if="userInfo.storeImg==null" style="width: 100rpx;height: 100rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
 						</image>
-						<u-avatar v-else :src="userInfo.avatarUrl" size="50"></u-avatar>
+						<u-avatar v-else :src="userInfo.storeImg" size="50"></u-avatar>
 					</view>
 					<view class="">
 						<image style="width:14rpx;height: 25rpx;"
@@ -25,8 +25,8 @@
 				<u--input v-model="userInfo.phoneNumber" :disabled='disabled' disabledColor="#ffffff" border="none" >
 				</u--input>
 			</u-form-item>
-			<u-form-item label="门店名称" prop="clientName" borderBottom ref="item1">
-				<u--input v-model="userInfo.clientName" :disabled='disabled' disabledColor="#ffffff" border="none" :placeholder="disabled?'':'请输入门店名称'">
+			<u-form-item label="门店名称" prop="storeName" borderBottom ref="item1">
+				<u--input v-model="userInfo.storeName" :disabled='disabled' disabledColor="#ffffff" border="none" :placeholder="disabled?'':'请输入门店名称'">
 				</u--input>
 			</u-form-item>
 			<u-form-item label="门店地址" borderBottom ref="item1">
@@ -86,7 +86,7 @@
 			this.disabled = this.type == 'info'
 			this.region = this.userInfo.region
 			console.log(this.userInfo);
-			this.$set(this.userInfo, 'avatarUrl', this.userInfo.avatarUrl)
+			this.$set(this.userInfo, 'storeImg', this.userInfo.storeImg)
 		},
 
 		methods: {
@@ -116,8 +116,8 @@
 							uni.navigateBack()
 						}, 1000)
 						uni.$TUIKit.updateMyProfile({
-							nick: this.userInfo.clientName,
-							avatar: this.userInfo.avatarUrl,
+							nick: this.userInfo.storeName,
+							avatar: this.userInfo.storeImg,
 							selfSignature: ''
 						}).then(res => {
 							console.info(res);

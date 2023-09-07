@@ -230,7 +230,7 @@
 			line-height: 91rpx;
 			text-align: center;
 			position: absolute;
-			bottom: 300rpx;
+			top: 300rpx;
 			left: 43rpx;
 		}
 

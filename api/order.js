@@ -49,3 +49,6 @@ export const overruleScenario = (data) => request.put('/client/order/overruleSce
 
 //客户确认维修方案
 export const confirmScenario = (data) => request.put('/client/order/confirmScenario',data)
+
+//客户重新发起订单
+export const reissueOrder = (data) => request.put('/client/order/reissue',data)
