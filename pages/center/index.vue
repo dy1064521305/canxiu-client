@@ -23,15 +23,15 @@
 
 				<view class="info" @click="editInfo">
 					<view>
-						<image v-if="userInfo.avatarUrl==null" style="width: 136rpx;height: 136rpx;"
+						<image v-if="userInfo.storeImg==null" style="width: 136rpx;height: 136rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
 						</image>
-						<u--image v-else width='136rpx' height='136rpx' :src="userInfo.avatarUrl" shape="circle">
+						<u--image v-else width='136rpx' height='136rpx' :src="userInfo.storeImg" shape="circle">
 						</u--image>
 					</view>
 					<view class="name">
-						<view v-if="userInfo.clientName!=null " style="font-size: 36rpx;">
-							{{userInfo.clientName}}
+						<view v-if="userInfo.storeName!=null " style="font-size: 36rpx;">
+							{{userInfo.storeName}}
 						</view>
 						<view style="font-size: 29rpx;">
 							{{userInfo.phone}}

@@ -210,9 +210,9 @@
 				<text class="ziduan">加急费</text>
 				<text style="color: #EC5722;">¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
 			</view>
-			<view v-if="info.materialPrice!=null" class="line">
+			<view v-if="info.materialPrice!=null" class="line" >
 				<text class="ziduan">材料费</text>
-				<text>¥{{info.materialPrice}}</text>
+				<text style="color: #EC5722;">¥{{info.materialPrice}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">小计：</text>
@@ -376,11 +376,14 @@
 			style="width:100%;margin:0 auto;color: #3398F3; text-align: center; margin:22rpx 0;">
 			有疑问？联系客服
 		</view> -->
-
-		<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待接单'||info.orderStatus=='待服务'" class="btns">
+		<!--  -->
+		<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待接单'||info.orderStatus=='待服务'||info.orderStatus=='上级驳回,待处理'" class="btns">
 			<view class="btn-white" @click="show=true">
 				取消订单
 			</view>
+		<!-- 	<view v-if="info.orderStatus=='上级驳回,待处理'" @click="handleRoute()" class="btn-green">
+				重新发起
+			</view> -->
 			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="handleRoute()" class="btn-green">
 				联系维修师
 			</view>
@@ -393,10 +396,10 @@
 			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="report('待评价')">
 				生成维修报告
 			</view>
-			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white"
+		<!-- 	<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white"
 				@click="repairOrderShow=true">
 				申请返修
-			</view>
+			</view> -->
 			<view v-if="info.orderStatus=='待评价'" class="btn-green" @click="appraiseHandle">
 				评价
 			</view>
@@ -412,9 +415,9 @@
 		</view>
 
 		<view v-if="info.orderStatus=='待验收'" class="btns">
-			<view style="width:166rpx;" class="btn-white" @click='complaint'>
+		<!-- 	<view style="width:166rpx;" class="btn-white" @click='complaint'>
 				投诉
-			</view>
+			</view> -->
 			<view style="width:166rpx;" class="btn-white" @click='resultShowModal=true'>
 				驳回
 			</view>
@@ -422,6 +425,9 @@
 				验收
 			</view>
 		</view>
+		
+	
+		
 
 		<view v-if="info.orderStatus=='服务中【审核通过】'" class="btns">
 			<view class="btn-white" @click="rejectShowModal=true">
@@ -983,12 +989,12 @@
 						icon: 'error',
 						title: '请传图片/视频',
 						duration: 1000
-					});
+					});s
 					return
 				}
 				this.info.reason = this.reason
 				this.info.url = this.bohuiUrl.toString()
-				this.repairOrderShow = false
+				this.resultShowModal = false
 				this.overruleScenarioApi()
 
 			},

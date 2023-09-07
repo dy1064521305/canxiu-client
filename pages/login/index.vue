@@ -240,8 +240,8 @@
 									console.log(res);
 									this.userInfo = res.data
 									let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
-									if (result.data.type == 'Success' && !isEmpty(this.userInfo.avatarUrl) && !
-										isEmpty(this.userInfo.clientName) && !isEmpty(this.userInfo
+									if (result.data.type == 'Success' && !isEmpty(this.userInfo.storeImg) && !
+										isEmpty(this.userInfo.storeName) && !isEmpty(this.userInfo
 											.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
 											.userInfo
 											.storeTypeId)) {

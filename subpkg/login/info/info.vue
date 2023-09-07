@@ -10,8 +10,8 @@
 			</u-form-item>
 
 
-			<u-form-item label="门店名称" prop="clientName" borderBottom ref="item1">
-				<u--input v-model="userInfo.clientName" border="none" placeholder="请输入门店名称"></u--input>
+			<u-form-item label="门店名称" prop="storeName" borderBottom ref="item1">
+				<u--input v-model="userInfo.storeName" border="none" placeholder="请输入门店名称"></u--input>
 			</u-form-item>
 			<u-form-item label="门店地址" borderBottom ref="item1">
 				<pickers @address="address">
@@ -89,7 +89,7 @@
 					})
 				}
 				
-				let arr = res.data.avatarUrl!=null?res.data.avatarUrl.split(','):[]
+				let arr = res.data.storeImg!=null?res.data.storeImg.split(','):[]
 				this.fileList=arr
 				console.log(this.fileList);
 			})
