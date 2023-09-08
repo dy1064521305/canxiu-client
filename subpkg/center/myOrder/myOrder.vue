@@ -61,7 +61,7 @@
 						</view>
 						<view class="bottom">
 							<view>下单时间：{{item.orderTime}}</view>
-							<view>{{item.orderStatus}}</view>
+							<view>{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.orderStatus}}</view>
 						</view>
 					</view>
 					<view v-if="item.projectDataVoList.length!=0" v-for="(pro,i) in item.projectDataVoList" :key="i"

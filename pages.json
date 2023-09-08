@@ -1,6 +1,5 @@
 {
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/init/init",
 			"style": {
 				"navigationBarTitleText": "",
@@ -93,7 +92,7 @@
 			}
 		}
 
-	
+
 
 
 
@@ -114,17 +113,17 @@
 						"navigationStyle": "custom"
 					}
 				}
-			   ,
+				,
 				{
-                    "path" : "order-push-list/index",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "工单助手",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+				                "path" : "order-push-list/index",
+				                "style" :                                                                                    
+				            {
+				                "navigationBarTitleText": "工单助手",
+				                "enablePullDownRefresh": false
+				            }
+
+				            }
+			]
 
 		},
 		{
@@ -146,10 +145,10 @@
 					}
 
 				}
-			 
-              
-               
-            ]
+
+
+
+			]
 		},
 		{
 			"root": "subpkg/home",
@@ -183,16 +182,15 @@
 
 
 
-			    ,{
-                    "path" : "video-container/video-container",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "视频播放",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+				, {
+					"path": "video-container/video-container",
+					"style": {
+						"navigationBarTitleText": "视频播放",
+						"enablePullDownRefresh": false
+					}
+
+				}
+			]
 		},
 		{
 			"root": "subpkg/car",
@@ -292,7 +290,7 @@
 						"navigationBarTitleText": "",
 						"enablePullDownRefresh": false
 					}
-				
+
 				}
 			]
 		},
@@ -366,13 +364,12 @@
 
 				},
 				{
-				    "path" : "setting/registrationAgreement/registrationAgreement",
-				    "style" :                                                                                    
-				{
-				    "navigationBarTitleText": "注册协议",
-				    "enablePullDownRefresh": false
-				}
-				
+					"path": "setting/registrationAgreement/registrationAgreement",
+					"style": {
+						"navigationBarTitleText": "注册协议",
+						"enablePullDownRefresh": false
+					}
+
 				},
 				{
 					"path": "personalInfo/personalInfo",
@@ -469,14 +466,14 @@
 						"navigationStyle": "custom"
 					}
 
-				},  {
+				}, {
 					"path": "myMoney/cashOut/cashOut",
 					"style": {
 						"navigationBarTitleText": "提现",
 						"enablePullDownRefresh": false
 					}
 
-				},{
+				}, {
 					"path": "aboutUs/aboutUs",
 					"style": {
 						"navigationBarTitleText": "关于我们",
@@ -490,17 +487,16 @@
 						"enablePullDownRefresh": false
 					}
 
+				}, {
+					"path": "setting/privacyAgreement/privacyAgreement",
+					"style": {
+						"navigationBarTitleText": "隐私政策",
+						"enablePullDownRefresh": false
+					}
+
 				}
-			    ,{
-                    "path" : "setting/privacyAgreement/privacyAgreement",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "隐私政策",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+
+			]
 		}
 	],
 	"tabBar": {
