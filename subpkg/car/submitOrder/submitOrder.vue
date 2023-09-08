@@ -19,7 +19,7 @@
 			<view v-else class="left" style="font-size: 36rpx;color: #A5A7A7;">
 				请添加服务地址
 			</view>
-			<view class="right">
+			<view v-if="!isAgain" class="right">
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
 					mode=""></image>
 			</view>
@@ -53,10 +53,45 @@
 					</view>
 				</view>
 
-				<view class="">
+				<view v-if="isAgain">
+					<view v-for="(itemm,indexx) in projectDataVoList" :key="indexx" style="padding: 20rpx;">
+						<project-card :pro='itemm' />
+						<view class="info-box">
+							<view class="font">
+								图片/视频
+							</view>
+							<view>
+								<cl-upload :listStyle="{
+										columnGap: '10rpx',
+										columns:'3',
+										rowGap:'10rpx'
+										}" :imageFormData="{
+											size:10
+										}" :videoFromData="{
+											size:10
+										}" v-model="itemm.projectImg" :add="false" :remove="false"></cl-upload>
+								<!-- <upLoadFile :fileListt='item.projectVideo' types='video' :index='index' :isDel='false' /> -->
+							</view>
+						</view>
+						<view v-if="itemm.remark!=''" class="info-box">
+							<view class="font">
+								订单备注
+							</view>
+							<view class="right" style="color: #707271;">
+								{{itemm.remark}}
+							</view>
+						</view>
+					</view>
+				</view>
+
+
+
+				<view v-else>
 					<proInfo :list="item.list" :isCar='true' :submit='false' @getCheck='getCheck'
 						@getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
 				</view>
+
+
 			</view>
 
 		</view>
@@ -87,7 +122,8 @@
 					<view class="">
 						起步价：
 					</view>
-					<view :style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'line-through':''}">
+					<view
+						:style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'line-through':''}">
 						¥{{item.list[0].startingFree}}
 					</view>
 				</view>
@@ -95,7 +131,8 @@
 					<view class="">
 						工时费：
 					</view>
-					<view :style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'line-through':''}">
+					<view
+						:style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'line-through':''}">
 						¥{{item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0)}}
 					</view>
 				</view>
@@ -114,12 +151,16 @@
 						品牌折扣：
 					</view>
 					<!-- 未达到起步价 -->
-					<view v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0" style="color:  #EC5722;">
+					<view
+						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0"
+						style="color:  #EC5722;">
 						-¥{{Number(item.list[0].startingFree)-Number(item.list[0].startingFreeDiscount)}}
 					</view>
 					<!-- 达到起步价 -->
-					<view v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0" style="color:  #EC5722;">
-						¥{{item.list.reduce((p, c) => p + ((Number(c.projectPrice)*Number(c.projectNumber))-(Number(c.discountPrice)*Number(c.projectNumber))), 0)}}
+					<view
+						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0"
+						style="color:  #EC5722;">
+						-¥{{item.list.reduce((p, c) => p + ((Number(c.projectPrice)*Number(c.projectNumber))-(Number(c.discountPrice)*Number(c.projectNumber))), 0)}}
 					</view>
 				</view>
 				<view class="line">
@@ -142,8 +183,7 @@
 			<!-- 	<view class=""> -->
 			<view class="">
 				<text style="font-size: 22rpx;color: #A5A7A7;">合计费用:</text>
-				<text
-					style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{info.orderPrice}}</text>
+				<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{info.orderPrice}}</text>
 			</view>
 			<!-- 	<view v-if="urgentPriceTotal!=0">
 					<text style="font-size: 22rpx;color: #A5A7A7;margin-left:180rpx;">加急费:</text>
@@ -173,6 +213,7 @@
 	import hTimeAlert from "@/components/h-time-alert/h-time-alert.vue"
 	import proInfo from '@/components/proInfo/proInfo.vue'
 	import formatter from '@/utils/formatter.js'
+	import projectCard from '@/components/projectCard/projectCard.vue'
 	import {
 		getAddressList
 	} from "@/api/address.js"
@@ -180,13 +221,17 @@
 		postOrder
 	} from '@/api/car.js'
 	import {
+		reissueOrder
+	} from '@/api/order.js'
+	import {
 		getInfoById,
 	} from '@/api/user.js'
 	export default {
 		name: 'test',
 		components: {
 			hTimeAlert,
-			proInfo
+			proInfo,
+			projectCard
 		},
 		mixins: [],
 		props: {},
@@ -210,6 +255,8 @@
 				showListByType: [],
 				timeIndex: undefined,
 				isCar: false, //是从购物车下单还是立即下单
+				isAgain: false,
+				projectDataVoList: []
 			};
 		},
 		onShow() {
@@ -217,11 +264,15 @@
 
 		},
 		onLoad(option) {
-			console.log(decodeURIComponent(option.item));
+			// console.log(decodeURIComponent(option.item));
 			let item = JSON.parse(decodeURIComponent(option.item))
 			this.submitList = item.checkedList
 			this.isCar = item.isCar
-		//	this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
+			this.isAgain = item.isAgain
+			console.log(this.isAgain);
+			this.projectDataVoList = item.checkedList
+
+			//	this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
 			console.log(this.showListByType, this.submitList, '.........103');
 			this.getMoney()
 			console.log(this.showListByType);
@@ -329,9 +380,9 @@
 				}
 
 			},
-			
+
 			//计算总钱数
-			getMoney(){
+			getMoney() {
 				this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
 				this.showListByType.forEach((item, index) => {
 					console.log(item);
@@ -340,17 +391,20 @@
 					console.log(all);
 					item.allMoney = all < Number(item.list[0].startingFreeDiscount) ? Number(item.list[0]
 						.startingFreeDiscount) : all
-				
+					console.log(item.allMoney);
 				})
-				this.info.orderPrice = this.showListByType.reduce((p, c) => p + c.allMoney,0)+ this.urgentPriceTotal
+				this.info.orderPrice = this.showListByType.reduce((p, c) => p + c.allMoney, 0) + this.urgentPriceTotal
 			},
 			getCheck(data) {
 				console.log(data);
 				console.log(this.submitList);
-				
+
 				let id = data.item.id ? data.item.id : data.item.projectId
 				//console.log(id);
-				this.submitList.forEach(item=>{item.projectNumber=(item.id ? item.id : item.projectId) === id ? data.num.value : item.projectNumber})
+				this.submitList.forEach(item => {
+					item.projectNumber = (item.id ? item.id : item.projectId) === id ? data.num.value : item
+						.projectNumber
+				})
 				// this.info.orderPrice = this.submitList.reduce((p, c) => p + (((c.id ? c.id : c.projectId) === id ? data.num.value : c.projectNumber) * Number(c.discountPrice)), 0)
 				// // this.urgentPriceTotal = this.info.isUrgent ? this.submitList.reduce((p, c) => p + (((c.id ? c.id : c
 				// // 		.projectId) === id ? data.num
@@ -360,7 +414,7 @@
 				// 		item.projectNumber = data.num.value
 				// 	}
 				// })
-			this.getMoney()
+				this.getMoney()
 				console.log(this.info.orderPrice);
 				const pages = uni.$u.pages()
 				pages[pages.length - 2].$vm.changeData([data.item])
@@ -427,71 +481,100 @@
 					});
 					return
 				}
-				//else {
-				console.log(this.addressInfo);
-				this.info.addressId = this.addressInfo.addressId
-				//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
-				this.info.clientId = storage.get('ClientId')
 
-				console.log(this.showListByType);
-				console.log(this.info);
-				let arr = JSON.parse(JSON.stringify(this.submitList))
-				console.log(arr);
+				if (this.isAgain) {
+					console.log({
+						orderId: this.showListByType[0].list[0].orderId,
+						expectTime: this.showListByType[0].expectTime + ':00'
+					})
+					reissueOrder({
+						orderId: this.showListByType[0].list[0].orderId,
+						expectTime: this.showListByType[0].expectTime + ':00'
+					}).then(res => {
+						console.log(res);
+						let timeObj = {}
+						this.showListByType.forEach(item => {
+							timeObj[item.list[0].workerType] = item.expectTime + ':00'
 
-				let bool1 = arr.some(item => {
-					return item.projectImg.length == 0
-				})
-				console.log(bool1);
-				if (bool1) {
-					this.$refs.uToast.show({
-						type: 'error',
-						message: '每个项目都要上传图片或视频'
-					});
-
-					return
-				}
-
-				arr.forEach(item => {
-					//item.projectVideo = this.toStrings(item.projectVideo)
-					item.projectImg = this.toStrings(item.projectImg)
-					item.shoppingCartStatus = 1
-					item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
-				})
-				let timeObj = {}
-				let startingFree = {}
-				let beforeStartingFree={}
-				this.showListByType.forEach(item => {
-					timeObj[item.list[0].workerType] = item.expectTime + ':00'
-					startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount,
-					beforeStartingFree[item.list[0].workerType] = item.list[0].startingFree
-				})
-				console.log(timeObj, startingFree);
-				this.info.orderProjectBoList = arr
-				this.info.startingFreeMap = startingFree
-				this.info.timeMap = timeObj
-				this.info.beforeStartingFreeMap=beforeStartingFree
-				//this.info.expectTime = this.info.expectTime + ':00'
-				console.log(this.info);
-				postOrder(this.info).then(res => {
-					console.log(res);
-					if (res.code == 200) {
-						uni.removeStorage({
-							key: 'address_info'
-						})
-						uni.removeStorage({
-							key: 'submit_order'
 						})
 						let info = {
 							money: this.info.orderPrice,
 							time: timeObj,
-							orderId: res.data
+							orderId:  this.showListByType[0].list[0].orderId
 						}
 						console.log(info);
 						uni.redirectTo({
 							url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(info)
 						})
+					})
+				} else {
+					//else {
+					console.log(this.addressInfo);
+					this.info.addressId = this.addressInfo.addressId
+					//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
+					this.info.clientId = storage.get('ClientId')
+
+					console.log(this.showListByType);
+					console.log(this.info);
+					let arr = JSON.parse(JSON.stringify(this.submitList))
+					console.log(arr);
+
+					let bool1 = arr.some(item => {
+						return item.projectImg.length == 0
+					})
+					console.log(bool1);
+					if (bool1) {
+						this.$refs.uToast.show({
+							type: 'error',
+							message: '每个项目都要上传图片或视频'
+						});
+
+						return
 					}
-				})
+
+					arr.forEach(item => {
+						//item.projectVideo = this.toStrings(item.projectVideo)
+						item.projectImg = this.toStrings(item.projectImg)
+						item.shoppingCartStatus = 1
+						item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
+					})
+					let timeObj = {}
+					let startingFree = {}
+					let beforeStartingFree = {}
+					this.showListByType.forEach(item => {
+						timeObj[item.list[0].workerType] = item.expectTime + ':00'
+						startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount,
+							beforeStartingFree[item.list[0].workerType] = item.list[0].startingFree
+					})
+					console.log(timeObj, startingFree);
+					this.info.orderProjectBoList = arr
+					this.info.startingFreeMap = startingFree
+					this.info.timeMap = timeObj
+					this.info.beforeStartingFreeMap = beforeStartingFree
+					//this.info.expectTime = this.info.expectTime + ':00'
+					console.log(this.info);
+					postOrder(this.info).then(res => {
+						console.log(res);
+						if (res.code == 200) {
+							uni.removeStorage({
+								key: 'address_info'
+							})
+							uni.removeStorage({
+								key: 'submit_order'
+							})
+							let info = {
+								money: this.info.orderPrice,
+								time: timeObj,
+								orderId: res.data
+							}
+							console.log(info);
+							uni.redirectTo({
+								url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(info)
+							})
+						}
+					})
+				}
+
 
 
 
@@ -514,6 +597,7 @@
 			},
 			//查看我的地址
 			myAddress() {
+				if (this.isAgain) return
 				let params = {
 					type: 'order',
 					list: this.submitList
@@ -531,7 +615,8 @@
 				// })
 				const pages = uni.$u.pages();
 				console.log(pages);
-				pages.some(p => p.route.includes('service') || p.route.includes('goodDetails')) ? uni.navigateBack() : uni
+				pages.some(p => p.route.includes('service') || p.route.includes('goodDetails') || p.route.includes(
+						'orderDetail')) ? uni.navigateBack() : uni
 					.switchTab({
 						url: '/pages/car/car'
 					})
@@ -608,9 +693,25 @@
 			margin-top: 20rpx;
 			width: 100%;
 			background-color: #fff;
+
 			// bottom: 110rpx;
 			// position: relative;
 			// top: 2rpx;
+			.info-box {
+				margin-top: 20rpx;
+				display: flex;
+
+				.font {
+					width: 20%;
+					font-size: 29rpx;
+					font-weight: bold;
+					color: #3D3F3E;
+				}
+
+				.right {
+					width: 80%;
+				}
+			}
 		}
 
 		.priceList {

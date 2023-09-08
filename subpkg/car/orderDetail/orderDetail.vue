@@ -313,7 +313,7 @@
 						</view>
 						<view class="line">
 							<text class="ziduan"></text>
-							<text>{{addressVo.contact}} {{addressVo.phone}}</text>
+							<text>{{addressVo.contact}} {{addressVo.showPhone}}</text>
 
 						</view>
 					</view>
@@ -381,9 +381,9 @@
 			<view class="btn-white" @click="show=true">
 				取消订单
 			</view>
-		<!-- 	<view v-if="info.orderStatus=='上级驳回,待处理'" @click="handleRoute()" class="btn-green">
+			<view v-if="info.orderStatus=='上级驳回,待处理'" @click="reissueOrderHandle" class="btn-green">
 				重新发起
-			</view> -->
+			</view>
 			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="handleRoute()" class="btn-green">
 				联系维修师
 			</view>
@@ -620,7 +620,13 @@
 						orderStatus: '已完成',
 						status: '评价已完成',
 						content: '您已评价，谢谢您的支持',
-					},
+					}
+					,
+					{
+						orderStatus: '师傅取消',
+						status: '重新指派中',
+						content:"师傅已取消,重新指派中"
+					}
 				],
 				appraise: {},
 				id: '', //订单id
@@ -686,7 +692,8 @@
 							this.addressVo = res.data.addressVo
 							this.addressVo.addressRegion = this.addressVo.addressRegion.replace(/\//g, '')
 							var reg = /^(\d{3})\d{4}(\d{4})$/;
-							this.addressVo.phone = this.addressVo.phone.replace(reg, "$1****$2");
+							this.addressVo.showPhone = this.addressVo.phone.replace(reg, "$1****$2");
+							
 						}
 
 						this.info = res.data
@@ -702,10 +709,10 @@
 						if (this.status == '') {
 							this.status = this.info.orderStatus
 							this.content = this.info.orderStatus
+							console.log(this.status,'7066666666666');
 						}
 						//师傅信息
 						this.info.workerId != null && order.getWorkerInfo(this.info.workerId).then(res => {
-							console.log(res, '6955555555555');
 							this.workerInfo = res.data
 							switch (this.workerInfo.levelName) {
 								case '一星匠人':
@@ -850,6 +857,26 @@
 					url: '../complaint/complaint?item=' + encodeURIComponent(JSON.stringify(this.info))
 				})
 			},
+			//重新发起
+			reissueOrderHandle(){
+				console.log(this.info);
+				this.info.projectDataVoList.forEach(item=>{
+					item.startingFreeDiscount=this.info.startingFree
+					item.startingFree=this.info.beforeStartingFree
+					item.orderId=this.info.orderId
+				})
+				let info = {
+					checkedList:this.info.projectDataVoList,
+					isCar: true,
+					isAgain:true,
+					address:this.info.addressVo,
+					
+				}
+			uni.navigateTo({
+				url: '../submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(
+					info))
+			})
+			},
 			//支付
 			pay() {
 				uni.navigateTo({
@@ -977,7 +1004,7 @@
 						title: '驳回成功',
 						duration: 1000
 					});
-
+					
 					this.getList()
 				})
 			},
