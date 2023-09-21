@@ -290,7 +290,7 @@
 			.btn {
 				width: 199rpx;
 				height: 69rpx;
-				background: linear-gradient(90deg, #72DAA4 0%, #A4D091 100%);
+				background: #A4D091 ;
 				border-radius: 34rpx;
 				font-size: 29rpx;
 				color: #FFFFFF;
