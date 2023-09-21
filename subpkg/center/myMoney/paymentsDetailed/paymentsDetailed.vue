@@ -5,7 +5,7 @@
 
 				<view class="data-box">
 					<u-search @custom="search" @search="search" :show-action="true" placeholder="搜索订单"
-						v-model="query.detailsType">
+						v-model="query.orderNumber">
 					</u-search>
 					<view style='margin-top: 20rpx;display: flex;'>
 						<view :style="{'width': date==''?'':'25%'}">
@@ -92,7 +92,7 @@
 					pageNum: 1,
 					userId: '',
 					userType: 'c',
-					detailsType: ''
+					orderNumber: ''
 
 				},
 				endTime: '',
