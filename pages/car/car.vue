@@ -84,9 +84,7 @@
 								style="align-items: center;display: flex;">
 								<text style="font-size: 24rpx;">
 									还差<text
-										style="color:#2E8FF4 ;">{{Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))}}</text>元达到起步价<text
-										@click="coudanHandle(item.workerType)"
-										style="color:#2E8FF4 ;margin-left: 5rpx;display:">去凑单></text>
+										style="color:#2E8FF4 ;">{{Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))}}</text>元达到起步价
 								</text>
 							</view>
 							<view v-else style="align-items: center;display: flex;font-size: 24rpx;">
@@ -94,7 +92,9 @@
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 								</image>已达到起步价
 							</view>
-
+							<text
+							@click="coudanHandle(item.workerType)"
+							style="color:#2E8FF4 ;margin-left: 5rpx;display:">去凑单></text>
 							<!-- 	</view> -->
 							<!-- 	<view style="font-size: 24rpx;display: flex;align-items: flex-end">
 							
@@ -239,6 +239,9 @@
 				this.allNum = 0
 				this.checkedList = []
 			}
+			uni.removeStorage({
+				key:'service_info'
+			})
 		},
 		onHide() {
 			this.coudanShow = false

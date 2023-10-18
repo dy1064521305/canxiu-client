@@ -122,12 +122,13 @@
 						<u-icon name="info-circle" color="#fff" size="20"></u-icon>
 						<text style="margin-left: 20rpx;">还差{{priceDifference}}元达到起步价</text>
 					</view>
-					<view @click="coudanShow=true">
-						去凑单>
-					</view>
+				
 				</view>
 				<view v-else>
 					已达到起步价
+				</view>
+				<view @click="coudanShow=true">
+					去凑单>
 				</view>
 			</view>
 			<view class="bottom-bottom">
@@ -142,22 +143,22 @@
 				</view>
 				<view class="detail-price">
 
-					<text
+					<view
 					v-if='isLogin'
-						style="font-size: 30rpx;font-weight: bold;color:#EC5722 ;">¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}</text>
-					<text
+						style="font-size: 30rpx;font-weight: bold;color:#EC5722 ;">¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}</view>
+					<view
 						v-if="projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)!=0"
 						style="color:#A4D091 ;margin-left: 5rpx;font-size: 25rpx;"
-						@click="preferentialShow=true">品牌优惠¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}></text>
+						@click="preferentialShow=true">品牌优惠¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}></view>
 
 				</view>
 
 				<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/b0566d28d45d47b2bf4b94356337615b.png"
 				mode="" @click="joinCar('car')"></image> -->
-				<view v-if="projectNumber==1" style="padding: 0 50rpx;" class="btn-green" @click="getOrderHandle">
+				<view   class="btn-green" @click="getOrderHandle">
 					立即下单
 				</view>
-				<view v-if="projectNumber!=1" style="padding: 0 50rpx;" class="btn-green" @click="goCar">
+				<view   class="btn-green" style="margin-left: 20rpx;" @click="goCar">
 					去维修车
 				</view>
 
@@ -847,7 +848,7 @@
 						clientId: storage.get('ClientId'),
 						workerType: this.goodInfo.workerType,
 						remark: item.remark ? item.remark : '',
-						projectNumber: 1,
+						projectNumber: item.projectNumber,
 						startingFreeDiscount: this.goodInfo.startingFreeDiscount,
 						startingFree: this.goodInfo.startingFree,
 						serviceTime: item.projectHours,
@@ -913,13 +914,14 @@
 		height: 100vh;
 
 		.btn-green {
-			height: 75rpx;
+			height: 65rpx;
 			background: #A4D091;
 			border-radius: 34rpx;
 			font-size: 29rpx;
 			color: #FFFFFF;
-			line-height: 75rpx;
+			line-height: 65rpx;
 			text-align: center;
+			padding: 0 40rpx;
 		}
 
 		.bgf {
@@ -1063,7 +1065,7 @@
 				}
 
 				.detail-price {
-					width: 50%;
+					width: 27%;
 					text-align: start;
 					font-size: 30rpx;
 				}
