@@ -848,7 +848,7 @@
 			//跳转服务页
 			goService(name) {
 
-				//		console.log(i);
+					console.log(i);
 				this.timer = setInterval(() => {
 					this.getCityName()
 

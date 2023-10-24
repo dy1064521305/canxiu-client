@@ -92,9 +92,8 @@
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 								</image>已达到起步价
 							</view>
-							<text
-							@click="coudanHandle(item.workerType)"
-							style="color:#2E8FF4 ;margin-left: 5rpx;display:">去凑单></text>
+							<text @click="coudanHandle(item.workerType)"
+								style="color:#2E8FF4 ;margin-left: 5rpx;display:">去凑单></text>
 							<!-- 	</view> -->
 							<!-- 	<view style="font-size: 24rpx;display: flex;align-items: flex-end">
 							
@@ -150,13 +149,16 @@
 		<u-popup :show="coudanShow" closeable @close="coudanShow=false">
 			<view class="cou-dan">
 				<view class="title">服务橱窗</view>
-				<view class="main">
+				<u--input @input='getCoudanList' @clear="getCoudanList" @confirm="getCoudanList"
+					clearable v-model="searchName" type="text" placeholder="请输入需要的服务" />
+				<view v-if="coudanList.length!=0" class="main">
 					<view v-for="(item,index) in coudanList" :key="index">
 						<good-card type='coudan' :item='item' />
 					</view>
 
 				</view>
-
+				<u-empty v-else mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" text='没有找到哦，换个关键词试一下吧'>
+				</u-empty>
 			</view>
 		</u-popup>
 
@@ -201,6 +203,8 @@
 				checkedList: [],
 				menuButtonInfoWidth: 0,
 				isLogin: false,
+				workerType: undefined,
+				searchName: ''
 			};
 		},
 		onReady() {
@@ -240,11 +244,13 @@
 				this.checkedList = []
 			}
 			uni.removeStorage({
-				key:'service_info'
+				key: 'service_info'
 			})
 		},
 		onHide() {
 			this.coudanShow = false
+			this.workerType=undefined,
+			this.searchName=''
 		},
 		methods: {
 
@@ -315,18 +321,19 @@
 			getTotalMoney() {
 				let arr = this.arrayGroupBy(this.checkedList, 'workerType');
 				console.log(arr, 'checkedListcheckedListcheckedListcheckedListcheckedList');
-			
-				 this.totalMoney=0
-				 arr.forEach((item,index)=>{
-					 console.log(item);
-					 let all=item.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
-					 let money2=all<Number(item[0].startingFreeDiscount)?Number(item[0].startingFreeDiscount):all
-					this.totalMoney+=money2
-				
-				
-				 })
-				 
-				 
+
+				this.totalMoney = 0
+				arr.forEach((item, index) => {
+					console.log(item);
+					let all = item.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
+					let money2 = all < Number(item[0].startingFreeDiscount) ? Number(item[0]
+						.startingFreeDiscount) : all
+					this.totalMoney += money2
+
+
+				})
+
+
 				//this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
 			},
 			getCheckList() {
@@ -585,10 +592,9 @@
 				console.log(this.dataList, '.....346', this.checkedList);
 				this.getTotalMoney()
 				car.editCar({
-					id:data.item.id,
-					projectNumber:data.item.projectNumber
-				}).then(res=>{
-				})
+					id: data.item.id,
+					projectNumber: data.item.projectNumber
+				}).then(res => {})
 				// this.totalMoney = this.checkedList.reduce((p, c) => p + ((c.id === data.item.id ? data.num.value : c
 				// 	.projectNumber) * c.discountPrice), 0)
 			},
@@ -666,17 +672,22 @@
 			},
 			//凑单列表
 			coudanHandle(name) {
-
+				this.workerType = name
+				this.coudanShow = true
+				this.getCoudanList()
+			},
+			getCoudanList() {
 				//获取凑单列表
 				car.listByWorkerType({
 					clientId: storage.get('ClientId'),
-					type: name
+					type: this.workerType,
+					name:this.searchName
 				}).then(res => {
 					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
 					this.coudanList = res.data
-					this.coudanShow = true
+
 				})
-			},
+			}
 		}
 	};
 </script>
