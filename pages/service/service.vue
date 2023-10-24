@@ -5,14 +5,16 @@
 				<!-- 	<view @click="choseCity" style="margin:0 18rpx 0 30rpx;">杭州</view>
 				<image @click="choseCity" class="triangle" src="../../static/img/home/triangle.png" mode=""></image>
 				<view class="line">|</view> -->
-				<image class="search-icon" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png" mode=""></image>
-			
-			<view style="width: 65%;color: #ccc;">
-					请输入需要的服务	
-				<!-- 		<u--input @clear='input("clear")' @input='input("input")' clearable border='none' @confirm="search"
+				<image class="search-icon"
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png"
+					mode=""></image>
+
+				<view style="width: 65%;color: #ccc;">
+					请输入需要的服务
+					<!-- 		<u--input @clear='input("clear")' @input='input("input")' clearable border='none' @confirm="search"
 						v-model="query.name" type="text" placeholder="请输入需要的服务" />-->
-				</view> 
-				<view class="search-title"  >搜索</view>
+				</view>
+				<view class="search-title">搜索</view>
 			</view>
 		</view>
 		<u-empty marginTop='70' text='没有找到该服务项目哦，换个关键词试一下吧' v-if="query.name!=''&&typesList.length==0&&isSearch"
@@ -87,9 +89,9 @@
 	export default {
 		data() {
 			return {
-				loading:false,
+				loading: false,
 				scrollTop: 0, //tab标题的滚动条位置
-				oldScrollTop: 0, // tab标题的滚动条旧位置
+				oldScrollTop:0, // tab标题的滚动条旧位置
 				current: 0, // 预设当前项的值
 				menuHeight: 0, // 左边菜单的高度
 				menuItemHeight: 0, // 左边菜单item的高度
@@ -110,14 +112,28 @@
 			this.getHeight();
 			// #endif
 			//this.getMenuItemTop()
-		
+
 
 
 		},
 		onShow() {
+		
 			if (getApp().index != undefined) {
 				this.$nextTick(() => {
 					this.swichMenu(getApp().index)
+				})
+			}else{
+				let that=this
+				uni.getStorage({
+					key:'service_info',
+					success(info) {
+						console.log(info);
+						that.current=info.data.current
+						
+						// that.scrollRightTop=info.data.scrollTop
+						that.swichMenu(that.current)
+						
+					}
 				})
 			}
 			getCarNum().then(res => {
@@ -128,21 +144,24 @@
 					})
 				}
 			})
-				this.getList()
+			console.log(this.current);
+			this.getList()
 
 		},
 		onHide() {
 			console.log(111);
 			getApp().index = undefined
+		
 		},
+	
 		methods: {
 			getList(type) {
-					this.typesList = []
+				this.typesList = []
 				console.log(type);
 				// uni.showLoading({
 				// 	title: '加载中...'
 				// });
-				this.loading=true
+				this.loading = true
 				service.getService(this.query).then(res => {
 					if (type == 'search') {
 						console.log(111);
@@ -153,18 +172,18 @@
 								this.typesList.push(item)
 							}
 						})
-							console.log(this.typesList);
-							this.isSearch = true
-							//uni.hideLoading()
-							this.loading=false
+						console.log(this.typesList);
+						this.isSearch = true
+						//uni.hideLoading()
+					
 					} else {
 						console.log(11111);
-					
+
 						this.typesList = res.data
 						this.isSearch = false
 					}
 
-				
+						this.loading = false
 					console.log(this.typesList);
 				})
 			},
@@ -246,6 +265,7 @@
 			},
 			async swichMenu(index) {
 				const ind = index
+				console.log(this.scrollRightTop);
 				if (this.typesList.length === 0) {
 					setTimeout(() => {
 						this.swichMenu(ind)
@@ -260,12 +280,13 @@
 				this.scrollRightTop = this.oldScrollTop;
 				this.$nextTick(function() {
 					this.scrollRightTop = this.arr[index];
-					//	console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
+						console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
 					this.current = index;
 					this.leftMenuStatus(index);
 				})
 			},
 			async rightScroll(e) {
+			console.log(e);
 				this.oldScrollTop = e.detail.scrollTop;
 				if (this.arr.length == 0) {
 					await this.getMenuItemTop();
@@ -295,11 +316,20 @@
 
 				this.query.name = ''
 				this.isSearch = false
-				this.getList()
-				console.log(item1);
+				console.log(this.current);
+				let info={
+						scrollTop:this.oldScrollTop,
+						current:this.current
+				}
+				uni.setStorage({
+					data: info,
+					key: 'service_info'
+
+				})
 				uni.navigateTo({
 					url: '../../subpkg/car/goodDetails/goodDetails?typeId=' + item1.typeId
 				})
+
 			},
 			//搜索
 			search() {
@@ -318,7 +348,7 @@
 
 
 			},
-		
+
 			clear() {
 				this.query.name = ''
 				this.isSearch = false
@@ -338,7 +368,7 @@
 			toNext(type) {
 				if (this.query.name != '' && type == 'input') {
 					console.log(type);
-					
+
 					this.getList('search')
 				} else {
 					if (type == 'clear') {
@@ -366,6 +396,7 @@
 			background-color: #fff;
 			position: relative;
 			z-index: 99999;
+
 			.search {
 				align-items: center;
 				display: flex;
@@ -426,7 +457,8 @@
 				width: 100%;
 				text-align: center;
 				display: inline-block;
-				background:linear-gradient(270deg, #A4D091 0%, #769D71 100%);;
+				background: linear-gradient(270deg, #A4D091 0%, #769D71 100%);
+				;
 				border-radius: 30rpx;
 
 				height: 60rpx;

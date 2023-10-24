@@ -271,13 +271,11 @@
 				],
 			};
 		},
-		// onTabItemTap: function(item) {
-		// 	if (!storage.get('AccessToken')) {
-		// 		uni.navigateTo({
-		// 			url: '/pages/login/index'
-		// 		})
-		// 	}
-		// },
+		onTabItemTap: function(item) {
+			uni.removeStorage({
+				key:'service_info'
+			})
+		},
 		onShow() {
 			this.getList()
 			this.isLogin = storage.get('AccessToken')

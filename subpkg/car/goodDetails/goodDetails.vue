@@ -122,7 +122,7 @@
 						<u-icon name="info-circle" color="#fff" size="20"></u-icon>
 						<text style="margin-left: 20rpx;">还差{{priceDifference}}元达到起步价</text>
 					</view>
-				
+
 				</view>
 				<view v-else>
 					已达到起步价
@@ -143,22 +143,23 @@
 				</view>
 				<view class="detail-price">
 
-					<view
-					v-if='isLogin'
-						style="font-size: 30rpx;font-weight: bold;color:#EC5722 ;">¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}</view>
+					<view v-if='isLogin' style="font-size: 30rpx;font-weight: bold;color:#EC5722 ;">
+						¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}
+					</view>
 					<view
 						v-if="projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)!=0"
-						style="color:#A4D091 ;margin-left: 5rpx;font-size: 25rpx;"
-						@click="preferentialShow=true">品牌优惠¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}></view>
+						style="color:#A4D091 ;margin-left: 5rpx;font-size: 25rpx;" @click="preferentialShow=true">
+						品牌优惠¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}>
+					</view>
 
 				</view>
 
 				<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/b0566d28d45d47b2bf4b94356337615b.png"
 				mode="" @click="joinCar('car')"></image> -->
-				<view   class="btn-green" @click="getOrderHandle">
+				<view class="btn-green" @click="getOrderHandle">
 					立即下单
 				</view>
-				<view   class="btn-green" style="margin-left: 20rpx;" @click="goCar">
+				<view class="btn-green" style="margin-left: 20rpx;" @click="goCar">
 					去维修车
 				</view>
 
@@ -227,13 +228,17 @@
 		<u-popup :show="coudanShow" closeable @close="coudanShow=false">
 			<view class="cou-dan">
 				<view class="title">服务橱窗</view>
-				<view class="main">
+				<u--input @input='getListByWorkerType()' @clear="getListByWorkerType" @confirm="getListByWorkerType"
+					clearable v-model="searchName" type="text" placeholder="请输入需要的服务" />
+				<view v-if="coudanList.length!=0" class="main">
+
 					<view v-for="(item,index) in coudanList" :key="index">
 						<good-card type='coudan' :item='item' :goodInfo='projectVoList[0]' />
 					</view>
 
 				</view>
-
+				<u-empty v-else mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" text='没有找到哦，换个关键词试一下吧'>
+				</u-empty>
 			</view>
 		</u-popup>
 		<!-- 品牌优惠弹框 -->
@@ -341,7 +346,9 @@
 				qrCode: '', //二维码
 				allNum: 0, //购物车数量
 				priceDifference: 0, //起步价差价
-				projectNumber: 1
+				projectNumber: 1,
+				searchName: '',
+
 			}
 		},
 		onLoad(options) {
@@ -433,6 +440,16 @@
 					this.getInfo()
 				}
 			},
+			getListByWorkerType() {
+				car.listByWorkerType({
+					clientId: storage.get('ClientId'),
+					type: this.goodInfo.workerType,
+					name: this.searchName
+				}).then(res => {
+					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
+					this.coudanList = res.data
+				})
+			},
 			//获取详细信息
 			getInfo() {
 				console.log(1111);
@@ -445,17 +462,11 @@
 						title: this.goodInfo.serviceName
 					})
 					console.log(this.goodInfo);
-				
+
 					//获取凑单列表
 					if (this.isLogin) {
-							this.getCarList()
-						car.listByWorkerType({
-							clientId: storage.get('ClientId'),
-							type: this.goodInfo.workerType
-						}).then(res => {
-							console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
-							this.coudanList = res.data
-						})
+						this.getCarList()
+						this.getListByWorkerType()
 					}
 
 					//获取评论
@@ -772,7 +783,7 @@
 			getCheck(item) {
 				console.log(item, 'itrwmmmmmmmmm');
 				if (!this.isLogin) {
-					 this.isShowLogin = true
+					this.isShowLogin = true
 					return
 				}
 				item.item.projectNumber = this.projectNumber = item.num.value
@@ -827,7 +838,7 @@
 				// 	return
 				// }
 				if (!this.isLogin) {
-					 this.isShowLogin = true
+					this.isShowLogin = true
 					return
 				}
 				console.log(this.projectVoList);
