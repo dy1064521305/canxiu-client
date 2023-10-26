@@ -74,6 +74,18 @@
 			choseMethod(i) {
 				this.currentIndex = i
 			},
+			successHandle() {
+				const pages = uni.$u.pages();
+
+				if (pages.some(p => p.route.includes('accept'))) {
+					uni.navigateBack({
+						delta: 2, //返回上上一级注意这里要设置为2
+					})
+				} else {
+					uni.navigateBack()
+				}
+				console.log(page);
+			},
 			pay() {
 				if (this.currentIndex == undefined) {
 					uni.showToast({
@@ -87,32 +99,43 @@
 						tradeType: 'APP'
 					}).then(res => {
 						console.log(res);
-
+						var orderInfos = {
+							"appid": res.data.appid, // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
+							"noncestr": res.data.nonce_str, // 随机字符串
+							"package": "Sign=WXPay", // 固定值
+							"partnerid": res.data.partnerid, // 微信支付商户号
+							"prepayid": res.data.prepay_id, // 统一下单订单号 
+							"timestamp": res.data.timestamp, // 时间戳（单位：秒）
+							"sign": res.data.sign, // 签名，这里用的 MD5/RSA 签名
+						}
+						uni.requestPayment({
+							provider: "wxpay",
+							orderInfo: orderInfos,
+							success(res) {
+								console.log(res);
+								this.successHandle()
+							},
+							fail(e) {
+								console.log(orderInfos);
+								console.log(e);
+							}
+						})
 					})
 				} else {
 					pay.alipay({
 						orderId: this.info.orderId,
 					}).then(res => {
 						console.log(res);
-							console.log(res.data.orderStr);
+						console.log(res.data.orderStr);
 						uni.requestPayment({
-						    provider: 'alipay',
-						    orderInfo: res.data.orderStr, 
-						    success: function (res) {
-						       const pages = uni.$u.pages();
-						       
-						       if (pages.some(p => p.route.includes('accept'))) {
-						       	uni.navigateBack({
-						       		delta: 2, //返回上上一级注意这里要设置为2
-						       	})
-						       } else {
-						       	uni.navigateBack()
-						       }
-						       console.log(page);
-						    },
-						    fail: function (err) {
-						        console.log('fail:' + JSON.stringify(err));
-						    }
+							provider: 'alipay',
+							orderInfo: res.data.orderStr,
+							success: function(res) {
+								this.successHandle()
+							},
+							fail: function(err) {
+								console.log('fail:' + JSON.stringify(err));
+							}
 						});
 
 					})
