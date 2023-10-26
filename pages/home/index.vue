@@ -138,7 +138,11 @@
 				去设置
 			</view>
 		</view>
-		<app-update ref="app_update" :force="true"></app-update>
+		
+		<view class="index" style="z-index: 99999999;">
+			<wu-app-update></wu-app-update>
+		</view>
+		
 	</view>
 </template>
 
@@ -156,8 +160,6 @@
 		getRegionService
 	} from '@/api/home.js';
 
-	import appUpdate from "@/components/app-update/app-update.vue";
-
 	import {
 		accountQueryState,
 		getUserSig,
@@ -172,8 +174,7 @@
 	} from '@/api/service.js'
 	export default {
 		components: {
-			goodCard,
-			appUpdate
+			goodCard
 		},
 		data() {
 			return {
