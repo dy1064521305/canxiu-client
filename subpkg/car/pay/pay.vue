@@ -96,7 +96,6 @@
 				} else if (this.currentIndex == 0) {
 					pay.weChatPay({
 						orderId: this.info.orderId,
-						tradeType: 'APP'
 					}).then(res => {
 						console.log(res);
 						var orderInfos = {
