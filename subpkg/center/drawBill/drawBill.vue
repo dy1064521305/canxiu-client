@@ -229,9 +229,7 @@
 			color: #FFFFFF;
 			line-height: 91rpx;
 			text-align: center;
-			position: absolute;
-			top: 300rpx;
-			left: 43rpx;
+			margin:300rpx auto;
 		}
 
 		.noInvoice {
