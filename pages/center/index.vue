@@ -125,7 +125,7 @@
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cdd0134f2d7e4200af485661223615eb.png">
 								</image>
 							</view>
-							<text>维修地址</text>
+							<text>我的地址</text>
 						</view>
 						<view class="box" @click="showPhone=true">
 							<view class='img'>
@@ -141,7 +141,7 @@
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/47c98144cb6a456c9767451b3d0db13f.png">
 								</image>
 							</view>
-							<text>邀请挣钱</text>
+							<text>邀请奖励</text>
 						</view>
 						<view class="box" @click="fuwuClick('invoice')">
 							<view class='img'>
@@ -200,6 +200,13 @@
 						</u-cell>
 
 					</u-cell-group>
+
+					
+				</view>
+				
+				<view @click="showPhone=true"
+					style="width:100%;margin:0 auto;color: #3398F3; text-align: center; margin:80rpx 0;">
+					有疑问？联系客服
 				</view>
 			</view>
 		</view>
@@ -273,7 +280,7 @@
 		},
 		onTabItemTap: function(item) {
 			uni.removeStorage({
-				key:'service_info'
+				key: 'service_info'
 			})
 		},
 		onShow() {

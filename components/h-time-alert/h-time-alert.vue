@@ -199,7 +199,7 @@
 				this.selectTime = timeArr[_ind].time;
 				this.selectEndime = timeArr[_ind].endtime;
 				this.activeTimeArr = timeArr;
-
+				
 			},
 			_handleData() {
 				let _data = {};
@@ -463,6 +463,15 @@
 			},
 			ok() {
 				let _data = this._handleData();
+				console.log(this.selectTime);
+				if (this.selectTime=='') {
+					uni.showToast({
+						title: '请选择上门时间',
+						duration: 2000,
+						icon: 'none'
+					});
+					return
+				}
 				this._closeAlert(_data);
 			}
 		}

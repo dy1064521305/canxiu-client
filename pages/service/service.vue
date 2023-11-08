@@ -90,14 +90,14 @@
 		data() {
 			return {
 				loading: false,
-				scrollTop: 0, //tab标题的滚动条位置
-				oldScrollTop:0, // tab标题的滚动条旧位置
+				scrollTop: 100, //tab标题的滚动条位置
+				oldScrollTop: 100, // tab标题的滚动条旧位置
 				current: 0, // 预设当前项的值
 				menuHeight: 0, // 左边菜单的高度
 				menuItemHeight: 0, // 左边菜单item的高度
 				itemId: '', // 栏目右边scroll-view用于滚动的id
 				arr: [], // 储存距离顶部高度的数组
-				scrollRightTop: 0, // 右边栏目scroll-view的滚动条高度
+				scrollRightTop: 100, // 右边栏目scroll-view的滚动条高度
 				timer: null, // 定时器		
 				titleHeight: 0, //小程序的顶部高度
 				typesList: [],
@@ -105,6 +105,7 @@
 					name: '', //搜索
 				},
 				isSearch: false,
+				storgeTop: undefined
 			};
 		},
 		onLoad() {
@@ -113,29 +114,41 @@
 			// #endif
 			//this.getMenuItemTop()
 
-
-
-		},
-		onShow() {
-		
 			if (getApp().index != undefined) {
 				this.$nextTick(() => {
 					this.swichMenu(getApp().index)
 				})
-			}else{
-				let that=this
-				uni.getStorage({
-					key:'service_info',
-					success(info) {
-						console.log(info);
-						that.current=info.data.current
-						
-						// that.scrollRightTop=info.data.scrollTop
-						that.swichMenu(that.current)
-						
-					}
-				})
 			}
+			// else {
+			// 	let that = this
+			// 	uni.getStorage({
+			// 		key: 'service_info',
+			// 		success(info) {
+			// 			console.log(info);
+			// 			that.current = info.data.current
+
+			// 			// that.storgeTop=info.data.scrollTop
+			// 			// that.rightScroll({
+			// 			//  detail:{
+			// 			// 	 scrollTop:info.data.scrollTop
+			// 			//  }
+			// 			// })
+
+			// 			that.swichMenu(that.current)
+
+			// 		}
+			// 	})
+			// }
+
+
+
+
+		},
+		onTabItemTap: function() {
+			this.getList()
+
+		},
+		onShow() {
 			getCarNum().then(res => {
 				if (res != 0) {
 					uni.setTabBarBadge({
@@ -144,16 +157,15 @@
 					})
 				}
 			})
-			console.log(this.current);
-			this.getList()
+
 
 		},
 		onHide() {
 			console.log(111);
 			getApp().index = undefined
-		
+
 		},
-	
+
 		methods: {
 			getList(type) {
 				this.typesList = []
@@ -175,7 +187,7 @@
 						console.log(this.typesList);
 						this.isSearch = true
 						//uni.hideLoading()
-					
+
 					} else {
 						console.log(11111);
 
@@ -183,7 +195,7 @@
 						this.isSearch = false
 					}
 
-						this.loading = false
+					this.loading = false
 					console.log(this.typesList);
 				})
 			},
@@ -277,16 +289,15 @@
 				}
 				console.log(index);
 				if (index == this.current) return;
-				this.scrollRightTop = this.oldScrollTop;
+
 				this.$nextTick(function() {
 					this.scrollRightTop = this.arr[index];
-						console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
+					console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
 					this.current = index;
 					this.leftMenuStatus(index);
 				})
 			},
 			async rightScroll(e) {
-			console.log(e);
 				this.oldScrollTop = e.detail.scrollTop;
 				if (this.arr.length == 0) {
 					await this.getMenuItemTop();
@@ -317,15 +328,15 @@
 				this.query.name = ''
 				this.isSearch = false
 				console.log(this.current);
-				let info={
-						scrollTop:this.oldScrollTop,
-						current:this.current
+				let info = {
+					scrollTop: this.oldScrollTop,
+					current: this.current
 				}
-				uni.setStorage({
-					data: info,
-					key: 'service_info'
+				// uni.setStorage({
+				// 	data: info,
+				// 	key: 'service_info'
 
-				})
+				// })
 				uni.navigateTo({
 					url: '../../subpkg/car/goodDetails/goodDetails?typeId=' + item1.typeId
 				})
@@ -359,12 +370,7 @@
 				this.typesList = []
 				uni.$u.debounce(this.toNext(type), 500)
 			},
-			//搜索
-			goSearch() {
-				uni.navigateTo({
-					url: '../../subpkg/home/search/search'
-				})
-			},
+
 			toNext(type) {
 				if (this.query.name != '' && type == 'input') {
 					console.log(type);

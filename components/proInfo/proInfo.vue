@@ -133,7 +133,7 @@
 						<view style="margin-right: 10rpx;">订单备注</view>
 						<view style='width: 80%'>
 							<u--textarea height='30rpx' border='none' maxlength='50' confirmType="done" autoHeight
-								v-model="item.remark" placeholder="备注内容(选填)" count @input='textareaInput'></u--textarea>
+								v-model="item.remarks" placeholder="备注内容(选填)" count @input='textareaInput'></u--textarea>
 						</view>
 					</view>
 				</view>
@@ -241,10 +241,11 @@
 							//	console.log('139......', item);
 							item.projectName = item.serviceProjectName ? item.serviceProjectName : item
 								.projectName
+								item.remarks = item.remark || ''
 						} else {
-							//	console.log(item, '.......147...');
+								console.log(item, '.......147...');
 							item.shuoming = item.remark
-							item.remark = item.remark || ''
+							item.remarks = item.remarks || ''
 							item.projectNumber = (item.projectNumber === undefined || item.projectNumber ===
 								0) ? 0 : item.projectNumber
 							//		console.log(1111);

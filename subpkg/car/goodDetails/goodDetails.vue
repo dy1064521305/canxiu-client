@@ -799,7 +799,7 @@
 					projectId: this.projectVoList[0].projectId,
 					projectImg: this.projectVoList[0].projectImg == [] ? undefined : this.projectVoList[0]
 						.projectImg.toString(),
-					remark: this.projectVoList[0].remark,
+					remark: this.projectVoList[0].remarks,
 					shoppingCartStatus: 0,
 					discountPrice: this.projectVoList[0].discountPrice,
 					// projectVideo: item.projectVideo != [] ? item.projectVideo.toString() :
@@ -858,8 +858,8 @@
 					newSetArray.push(Object.assign({}, item, {
 						clientId: storage.get('ClientId'),
 						workerType: this.goodInfo.workerType,
-						remark: item.remark ? item.remark : '',
-						projectNumber: item.projectNumber,
+						remark: item.remarks ? item.remarks : '',
+						projectNumber: item.projectNumber? item.projectNumber:1,
 						startingFreeDiscount: this.goodInfo.startingFreeDiscount,
 						startingFree: this.goodInfo.startingFree,
 						serviceTime: item.projectHours,
@@ -908,7 +908,7 @@
 
 			textConfirm(arr) {
 				console.log(arr);
-				this.projectVoList[0].remark = arr[0].remark
+				this.projectVoList[0].remarks = arr[0].remarks
 			},
 
 		}
