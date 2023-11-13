@@ -20,7 +20,7 @@
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png"
 						mode="widthFix"></image>
 				</view>
-				<view v-else class="un" @click="choseMethod(index)">
+				<view v-else class="un" @click="choseMethod(index,item.name)">
 					<view class="circle"></view>
 				</view>
 			</view>
@@ -45,14 +45,15 @@
 						name: '支付宝支付',
 						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/15/9955d4e3556e402091654a20d34956aa.png',
 					},
-					// {
-					// 	name: '集团代付',
-					// 	url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/15/7483d75ee78344d7b12762f5585a5bdd.png',
-					// },
+					{
+						name: '集团代付',
+						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/15/7483d75ee78344d7b12762f5585a5bdd.png',
+					},
 				],
 				currentIndex: undefined,
 				info: {},
-				code: ''
+				code: '',
+				type: ''
 			};
 		},
 		onLoad(option) {
@@ -71,8 +72,9 @@
 			});
 		},
 		methods: {
-			choseMethod(i) {
+			choseMethod(i, n) {
 				this.currentIndex = i
+				this.type = n
 			},
 			successHandle() {
 				const pages = uni.$u.pages();
@@ -93,7 +95,7 @@
 						duration: 800,
 						icon: 'none'
 					});
-				} else if (this.currentIndex == 0) {
+				} else if (this.type == '微信支付') {
 					pay.weChatPay({
 						orderId: this.info.orderId,
 					}).then(res => {
@@ -120,7 +122,7 @@
 							}
 						})
 					})
-				} else {
+				} else if (this.type == '支付宝支付') {
 					pay.alipay({
 						orderId: this.info.orderId,
 					}).then(res => {
@@ -138,6 +140,22 @@
 						});
 
 					})
+				} else if (this.type == '集团代付') {
+					pay.payOnBehalf({
+						orderId: this.info.orderId,
+					}).then(res => {
+						uni.showToast({
+							title: '操作成功',
+							duration: 800,
+							icon: 'none'
+						});
+						setTimeout(() => {
+							this.successHandle()
+						},900)
+					})
+
+
+
 				}
 			}
 		}

@@ -9,3 +9,6 @@ export const alipay = (data) => request.post('/client/pay/alipay',data)
 
 // 支付宝支付
 export const alipayNotify = (data) => request.post('/client/pay/alipayNotify',data)
+
+// 集团代付
+export const payOnBehalf = (data) => request.put('/client/pay/payOnBehalf',data)
