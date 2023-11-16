@@ -44,7 +44,7 @@
 					</image>
 					<image v-else style="width:98rpx;height: 98rpx;" :src="workerInfo.avatarUrl"></image>
 					<view class="">
-						{{info.projectDataVoList[0].workerType.replace('人工','师傅')}}
+					维修师傅
 					</view>
 				</view>
 
@@ -429,7 +429,7 @@
 	
 		
 
-		<view v-if="info.orderStatus=='服务中【审核通过】'" class="btns">
+		<view v-if="info.orderStatus=='服务中【待客户确认】'" class="btns">
 			<view class="btn-white" @click="rejectShowModal=true">
 				驳回
 			</view>
@@ -939,7 +939,8 @@
 					id: this.info.orderId,
 					info: this.info,
 					newProject: this.newProject,
-					showMelList: this.showMelList
+					showMelList: this.showMelList,
+					isGet:this.isGet
 				}
 				console.log(info);
 

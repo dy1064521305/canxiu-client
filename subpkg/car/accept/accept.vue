@@ -146,26 +146,27 @@
 						订单费用
 					</view>
 					<view class="img"
-						v-if="Number(info.info.startingFree)-(info.info.additionalPrice!=null?Number(info.info.orderPrice)-Number(info.info.additionalPrice):Number(info.info.orderPrice))>=0">
+						v-if="info.isGet">
 						<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
 						未达标按起步价收取
 					</view>
 					<view
-						v-if="Number(info.info.startingFree)-(info.info.additionalPrice!=null?Number(info.info.orderPrice)-Number(info.info.additionalPrice):Number(info.info.orderPrice))<0"
+					 v-else
 						class="img">
 						<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 						</image>已达到起步价
 					</view>
 				</view>
 				<view class="line">
 					<text class="ziduan">起步价</text>
-					<text v-if="info.info.startingFree!=null">¥{{info.info.startingFree}}</text>
+				<text :style="{'text-decoration':!info.isGet?'line-through':'','color':!info.isGet?'#A5A7A7':'#EC5722'}"
+					v-if="info.info.beforeStartingFree!=null">¥{{info.info.beforeStartingFree}}</text>
 				</view>
 				<view class="line">
 					<text class="ziduan">工时费</text>
-					<text style="text-decoration:line-through"
-						v-if="info.info.servicePrice!=null">¥{{info.info.servicePrice}}</text>
+				<text :style="{'text-decoration':info.isGet?'line-through':'','color':info.isGet?'#A5A7A7':'#EC5722'}"
+					v-if="info.info.servicePrice!=null">¥{{info.info.servicePrice}}</text>
 				</view>
 				<view class="line">
 					<text class="ziduan">加急费</text>
@@ -179,7 +180,7 @@
 					<text class="ziduan">小计：</text>
 			
 					<text
-						style="color: #EC5722;">¥{{(info.info.additionalPrice!=null?Number(info.info.additionalPrice):0)+(info.info.materialPrice!=null?Number(info.info.materialPrice):0)+Number(info.info.servicePrice)}}</text>
+						style="color: #EC5722;">¥{{info.info.favorablePrice!=0&&info.info.favorablePrice!=null?Number(info.info.orderPrice)+Number(info.info.favorablePrice):Number(info.info.orderPrice)}}</text>
 				</view>
 				<view v-if="info.info.favorablePrice!=0&&info.info.favorablePrice!=null"
 					style="margin-left: 20rpx;color: #A5A7A7;" class="line">
