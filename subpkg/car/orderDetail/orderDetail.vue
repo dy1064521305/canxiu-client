@@ -429,7 +429,7 @@
 	
 		
 
-		<view v-if="info.orderStatus=='服务中【待客户确认】'" class="btns">
+		<view v-if="info.orderStatus=='服务中【待客户审核】'" class="btns">
 			<view class="btn-white" @click="rejectShowModal=true">
 				驳回
 			</view>

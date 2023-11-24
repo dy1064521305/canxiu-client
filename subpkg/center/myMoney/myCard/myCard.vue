@@ -23,7 +23,7 @@
 							</view>
 						</view>
 						<view class="">
-							**** **** **** {{item.cardNumber.slice(12, 16)}}
+							**** **** **** {{item.cardNumber.substr(-4)}}
 						</view>
 					</view>
 				</view>

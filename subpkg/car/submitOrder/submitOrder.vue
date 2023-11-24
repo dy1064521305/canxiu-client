@@ -356,6 +356,7 @@
 							this.showModal = this.addressList.length == 0
 							try {
 								const value = uni.getStorageSync('address_info');
+								console.log(value);
 								if (value) {
 									this.addressInfo = value
 									console.log(value);
@@ -373,6 +374,7 @@
 								}
 							} catch (e) {
 								// error
+								console.log(e);
 							}
 
 						})
@@ -481,7 +483,16 @@
 					});
 					return
 				}
-
+					console.log(this.addressInfo.addressId,this.addressList.length);
+				if (!this.addressInfo.addressId||this.addressList.length==0) {
+					uni.showToast({
+						title: '请选择地址',
+						duration: 2000,
+						icon: 'none'
+					});
+					return
+				}
+			
 				if (this.isAgain) {
 					console.log({
 						orderId: this.showListByType[0].list[0].orderId,
@@ -574,9 +585,6 @@
 						}
 					})
 				}
-
-
-
 
 
 
