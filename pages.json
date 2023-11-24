@@ -436,15 +436,17 @@
 						"enablePullDownRefresh": false
 					}
 
-				}, {
-					"path": "invited/invited",
-					"style": {
-						"navigationBarTitleText": "",
-						"enablePullDownRefresh": false,
-						"navigationStyle": "custom"
-					}
+				}, 
+				// {
+				// 	"path": "invited/invited",
+				// 	"style": {
+				// 		"navigationBarTitleText": "",
+				// 		"enablePullDownRefresh": false,
+				// 		"navigationStyle": "custom"
+				// 	}
 
-				}, {
+				// },
+				{
 					"path": "myMoney/paymentsDetailed/paymentsDetailed",
 					"style": {
 						"navigationBarTitleText": "订单收支明细",

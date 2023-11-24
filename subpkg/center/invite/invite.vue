@@ -184,15 +184,15 @@
 						console.log(this.userInfo);
 						//获取二维码
 						// #ifdef MP-WEIXIN
-						generateQrCode({
-							codeStatus: 'w',
-							page: 'subpkg/center/invited/invited',
-							scene: this.userInfo.invitationCode
-						}).then(async res => {
-							console.log(res);
-							this.qrCode = await this.Tobase(res.msg)
-							console.log(this.qrCode);
-						})
+						// generateQrCode({
+						// 	codeStatus: 'w',
+						// 	page: 'subpkg/center/invited/invited',
+						// 	scene: this.userInfo.invitationCode
+						// }).then(async res => {
+						// 	console.log(res);
+						// 	this.qrCode = await this.Tobase(res.msg)
+						// 	console.log(this.qrCode);
+						// })
 						// #endif
 
 
@@ -497,14 +497,14 @@
 			overlayClose() {
 				this.shows = false
 			},
-			go() {
-				uni.navigateTo({
-					url: '../invited/invited',
-					fail(res) {
-						console.log(res);
-					}
-				})
-			}
+			// go() {
+			// 	uni.navigateTo({
+			// 		url: '../invited/invited',
+			// 		fail(res) {
+			// 			console.log(res);
+			// 		}
+			// 	})
+			// }
 		}
 	}
 </script>
