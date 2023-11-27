@@ -114,7 +114,7 @@
 			},
 			getUrl(url) {
 				console.log(url);
-				this.userInfo.avatarUrl = url.urls[0]
+				this.userInfo.storeImg = url.urls[0]
 			},
 			reset() {
 				this.index = undefined

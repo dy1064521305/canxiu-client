@@ -1,11 +1,11 @@
 <template>
 	<view class="appraise">
-		<view v-for="(item,index) in projectData" class="box">
+		<view v-for="(item,index) in projectData" :key='index' class="box">
 			<view class="">
 				<image style="width: 130rpx;height: 130rpx;margin: 20rpx;
 border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 			</view>
-			<view style="display: flex;flex-direction: column;margin-top:41rpx;height: 100%;width: 100%;">
+			<view style="display: flex;flex-direction: column;margin-top:41rpx;height: 100%;width: 72%;">
 				<view style="display: flex;justify-content: space-between;">
 					<view style="color: #3D3F3E;font-weight: 600;">
 						{{item.name}}
