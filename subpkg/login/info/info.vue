@@ -129,15 +129,15 @@
 				refine(this.userInfo).then(res => {
 					console.log(res);
 					
-					uni.$TUIKit.updateMyProfile({
-						nick: this.userInfo.clientName,
-						avatar: this.userInfo.avatarUrl,
-						selfSignature: ''
-					}).then(res => {
-						console.info(res);
-						console.info(res);
-						console.info(res);
-					})
+					// uni.$TUIKit.updateMyProfile({
+					// 	nick: this.userInfo.clientName,
+					// 	avatar: this.userInfo.avatarUrl,
+					// 	selfSignature: ''
+					// }).then(res => {
+					// 	console.info(res);
+					// 	console.info(res);
+					// 	console.info(res);
+					// })
 					
 					this.reset()
 						const apps = getApp()
