@@ -437,15 +437,7 @@
 					}
 
 				}, 
-				// {
-				// 	"path": "invited/invited",
-				// 	"style": {
-				// 		"navigationBarTitleText": "",
-				// 		"enablePullDownRefresh": false,
-				// 		"navigationStyle": "custom"
-				// 	}
-
-				// },
+			
 				{
 					"path": "myMoney/paymentsDetailed/paymentsDetailed",
 					"style": {

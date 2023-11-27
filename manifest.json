@@ -64,7 +64,7 @@
                     "NSLocationAlwaysAndWhenInUseUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
                     "NSLocationWhenInUseUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
                     "NSLocationAlwaysUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
-                    "NSPhotoLibraryUsageDescription" : "从相册中选择图片或视频作为报修依据",
+                    "NSPhotoLibraryUsageDescription" : "需要获取个人照片进行编辑是否允许此App获取相册权限",
                     "NSPhotoLibraryAddUsageDescription" : "生成维修报告保存本地"
                 }
             },
