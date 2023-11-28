@@ -2,8 +2,8 @@
     "name" : "餐修",
     "appid" : "__UNI__16112CC",
     "description" : "",
-    "versionName" : "1.0.8",
-    "versionCode" : 108,
+    "versionName" : "1.3.2",
+    "versionCode" : 132,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -157,9 +157,9 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx4cfd49d2ac4a3788",
+        "appid" : "wx365a28a668734937",
         "setting" : {
-            "urlCheck" : false,
+            "urlCheck" : true,
             "es6" : true,
             "postcss" : true,
             "minified" : true
@@ -199,5 +199,6 @@
     "h5" : {
         "template" : "template.h5.html"
     },
-    "locale" : "auto"
+    "locale" : "auto",
+    "fallbackLocale" : "zh-Hans"
 }
