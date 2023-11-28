@@ -140,7 +140,7 @@
 						trigger: ['blur', 'change']
 					},
 					'info.myNumber': {
-						type: 'number',
+						type: 'string',
 						required: true,
 						message: '请填写身份证号',
 						trigger: ['blur', 'change']
