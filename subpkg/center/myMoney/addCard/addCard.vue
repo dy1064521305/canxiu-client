@@ -149,7 +149,7 @@
 				},
 				rules2: {
 					'card.cardNumber': {
-						type: 'number',
+						type: 'string',
 						required: true,
 						message: '请填写卡号',
 						trigger: ['blur', 'change']
