@@ -801,6 +801,7 @@
 						.projectImg.toString(),
 					remark: this.projectVoList[0].remarks,
 					shoppingCartStatus: 0,
+					projectType:this.projectVoList[0].projectType,
 					discountPrice: this.projectVoList[0].discountPrice,
 					// projectVideo: item.projectVideo != [] ? item.projectVideo.toString() :
 					// 	undefined,
@@ -864,6 +865,7 @@
 						startingFree: this.goodInfo.startingFree,
 						serviceTime: item.projectHours,
 						serviceProjectName: item.projectName,
+						projectType:item.projectType
 					}, {
 						productId: this.goodInfo.serviceId
 					}))

@@ -275,7 +275,7 @@
 						title: '卡片生成中'
 					});
 				}
-				if (!this.image || !this.bigImg || !this.qrCode) {
+				if (!this.image || !this.bigImg) {
 					return setTimeout(this.shareInfo, 888)
 				}
 				this.base = {
