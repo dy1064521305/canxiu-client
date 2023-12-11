@@ -7,7 +7,7 @@ const environment = {
 		// baseURL: 'http://121.41.107.68:8080',
 		baseURL: 'http://121.40.253.155:8080',
 		// baseURL: 'https://www.canxiukeji.com/prod-api',
-		
+
 	},
 	// 生产环境配置
 	production: {
