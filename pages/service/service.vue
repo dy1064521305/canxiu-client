@@ -59,12 +59,14 @@
 									<view class="item-container">
 										<view class="thumb-box" v-for="(item2, index2) in item1.children" :key="index2"
 											@click="featureC(item2)">
-											<image v-if="item2.url != ''" class="item-menu-image" :src="item2.url"
+											<image lazy-load :lazy-load-margin='0' v-if="item2.typeImg !=null" class="item-menu-image" :src="item2.typeImg"
 												mode="">
 											</image>
+											
+											
 											<view v-else class="item-menu-image row-c"
 												style="background-color: #F4F6F8;">
-												<text style="font-size: 20rpx;color: #d0d0d0;">加载失败</text>
+												<text style="font-size: 20rpx;color: #d0d0d0;">暂无图片</text>
 											</view>
 											<view class="item-menu-name">{{item2.typeName}}</view>
 										</view>
@@ -190,8 +192,16 @@
 
 					} else {
 						console.log(11111);
-
-						this.typesList = res.data
+						
+						// res.data.forEach((item,index)=>{
+						// 	this.typesList.push({
+						// 		typeId: item.typeId,
+						// 		typeLevel: item.typeLevel,
+						// 		typeName: item.typeName,
+						// 		children:index==0?item.children:[]
+						// 	})
+						// })
+						 this.typesList = res.data
 						this.isSearch = false
 					}
 
@@ -292,7 +302,7 @@
 
 				this.$nextTick(function() {
 					this.scrollRightTop = this.arr[index];
-					console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
+					// console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
 					this.current = index;
 					this.leftMenuStatus(index);
 				})
@@ -573,6 +583,8 @@
 			.item-menu-image {
 				width: 120rpx;
 				height: 120rpx;
+				text-align: center;
+				line-height: 120rpx;
 			}
 		}
 
