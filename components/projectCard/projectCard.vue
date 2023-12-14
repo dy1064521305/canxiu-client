@@ -1,13 +1,20 @@
 <template>
 	<view class="card">
 		<view style="display: flex;height: 156rpx;">
-			<view style="position: relative;">
-				<image style="width: 156rpx;height:100%;" :src="info.img[0]">
+			<view  v-if="info.img.length==0||info.img[0]==''"  class="no-img">
+				<image style="width:110rpx ;height: 77rpx;"
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+					mode=""></image>
+				<text>暂无图片</text>
+			</view>
+			<view v-else style="position: relative;">
+				<image style="width: 156rpx;height:100%;	border-radius: 11rpx;" :src="info.img[0]">
 				</image>
 				<view class="weixiu" v-if="type=='myOrder'">
 					维修
 				</view>
 			</view>
+
 			<view
 				style="width: 76%;display: flex;flex-direction: column; padding-left:20rpx;justify-content: space-between;height: 100%;font-size: 25rpx;">
 				<view style="display: flex;">
@@ -26,7 +33,7 @@
 						¥{{info.price}}
 					</view>
 				</view>
-				
+
 				<view class="">
 					{{info.typeName}}
 				</view>
@@ -59,12 +66,12 @@
 			};
 		},
 		created() {
-			//console.log(this.pro);
-				this.info=this.pro
+			// console.log(this.pro);
+			this.info = this.pro
 			this.info.productName = this.pro.productName ? this.pro.productName : this.pro.serviceProductName
 			this.info.projectHours = this.pro.projectHours ? this.pro.projectHours : this.pro.serviceTime
 			this.info.typeName = this.pro.typeName ? this.pro.typeName : this.pro.serviceTypeName
-			this.info.price=this.info.discountPrice?this.info.discountPrice:this.info.projectPrice
+			this.info.price = this.info.discountPrice ? this.info.discountPrice : this.info.projectPrice
 			//console.log(this.pro);
 		}
 
@@ -80,6 +87,23 @@
 			font-size: 26rpx;
 			background: #1890ff;
 			padding: 0rpx 8rpx;
+		}
+
+		.no-img {
+			width: 170rpx;
+			height: 100%;
+			background: #F4F4F4;
+			border-radius: 11rpx;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			// margin: 18rpx;
+
+			text {
+				font-size: 22rpx;
+				color: #A4D091;
+			}
 		}
 	}
 </style>
