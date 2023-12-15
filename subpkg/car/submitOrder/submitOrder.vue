@@ -136,7 +136,7 @@
 						¥{{item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0)}}
 					</view>
 				</view>
-				<view v-if="!isCar" class="line">
+				<view v-if="!isCar&&urgentPriceTotal!=0" class="line">
 					<view class="">
 						加急费：
 					</view>

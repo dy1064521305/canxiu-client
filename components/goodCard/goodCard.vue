@@ -1,6 +1,12 @@
 <template>
 	<view class="box" @click="goDetailed(info)">
-		<view class="img">
+		<view v-if="!info.serviceImg" class="no-img">
+			<image style="width:110rpx ;height: 77rpx;"
+				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+				mode=""></image>
+			<text>暂无图片</text>
+		</view>
+		<view v-else class="img">
 			<image :src="info.serviceImg" mode=""></image>
 		</view>
 		<view class="right">
@@ -17,16 +23,19 @@
 			</view>
 			<view class="bottom">
 				<text style="width: 65%;display: inline-block;">
-					<text v-if="type!='coudan'" style="color: #EC5722;display:inline-block;margin: 0 12rpx;" class="blod">¥{{info.servicePrice}}</text>
-					<text v-if="type=='coudan'" style="color: #EC5722;font-size: 34rpx;margin-right: 20rpx;">¥{{info.discountPrice}}</text>
-					<text v-if="type=='coudan'&&info.discountPrice!=info.projectPrice" style="font-size: 25rpx;text-decoration:line-through">¥{{info.projectPrice}}</text>
+					<text v-if="type!='coudan'" style="color: #EC5722;display:inline-block;margin: 0 12rpx;"
+						class="blod">¥{{info.servicePrice}}</text>
+					<text v-if="type=='coudan'"
+						style="color: #EC5722;font-size: 34rpx;margin-right: 20rpx;">¥{{info.discountPrice}}</text>
+					<text v-if="type=='coudan'&&info.discountPrice!=info.projectPrice"
+						style="font-size: 25rpx;text-decoration:line-through">¥{{info.projectPrice}}</text>
 				</text>
 				<!-- 		<text style="font-size: 22rpx;color: #A5A7A7;width: 52%;display: inline-block;">9999+人付款</text> -->
-				<view v-if="type=='coudan'" >
+				<view v-if="type=='coudan'">
 					<u-icon name="plus-circle-fill" color="#A4D091" size="27"></u-icon>
 				</view>
 				<text v-else class="btn">立即下单</text>
-			
+
 			</view>
 		</view>
 
@@ -43,13 +52,13 @@
 			//师傅是登录状态
 			isLogin: {
 				type: Boolean,
-				default:true
+				default: true
 			},
 			type: {
 				type: String
 			},
-			goodInfo:{
-				type:Object
+			goodInfo: {
+				type: Object
 			}
 		},
 		data() {
@@ -63,7 +72,7 @@
 				handler: function() {
 					//	console.log(this.item);
 					this.info = this.item
-					this.info.serviceImg= this.item.serviceImg?this.item.serviceImg:this.item.serviceProjectImg
+					this.info.serviceImg = this.item.serviceImg ? this.item.serviceImg : this.item.serviceProjectImg
 					if (this.info.serviceImg != null) {
 						this.info.serviceImg = Array.isArray(this.info.serviceImg) ? this.info.serviceImg[0] : this
 							.info.serviceImg.split(',')[0]
@@ -75,12 +84,11 @@
 		created() {
 			//console.log(this.item);
 			this.info = this.item
-				this.info.serviceImg= this.item.serviceImg?this.item.serviceImg:this.item.serviceProjectImg
+			this.info.serviceImg = this.item.serviceImg ? this.item.serviceImg : this.item.serviceProjectImg
 			if (this.info.serviceImg != null) {
 				this.info.serviceImg = Array.isArray(this.info.serviceImg) ? this.info.serviceImg[0] : this
 					.info.serviceImg.split(',')[0]
 			}
-
 
 		},
 		methods: {
@@ -97,20 +105,20 @@
 							console.log(res);
 						}
 					})
-				}else if(this.type == 'coudan'){
-					console.log( itemm.productId);
-					let info={
-						serviceId:itemm.productId,
-						goodInfo:this.goodInfo
+				} else if (this.type == 'coudan') {
+					console.log(itemm.productId);
+					let info = {
+						serviceId: itemm.productId,
+						goodInfo: this.goodInfo
 					}
 					uni.navigateTo({
-						url: '/subpkg/car/coudanDetail/coudanDetail?info=' +encodeURIComponent(JSON.stringify(info)),
+						url: '/subpkg/car/coudanDetail/coudanDetail?info=' + encodeURIComponent(JSON.stringify(
+							info)),
 						fail(res) {
 							console.log(res);
 						}
 					})
-				}
-				 else {
+				} else {
 					uni.navigateTo({
 						url: '../../../subpkg/car/goodDetails/goodDetails?serviceId=' + itemm.serviceId,
 						fail(res) {
@@ -133,13 +141,33 @@
 		margin-top: 20rpx;
 		display: flex;
 
+		.no-img {
+			width: 181rpx;
+			height: 181rpx;
+			background: #F4F4F4;
+			border-radius: 11rpx;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			margin: 18rpx;
+
+			text {
+				font-size: 22rpx;
+				color: #A4D091;
+			}
+		}
+
 		.img {
-			width: 30%;
+			width: 181rpx;
+			height: 181rpx;
 			padding: 18rpx;
+
 			image {
 				width: 100%;
 				height: 100%;
-				//padding: 10rpx;
+
+				border-radius: 11rpx;
 			}
 		}
 
@@ -148,7 +176,8 @@
 			flex-direction: column;
 			padding: 10rpx;
 			width: 70%;
-			height: 161rpx;
+			// height: 161rpx;
+
 			.top {
 				height: 68%;
 
@@ -170,6 +199,7 @@
 				//display: inline;
 				align-items: center;
 				justify-content: space-between;
+
 				.btn {
 					display: inline-block;
 					width: 163rpx;

@@ -7,10 +7,19 @@
 					<u-checkbox v-if="submit&&isCar" shape="circle" :name="item.id?item.id:item.projectId"
 						activeColor='#A4D091' @change='val=>checkChange(val,item)'>
 					</u-checkbox>
-					<u-image v-if="isCar" radius='10rpx' width="144rpx" height="100%" :src="item.imgList[0]">
-						<!-- 	@click="previewImage(item.imgList)" -->
-					</u-image>
 
+					<view v-if="isCar" class="no-img" :style="{'background':item.imgList.length!=0?'':'#F4F4F4'}">
+						<image v-if="item.imgList.length!=0" style="border-radius: 10rpx;width: 100%;height: 100%;"  :src="item.imgList[0]">
+							
+						</image>
+						<view v-else class="imgs">
+							<image style="width:98rpx ;height: 68rpx;"
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+								mode=""></image>
+							<text>暂无图片</text>
+						</view>
+
+					</view>
 					<view v-if="isCar" class="info-one">
 						<view
 							style="font-size: 29rpx;color: #3D3F3E;font-weight: bold;display: flex;justify-content: space-between;">
@@ -32,9 +41,9 @@
 								</view>
 							</view>
 							<view class="right">
-								<u-number-box min='1' 
-									v-model="item.projectNumber" class='number' button-size="26px" color="#ffffff"
-									bgColor="#A4D091" @change='val=>numChange(item,val,index)' iconStyle="color: #fff">
+								<u-number-box min='1' v-model="item.projectNumber" class='number' button-size="26px"
+									color="#ffffff" bgColor="#A4D091" @change='val=>numChange(item,val,index)'
+									iconStyle="color: #fff">
 								</u-number-box>
 							</view>
 						</view>
@@ -56,29 +65,27 @@
 							<!-- 	<image @click="deleteById(item.id)" v-if="isDelete" style="width: 145rpx;height: 69rpx;"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/94862fc485714c92b1cff30a2bf71425.png">
 							</image> -->
-							<u-number-box min='0' 
-							disabledInput
-								v-model="item.projectNumber" class='number' button-size="27" color="#ffffff"
-								bgColor="#A4D091" :asyncChange="true" @change='val=>numChange(item,val,index)'
-								iconStyle="color: #fff">
+							<u-number-box min='0' disabledInput v-model="item.projectNumber" class='number'
+								button-size="27" color="#ffffff" bgColor="#A4D091" :asyncChange="true"
+								@change='val=>numChange(item,val,index)' iconStyle="color: #fff">
 							</u-number-box>
 						</view>
 						<view class="bottom">
-						<view class="left">
-							<!-- 
+							<view class="left">
+								<!-- 
 							<text v-if="!question"
 								style="font-size: 22rpx;color: #EC5722;margin-right: 10rpx;">预估费用:</text> -->
-							<text style="font-size:27rpx;">¥</text>
-							<text
-								style="	font-weight: bold;font-size: 38rpx;margin: 0 10rpx;">{{item.discountPrice}}</text>
-						
-							<view @click='questionHandle(item)' v-if="question" style="color:#A5A7A7 ;">
-								...
-							</view>
-							<!-- 	<image 
+								<text style="font-size:27rpx;">¥</text>
+								<text
+									style="	font-weight: bold;font-size: 38rpx;margin: 0 10rpx;">{{item.discountPrice}}</text>
+
+								<view @click='questionHandle(item)' v-if="question" style="color:#A5A7A7 ;">
+									...
+								</view>
+								<!-- 	<image 
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0b076ac258454779a88431fc8f26cb56.png"
 								mode=""></image> -->
-						</view>
+							</view>
 							<view class="price-info" v-if="item.preferentialPrice!=0">
 								<view style="position: absolute;
     top: -20rpx;
@@ -133,7 +140,8 @@
 						<view style="margin-right: 10rpx;">订单备注</view>
 						<view style='width: 80%'>
 							<u--textarea height='30rpx' border='none' maxlength='50' confirmType="done" autoHeight
-								v-model="item.remarks" placeholder="备注内容(选填)" count @input='textareaInput'></u--textarea>
+								v-model="item.remarks" placeholder="备注内容(选填)" count
+								@input='textareaInput'></u--textarea>
 						</view>
 					</view>
 				</view>
@@ -203,7 +211,7 @@
 			//是否是凑单页面
 			isCoudan: {
 				type: Boolean,
-					default: false
+				default: false
 			},
 			//是购物车还是立即下单
 			types: {
@@ -241,9 +249,9 @@
 							//	console.log('139......', item);
 							item.projectName = item.serviceProjectName ? item.serviceProjectName : item
 								.projectName
-								item.remarks = item.remark || ''
+							item.remarks = item.remark || ''
 						} else {
-								console.log(item, '.......147...');
+							console.log(item, '.......147...');
 							item.shuoming = item.remark
 							item.remarks = item.remarks || ''
 							item.projectNumber = (item.projectNumber === undefined || item.projectNumber ===
@@ -251,9 +259,9 @@
 							//		console.log(1111);
 						}
 						//	console.log(item);
-						item.imgList = item.serviceProjectImg !== null ? item.serviceProjectImg.split(',') :
+						item.imgList = item.serviceProjectImg !== null&& item.serviceProjectImg !== '' ? item.serviceProjectImg.split(',') :
 						[],
-
+						console.log(item);
 							item.projectImg = item.projectImg != '' && !Array.isArray(item.projectImg) ? item
 							.projectImg.split(',') : Array.isArray(item.projectImg) ? item.projectImg : []
 						//console.log(item.projectVideo);
@@ -315,26 +323,26 @@
 			},
 			numChange(item, value, i) {
 				console.log('207...', item, value, this.dataList);
-				if (item.projectImg.length == 0&&!this.isCar&&!this.isCoudan) {
+				if (item.projectImg.length == 0 && !this.isCar && !this.isCoudan) {
 					this.$refs.uToast.show({
 						type: 'error',
 						message: '请先上传图片/视频'
 					});
-				
+
 					return
 				}
-				console.log(value.value,item.projectNumber);
-				let flag=value.value<item.projectNumber?-1:1
-				item.projectNumber=value.value
-				let obj=item
+				console.log(value.value, item.projectNumber);
+				let flag = value.value < item.projectNumber ? -1 : 1
+				item.projectNumber = value.value
+				let obj = item
 				console.log(item.projectNumber);
-				this.$set(this.dataList,i,obj)
+				this.$set(this.dataList, i, obj)
 				this.$emit('getCheck', {
 					item: item,
 					num: value,
-					flag:flag
+					flag: flag
 				})
-				
+
 
 			},
 			// //预览图片
@@ -425,6 +433,26 @@
 
 		}
 
+		.no-img {
+			width: 170rpx;
+			
+			border-radius: 11rpx;
+
+			.imgs {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100%;
+				text {
+					font-size: 21rpx;
+					color: #A4D091;
+				}
+			}
+
+
+		}
+
 		.info-one,
 		.info-two {
 
@@ -469,6 +497,7 @@
 
 							background-color: #A4D091;
 							color: #fff;
+							z-index: 1;
 						}
 
 						.two {

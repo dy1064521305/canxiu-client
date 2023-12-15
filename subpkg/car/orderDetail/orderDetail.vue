@@ -44,16 +44,17 @@
 					</image>
 					<image v-else style="width:98rpx;height: 98rpx;" :src="workerInfo.avatarUrl"></image>
 					<view class="">
-					维修师傅
+						维修师傅
 					</view>
 				</view>
 
 				<view style="margin-left:14rpx ;width: 85%;">
 					<view style="font-size: 31rpx;color: #3D3F3E;font-weight: bold;margin: 10rpx 0;display: flex;">
-					<text style="margin-right: 20rpx;">	{{workerInfo.workerName}}</text>
+						<text style="margin-right: 20rpx;"> {{workerInfo.workerName}}</text>
 						<!-- 	<img :src="workerInfo.levelIcon" style='width: 140rpx;height: 34rpx;margin-left: 20rpx;'> -->
 
-						<u-rate count="5" v-model="workerInfo.value" activeColor='#ec9322' size='32rpx' readonly ></u-rate>
+						<u-rate count="5" v-model="workerInfo.value" activeColor='#ec9322' size='32rpx'
+							readonly></u-rate>
 					</view>
 					<!-- 	<view style="font-size: 25rpx;color: #A5A7A7;">
 						{{workerInfo.workerPhone}}
@@ -81,7 +82,7 @@
 					<view>
 						<cl-upload :listStyle="{
 						columnGap: '10rpx',
-						columns:'3',
+						columns:'4',
 						rowGap:'10rpx'
 						}" :imageFormData="{
 							size:10
@@ -131,6 +132,12 @@
 						<view style="display: flex;margin-top: 20rpx;">
 							<u-image v-if="chi.img" radius='10rpx' width="140rpx" height="100%" :src="chi.img">
 							</u-image>
+							<view v-else class="no-img">
+								<image style="width:104rpx ;height: 70rpx;"
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+									mode=""></image>
+								<text>暂无图片</text>
+							</view>
 							<view
 								style="height: 100%;display: flex;flex-direction: column;justify-content: space-evenly;width: 100%;margin-left: 20rpx;">
 								<view style="width: 100%;">
@@ -198,19 +205,24 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">起步价</text>
-				<text :style="{'text-decoration':!isGet?'line-through':'','color':!isGet?'#A5A7A7':'#EC5722'}"
-					v-if="info.beforeStartingFree!=null">¥{{info.beforeStartingFree}}</text>
+				<text
+					:style="{'text-decoration':!isGet?'line-through':'','color':!isGet?'#A5A7A7':'#EC5722'}">¥{{info.beforeStartingFree}}</text>
 			</view>
+		<!-- 	<view class="line">
+				<text class="ziduan">检测费</text>
+				<text
+					:style="{'text-decoration':isGet?'line-through':'','color':isGet?'#A5A7A7':'#EC5722'}">¥{{info.servicePrice}}</text>
+			</view> -->
 			<view class="line">
-				<text class="ziduan">工时费</text>
-				<text :style="{'text-decoration':isGet?'line-through':'','color':isGet?'#A5A7A7':'#EC5722'}"
-					v-if="info.servicePrice!=null">¥{{info.servicePrice}}</text>
+				<text class="ziduan">服务费</text>
+				<text
+					:style="{'text-decoration':isGet?'line-through':'','color':isGet?'#A5A7A7':'#EC5722'}">¥{{info.servicePrice}}</text>
 			</view>
 			<view v-if="info.additionalPrice!=null&&info.additionalPrice!=0" class="line">
 				<text class="ziduan">加急费</text>
-				<text style="color: #EC5722;">¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
+				<text style="color: #EC5722;">¥{{info.additionalPrice}}</text>
 			</view>
-			<view v-if="info.materialPrice!=null" class="line" >
+			<view v-if="info.materialPrice!=null&&info.materialPrice!=0" class="line">
 				<text class="ziduan">材料费</text>
 				<text style="color: #EC5722;">¥{{info.materialPrice}}</text>
 			</view>
@@ -226,7 +238,7 @@
 				<text style="color: #EC5722;">-¥{{info.favorablePrice}}</text>
 			</view>
 			<view class="line">
-				<text class="ziduan">合计</text>
+				<text class="ziduan">实付金额</text>
 				<!-- info.additionalPrice!=null?Number(info.additionalPrice)+Number(info.preferentialPrice):Number(info.preferentialPrice) -->
 				<text style="color: #EC5722;">¥{{info.orderPrice}}</text>
 			</view>
@@ -377,7 +389,9 @@
 			有疑问？联系客服
 		</view> -->
 		<!--  -->
-		<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待接单'||info.orderStatus=='待服务'||info.orderStatus=='上级驳回,待处理'" class="btns">
+		<view
+			v-if="info.orderStatus=='待上门'||info.orderStatus=='待接单'||info.orderStatus=='待服务'||info.orderStatus=='上级驳回,待处理'"
+			class="btns">
 			<view class="btn-white" @click="show=true">
 				取消订单
 			</view>
@@ -396,7 +410,7 @@
 			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="report('待评价')">
 				生成维修报告
 			</view>
-		<!-- 	<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white"
+			<!-- 	<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white"
 				@click="repairOrderShow=true">
 				申请返修
 			</view> -->
@@ -415,7 +429,7 @@
 		</view>
 
 		<view v-if="info.orderStatus=='待验收'" class="btns">
-		<!-- 	<view style="width:166rpx;" class="btn-white" @click='complaint'>
+			<!-- 	<view style="width:166rpx;" class="btn-white" @click='complaint'>
 				投诉
 			</view> -->
 			<view style="width:166rpx;" class="btn-white" @click='resultShowModal=true'>
@@ -425,9 +439,9 @@
 				验收
 			</view>
 		</view>
-		
-	
-		
+
+
+
 
 		<view v-if="info.orderStatus=='服务中【待客户审核】'" class="btns">
 			<view class="btn-white" @click="rejectShowModal=true">
@@ -620,12 +634,11 @@
 						orderStatus: '已完成',
 						status: '评价已完成',
 						content: '您已评价，谢谢您的支持',
-					}
-					,
+					},
 					{
 						orderStatus: '师傅取消',
 						status: '重新指派中',
-						content:"师傅已取消,重新指派中"
+						content: "师傅已取消,重新指派中"
 					}
 				],
 				appraise: {},
@@ -693,7 +706,7 @@
 							this.addressVo.addressRegion = this.addressVo.addressRegion.replace(/\//g, '')
 							var reg = /^(\d{3})\d{4}(\d{4})$/;
 							this.addressVo.showPhone = this.addressVo.phone.replace(reg, "$1****$2");
-							
+
 						}
 
 						this.info = res.data
@@ -709,7 +722,7 @@
 						if (this.status == '') {
 							this.status = this.info.orderStatus
 							this.content = this.info.orderStatus
-							console.log(this.status,'7066666666666');
+							console.log(this.status, '7066666666666');
 						}
 						//师傅信息
 						this.info.workerId != null && order.getWorkerInfo(this.info.workerId).then(res => {
@@ -858,24 +871,24 @@
 				})
 			},
 			//重新发起
-			reissueOrderHandle(){
+			reissueOrderHandle() {
 				console.log(this.info);
-				this.info.projectDataVoList.forEach(item=>{
-					item.startingFreeDiscount=this.info.startingFree
-					item.startingFree=this.info.beforeStartingFree
-					item.orderId=this.info.orderId
+				this.info.projectDataVoList.forEach(item => {
+					item.startingFreeDiscount = this.info.startingFree
+					item.startingFree = this.info.beforeStartingFree
+					item.orderId = this.info.orderId
 				})
 				let info = {
-					checkedList:this.info.projectDataVoList,
+					checkedList: this.info.projectDataVoList,
 					isCar: true,
-					isAgain:true,
-					address:this.info.addressVo,
-					
+					isAgain: true,
+					address: this.info.addressVo,
+
 				}
-			uni.navigateTo({
-				url: '../submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(
-					info))
-			})
+				uni.navigateTo({
+					url: '../submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(
+						info))
+				})
 			},
 			//支付
 			pay() {
@@ -940,7 +953,7 @@
 					info: this.info,
 					newProject: this.newProject,
 					showMelList: this.showMelList,
-					isGet:this.isGet
+					isGet: this.isGet
 				}
 				console.log(info);
 
@@ -1005,7 +1018,7 @@
 						title: '驳回成功',
 						duration: 1000
 					});
-					
+
 					this.getList()
 				})
 			},
@@ -1017,7 +1030,8 @@
 						icon: 'error',
 						title: '请传图片/视频',
 						duration: 1000
-					});s
+					});
+					s
 					return
 				}
 				this.info.reason = this.reason
@@ -1262,6 +1276,19 @@
 			}
 		}
 
+		.no-img {
+			width: 181rpx;
+			background: #F4F4F4;
+			border-radius: 11rpx;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
 
+			text {
+				font-size: 21rpx;
+				color: #A4D091;
+			}
+		}
 	}
 </style>

@@ -2,12 +2,19 @@
 	<scroll-view class="serviceInfo" ref="target" :scroll-y="true">
 		<!-- 服务详情 -->
 		<view class="top">
-			<u-swiper height='746rpx' :list="serviceImgList" @change="e => currentNum = e.current" :autoplay="false"
-				indicatorStyle="right: 20px">
+			<u-swiper v-if="serviceImgList.length!=0" height='746rpx' :list="serviceImgList"
+				@change="e => currentNum = e.current" :autoplay="false" indicatorStyle="right: 20px">
 				<view slot="indicator" class="indicator-num">
 					<text class="indicator-num__text">{{ currentNum + 1 }}/{{ serviceImgList.length }}</text>
 				</view>
 			</u-swiper>
+			<view v-else class="no-img">
+				<image style="width:500rpx ;height:400rpx;"
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+					mode=""></image>
+				<text>暂无图片</text>
+			</view>
+
 			<view class="info bgf">
 				<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
 				<text style="font-weight: bold;">{{goodInfo.serviceName}}</text><text
@@ -502,8 +509,9 @@
 						//console.log(this.qrCode);
 					})
 
-					this.serviceImgList = this.goodInfo.serviceImg !== null ? this.goodInfo.serviceImg.split(',') :
-						[]
+					this.serviceImgList = this.goodInfo.serviceImg !== null&& this.goodInfo.serviceImg !=="" ? this.goodInfo.serviceImg.split(',') :
+						[],
+						console.log(this.serviceImgList,'514444444444');
 					this.goodInfo.projectVoList.forEach((p, i) => {
 						this.projectVoList.splice(i, 1, p)
 					})
@@ -801,7 +809,7 @@
 						.projectImg.toString(),
 					remark: this.projectVoList[0].remarks,
 					shoppingCartStatus: 0,
-					projectType:this.projectVoList[0].projectType,
+					projectType: this.projectVoList[0].projectType,
 					discountPrice: this.projectVoList[0].discountPrice,
 					// projectVideo: item.projectVideo != [] ? item.projectVideo.toString() :
 					// 	undefined,
@@ -860,12 +868,12 @@
 						clientId: storage.get('ClientId'),
 						workerType: this.goodInfo.workerType,
 						remark: item.remarks ? item.remarks : '',
-						projectNumber: item.projectNumber? item.projectNumber:1,
+						projectNumber: item.projectNumber ? item.projectNumber : 1,
 						startingFreeDiscount: this.goodInfo.startingFreeDiscount,
 						startingFree: this.goodInfo.startingFree,
 						serviceTime: item.projectHours,
 						serviceProjectName: item.projectName,
-						projectType:item.projectType
+						projectType: item.projectType
 					}, {
 						productId: this.goodInfo.serviceId
 					}))
@@ -942,6 +950,19 @@
 		}
 
 		.top {
+			.no-img {
+				    width: 100%;
+				    height: 564rpx;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+
+				text {
+					font-size: 50rpx;
+					color: #A4D091;
+				}
+			}
 
 			.indicator-num {
 				padding: 2px 0;
