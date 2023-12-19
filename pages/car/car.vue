@@ -650,9 +650,12 @@
 			textareaInput(arr) {
 				this.dataList.forEach(item1 => {
 					item1.children.forEach(item2 => {
-						if (item2.id === arr[0].id) {
-							item2.remark = arr[0].remark
-						}
+						arr.forEach(arr=>{
+							if (item2.id === arr.id) {
+								item2.remark = arr.remarks
+							}
+						})
+					
 					})
 				})
 			},

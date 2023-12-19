@@ -122,8 +122,8 @@
 					mode=""></image>
 				<text>客服</text>
 			</view> -->
-			<view class="bottom-top" v-if='isLogin'>
-				<view style="display: flex; justify-content: space-between; width: 100%;"
+			<view class="bottom-top" v-if='isLogin&&projectNumber!=0'>
+				<view style="display: flex; justify-content: space-between; width: 82%;"
 					v-if="Number(priceDifference)>0">
 					<view class="coudan">
 						<u-icon name="info-circle" color="#fff" size="20"></u-icon>
@@ -135,7 +135,7 @@
 					已达到起步价
 				</view>
 				<view @click="coudanShow=true">
-					去凑单>
+					{{Number(priceDifference)>0?'去凑单>':'继续加购>'}}
 				</view>
 			</view>
 			<view class="bottom-bottom">
@@ -353,7 +353,7 @@
 				qrCode: '', //二维码
 				allNum: 0, //购物车数量
 				priceDifference: 0, //起步价差价
-				projectNumber: 1,
+				projectNumber: 0,
 				searchName: '',
 
 			}
@@ -401,44 +401,44 @@
 		},
 		methods: {
 			getCarList() {
+
 				getCarNum().then(res => {
 
 					this.allNum = res
-					//计算起步价差价	
 
-					car.getCarList({
-						clientId: storage.get('ClientId')
-					}).then(res => {
-						console.log(res.data.length, 'carrrrrrrrrr');
-						if (res.data.length != 0) {
-							let bool = res.data.some(item => {
-								return item.workerType == this.goodInfo.workerType
-							})
-							if (bool) {
-								res.data.forEach(item => {
-									if (item.workerType == this.goodInfo.workerType) {
-										let money = 0
-										money = Number(this.goodInfo.startingFreeDiscount) - item
-											.children
-											.reduce((p, c) => p + (Number(c.projectNumber) *
-												Number(c
-													.discountPrice)), 0)
-										this.priceDifference = money
-										console.log(this.priceDifference);
-									}
-								})
+					// car.getCarList({
+					// 	clientId: storage.get('ClientId')
+					// }).then(res => {
+					// 	console.log(res.data.length, 'carrrrrrrrrr');
+					// 	if (res.data.length != 0) {
+					// 		let bool = res.data.some(item => {
+					// 			return item.workerType == this.goodInfo.workerType
+					// 		})
+					// 		if (bool) {
+					// 			res.data.forEach(item => {
+					// 				if (item.workerType == this.goodInfo.workerType) {
+					// 					let money = 0
+					// 					money = Number(this.goodInfo.startingFreeDiscount) - item
+					// 						.children
+					// 						.reduce((p, c) => p + (Number(c.projectNumber) *
+					// 							Number(c
+					// 								.discountPrice)), 0)
+					// 					this.priceDifference = money
+					// 					console.log(this.priceDifference);
+					// 				}
+					// 			})
 
-							} else {
-								this.priceDifference = this.goodInfo.startingFreeDiscount
-							}
+					// 		} else {
+					// 			this.priceDifference = this.goodInfo.startingFreeDiscount
+					// 		}
 
-						} else {
-							console.log(this.goodInfo.startingFreeDiscount);
-							this.priceDifference = this.goodInfo.startingFreeDiscount
-						}
+					// 	} else {
+					// 		console.log(this.goodInfo.startingFreeDiscount);
+					// 		this.priceDifference = this.goodInfo.startingFreeDiscount
+					// 	}
 
-						console.log(this.priceDifference);
-					})
+					// 	console.log(this.priceDifference);
+					// })
 				})
 			},
 			otherFun(object) {
@@ -472,7 +472,7 @@
 
 					//获取凑单列表
 					if (this.isLogin) {
-						this.getCarList()
+						// this.getCarList()
 						this.getListByWorkerType()
 					}
 
@@ -509,9 +509,9 @@
 						//console.log(this.qrCode);
 					})
 
-					this.serviceImgList = this.goodInfo.serviceImg !== null&& this.goodInfo.serviceImg !=="" ? this.goodInfo.serviceImg.split(',') :
-						[],
-						console.log(this.serviceImgList,'514444444444');
+					this.serviceImgList = this.goodInfo.serviceImg !== null && this.goodInfo.serviceImg !== "" ?
+						this.goodInfo.serviceImg.split(',') : [],
+						console.log(this.serviceImgList, '514444444444');
 					this.goodInfo.projectVoList.forEach((p, i) => {
 						this.projectVoList.splice(i, 1, p)
 					})
@@ -817,6 +817,11 @@
 				})
 
 				console.log(carArr);
+				// //计算起步价差价
+				console.log(this.goodInfo);
+				let total =Number(this.projectVoList[0].projectPrice)*Number(item.item.projectNumber)
+				this.priceDifference = Number(this.goodInfo.startingFreeDiscount) - total
+				console.log(total);
 				car.joinCar(carArr).then(res => {
 					console.log(res);
 					if (res.code == 200) {
@@ -951,8 +956,8 @@
 
 		.top {
 			.no-img {
-				    width: 100%;
-				    height: 564rpx;
+				width: 100%;
+				height: 564rpx;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
