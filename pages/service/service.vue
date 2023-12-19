@@ -59,15 +59,19 @@
 									<view class="item-container">
 										<view class="thumb-box" v-for="(item2, index2) in item1.children" :key="index2"
 											@click="featureC(item2)">
-											<image lazy-load :lazy-load-margin='0' v-if="item2.typeImg !=null" class="item-menu-image" :src="item2.typeImg"
-												mode="">
+											<image lazy-load :lazy-load-margin='0' v-if="item2.typeImg !=null"
+												class="item-menu-image" :src="item2.typeImg" mode="">
 											</image>
-											
-											
-											<view v-else class="item-menu-image row-c"
+
+											<view v-else class="imgs">
+												<image style="width:98rpx ;height: 68rpx;"
+													src="../../static/center/noImg.png" mode=""></image>
+												<text>暂无图片</text>
+											</view>
+											<!-- 	<view v-else class="item-menu-image row-c"
 												style="background-color: #F4F6F8;">
 												<text style="font-size: 20rpx;color: #d0d0d0;">暂无图片</text>
-											</view>
+											</view> -->
 											<view class="item-menu-name">{{item2.typeName}}</view>
 										</view>
 									</view>
@@ -115,7 +119,8 @@
 			this.getHeight();
 			// #endif
 			//this.getMenuItemTop()
-
+			this.getList()
+			console.log(getApp().index);
 			if (getApp().index != undefined) {
 				this.$nextTick(() => {
 					this.swichMenu(getApp().index)
@@ -159,7 +164,12 @@
 					})
 				}
 			})
+			if (getApp().index != undefined) {
+				this.$nextTick(() => {
 
+					this.swichMenu(getApp().index)
+				})
+			}
 
 		},
 		onHide() {
@@ -192,7 +202,7 @@
 
 					} else {
 						console.log(11111);
-						
+
 						// res.data.forEach((item,index)=>{
 						// 	this.typesList.push({
 						// 		typeId: item.typeId,
@@ -201,7 +211,7 @@
 						// 		children:index==0?item.children:[]
 						// 	})
 						// })
-						 this.typesList = res.data
+						this.typesList = res.data
 						this.isSearch = false
 					}
 
@@ -578,7 +588,25 @@
 				justify-content: center;
 				flex-direction: column;
 				margin-top: 20rpx;
+
+				.imgs {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					padding: 12rpx;
+					background: #F4F4F4;
+					border-radius: 11rpx;
+
+					text {
+						font-size: 21rpx;
+						color: #A4D091;
+					}
+				}
+
 			}
+
+
 
 			.item-menu-image {
 				width: 120rpx;

@@ -12,7 +12,8 @@
 				<header>
 					<view class="search">
 
-						<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png"></image>
+						<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png">
+						</image>
 						<view style="width: 85%;">
 							<u--input @clear='clear' clearable border='none' @confirm="history" v-model="searchCity" type="text"
 								placeholder="请输入城市名称"   />
@@ -25,13 +26,19 @@
 					<view v-if="isSearch&&searchResult==''" class="result">
 						暂无该城市
 					</view>
+
 					<view v-if="!isSearch" class="bottom">
-						<view class="left">
-							<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/4dcfbc3c78a44b7ab7298792dd209bfb.png" mode=""></image>
+						<view style="display: flex;align-items: center;">
+							<image style="width: 38rpx;height: 45rpx;"
+								 src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/19/991f64631ffc414f9f624ac43a66ab71.png"
+								 mode=""></image>
+						</view>
+						<view class="right">
+
 							<text>{{cityName}}</text>
 							<text>当前定位</text>
+							<text @click="getLocation('again')">重新定位</text>
 						</view>
-						<view class="again" @click="getLocation('again')">重新定位</view>
 					</view>
 				</header>
 
@@ -40,7 +47,8 @@
 						最近访问
 					</view>
 					<view style="display: flex;flex-wrap: wrap;">
-						<view v-if="hList.length!=0" v-for="(item,index) in hList" :key="index" class="box" @click="checkCity(item)">
+						<view v-if="hList.length!=0" v-for="(item,index) in hList" :key="index" class="box"
+							@click="checkCity(item)">
 							{{item}}
 						</view>
 					</view>
@@ -86,9 +94,11 @@
 
 <script>
 	//import Citys from '../city.js';
-		var QQMapWX = require('@/utils/qqmap-wx-jssdk.js')
+	var QQMapWX = require('@/utils/qqmap-wx-jssdk.js')
 	import * as home from '@/api/home.js'
-import {pinyin} from 'pinyin-pro'
+	import {
+		pinyin
+	} from 'pinyin-pro'
 	export default {
 		components: {},
 		props: {},
@@ -155,7 +165,7 @@ import {pinyin} from 'pinyin-pro'
 			getList() {
 				//获取热门城市
 				home.getHotCity().then(res => {
-					console.log(res,'1601600160');
+					console.log(res, '1601600160');
 					console.log(111111111111111111);
 					this.hotCity = res.data
 				})
@@ -266,8 +276,8 @@ import {pinyin} from 'pinyin-pro'
 					key: 'city',
 					data: name
 				})
-				
-			  this.historyCity(name)
+
+				this.historyCity(name)
 				uni.navigateBack()
 			},
 			//清空
@@ -276,7 +286,7 @@ import {pinyin} from 'pinyin-pro'
 				this.searchCity = ''
 				this.isSearch = false
 			},
-			historyCity(name){
+			historyCity(name) {
 				let _this = this;
 				uni.getStorage({ //从缓存中取搜索历史记录的数组
 					key: 'search_cache',
@@ -312,7 +322,7 @@ import {pinyin} from 'pinyin-pro'
 				_this.isSearch = true
 				if (_this.searchCity == '') {
 					this.isSearch = false
-				} else {	
+				} else {
 					_this.historyCity(_this.searchCity)
 					_this.search(_this.searchCity); //搜索
 					// uni.getStorage({ //从缓存中取搜索历史记录的数组
@@ -341,7 +351,7 @@ import {pinyin} from 'pinyin-pro'
 					// 			key: 'search_cache',
 					// 			data: _this.hList,
 					// 		});
-						
+
 					// 	}
 					// })
 				}
@@ -387,32 +397,30 @@ import {pinyin} from 'pinyin-pro'
 			padding: 30rpx 0;
 			display: flex;
 
-			.left {
-				width: 81%;
+			.right {
+				flex: 1;
 
-				image {
-					width: 38rpx;
-					height: 45rpx;
-
-				}
-
-				text:nth-child(2) {
+				text:nth-child(1) {
 					font-weight: bold;
 					font-size: 33rpx;
-					margin: 0 20rpx;
+					margin: 0 14.49rpx;
+				}
+				
+				
+				text:nth-child(2) {
+					font-size: 25rpx;
+					color: #A5A7A7;
+					width: 64%;
+					display: inline-block;
 				}
 
 				text:nth-child(3) {
 					font-size: 25rpx;
-					color: #A5A7A7;
+					color: #A4D091;
 				}
 			}
 
-			.again {
-				font-size: 25rpx;
-				color: #72DAA4;
-				padding-top: 20rpx;
-			}
+
 		}
 	}
 
