@@ -40,11 +40,11 @@
     width: 21%;
     align-items: center;">
 					<image v-if="workerInfo.avatarUrl==null" style="width:98rpx;height: 98rpx;"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/05/2b752f2fa84446d8867149d48996ec45.png">
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/11/10/38405b13b68b4ac3be692e812874e648.png">
 					</image>
 					<image v-else style="width:98rpx;height: 98rpx;" :src="workerInfo.avatarUrl"></image>
-					<view class="">
-						维修师傅
+					<view class="logo">
+						{{workerType}}
 					</view>
 				</view>
 
@@ -70,7 +70,7 @@
 
 		</view>
 		<view class="project bg">
-			<view v-if="newProject.length!=0" style="font-size: 33rpx;font-weight: bold;">
+			<view v-if="newProject.length!=0&&info.orderStatus!='服务中【审核驳回】'&&info.orderStatus!='服务中【待上级审核】'" style="font-size: 33rpx;font-weight: bold;">
 				原维修方案
 			</view>
 			<view v-for="(item,index) in info.projectDataVoList" :key="index" style="margin: 15rpx 0;">
@@ -107,7 +107,7 @@
 
 
 
-		<view v-if="newProject.length!=0||showMelList.length!=0" class="bg">
+		<view v-if="(newProject.length!=0||showMelList.length!=0)&&info.orderStatus!='服务中【审核驳回】'&&info.orderStatus!='服务中【待上级审核】'" class="bg">
 			<view v-if="newProject.length!=0" class="projec">
 				<view style="font-size: 33rpx;font-weight: bold;">
 					变更后服务项<image style="width: 62rpx;height: 27rpx;margin-left: 20rpx;"
@@ -208,7 +208,7 @@
 				<text
 					:style="{'text-decoration':!isGet?'line-through':'','color':!isGet?'#A5A7A7':'#EC5722'}">¥{{info.beforeStartingFree}}</text>
 			</view>
-		<!-- 	<view class="line">
+			<!-- 	<view class="line">
 				<text class="ziduan">检测费</text>
 				<text
 					:style="{'text-decoration':isGet?'line-through':'','color':isGet?'#A5A7A7':'#EC5722'}">¥{{info.servicePrice}}</text>
@@ -647,6 +647,8 @@
 				showMelList: [], //显示的材料格式
 				melTotal: 0, //材料总钱数,
 				isGet: false, //是否达到起步价
+				workerType: undefined,
+
 			};
 		},
 		onLoad(option) {
@@ -795,6 +797,8 @@
 						this.info.orderStatus == '待接单' && this.timeFn(this.info.orderTime)
 
 						//this.timeFn('2023-03-09 11:20:18')
+						console.log(this.info.projectDataVoList[0].workerType, '8000000000000000');
+						this.workerType=this.info.projectDataVoList[0].workerType.replace('人工','师傅')
 						this.info.projectDataVoList.forEach(item => {
 							item.projectImg = item.projectImg != '' ? item.projectImg.split(',') : []
 							// item.projectVideo = item.projectVideo != '' ? item.projectVideo.split(',') : []
@@ -1118,6 +1122,17 @@
 			.info {
 				display: flex;
 				margin-top: 20rpx;
+			}
+
+			.logo {
+				z-index: 10;
+				background: #FFFFFF;
+				border-radius: 7rpx;
+				border: 2rpx solid #A4D091;
+				font-size: 18rpx;
+				color: #A4D091;
+				padding: 6rpx 14rpx;
+				margin-top: -15rpx;
 			}
 		}
 

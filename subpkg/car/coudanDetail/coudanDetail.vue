@@ -2,12 +2,18 @@
 	<scroll-view class="serviceInfo" ref="target" :scroll-y="true">
 		<!-- 服务详情 -->
 		<view class="top">
-			<u-swiper height='746rpx' :list="serviceImgList" @change="e => currentNum = e.current" :autoplay="false"
-				indicatorStyle="right: 20px">
+			<u-swiper v-if="serviceImgList.length!=0" height='746rpx' :list="serviceImgList"
+				@change="e => currentNum = e.current" :autoplay="false" indicatorStyle="right: 20px">
 				<view slot="indicator" class="indicator-num">
 					<text class="indicator-num__text">{{ currentNum + 1 }}/{{ serviceImgList.length }}</text>
 				</view>
 			</u-swiper>
+			<view v-else class="no-img">
+				<image style="width:500rpx ;height:400rpx;"
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+					mode=""></image>
+				<text>暂无图片</text>
+			</view>
 			<view class="info bgf">
 				<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
 				<text style="font-weight: bold;">{{goodInfo.serviceName}}</text><text
@@ -227,11 +233,11 @@
 
 					})
 
-					this.serviceImgList = this.goodInfo.serviceImg !== null ? this.goodInfo.serviceImg.split(',') :
-						[]
-					this.goodInfo.projectVoList.forEach((p, i) => {
-						this.projectVoList.splice(i, 1, p)
-					})
+					this.serviceImgList = this.goodInfo.serviceImg !== null && this.goodInfo.serviceImg !== "" ?
+						this.goodInfo.serviceImg.split(',') : [],
+						this.goodInfo.projectVoList.forEach((p, i) => {
+							this.projectVoList.splice(i, 1, p)
+						})
 					this.projectVoList.forEach(item => {
 						item.serviceProjectImg = item.projectImg,
 							item.projectImg = '',
@@ -329,8 +335,8 @@
 				console.log(this.goodOptionInfo);
 
 				let projectVoListCopy = []
-				projectVoListCopy =JSON.parse(JSON.stringify(this.projectVoList))
-				if (this.goodOptionInfo&&!this.goodOptionInfo.projectNumber) projectVoListCopy.push(this.goodOptionInfo)
+				projectVoListCopy = JSON.parse(JSON.stringify(this.projectVoList))
+				if (this.goodOptionInfo && !this.goodOptionInfo.projectNumber) projectVoListCopy.push(this.goodOptionInfo)
 				let carArr = []
 				projectVoListCopy.forEach(item => {
 					carArr.push({
@@ -341,7 +347,7 @@
 						projectNumber: !item.projectNumber ? 1 : item.projectNumber,
 						projectId: item.projectId,
 						projectImg: item.projectImg.toString(),
-						remark: item.remark == null ? '' : item.remark,
+						remark: item.remarks == null ? '' : item.remarks,
 						shoppingCartStatus: 0,
 						discountPrice: item.discountPrice,
 						workerType: item.workerType,
@@ -356,6 +362,9 @@
 							title: '操作成功',
 							duration: 2000
 						});
+						// uni.navigateBack()
+					
+
 						let type = 'goCar'
 						uni.reLaunch({
 							url: '../../../pages/car/car?type=' + type
@@ -385,7 +394,7 @@
 
 			textConfirm(arr) {
 				console.log(arr);
-				this.projectVoList[0].remark = arr[0].remark
+				this.projectVoList[0].remarks = arr[0].remarks
 			},
 		}
 	}
@@ -405,6 +414,19 @@
 		}
 
 		.top {
+			.no-img {
+				width: 100%;
+				height: 564rpx;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+
+				text {
+					font-size: 50rpx;
+					color: #A4D091;
+				}
+			}
 
 			.indicator-num {
 				padding: 2px 0;
