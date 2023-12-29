@@ -38,12 +38,14 @@
 			<view v-for="(item,index) in showListByType" :key="index" style="margin-bottom: 10rpx;">
 				<view
 					style="display: flex;justify-content: space-between;align-items: center;background-color: #f5f9fa;">
-					<text v-if="isCar"
-						style="font-size: 34rpx;font-weight: bold;margin-left: 13rpx;">{{item.list[0].workerType.replace('人工','师傅')}}</text>
-					<view :style="{'width':isCar?'74%':'100%'}" class="time-two" @click="timeShowHandle(index)">
-						<text
-							style="font-size: 31rpx;color: #3D3F3E;font-weight: bold;padding-left: 15rpx;">预约上门时间</text>
+
+					<view class="time-two" @click="timeShowHandle(index)">
 						<view class="">
+							<text v-if="isCar"
+								style="font-weight: bold;margin-left: 28rpx;">{{item.list[0].workerType.replace('师傅','')}}</text>
+							<text style="color: #3D3F3E;font-weight: bold;padding-left: 15rpx;">选择上门时间</text>
+						</view>
+						<view>
 							<text
 								style='text-align: end;margin-right: 22rpx;'>{{item.expectTime==undefined?'时间':item.expectTime}}</text>
 							<image style="width: 14rpx;height: 25rpx;    margin-right: 20rpx;"
@@ -101,11 +103,11 @@
 				v-for="(item,index) in showListByType" :key="index">
 				<view class="line">
 					<view style="font-size: 34rpx;font-weight: bold;">
-						{{isCar?item.list[0].workerType.replace('人工','师傅'):'订单明细'}}
+						{{isCar?item.list[0].workerType:'订单明细'}}
 					</view>
 					<view class="img"
 						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0">
-						<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
+						<u-icon name="error-circle" color="#EC5722" size="22"></u-icon>
 						未达标按起步价收取
 					</view>
 					<view
@@ -191,7 +193,7 @@
 				</view> -->
 			<!-- 	</view> -->
 
-			<view class="btn" @click.stop="submitOrder">提交订单</view>
+			<view class="btn" @click.stop="submitOrder">立即下单</view>
 
 		</view>
 
@@ -343,7 +345,7 @@
 				if (storage.get('ClientId')) {
 					//查询门店名称
 					getInfoById(storage.get('ClientId')).then(res => {
-							console.log( res.data.storeName,'34666666666666');
+							console.log(res.data.storeName, '34666666666666');
 							this.info.warrantyStore = res.data.storeName
 							//	this.fileList.push({url:arr[0]})
 						}),
@@ -483,8 +485,8 @@
 					});
 					return
 				}
-					console.log(this.addressInfo.addressId,this.addressList.length);
-				if (!this.addressInfo.addressId||this.addressList.length==0) {
+				console.log(this.addressInfo.addressId, this.addressList.length);
+				if (!this.addressInfo.addressId || this.addressList.length == 0) {
 					uni.showToast({
 						title: '请选择地址',
 						duration: 2000,
@@ -492,7 +494,7 @@
 					});
 					return
 				}
-			
+
 				if (this.isAgain) {
 					console.log({
 						orderId: this.showListByType[0].list[0].orderId,
@@ -511,7 +513,7 @@
 						let info = {
 							money: this.info.orderPrice,
 							time: timeObj,
-							orderId:  this.showListByType[0].list[0].orderId
+							orderId: this.showListByType[0].list[0].orderId
 						}
 						console.log(info);
 						uni.redirectTo({
@@ -552,16 +554,19 @@
 					let timeObj = {}
 					let startingFree = {}
 					let beforeStartingFree = {}
+					let costStartingFreeMap = {}
 					this.showListByType.forEach(item => {
 						timeObj[item.list[0].workerType] = item.expectTime + ':00'
 						startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount,
-							beforeStartingFree[item.list[0].workerType] = item.list[0].startingFree
+							beforeStartingFree[item.list[0].workerType] = item.list[0].startingFree,
+							costStartingFreeMap[item.list[0].workerType] = item.list[0].initialLabor
 					})
 					console.log(timeObj, startingFree);
 					this.info.orderProjectBoList = arr
 					this.info.startingFreeMap = startingFree
 					this.info.timeMap = timeObj
 					this.info.beforeStartingFreeMap = beforeStartingFree
+					this.info.costStartingFreeMap = costStartingFreeMap
 					//this.info.expectTime = this.info.expectTime + ':00'
 					console.log(this.info);
 					postOrder(this.info).then(res => {
@@ -621,13 +626,14 @@
 				// uni.removeStorage({
 				// 	key:'submit_order'
 				// })
-				const pages = uni.$u.pages();
-				console.log(pages);
-				pages.some(p => p.route.includes('service') || p.route.includes('goodDetails') || p.route.includes(
-						'orderDetail')) ? uni.navigateBack() : uni
-					.switchTab({
-						url: '/pages/car/car'
-					})
+				uni.navigateBack()
+				// const pages = uni.$u.pages();
+				// console.log(pages);
+				// pages.some(p => p.route.includes('service') || p.route.includes('goodDetails') || p.route.includes(
+				// 		'orderDetail')) ? uni.navigateBack() : uni
+				// 	.switchTab({
+				// 		url: '/pages/car/car'
+				// 	})
 
 			},
 			textConfirm(arr) {
@@ -689,8 +695,9 @@
 		}
 
 		.time-two {
+			font-size: 30rpx;
 			height: 85rpx;
-			//width: 74%;
+			width: 100%;
 			background: #fff;
 			display: flex;
 			align-items: center;
@@ -753,7 +760,7 @@
 			.btn {
 				width: 199rpx;
 				height: 69rpx;
-				background: linear-gradient(270deg, #A4D091 0%, #769D71 100%);
+				background: #A4D091;
 				border-radius: 34rpx;
 				font-size: 29rpx;
 				color: #FFFFFF;

@@ -162,11 +162,10 @@
 			}
 		},
 		onLoad(options) {
-			console.log(this.isLogin);
-			let item = JSON.parse(decodeURIComponent(options.info))
-			this.goodOptionInfo = item.goodInfo
+
+			// this.goodOptionInfo = item.goodInfo
 			this.query.clientId = storage.get('ClientId')
-			this.query.serviceId = item.serviceId
+			this.query.serviceId = options.serviceId
 
 			this.$nextTick(() => {
 				this.getInfo()
@@ -316,7 +315,10 @@
 				this.projectVoList[0] = item.item
 
 			},
-
+			textareaInput(arr) {
+				console.log(arr);
+				this.projectVoList[0].remarks=arr[0].remarks
+			},
 			getDeleteUrlList(list) {
 				console.log(list);
 				this.projectVoList[0].projectImg = list[0].projectImg
@@ -332,11 +334,11 @@
 					return
 				}
 
-				console.log(this.goodOptionInfo);
+				// console.log(this.goodOptionInfo);
 
 				let projectVoListCopy = []
 				projectVoListCopy = JSON.parse(JSON.stringify(this.projectVoList))
-				if (this.goodOptionInfo && !this.goodOptionInfo.projectNumber) projectVoListCopy.push(this.goodOptionInfo)
+				// if (this.goodOptionInfo && !this.goodOptionInfo.projectNumber) projectVoListCopy.push(this.goodOptionInfo)
 				let carArr = []
 				projectVoListCopy.forEach(item => {
 					carArr.push({
@@ -362,15 +364,18 @@
 							title: '操作成功',
 							duration: 2000
 						});
-						// uni.navigateBack()
-					
+						setTimeout(() => {
+							uni.navigateBack()
+						}, 800)
 
-						let type = 'goCar'
-						uni.reLaunch({
-							url: '../../../pages/car/car?type=' + type
-						}).then(res => {
-							console.log(res);
-						})
+
+
+						// let type = 'goCar'
+						// uni.reLaunch({
+						// 	url: '../../../pages/car/car?type=' + type
+						// }).then(res => {
+						// 	console.log(res);
+						// })
 					}
 				})
 				console.log(this.projectVoList);

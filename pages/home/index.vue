@@ -3,18 +3,24 @@
 		<view v-if="locationStatus=='authorized'||locationStatus==''" class="home">
 			<u-navbar :height="navHeight" placeholder :bgColor="'RGBA(147, 189, 134, '+opacity+')'">
 				<view slot='left'>
-
+					
 				</view>
-				<view slot='center' style="padding-bottom:50rpx;width: 94%;">
-					<view class="search" :style="{'margin-top':titleHeight+'rpx'}" @click="goSearch">
+				<view slot='center' :style="{'padding-bottom':'50rpx','margin-top':titleHeight+'rpx','display':'flex','width':'93%'}">
+					<view class="citys">
+						<view @click.stop="choseCity">{{cityName}}
+						</view>
+						<image @click.stop="choseCity" style="width: 25rpx;height: 16rpx;"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/330ef3078c78421bb695ed0d1f82c5c8.png"
+							mode="">
+						</image>
+					</view>
+					<view class="search"  @click="goSearch">
 						<view class="left">
-							<view @click.stop="choseCity" style="margin:0 10rpx 0 30rpx;font-size: 29rpx;">{{cityName}}
-							</view>
-							<image @click.stop="choseCity" class="triangle" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/f0c8bd76fe63450f9887dbddddb0bd9c.png"
-								mode="">
-							</image>
-							<view class="line">|</view>
-							<image class="search-icon" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png" mode=""></image>
+							<!-- 
+							<view class="line">|</view> -->
+							<image class="search-icon"
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png"
+								mode=""></image>
 							<input style="width: 0%;" type="text" disabled>
 						</view>
 						<view class="search-title" @click="goSearch">搜索</view>
@@ -72,14 +78,17 @@
 						故障区域
 					</view>
 					<view class="boxs">
-						<view  class="box" v-for="(item,index) in regionService" :key='index'
+						<view
+							:style="{'margin':index==0?'10.87rpx 10.87rpx 14.49rpx 0':index==1?'10.87rpx 0 14.49rpx 10.87rpx':index==2?'14.49rpx 10.87rpx 0 0':'14.49rpx 0 0 10.87rpx'}"
+							class="box" v-for="(item,index) in regionService" :key='index'
 							@click="goMore(item.regionName,item.productVoList)">
-							<image style="height: 100%;width: 100%;" :src="item.regionImage"></image>
+							<image style="height: 100%;width: 100%;border-radius: 14rpx;" :src="item.regionImage">
+							</image>
 							<view class="mask">
 								{{item.regionName}}
 							</view>
 						</view>
-					
+
 					</view>
 				</view>
 				<view class="home-bottom" id='bottom' :style="{minHeight:scrollHeight+'px'}">
@@ -129,6 +138,19 @@
 				</view>
 
 			</view>
+
+			<view class="car" @click="goCar">
+				<!-- 	<view class="dot">
+					{{carNum>99?'99+':carNum}}
+				</view> -->
+				<view class="dot">
+					<u-badge numberType="overflow" type="error" max="99" :value="carNum"></u-badge>
+				</view>
+
+				<image style="width: 59.78rpx;height: 59.78rpx;"
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/19/76307108cb444855a711615dd72becb0.png"
+					mode=""></image>
+			</view>
 		</view>
 		<view v-if="locationStatus!='authorized'&&locationStatus!=''">
 			<u-empty mode="permission" marginTop='400rpx' icon="http://cdn.uviewui.com/uview/empty/permission.png"
@@ -138,11 +160,11 @@
 				去设置
 			</view>
 		</view>
-		
+
 		<view class="index" style="z-index: 99999999;">
 			<wu-app-update></wu-app-update>
 		</view>
-		
+
 	</view>
 </template>
 
@@ -150,7 +172,8 @@
 	import storage from '@/utils/storage'
 	import goodCard from '../../components/goodCard/goodCard.vue'
 	import {
-		getCarNum
+		getCarNum,
+		getOrderNum
 	} from '@/utils/api.js'
 	var QQMapWX = require('@/utils/qqmap-wx-jssdk.js')
 	import {
@@ -310,7 +333,8 @@
 				cityName: '获取位置中...',
 				locationStatus: '', //定位权限
 				timer: '',
-				promiseList: [false, false]
+				promiseList: [false, false],
+				carNum: 0
 			}
 		},
 		onReady() {
@@ -319,7 +343,7 @@
 		watch: {
 			promiseList: {
 				handler(n) {
-					console.log(n, '<<<0---------------n',this.tabHeight);
+					console.log(n, '<<<0---------------n', this.tabHeight);
 					if (n.every(item => item)) {
 						this.$nextTick(() => {
 							uni.createSelectorQuery().in(this).select('#bottom')
@@ -328,13 +352,14 @@
 										.boundingClientRect(data1 => {
 											console.log(data1, data);
 											this.scrollTop = data.top - data1.top
-										  if (this.tabHeight==0) {
-											  console.log(1111111111111,'22222222222');
-										  	this.tabHeight = data1.top
-										  }
-											
+											if (this.tabHeight == 0) {
+												console.log(1111111111111, '22222222222');
+												this.tabHeight = data1.top
+											}
+
 											console.log(this.scrollTop,
-												'<<<-----------------scrollTop----watch',this.tabHeight);
+												'<<<-----------------scrollTop----watch', this
+												.tabHeight);
 										}).exec();
 
 								}).exec();
@@ -358,13 +383,14 @@
 		onShow() {
 			if (storage.get('AccessToken')) {
 				getCarNum().then(res => {
-					if (res != 0) {
-						uni.setTabBarBadge({
-							index: 2,
-							text: res
-						})
-					}
+				this.carNum = res
 
+				});
+				getOrderNum().then(res => {
+					uni.setTabBarBadge({
+						index: 3,
+						text: res
+					})
 				})
 			}
 
@@ -391,12 +417,12 @@
 									.data.num)
 								if (num > 0) {
 									uni.setTabBarBadge({
-										index: 3,
+										index: 2,
 										text: num + ''
 									})
 								} else {
 									uni.removeTabBarBadge({
-										index: 3
+										index: 2
 									})
 								}
 							})
@@ -424,12 +450,12 @@
 						let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
 						if (num > 0) {
 							uni.setTabBarBadge({
-								index: 3,
+								index: 2,
 								text: num + ''
 							})
 						} else {
 							uni.removeTabBarBadge({
-								index: 3
+								index: 2
 							})
 						}
 					})
@@ -597,15 +623,15 @@
 						name: d.symptomsName,
 						list: this.queryParams.pageNum === 1 ? d.productVoList.records.map(rec => ({
 								...rec,
-								servicePrice: !this.isShowMoney&&rec
-									.servicePrice!=null ? this.replaceMoney(rec
-									.servicePrice) : rec.servicePrice
+								servicePrice: !this.isShowMoney && rec
+									.servicePrice != null ? this.replaceMoney(rec
+										.servicePrice) : rec.servicePrice
 							})) : this
 							.serviceSymptomsName[i].list.concat(d.productVoList.records.map(rec => ({
 								...rec,
-								servicePrice: !this.isShowMoney&&rec
-									.servicePrice!=null ? this.replaceMoney(rec
-									.servicePrice) : rec.servicePrice
+								servicePrice: !this.isShowMoney && rec
+									.servicePrice != null ? this.replaceMoney(rec
+										.servicePrice) : rec.servicePrice
 							}))),
 						total: d.productVoList.total
 					}))
@@ -634,15 +660,16 @@
 				})
 			},
 			getServiceSymptoms() {
-					console.log(this.serviceSymptomsName);
+				console.log(this.serviceSymptomsName);
 				this.loading = true
 
 				this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
 					name: d.name,
 					list: d.list.map(rec => ({
 						...rec,
-						servicePrice: !this.isShowMoney&&rec.servicePrice!=null ? this.replaceMoney(rec
-							.servicePrice) : rec.servicePrice
+						servicePrice: !this.isShowMoney && rec.servicePrice != null ? this
+							.replaceMoney(rec
+								.servicePrice) : rec.servicePrice
 					})),
 					total: d.total
 				}))
@@ -747,7 +774,7 @@
 
 
 			},
-		
+
 			//设置定位权限
 			setting() {
 				console.log(this.locationStatus, 'this.locationStatus');
@@ -790,7 +817,8 @@
 					}
 				}, 800)
 				arr.forEach(item => {
-					item.servicePrice = !this.isShowMoney&&item.servicePrice!=null ? this.replaceMoney(item.servicePrice) :
+					item.servicePrice = !this.isShowMoney && item.servicePrice != null ? this.replaceMoney(item
+							.servicePrice) :
 						item.servicePrice
 				})
 				let infos = {
@@ -870,6 +898,11 @@
 
 
 			},
+			goCar() {
+				uni.navigateTo({
+					url: '../../subpkg/car/car/car'
+				})
+			}
 			// app 更新
 		}
 	}
@@ -897,6 +930,17 @@
 		}
 
 
+		.citys {
+			color: #fff;
+			align-items: center;
+			display: flex;
+
+			image {
+				margin-left: 15rpx;
+				margin-top: 9rpx;
+			}
+		}
+
 		.search {
 			align-items: center;
 			display: flex;
@@ -904,6 +948,8 @@
 			background: #FFFFFF;
 			border-radius: 36rpx;
 			padding-right: 10rpx;
+			margin-left: 20rpx;
+			    width: 77%;
 
 			.left {
 				height: 100%;
@@ -911,11 +957,7 @@
 				align-items: center;
 				width: 89%;
 
-				.triangle {
-					width: 25rpx;
-					height: 16rpx;
-					display: inline-block;
-				}
+
 
 				.line {
 					color: #D8D8D8;
@@ -925,7 +967,7 @@
 				.search-icon {
 					width: 25rpx;
 					height: 25rpx;
-					margin-right: 18rpx;
+					margin-left: 20rpx;
 				}
 			}
 
@@ -1046,24 +1088,21 @@
 			}
 
 			.fault-area {
-				margin: 40rpx 20rpx 0 20rpx;
+				margin: 18.12rpx 20rpx 0 20rpx;
+				padding: 21.74rpx 18.12rpx;
 				//	height: 520rpx;
 				background: #FFFFFF;
 				box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.05);
 				border-radius: 14rpx;
 
 				.title {
-					font-size: 33rpx;
+					font-size: 30.8rpx;
 					color: #3D3F3E;
-					padding: 22rpx;
-					margin-bottom: -15rpx;
 				}
 
 				.boxs {
 					display: flex;
 					flex-wrap: wrap;
-					//justify-content: space-evenly;
-					padding: 0 10rpx;
 
 					.box {
 						width: 48%;
@@ -1099,7 +1138,7 @@
 				}
 
 				::v-deep.u-tabs__wrapper__nav__line {
-					background:#A4D091;
+					background: #A4D091;
 				}
 
 				.btns {
@@ -1111,6 +1150,29 @@
 			}
 		}
 
+	}
+
+	.car {
+		width: 109rpx;
+		height: 109rpx;
+		background: #FFFFFF;
+		box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.1);
+		border: 1rpx solid #F8F8F8;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		position: fixed;
+		right: 36.23rpx;
+		bottom: 39.86rpx;
+
+		.dot {
+			z-index: 10;
+			position: absolute;
+			left: 57rpx;
+			top: 22rpx;
+
+		}
 	}
 
 	.btn {

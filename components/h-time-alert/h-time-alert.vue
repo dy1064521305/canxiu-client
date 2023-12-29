@@ -18,18 +18,18 @@
 					<view v-if="index>2&&isToday" @click="_changeTime(index)" :class="{ active: item.checked }"
 						v-for="(item, index) in activeTimeArr" :key="item.time">
 						<!-- 	{{ item.time }}{{ rangeType ? '-' + item.endtime : '' }} -->
-						{{item.endtime}}
+						{{item.endtime}}<text v-if="index<=isUrgentIndex&&isToday&&!isCar">加急</text>
 						<image v-if="index<=isUrgentIndex&&isToday&&!isCar"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/6bfb10ff7ad7404699859bf0a72cb672.png"
-							style="width: 60rpx;height: 36rpx;"></image>
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/2889ed6d29b441d9a6da3c69af618f96.png"
+							style="width: 36rpx;height: 36rpx;"></image>
 					</view>
 					<view v-if="!isToday" @click="_changeTime(index)" :class="{ active: item.checked }"
 						v-for="(item, index) in activeTimeArr" :key="item.time">
 						<!-- 	{{ item.time }}{{ rangeType ? '-' + item.endtime : '' }} -->
-						{{item.endtime}}
+						{{item.endtime}}<text v-if="index<=isUrgentIndex&&isToday">加急</text>
 						<image v-if="index<=isUrgentIndex&&isToday"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/6bfb10ff7ad7404699859bf0a72cb672.png"
-							style="width: 60rpx;height: 36rpx;"></image>
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/2889ed6d29b441d9a6da3c69af618f96.png"
+							style="width:36rpx;height: 36rpx;"></image>
 					</view>
 				</view>
 			</view>
@@ -659,7 +659,7 @@
 		image {
 			position: absolute;
 			width: 36rpx;
-			left: 315rpx;
+			left: 335rpx;
 			top: -2rpx;
 		}
 	}

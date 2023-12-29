@@ -7,36 +7,59 @@
 			<text>暂无图片</text>
 		</view>
 		<view v-else class="img">
+			<view :class="info.projectType==0?'weixiu':info.projectType==1?'baoyang':''">
+				{{info.projectType==0?'维修':info.projectType==1?'维保':''}}
+			</view>
 			<image :src="info.serviceImg" mode=""></image>
 		</view>
 		<view class="right">
 			<view class="top">
-				<view v-if="type!='coudan'" class="title blod">
+				<view class="title blod">
 					{{info.serviceName}}
 				</view>
-				<view v-if="type=='coudan'" class="title blod">
+				<!-- 		<view v-if="type=='coudan'" class="title blod">
 					{{info.serviceProductName}}
-				</view>
-				<view v-if="type!='coudan'" class="small">
+				</view> -->
+				<view class="small">
 					{{info.serviceTypeName}}
 				</view>
 			</view>
 			<view class="bottom">
-				<text style="width: 65%;display: inline-block;">
-					<text v-if="type!='coudan'" style="color: #EC5722;display:inline-block;margin: 0 12rpx;"
-						class="blod">¥{{info.servicePrice}}</text>
-					<text v-if="type=='coudan'"
-						style="color: #EC5722;font-size: 34rpx;margin-right: 20rpx;">¥{{info.discountPrice}}</text>
-					<text v-if="type=='coudan'&&info.discountPrice!=info.projectPrice"
-						style="font-size: 25rpx;text-decoration:line-through">¥{{info.projectPrice}}</text>
-				</text>
-				<!-- 		<text style="font-size: 22rpx;color: #A5A7A7;width: 52%;display: inline-block;">9999+人付款</text> -->
-				<view v-if="type=='coudan'">
-					<u-icon name="plus-circle-fill" color="#A4D091" size="27"></u-icon>
-				</view>
-				<text v-else class="btn">立即下单</text>
+				<view class="bleft">
+					<view style="margin-top: 10rpx;">
+						<text style="color: #EC5722;display:inline-block;font-size: 21rpx;" class="blod">¥<text
+								style="font-size: 40rpx;font-weight: bold;margin:0 7rpx;">{{info.discountPrice}}</text></text>
+						<text v-if="info.preferentialPrice!=0"
+							style="font-size: 21rpx;text-decoration:line-through;color: #A5A7A7;">¥{{info.servicePrice}}</text>
+					</view>
 
+					<view v-if="info.preferentialPrice!=0" class="price-info">
+						<view style="position: absolute;
+					top: -17rpx;
+					left: 17rpx;">
+							<u-icon name="arrow-up-fill" color="#A4D091" size="18"></u-icon>
+						</view>
+						<view class="bottom">
+
+							<view class="one">
+
+								品牌折扣价
+							</view>
+							<view class="two">
+								已省¥{{info.preferentialPrice}}
+							</view>
+						</view>
+
+
+					</view>
+				</view>
+				<view style="    display: flex;
+    align-items: flex-end;">
+					<text class="btn">立即下单</text>
+				</view>
 			</view>
+
+
 		</view>
 
 
@@ -57,9 +80,7 @@
 			type: {
 				type: String
 			},
-			goodInfo: {
-				type: Object
-			}
+			
 		},
 		data() {
 			return {
@@ -141,6 +162,8 @@
 		margin-top: 20rpx;
 		display: flex;
 
+	
+
 		.no-img {
 			width: 181rpx;
 			height: 181rpx;
@@ -162,7 +185,28 @@
 			width: 181rpx;
 			height: 181rpx;
 			padding: 18rpx;
-
+			position: relative;
+			.weixiu,
+			.baoyang {
+				width: 65rpx;
+				height: 36rpx;
+				background: #E1E9FC;
+				border-radius: 0rpx 7rpx 7rpx 0rpx;
+				font-size: 22rpx;
+				color: #383C45;
+				line-height: 36rpx;
+				text-align: center;
+				position: absolute;
+				top: 37rpx;
+			}
+			
+			.weixiu {
+				background: #E1E9FC;
+			}
+			
+			.baoyang {
+				background: #E6F1EB;
+			}
 			image {
 				width: 100%;
 				height: 100%;
@@ -174,7 +218,7 @@
 		.right {
 			display: flex;
 			flex-direction: column;
-			padding: 10rpx;
+			padding: 21rpx 21rpx 21rpx 0;
 			width: 70%;
 			// height: 161rpx;
 
@@ -184,6 +228,7 @@
 				.title {
 					font-size: 29rpx;
 					color: #3D3F3E;
+					font-weight: bold;
 				}
 
 				.small {
@@ -193,12 +238,47 @@
 				}
 			}
 
+
+			// .bottom {
+			// 	display: flex;
+			// 	height: 30%;
+			// 	//display: inline;
+			// 	align-items: center;
+			// 	justify-content: space-between;
+
+
+			// }
 			.bottom {
 				display: flex;
-				height: 30%;
-				//display: inline;
-				align-items: center;
 				justify-content: space-between;
+
+				.price-info {
+					position: relative;
+					margin-top: 10rpx;
+
+					.bottom {
+						display: flex;
+
+						.one,
+						.two {
+							padding: 2rpx 15rpx;
+							font-size: 18rpx;
+						}
+
+						.one {
+
+							background-color: #A4D091;
+							color: #fff;
+							z-index: 1;
+						}
+
+						.two {
+							color: #A5A7A7;
+							border: 2rpx solid #A4D091;
+						}
+					}
+
+				}
 
 				.btn {
 					display: inline-block;
@@ -210,7 +290,9 @@
 					font-size: 25rpx;
 					text-align: center;
 					line-height: 54rpx;
+
 				}
+
 			}
 		}
 	}

@@ -58,7 +58,7 @@
 						去提现
 					</view>
 				</view>
-				<view class="order">
+			<!-- 	<view class="order">
 					<view class="title">
 						<text>我的订单</text>
 						<text @click='allOrder'>全部订单</text>
@@ -81,7 +81,7 @@
 						</view>
 					</view>
 
-				</view>
+				</view> -->
 				<!-- 	<view class="hetong">
 					<view class="imgPlace">
 						<image style="width: 36rpx;"
@@ -516,6 +516,7 @@
 			height: 238rpx;
 			background: #FFFFFF;
 
+border-radius: 14rpx;
 			.title {
 				padding: 22rpx;
 				align-items: center;

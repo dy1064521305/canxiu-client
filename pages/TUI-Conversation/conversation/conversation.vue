@@ -117,12 +117,12 @@
 						let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
 						if (num > 0) {
 							uni.setTabBarBadge({
-								index: 3,
+								index: 2,
 								text: num + ''
 							})
 						} else {
 							uni.removeTabBarBadge({
-								index: 3
+								index: 2
 							})
 						}
 					})
@@ -184,12 +184,12 @@
 					let num = parseInt(totalUnreadCount) + parseInt(ress.data.num)
 					if (num > 0) {
 						uni.setTabBarBadge({
-							index: 3,
+							index: 2,
 							text: num + ''
 						})
 					} else {
 						uni.removeTabBarBadge({
-							index: 3
+							index: 2
 						})
 					}
 				})
