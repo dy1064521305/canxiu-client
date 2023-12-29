@@ -230,12 +230,17 @@
 				<text class="ziduan">小计：</text>
 
 				<text
-					style="color: #EC5722;">¥{{info.favorablePrice!=0&&info.favorablePrice!=null?Number(info.orderPrice)+Number(info.favorablePrice):Number(info.orderPrice)}}</text>
+					style="color: #EC5722;">¥{{Number(info.orderPrice)+Number(info.favorablePrice)+Number(info.subsidyPrice)}}</text>
 			</view>
-			<view v-if="info.favorablePrice!=0&&info.favorablePrice!=null" style="margin-left: 20rpx;color: #A5A7A7;"
+			<view v-if="info.favorablePrice!=0" style="margin-left: 20rpx;color: #A5A7A7;"
 				class="line">
 				<text class="ziduan">品牌折扣：</text>
 				<text style="color: #EC5722;">-¥{{info.favorablePrice}}</text>
+			</view>
+			<view v-if="info.subsidyPrice!=null" style="margin-left: 20rpx;color: #A5A7A7;"
+				class="line">
+				<text class="ziduan">价格优惠：</text>
+				<text style="color: #EC5722;">-¥{{info.subsidyPrice}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">实付金额</text>
@@ -798,7 +803,7 @@
 
 						//this.timeFn('2023-03-09 11:20:18')
 						console.log(this.info.projectDataVoList[0].workerType, '8000000000000000');
-						this.workerType=this.info.projectDataVoList[0].workerType.replace('人工','师傅')
+						this.workerType=this.info.projectDataVoList[0].workerType
 						this.info.projectDataVoList.forEach(item => {
 							item.projectImg = item.projectImg != '' ? item.projectImg.split(',') : []
 							// item.projectVideo = item.projectVideo != '' ? item.projectVideo.split(',') : []

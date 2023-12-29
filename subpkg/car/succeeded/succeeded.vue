@@ -56,8 +56,8 @@
 			},
 			//查看订单
 			goDetailed(){
-				uni.navigateTo({
-					url: '../../center/myOrder/myOrder'
+				uni.switchTab({
+					url:'/pages/myOrder/myOrder'
 				})
 				// uni.navigateTo({
 				// 	url: '../../car/orderDetail/orderDetail?id=' + this.info.orderId

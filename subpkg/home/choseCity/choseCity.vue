@@ -374,7 +374,7 @@
 
 <style lang="scss" scoped>
 	header {
-		height: 190rpx;
+		// height: 190rpx;
 		background: #FFFFFF;
 		padding: 18rpx 22rpx 0 22rpx;
 

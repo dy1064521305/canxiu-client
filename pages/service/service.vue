@@ -156,14 +156,14 @@
 
 		},
 		onShow() {
-			getCarNum().then(res => {
-				if (res != 0) {
-					uni.setTabBarBadge({
-						index: 2,
-						text: res
-					})
-				}
-			})
+			// getCarNum().then(res => {
+			// 	if (res != 0) {
+			// 		uni.setTabBarBadge({
+			// 			index: 2,
+			// 			text: res
+			// 		})
+			// 	}
+			// })
 			if (getApp().index != undefined) {
 				this.$nextTick(() => {
 
@@ -483,8 +483,7 @@
 				width: 100%;
 				text-align: center;
 				display: inline-block;
-				background: linear-gradient(270deg, #A4D091 0%, #769D71 100%);
-				;
+				background:#A4D091;
 				border-radius: 30rpx;
 
 				height: 60rpx;
@@ -572,7 +571,7 @@
 			.item-menu-name {
 				margin-top: 8rpx;
 				font-weight: normal;
-				font-size: 24rpx;
+				font-size: 25rpx;
 				color: $u-main-color;
 			}
 
@@ -594,12 +593,13 @@
 					flex-direction: column;
 					align-items: center;
 					justify-content: center;
-					padding: 12rpx;
+					width: 141rpx;
+					height: 141rpx;
 					background: #F4F4F4;
 					border-radius: 11rpx;
-
+					
 					text {
-						font-size: 21rpx;
+						font-size: 23rpx;
 						color: #A4D091;
 					}
 				}
@@ -609,10 +609,11 @@
 
 
 			.item-menu-image {
-				width: 120rpx;
-				height: 120rpx;
+				width: 141rpx;
+				height: 141rpx;
 				text-align: center;
 				line-height: 120rpx;
+					border-radius: 11rpx;
 			}
 		}
 

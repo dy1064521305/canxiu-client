@@ -2,7 +2,7 @@
 	<view class="my-order">
 		<z-paging ref="paging" v-model="orderList" @query="getOrderlistHandle" @onRefresh="refresh">
 			<view slot='top'>
-				<u-navbar title="我的订单" placeholder :safeAreaInsetTop="true" :autoBack='true'>
+				<u-navbar title="我的订单" placeholder :safeAreaInsetTop="true">
 					<view class="u-nav-slot" slot="right" @click="show">
 						<image
 							:style="{'width': '29rpx','margin-right':menuButtonInfoWidth+'rpx','padding-top':'15rpx'}"
@@ -41,32 +41,34 @@
 								mode=""></image>
 						</view> -->
 						<view class="top">
-							<view class="left">
-								<view style="font-size: 35rpx;">{{item.warrantyStore}}</view>
-								<view style="display: flex;align-items: center;">
+						<!-- 	<view class="left"> -->
+								<view style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
+									{{item.warrantyStore}}
+									<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
+										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
+								</view>
+								<view style="display: flex;margin: 7rpx 0;">
 									订单号：{{item.orderNumber}}
 									<view @click.stop="copy(item.orderNumber)">
 										<image
-											src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/07/20/9f47c1b609a546f18bc814eb9299768c.png"
-											style="width: 45rpx;height: 45rpx;margin-left: 10rpx;"></image>
+											src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/57de362ad312499d93634d2ae9021099.png"
+											style="width: 29rpx;height: 29rpx;margin-left: 10rpx;"></image>
 									</view>
 								</view>
-							</view>
-							<view class="right" :style="{'background-color':item.isUrgent==1||item.isUrgent==2?'red':'#ccc'}">
-								<img style="width: 45rpx;height: 48rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/07/25/e617f1d98e8a45b28aa44c2f8838704c.png">
-								加急
+						<!-- 	</view> -->
 
-							</view>
 						</view>
 						<view class="bottom">
 							<view>下单时间：{{item.orderTime}}</view>
 							<view>{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.orderStatus}}</view>
 						</view>
 					</view>
-					<view v-if="item.projectDataVoList.length!=0" v-for="(pro,i) in item.projectDataVoList" :key="i"
-						style="margin: 20rpx 0;">
-					<!-- 	<view style="display: flex;height: 156rpx;">
+					<view class="">
+
+					</view>
+					<view v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
+						v-for="(pro,i) in item.projectDataVoList" :key="i" style="margin: 20rpx 0;">
+						<!-- 	<view style="display: flex;height: 156rpx;">
 							<view style="position: relative;">
 								<image style="width: 156rpx;height:100%;" :src="pro.projectImg[0]">
 								</image>
@@ -96,21 +98,22 @@
 								</view>
 							</view>
 						</view> -->
-						<project-card :pro='pro' type='myOrder'/>
+						<project-card :pro='pro' type='myOrder' />
 					</view>
 					<view style="color: #EC5722;text-align: end;">
 						小计：￥{{item.orderPrice}}
 					</view>
 					<view class="time">
 						<text>预约上门时间：{{item.expectTime}}</text>
-						<text>由{{item.workerType.replace('人工','师傅')}}维修</text>
+						<text>由{{item.workerType!=null&&item.workerType}}维修</text>
 					</view>
 					<view class="btns">
-					<!-- 	<view @click.stop='backFix(item)' class="btn-white"
+						<!-- 	<view @click.stop='backFix(item)' class="btn-white"
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view> -->
 						<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
 							@click="handleRoute(item)">联系师傅</view>
-						<view @click.stop='orderDetail(item.orderId)' class="btn-green" v-if="item.orderStatus=='待评价'">去评价</view>
+						<view @click.stop='orderDetail(item.orderId)' class="btn-green" v-if="item.orderStatus=='待评价'">
+							去评价</view>
 						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
 						<view @click.stop='orderDetail(item.orderId)' class="btn-green"
 							v-if="item.orderStatus=='服务中【审核通过】'">确认方案</view>
@@ -182,14 +185,18 @@
 						</view>
 					</view>
 
-					<view class="btn">
-					
+					<view class="btns" style="justify-content: space-evenly;margin-top: 60rpx;">
+
+						<view class="btn-white" @click="refresh">重置</view>
+						<view @click="queryList()" class="btn-green">确认</view>
+
+						<!-- 
 						<image
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/c804038468f4457a9f3cfddaceca81f8.png"
-							@click="refresh"></image>
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/c804038468f4457a9f3cfddaceca81f8.png">
+						</image>
 						<image
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/d8318d98692148449518ada0130e641b.png"
-							@click="queryList()"></image>
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/d8318d98692148449518ada0130e641b.png">
+						</image> -->
 					</view>
 				</view>
 			</view>
@@ -209,11 +216,11 @@
 	import formatter from '@/utils/formatter.js'
 	import projectCard from '@/components/projectCard/projectCard.vue'
 	export default {
-		components:{
+		components: {
 			projectCard
 		},
 		data() {
-			
+
 			return {
 				repairOrderShow: false,
 				repairInfo: {},
@@ -322,7 +329,9 @@
 			} else {
 				let item = JSON.parse(option.item)
 				//	this.$refs.paging.reload();
-				this.currentIndex = this.list1.findIndex(c=>{return c.name==item.name})
+				this.currentIndex = this.list1.findIndex(c => {
+					return c.name == item.name
+				})
 				this.statusClick({
 					name: item.name
 				})
@@ -333,7 +342,7 @@
 
 			handleRoute(item) {
 				let id = 'C2C' + item.workerId
-				const url = `../../../subpkgChat/TUI-Chat/chat?conversationID=${id}`;
+				const url = `../../subpkgChat/TUI-Chat/chat?conversationID=${id}`;
 				uni.navigateTo({
 					url
 				});
@@ -376,7 +385,7 @@
 				getOrderList(this.queryParams).then(res => {
 					console.log(res);
 					res.rows.forEach(i => {
-						i.projectDataVoList.forEach(item => {
+						i.projectDataVoList && i.projectDataVoList.forEach(item => {
 							item.img = item.projectImg != null ? item.projectImg.split(
 								',') : []
 						})
@@ -437,7 +446,7 @@
 			//订单详情
 			orderDetail(id) {
 				uni.navigateTo({
-					url: '../../car/orderDetail/orderDetail?id=' + id
+					url: '../../subpkg/car/orderDetail/orderDetail?id=' + id
 				})
 			},
 			checkboxChange(n) {
@@ -483,14 +492,14 @@
 			appraise(item) {
 				console.log(item);
 				uni.navigateTo({
-					url: '../../car/appraise/appraise?id=' + item.orderId
+					url: '../../subpkg/car/appraise/appraise?id=' + item.orderId
 				})
 			},
 			//支付
 			pay(item) {
 				console.log(item);
 				uni.navigateTo({
-					url: '../../car/pay/pay?item=' + encodeURIComponent(JSON.stringify(item))
+					url: '../../subpkg/car/pay/pay?item=' + encodeURIComponent(JSON.stringify(item))
 				})
 			},
 			backFix(item) {
@@ -535,6 +544,10 @@
 
 <style lang="scss">
 	.my-order {
+		::v-deep.u-navbar__content__left {
+			display: none !important;
+		}
+
 		.top {
 			background: #fff;
 			//padding: 20rpx 20rpx 0 20rpx;
@@ -567,6 +580,8 @@
 			}
 		}
 
+
+
 		.orders {
 			position: relative;
 			margin: 20rpx auto;
@@ -578,7 +593,7 @@
 			.main {
 				padding: 20rpx;
 
-				
+
 
 				.title {
 					display: flex;
@@ -588,8 +603,8 @@
 					font-size: 26rpx;
 
 					.top {
-						display: flex;
-						justify-content: space-between;
+						// display: flex;
+						// justify-content: space-between;
 
 						.right {
 							//background-color: red;
@@ -617,39 +632,41 @@
 					color: #3D3F3E;
 					padding-top: 20rpx;
 					border-top: 2rpx solid #F8F8F8;
-					    display: flex;
-					    justify-content: space-between;
-				}
-
-				.btns {
-					width: 100%;
 					display: flex;
-					justify-content: flex-end;
-
-					.btn-white,
-					.btn-green {
-						width: 199rpx;
-						border-radius: 45rpx;
-						text-align: center;
-						font-size: 30rpx;
-						margin: 15rpx 0 0 10rpx;
-					}
-
-					.btn-white {
-						height: 55rpx;
-						background: #FFFFFF;
-						border: 4rpx solid #A4D091;
-						color: #A4D091;
-						line-height: 55rpx;
-					}
-
-					.btn-green {
-						line-height: 60rpx;
-						height: 60rpx;
-						background: #A4D091;
-						color: #fff;
-					}
+					justify-content: space-between;
 				}
+
+
+			}
+		}
+
+		.btns {
+			width: 100%;
+			display: flex;
+			justify-content: flex-end;
+
+			.btn-white,
+			.btn-green {
+				width: 199rpx;
+				border-radius: 45rpx;
+				text-align: center;
+				font-size: 30rpx;
+				margin: 15rpx 0 0 10rpx;
+			}
+
+			.btn-white {
+				height: 55rpx;
+				background: #FFFFFF;
+				border: 4rpx solid #A4D091;
+				color: #A4D091;
+				line-height: 55rpx;
+			}
+
+			.btn-green {
+				line-height: 60rpx;
+				height: 60rpx;
+				background: #A4D091;
+				color: #fff;
 			}
 		}
 

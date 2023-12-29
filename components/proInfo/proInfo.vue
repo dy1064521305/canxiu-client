@@ -4,41 +4,67 @@
 			<view v-for="(item, index) in dataList" :key="index">
 
 				<view class="check">
-					<u-checkbox v-if="submit&&isCar" shape="circle" :name="item.id?item.id:item.projectId"
-						activeColor='#A4D091' @change='val=>checkChange(val,item)'>
-					</u-checkbox>
-
-					<view v-if="isCar" class="no-img" :style="{'background':item.imgList.length!=0?'':'#F4F4F4'}">
-						<image v-if="item.imgList.length!=0" style="border-radius: 10rpx;width: 100%;height: 100%;"  :src="item.imgList[0]">
-							
-						</image>
-						<view v-else class="imgs">
-							<image style="width:98rpx ;height: 68rpx;"
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
-								mode=""></image>
-							<text>暂无图片</text>
-						</view>
-
-					</view>
-					<view v-if="isCar" class="info-one">
-						<view
-							style="font-size: 29rpx;color: #3D3F3E;font-weight: bold;display: flex;justify-content: space-between;">
-							<view :style="{'width':isDelete?'70%':''}"> {{item.serviceProductName}}</view>
-							<view class="delete-btn" @click="deleteById(item.id)" v-if="isDelete">
-								删除
+					<view v-if="isCar" class="box">
+						<view class="top">
+							<view style="display: flex;">
+								<u-checkbox v-if="submit&&isCar" shape="circle" :name="item.id?item.id:item.projectId"
+									activeColor='#A4D091' @change='val=>checkChange(val,item)'>
+								</u-checkbox>
 							</view>
-							<!-- 		<image   style="width: 100rpx;height: 35rpx;"
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/94862fc485714c92b1cff30a2bf71425.png">
-							</image> -->
+
+
+							<view class="no-img" :style="{'background':item.imgList.length!=0?'':'#F4F4F4'}">
+								<image v-if="item.imgList.length!=0"
+									style="border-radius: 10rpx;width: 100%;height: 100%;" :src="item.imgList[0]">
+
+								</image>
+								<view v-else class="imgs">
+									<image style="width:98rpx ;height: 68rpx;"
+										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+										mode=""></image>
+									<text>暂无图片</text>
+								</view>
+
+							</view>
+
+							<view v-if="isCar" class="info-one">
+								<view
+									style="font-size: 29rpx;color: #3D3F3E;font-weight: bold;display: flex;justify-content: space-between;">
+									<view :style="{'width':isDelete?'70%':''}"> {{item.serviceProductName}}</view>
+									<view class="delete-btn" @click="deleteById(item.id)" v-if="isDelete">
+										删除
+									</view>
+									<!-- 		<image   style="width: 100rpx;height: 35rpx;"
+										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/94862fc485714c92b1cff30a2bf71425.png">
+									</image> -->
+								</view>
+								<view class="center">
+									<view class="left">
+										<!-- 	<view class="">
+											{{item.serviceProjectName}}
+										</view> -->
+										<view class="">
+											{{item.serviceTypeName}}
+										</view>
+									</view>
+
+								</view>
+								<view class="bottom">
+									<view class="left">
+										工时:{{item.serviceTime}}小时
+
+									</view>
+
+								</view>
+
+							</view>
+
+
+
 						</view>
-						<view class="center">
-							<view class="left">
-								<view class="">
-									{{item.serviceProjectName}}
-								</view>
-								<view class="">
-									{{item.serviceTypeName}}
-								</view>
+						<view class="top-bottom" :style="{'padding-left':!submit?'165rpx':'209rpx'}">
+							<view style="color: #EC5722;margin-right: 10rpx;font-size: 22rpx;">
+								维修费:<text style="font-size: 40rpx;font-weight: bold;margin: 0 10rpx;">{{item.discountPrice}}</text>元
 							</view>
 							<view class="right">
 								<u-number-box min='1' v-model="item.projectNumber" class='number' button-size="26px"
@@ -47,30 +73,19 @@
 								</u-number-box>
 							</view>
 						</view>
-						<view class="bottom">
-							<view class="left">
-								工时:{{item.serviceTime}}小时
-
-							</view>
-							<view style="color: #EC5722;margin-right: 10rpx;font-size: 28rpx;">
-								工时费:¥{{item.discountPrice}}
-							</view>
-						</view>
 					</view>
+
+
+
+
+
+
+
+
 
 					<view v-if="!isCar" class="info-two">
 						<view
 							style="font-size: 29rpx;color: #3D3F3E;font-weight: bold;display: flex;align-items: center;justify-content: space-between;">
-							<view> {{item.serviceProductName}}</view>
-							<!-- 	<image @click="deleteById(item.id)" v-if="isDelete" style="width: 145rpx;height: 69rpx;"
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/94862fc485714c92b1cff30a2bf71425.png">
-							</image> -->
-							<u-number-box min='0' disabledInput v-model="item.projectNumber" class='number'
-								button-size="27" color="#ffffff" bgColor="#A4D091" :asyncChange="true"
-								@change='val=>numChange(item,val,index)' iconStyle="color: #fff">
-							</u-number-box>
-						</view>
-						<view class="bottom">
 							<view class="left">
 								<!-- 
 							<text v-if="!question"
@@ -86,6 +101,16 @@
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0b076ac258454779a88431fc8f26cb56.png"
 								mode=""></image> -->
 							</view>
+							<!-- 	<image @click="deleteById(item.id)" v-if="isDelete" style="width: 145rpx;height: 69rpx;"
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/94862fc485714c92b1cff30a2bf71425.png">
+							</image> -->
+							<u-number-box min='0' disabledInput v-model="item.projectNumber" class='number'
+								button-size="27" color="#ffffff" bgColor="#A4D091" :asyncChange="true"
+								@change='val=>numChange(item,val,index)' iconStyle="color: #fff">
+							</u-number-box>
+						</view>
+						<view class="bottom">
+
 							<view class="price-info" v-if="item.preferentialPrice!=0">
 								<view style="position: absolute;
     top: -20rpx;
@@ -112,12 +137,14 @@
 				<!-- v-if="checkboxValue1.includes(item.id?item.id:item.projectId)||isCar" -->
 				<view class="remark">
 					<view>
-						<text style="color: red">*</text><text style="margin:0 30rpx 0 10rpx;">图片/视频</text>
+						<view class="">
+							<text style="color: red">*</text><text style="margin:0 30rpx 0 10rpx;">视频/图片</text>
+						</view>
 
-						<view style="width: 66%;">
+						<view style="width: 100%;margin: 10.87rpx 0 28.99rpx 0;">
 							<cl-upload :listStyle="{
 							columnGap: '10rpx',
-							columns:'3',
+							columns:'4',
 							rowGap:'10rpx'
 							}" :imageFormData="{
 								size:10
@@ -138,10 +165,9 @@
 					</view> -->
 					<view style="align-items: center;">
 						<view style="margin-right: 10rpx;">订单备注</view>
-						<view style='width: 80%'>
-							<u--textarea height='30rpx' border='none' maxlength='50' confirmType="done" autoHeight
-								v-model="item.remarks" placeholder="备注内容(选填)" count
-								@input='textareaInput'></u--textarea>
+						<view style='width: 100%'>
+							<u--textarea :height='!isCar?"72":"20"' border='none' maxlength='50' confirmType="done"
+								v-model="item.remarks" placeholder="请输入内容" count @input='textareaInput'></u--textarea>
 						</view>
 					</view>
 				</view>
@@ -259,10 +285,10 @@
 							//		console.log(1111);
 						}
 						//	console.log(item);
-						item.imgList = item.serviceProjectImg !== null&& item.serviceProjectImg !== '' ? item.serviceProjectImg.split(',') :
-						[],
-						console.log(item);
-							item.projectImg = item.projectImg != '' && !Array.isArray(item.projectImg) ? item
+						item.imgList = item.serviceProjectImg !== null && item.serviceProjectImg !== '' ? item
+							.serviceProjectImg.split(',') : [],
+							console.log(item);
+						item.projectImg = item.projectImg != '' && !Array.isArray(item.projectImg) ? item
 							.projectImg.split(',') : Array.isArray(item.projectImg) ? item.projectImg : []
 						//console.log(item.projectVideo);
 						// item.projectVideo = item.projectVideo != '' && item.projectVideo != undefined && !Array
@@ -427,58 +453,76 @@
 	.info-all {
 		.check {
 			//height: 144rpx;
-			padding: 14rpx;
+			// padding: 14rpx;
 			display: flex;
-			border-top: 2rpx solid #F8F8F8;
+			// border-top: 2rpx solid #F8F8F8;
 
-		}
 
-		.no-img {
-			width: 170rpx;
-			
-			border-radius: 11rpx;
+			.box {
+				width: 100%;
+				padding: 0 28rpx;
+				.top {
+					display: flex;
+					width: 100%;
+					height: 156rpx;
 
-			.imgs {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				height: 100%;
-				text {
-					font-size: 21rpx;
-					color: #A4D091;
+					.no-img {
+						width: 156rpx;
+
+						border-radius: 11rpx;
+
+						.imgs {
+							display: flex;
+							flex-direction: column;
+							align-items: center;
+							justify-content: center;
+							height: 100%;
+
+							text {
+								font-size: 21rpx;
+								color: #A4D091;
+							}
+						}
+
+
+					}
+
+				}
+
+				.top-bottom {
+					display: flex;
+					    margin-top: 27rpx;
+					
+						justify-content: space-between;
+						align-items: baseline;
 				}
 			}
 
-
 		}
 
-		.info-one,
-		.info-two {
 
+		.info-two {
+			padding: 28.99rpx;
 			width: 100%;
-		}
 
-		.info-two {
-			padding: 0 10rpx;
+			.left {
+				display: flex;
+				align-items: center;
+				width: 70%;
+				color: #EC5722;
+				font-weight: bold;
+				font-size: 38rpx;
+
+				image {
+					width: 36rpx;
+					height: 36rpx;
+					margin-left: 10rpx;
+				}
+			}
 
 			.bottom {
 				margin-top: 10rpx;
 
-				.left {
-					display: flex;
-					align-items: center;
-					width: 70%;
-					color: #EC5722;
-					font-weight: bold;
-					font-size: 38rpx;
-
-					image {
-						width: 36rpx;
-						height: 36rpx;
-						margin-left: 10rpx;
-					}
-				}
 
 				.price-info {
 					position: relative;
@@ -513,8 +557,21 @@
 
 		}
 
+		::v-deep.u-textarea {
+			background: rgba(165, 167, 167, 0.05);
+			margin-top: 10.87rpx;
+		}
+
+		::v-deep.u-textarea__count {
+			background: rgba(165, 167, 167, 0.05) !important;
+		}
+
 		.info-one {
-			padding: 0 0 0 10rpx;
+			padding-left:10rpx;
+			width: 68%;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
 
 			.delete-btn {
 				background-color: #ec5722;
@@ -555,13 +612,9 @@
 			font-size: 29rpx;
 			color: #3D3F3E;
 			font-weight: bold;
-			padding: 20rpx 25rpx;
-
-			view {
-				display: flex;
+			padding: 20rpx 28rpx;
 
 
-			}
 		}
 	}
 </style>

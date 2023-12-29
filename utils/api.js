@@ -9,6 +9,9 @@ const instance = {
 import {
 	getCarList
 } from '@/api/car.js';
+import {
+		getOrderList
+	} from '@/api/order.js'
 import storage from '@/utils/storage';
 const app = getApp();
 export function login(options) {
@@ -118,6 +121,22 @@ export const getCarNum = () => {
 
 		})
 		console.log(allNum, '<<<<<<<allnum')
+		return Promise.resolve(String(allNum))
+	})
+}
+
+//获取订单数量
+export const getOrderNum = () => {
+	return getOrderList({ 
+		pageSize: 10,
+		pageNum: 1,
+		orderStatus:"",
+		clientId: storage.get('ClientId') == false ? 0 : storage.get('ClientId')
+	}).then(res => {
+
+		let allNum = res.total
+	
+		console.log(allNum, '<<<<<<<allnumorderorderorderorderfe')
 		return Promise.resolve(String(allNum))
 	})
 }
