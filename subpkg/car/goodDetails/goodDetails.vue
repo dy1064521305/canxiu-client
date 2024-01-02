@@ -141,7 +141,7 @@
 			<view class="bottom-bottom">
 				<view style="display: flex;flex-direction: column;position: relative;align-items: center;width:17%"
 					@click="goCar">
-					<u-badge type="error" max="99" :absolute="true" :offset="[-10,13]" :value="allNum"></u-badge>
+					<u-badge type="error" max="99" :absolute="true" :offset="[-5,13]" :value="allNum"></u-badge>
 					<image
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/722e9538b21641bba55896f3a2c96eea.png"
 						mode=""></image>
@@ -150,12 +150,12 @@
 				</view>
 				<view class="detail-price">
 
-					<view v-if='isLogin' style="font-size: 30rpx;font-weight: bold;color:#EC5722 ;">
+					<view v-if='isLogin' style="font-size: 34rpx;font-weight: bold;">
 						¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}
 					</view>
 					<view
 						v-if="projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)!=0"
-						style="color:#A4D091 ;margin-left: 5rpx;font-size: 25rpx;" @click="preferentialShow=true">
+						style="margin-left: 5rpx;font-size: 21rpx;" @click="preferentialShow=true">
 						品牌优惠¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}>
 					</view>
 
@@ -166,9 +166,9 @@
 				<view class="btn-green" @click="getOrderHandle">
 					立即下单
 				</view>
-				<view class="btn-green" style="margin-left: 20rpx;" @click="goCar">
+				<!-- 	<view class="btn-green" style="margin-left: 20rpx;" @click="goCar">
 					去维修车
-				</view>
+				</view> -->
 
 				<!-- 	<image style="width: 220rpx;height: 69rpx;"
 					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/dddcfdd8b2954673ae8d63397355ce95.png"
@@ -235,12 +235,17 @@
 		<u-popup :show="coudanShow" closeable @close="coudanShow=false">
 			<view class="cou-dan">
 				<view class="title">服务橱窗</view>
-				<u--input @input='getListByWorkerType()' @clear="getListByWorkerType" @confirm="getListByWorkerType"
-					clearable v-model="searchName" type="text" placeholder="请输入需要的服务" />
+				<!-- 	<u--input @input='getListByWorkerType()' @clear="getListByWorkerType" @confirm="getListByWorkerType"
+					clearable v-model="searchName" type="text" placeholder="请输入需要的服务" /> -->
+				<view style="padding:10rpx 20rpx;">
+					<u-search clearabled placeholder="请输入需要的服务" v-model="searchName" @clear="getListByWorkerType"
+						@search="getListByWorkerType" :showAction="false"></u-search>
+				</view>
+
 				<view v-if="coudanList.length!=0" class="main">
 
 					<view v-for="(item,index) in coudanList" :key="index">
-						<good-card type='coudan' :item='item' :goodInfo='projectVoList[0]' />
+						<coudan-card :item='item' />
 					</view>
 
 				</view>
@@ -290,7 +295,7 @@
 	import storage from '@/utils/storage'
 	import proInfo from '@/components/proInfo/proInfo.vue'
 	import lPainter from '@/components/lime-painter/components/l-painter/l-painter.vue'
-	import goodCard from '@/components/goodCard/goodCard.vue'
+	import coudanCard from '../components/coudanCard/coudanCard.vue'
 	import * as car from '@/api/car.js'
 	import {
 		getServiceInfo,
@@ -311,7 +316,7 @@
 	export default {
 		components: {
 			lPainter,
-			goodCard,
+			coudanCard,
 			proInfo
 		},
 		data() {
@@ -396,6 +401,9 @@
 			//获取购物车数量
 			if (this.isLogin) {
 				this.getCarList()
+				this.getInfo()
+				this.priceDifference = 0
+				this.projectNumber = 0
 			}
 
 		},
@@ -519,6 +527,7 @@
 						item.serviceProjectImg = item.projectImg,
 							item.projectImg = '',
 							item.productId = this.goodInfo.serviceId
+							// item.remarks=''
 					})
 					console.log(this.projectVoList);
 					if (!this.isLogin) {
@@ -762,8 +771,8 @@
 			//维修车
 			goCar() {
 				let type = 'goCar'
-				this.isLogin ? uni.reLaunch({
-					url: '../../../pages/car/car?type=' + type
+				this.isLogin ? uni.navigateTo({
+					url: '../car/car'
 				}).then(res => {
 					console.log(res);
 				}) : this.isShowLogin = true
@@ -787,16 +796,20 @@
 			// 		this.isShowLogin = true
 			// 	}
 			// },
-
+			textareaInput(arr) {
+				console.log(arr);
+				this.projectVoList[0].remarks = arr[0].remarks
+			},
 			getCheck(item) {
 				console.log(item, 'itrwmmmmmmmmm');
 				if (!this.isLogin) {
 					this.isShowLogin = true
 					return
 				}
-				item.item.projectNumber = this.projectNumber = item.num.value
+				this.projectVoList[0].projectNumber = this.projectNumber = item.num.value
 
-				this.projectVoList[0] = item.item
+				// this.projectVoList[0] = item.item
+				console.log(this.projectVoList[0], '8055555555555');
 				let carArr = []
 				carArr.push({
 					clientId: storage.get('ClientId'),
@@ -811,6 +824,7 @@
 					shoppingCartStatus: 0,
 					projectType: this.projectVoList[0].projectType,
 					discountPrice: this.projectVoList[0].discountPrice,
+					initialLabor: this.goodInfo.initialLabor,
 					// projectVideo: item.projectVideo != [] ? item.projectVideo.toString() :
 					// 	undefined,
 					workerType: this.goodInfo.workerType
@@ -819,7 +833,7 @@
 				console.log(carArr);
 				// //计算起步价差价
 				console.log(this.goodInfo);
-				let total =Number(this.projectVoList[0].projectPrice)*Number(item.item.projectNumber)
+				let total = Number(this.projectVoList[0].projectPrice) * Number(item.item.projectNumber)
 				this.priceDifference = Number(this.goodInfo.startingFreeDiscount) - total
 				console.log(total);
 				car.joinCar(carArr).then(res => {
@@ -878,7 +892,8 @@
 						startingFree: this.goodInfo.startingFree,
 						serviceTime: item.projectHours,
 						serviceProjectName: item.projectName,
-						projectType: item.projectType
+						projectType: item.projectType,
+						initialLabor: this.goodInfo.initialLabor
 					}, {
 						productId: this.goodInfo.serviceId
 					}))
@@ -948,6 +963,7 @@
 			line-height: 65rpx;
 			text-align: center;
 			padding: 0 40rpx;
+			font-weight: bold;
 		}
 
 		.bgf {
@@ -1092,21 +1108,27 @@
 				align-items: center;
 				background: #fff;
 
-				image {
-					width: 30rpx;
-					height: 30rpx;
+				::v-deep.u-badge {
+					z-index: 100;
 				}
 
-				image:first-child {
-					width: 47rpx;
-					height: 43rpx;
-					margin: 0 30rpx;
+				image {
+					width: 54rpx;
+					height: 54rpx;
 				}
+
+				// image:first-child {
+				// 	width: 47rpx;
+				// 	height: 43rpx;
+				// 	margin: 0 30rpx;
+				// }
 
 				.detail-price {
-					width: 27%;
+					width: 55%;
 					text-align: start;
-					font-size: 30rpx;
+					color: #EC5722;
+					display: flex;
+					align-items: center;
 				}
 
 			}

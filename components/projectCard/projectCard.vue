@@ -1,18 +1,21 @@
 <template>
 	<view class="card">
 		<view style="display: flex;height: 156rpx;">
-			<view  v-if="info.img.length==0||info.img[0]==''"  class="no-img">
+			<view v-if="info.img.length==0||info.img[0]==''" class="no-img">
 				<image style="width:110rpx ;height: 77rpx;"
 					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
 					mode=""></image>
 				<text>暂无图片</text>
 			</view>
 			<view v-else style="position: relative;">
-				<image style="width: 156rpx;height:100%;	border-radius: 11rpx;" :src="info.img[0]">
-				</image>
-				<view class="weixiu" v-if="type=='myOrder'">
-					维修
+				<view v-if="type=='myOrder'" :class="!info.projectType||info.projectType==0?'weixiu':info.projectType==1?'baoyang':''">
+					{{!info.projectType||info.projectType==0?'维修':info.projectType==1?'维保':''}}
 				</view>
+				<image style="width: 156rpx;height:100%;border-radius: 11rpx;" :src="info.img[0]">
+				</image>
+				<!-- 	<view class="weixiu" >
+					维修
+				</view> -->
 			</view>
 
 			<view
@@ -80,13 +83,36 @@
 
 <style lang="scss" scoped>
 	.card {
-		.weixiu {
-			color: #fff;
+		// .weixiu {
+		// 	color: #fff;
+		// 	position: absolute;
+		// 	top: 0;
+		// 	font-size: 26rpx;
+		// 	background: #1890ff;
+		// 	padding: 0rpx 8rpx;
+		// }
+
+		.weixiu,
+		.baoyang {
+			width: 65rpx;
+			height: 36rpx;
+			background: #E1E9FC;
+			border-radius: 0rpx 7rpx 7rpx 0rpx;
+			font-size: 22rpx;
+			color: #383C45;
+			line-height: 36rpx;
+			text-align: center;
 			position: absolute;
-			top: 0;
-			font-size: 26rpx;
-			background: #1890ff;
-			padding: 0rpx 8rpx;
+			top: 13rpx;
+			z-index: 100;
+		}
+
+		.weixiu {
+			background: #E1E9FC;
+		}
+
+		.baoyang {
+			background: #E6F1EB;
 		}
 
 		.no-img {

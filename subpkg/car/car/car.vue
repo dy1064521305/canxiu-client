@@ -24,7 +24,9 @@
 				</view>
 
 			</z-paging> -->
-			<u-navbar title="维修车" placeholder :safeAreaInsetTop="true" :autoBack='false'>
+
+			<u-navbar title="维修车" placeholder :safeAreaInsetTop="true" :autoBack='true'>
+
 				<view class="u-nav-slot" slot="right">
 					<image v-if="dataList.length!=0" @click='isDelete=!isDelete'
 						:style="{'margin-right':menuButtonInfoWidth+'rpx','width': '29rpx','height': '29rpx','padding-left': '10rpx'}"
@@ -66,7 +68,8 @@
 				<u-checkbox-group v-model="checkboxValue1" placement="column">
 					<view style="background-color: #fff;margin-bottom: 20rpx;" v-for="(item,index) in dataList"
 						:key="index">
-						<view style="padding: 20rpx 14rpx;display: flex;justify-content: space-between;">
+						<view
+							style="padding: 20rpx 28rpx;display: flex;justify-content: space-between;align-items: center;">
 							<!-- 	<view > -->
 
 							<view style="display: flex;align-items: center;">
@@ -74,26 +77,26 @@
 									@change='val=>typeCheckChange(val,item,index)'>
 								</u-checkbox>
 								<text
-									style="font-size:38rpx;font-weight: bold;color: #3D3F3E;">{{item.workerType}}</text>
+									style="font-size:34rpx;font-weight: bold;color: #3D3F3E;">{{item.workerType.replace('师傅','')}}</text>
 								<text
-									style="font-size: 26rpx;margin-left: 10rpx;">起步价:{{item.startingFreeDiscount}}元</text>
+									style="font-size: 25rpx;margin-left: 10rpx;">起步价:{{item.startingFreeDiscount}}元</text>
 
 							</view>
 							<view
 								v-if="Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))>0"
 								style="align-items: center;display: flex;">
-								<text style="font-size: 24rpx;">
+								<text style="font-size: 25rpx;">
 									还差<text
-										style="color:#2E8FF4 ;">{{Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))}}</text>元达到起步价
+										style="color:#EC5722;">{{Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))}}</text>元达到起步价
 								</text>
 							</view>
-							<view v-else style="align-items: center;display: flex;font-size: 24rpx;">
+							<view v-else style="align-items: center;display: flex;font-size: 25rpx;">
 								<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 								</image>已达到起步价
 							</view>
 							<text @click="coudanHandle(item.workerType)"
-								style="color:#2E8FF4 ;margin-left: 5rpx;display:">去凑单></text>
+								style="color:#EC5722;font-size: 25rpx;">去凑单></text>
 							<!-- 	</view> -->
 							<!-- 	<view style="font-size: 24rpx;display: flex;align-items: flex-end">
 							
@@ -117,7 +120,7 @@
 
 			</view>
 
-
+			<!-- :style="{bottom:(tabbarHeight*2-10)+'rpx'}" -->
 			<view v-if="dataList.length!=0" class="bottom" :style="{bottom:(tabbarHeight*2-10)+'rpx'}">
 				<view v-if="checkedList.length !== allNum||checkedList.length==0" class="check"
 					@click="allCheckHandle(true)">
@@ -149,11 +152,18 @@
 		<u-popup :show="coudanShow" closeable @close="coudanShow=false">
 			<view class="cou-dan">
 				<view class="title">服务橱窗</view>
-				<u--input @input='getCoudanList' @clear="getCoudanList" @confirm="getCoudanList"
-					clearable v-model="searchName" type="text" placeholder="请输入需要的服务" />
+				<view style="padding:10rpx 20rpx;">
+					<u-search clearabled placeholder="请输入需要的服务" v-model="searchName" @clear="getCoudanList"
+						@search="getCoudanList" :show-action="false"></u-search>
+				</view>
+
+
 				<view v-if="coudanList.length!=0" class="main">
-					<view v-for="(item,index) in coudanList" :key="index">
-						<good-card type='coudan' :item='item' />
+					<view v-for="(item,index) in coudanList" :key="index" class="box" >
+						<coudan-card :item='item' />
+
+
+
 					</view>
 
 				</view>
@@ -168,7 +178,7 @@
 	import storage from '@/utils/storage'
 	import proInfo from '@/components/proInfo/proInfo.vue'
 	import * as car from '@/api/car.js'
-	import goodCard from '@/components/goodCard/goodCard.vue'
+	import coudanCard from '../components/coudanCard/coudanCard.vue'
 	import {
 		getCarNum
 	} from '@/utils/api.js'
@@ -179,7 +189,7 @@
 		name: 'test',
 		components: {
 			proInfo,
-			goodCard
+			coudanCard
 		},
 		mixins: [],
 		props: {},
@@ -214,14 +224,7 @@
 			// #endif
 
 		},
-		onLoad(option) {
-			console.log(option);
-			if (option.type == 'goCar' && storage.get('AccessToken')) {
-				this.getCarList()
-				this.allNum = 0
-				this.checkedList = []
-			}
-		},
+
 		onShow() {
 
 			// #ifdef APP-PLUS
@@ -234,11 +237,8 @@
 			// #endif	
 			//this.getList()
 			this.isLogin = storage.get('AccessToken')
-			this.getCarNumHandle()
-		},
-		onTabItemTap: function(item) {
 
-			if (storage.get('AccessToken')) {
+			if (this.isLogin) {
 				this.getCarList()
 				this.allNum = 0
 				this.checkedList = []
@@ -246,11 +246,23 @@
 			uni.removeStorage({
 				key: 'service_info'
 			})
+			//this.getCarNumHandle()
 		},
+		// onTabItemTap: function(item) {
+
+		// 	if (storage.get('AccessToken')) {
+		// 		this.getCarList()
+		// 		this.allNum = 0
+		// 		this.checkedList = []
+		// 	}
+		// 	uni.removeStorage({
+		// 		key: 'service_info'
+		// 	})
+		// },
 		onHide() {
 			this.coudanShow = false
-			this.workerType=undefined,
-			this.searchName=''
+			this.workerType = undefined,
+				this.searchName = ''
 		},
 		methods: {
 
@@ -535,7 +547,7 @@
 									});
 									//this.getCarList()
 									this.deleteList(arr)
-									this.getCarNumHandle()
+									// this.getCarNumHandle()
 									this.checkboxValue1 = []
 
 								}
@@ -565,7 +577,7 @@
 						isCar: true
 					}
 					uni.navigateTo({
-						url: '../../subpkg/car/submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(
+						url: '../submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(
 							info))
 					})
 				}
@@ -633,7 +645,7 @@
 				console.log(this.dataList);
 				console.log(this.checkedList, '4224224224220');
 				console.log(this.checkboxValue1, 'delelelelelelelelel');
-				this.getCarNumHandle()
+				// this.getCarNumHandle()
 			},
 			//取消登录
 			quxiao() {
@@ -650,12 +662,12 @@
 			textareaInput(arr) {
 				this.dataList.forEach(item1 => {
 					item1.children.forEach(item2 => {
-						arr.forEach(arr=>{
+						arr.forEach(arr => {
 							if (item2.id === arr.id) {
 								item2.remark = arr.remarks
 							}
 						})
-					
+
 					})
 				})
 			},
@@ -684,7 +696,7 @@
 				car.listByWorkerType({
 					clientId: storage.get('ClientId'),
 					type: this.workerType,
-					name:this.searchName
+					name: this.searchName
 				}).then(res => {
 					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
 					this.coudanList = res.data
@@ -733,9 +745,7 @@
 		// 	background-color: #fff;
 		// 	text-align: end;
 		// 	padding-top: 20rpx;
-		::v-deep.u-navbar__content__left {
-			display: none;
-		}
+
 
 		.address {
 			//	padding: 0 34rpx;
@@ -777,13 +787,14 @@
 
 		.bottom {
 			width: 100%;
-			height: 91rpx;
+			height: 114rpx;
 			background: #fff;
 			position: fixed;
 			display: flex;
 			align-items: center;
 			padding: 10rpx 30rpx;
 			z-index: 9999;
+			bottom: 0;
 
 			image,
 			.check {
@@ -816,7 +827,7 @@
 		}
 
 		.cou-dan {
-			height: 88vh;
+			height: 85vh;
 
 			.title {
 				margin: 20rpx;

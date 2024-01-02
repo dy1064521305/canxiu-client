@@ -65,9 +65,9 @@
 			}
 		},
 		{
-			"path": "pages/car/car",
+			"path": "pages/myOrder/myOrder",
 			"style": {
-				"navigationBarTitleText": "维修车",
+				"navigationBarTitleText": "订单",
 				"navigationStyle": "custom"
 			}
 		},
@@ -194,14 +194,25 @@
 		},
 		{
 			"root": "subpkg/car",
-			"pages": [{
+			"pages": [
+				{
 					"path": "goodDetails/goodDetails",
 					"style": {
 						"navigationBarTitleText": "",
 						"enablePullDownRefresh": false
 					}
 
-				}, {
+				},
+				{
+					"path": "car/car",
+					"style": {
+						"navigationBarTitleText": "维修车",
+						"enablePullDownRefresh": false,
+							"navigationStyle": "custom"
+					}
+				
+				},
+				{
 					"path": "allComments/allComments",
 					"style": {
 						"navigationBarTitleText": "全部评论",
@@ -296,17 +307,19 @@
 		},
 		{
 			"root": "subpkg/center",
-			"pages": [{
-					"path": "myOrder/myOrder",
-					"style": {
-						"navigationBarTitleText": "我的订单",
-						"enablePullDownRefresh": false,
-						"navigationStyle": "custom"
-					}
+			"pages": [
+				// {
+				// 	"path": "myOrder/myOrder",
+				// 	"style": {
+				// 		"navigationBarTitleText": "我的订单",
+				// 		"enablePullDownRefresh": false,
+				// 		"navigationStyle": "custom"
+				// 	}
 
-				}
+				// }
 
-				, {
+				// , 
+				{
 					"path": "workerDetailed/workerDetailed",
 					"style": {
 						"navigationBarTitleText": "维修师详情",
@@ -495,9 +508,10 @@
 	],
 	"tabBar": {
 		"color": "#909399",
-		"selectedColor": "#000000",
+		"selectedColor": "#A4D091",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
+		"redDotColor":"#EC5722",
 		"list": [{
 				"pagePath": "pages/home/index",
 				"iconPath": "./static/img/tabbar/index-unactive.png",
@@ -508,20 +522,22 @@
 				"iconPath": "./static/img/tabbar/service-unactive.png",
 				"selectedIconPath": "./static/img/tabbar/service-active.png",
 				"text": "服务"
-			}, {
-				"pagePath": "pages/car/car",
-				"iconPath": "./static/img/tabbar/car-unactive.png",
-				"selectedIconPath": "./static/img/tabbar/car-active.png",
-				"text": "维修车",
-				"style": {
-					"navigationStyle": "custom"
-				}
-			},
+			}, 
+		
 			{
 				"pagePath": "pages/TUI-Conversation/conversation/conversation",
 				"iconPath": "./static/img/tabbar/message-unactive.png",
 				"selectedIconPath": "./static/img/tabbar/message-active.png",
 				"text": "消息"
+			},
+			{
+				"pagePath": "pages/myOrder/myOrder",
+				"iconPath": "./static/img/tabbar/order-unactive.png",
+				"selectedIconPath": "./static/img/tabbar/order-active.png",
+				"text": "订单",
+				"style": {
+					"navigationStyle": "custom"
+				}
 			},
 			{
 				"pagePath": "pages/center/index",
