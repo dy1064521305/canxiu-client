@@ -199,7 +199,7 @@
 				this.selectTime = timeArr[_ind].time;
 				this.selectEndime = timeArr[_ind].endtime;
 				this.activeTimeArr = timeArr;
-				
+
 			},
 			_handleData() {
 				let _data = {};
@@ -464,7 +464,7 @@
 			ok() {
 				let _data = this._handleData();
 				console.log(this.selectTime);
-				if (this.selectTime=='') {
+				if (this.selectTime == '') {
 					uni.showToast({
 						title: '请选择上门时间',
 						duration: 2000,
@@ -695,10 +695,11 @@
 
 
 	.btns {
-		margin: 20rpx 0;
+		margin: 20rpx 0 47rpx 0;
 		display: flex;
 		width: 100%;
 		justify-content: space-around;
+		font-weight: bold;
 
 		// image {
 		// 	width: 337rpx;
@@ -707,21 +708,22 @@
 		// }
 		.btn-white,
 		.btn-green {
-			height: 85rpx;
+		
 			border-radius: 45rpx;
 			text-align: center;
-			line-height: 85rpx;
-			font-size: 36rpx;
-			width: 300rpx;
+			font-size: 34rpx;
+			width: 48%;
 		}
 
 		.btn-white {
 			background: #FFFFFF;
 			border: 4rpx solid #A4D091;
 			color: #A4D091;
+			padding:20rpx;
 		}
 
 		.btn-green {
+			padding:24rpx;
 			background: #A4D091;
 			color: #fff;
 		}

@@ -8,7 +8,7 @@
 				<view style="display: flex;align-items: center;width: 100%;" @click="goLogoInfo">
 					<view style="width: 89%;">
 
-						<image v-if="userInfo.storeImg==null" style="width: 100rpx;height: 100rpx;"
+						<image v-if="userInfo.storeImg==null||userInfo.storeImg==''" style="width: 100rpx;height: 100rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
 						</image>
 						<u-avatar v-else :src="userInfo.storeImg" size="50"></u-avatar>
