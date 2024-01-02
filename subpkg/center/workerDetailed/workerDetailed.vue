@@ -1,7 +1,7 @@
 <template>
 	<view class="worker">
 		<image style="height:543rpx ;width: 100%;"
-			src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png"></image>
+			src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/11/22/9afcbb340d984a55950ec7e1cbdebe36.png"></image>
 
 		<view class="main">
 			<z-paging ref="paging" v-model="appraiseList" @query="getList">
@@ -9,7 +9,7 @@
 					<view class="info">
 						<view>
 							<image v-if="workerInfo.avatarUrl==null" style="width:136rpx;height: 136rpx;"
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/05/2b752f2fa84446d8867149d48996ec45.png">
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/11/10/38405b13b68b4ac3be692e812874e648.png">
 							</image>
 							<image v-else style="width:136rpx;height:136rpx;" :src="workerInfo.avatarUrl"></image>
 						</view>
@@ -17,7 +17,10 @@
 							<view style="font-size: 36rpx;font-weight: bold;">
 								{{workerInfo.workerName}}
 							</view>
-							<u-rate count="5" v-model="workerInfo.value" inactiveColor='#fff' activeColor='#ec9322' size='35rpx' readonly > </u-rate>
+							<view style="margin-left: -9rpx;">
+									<u-rate  count="5" v-model="workerInfo.value" inactiveColor='#fff' activeColor='#ec9322' size='50rpx' readonly > </u-rate>
+							</view>
+						
 						</view>
 					</view>
 
@@ -37,17 +40,23 @@
 				<!-- 用户评论 -->
 				<view class="comment box-bg">
 					<view class="title">
-						用户评论
+						用户评价
 					</view>
 					<view class="mains" v-for="(item,index1) in appraiseList" :key='index1'>
-						<view style="display: flex;margin-bottom: 10rpx;">
-							<view class="">
-								<u-avatar :src="item.avatarUrl" size="28"></u-avatar>
+						<view style="display: flex;margin-bottom: 10rpx;align-items: center;">
+							<view v-if="item.avatarUrl!=null">
+							<!-- 	<u-avatar :src="item.avatarUrl" size="34"></u-avatar> -->
+								<image  style="width: 72rpx;height: 72rpx;border-radius: 50%;"
+									:src="item.avatarUrl">
+								</image>
 							</view>
+							<image v-else style="width: 72rpx;height: 72rpx;border-radius: 50%;"
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
+							</image>
 							<view
-								style="font-size: 25rpx;color: #3D3F3E;height: 60rpx;line-height: 60rpx;margin:0 20rpx;">
+								style="font-size: 29rpx;color: #3D3F3E;margin:0 20rpx;">
 								哈*</view>
-							<u-rate :count="count" v-model="item.num" allowHalf activeColor='#ec9322' readonly></u-rate>
+							<u-rate :count="count" v-model="item.num" allowHalf activeColor='#ec9322' size='35rpx' readonly></u-rate>
 							<view class="time" :style="{'width':isshow?'43%':'50%'}">
 								{{item.time}}
 							</view>
