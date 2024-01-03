@@ -276,7 +276,7 @@
 
 			//	this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
 			console.log(this.showListByType, this.submitList, '.........103');
-			this.getMoney()
+			this.getMoney('init')
 			console.log(this.showListByType);
 			// try {
 			// 	const value = uni.getStorageSync('submit_order');
@@ -386,8 +386,11 @@
 			},
 
 			//计算总钱数
-			getMoney() {
-				this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
+			getMoney(type) {
+				if (type=='init') {
+							this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
+				}
+		
 				this.showListByType.forEach((item, index) => {
 					console.log(item);
 					let all = item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)),
@@ -418,6 +421,7 @@
 				// 		item.projectNumber = data.num.value
 				// 	}
 				// })
+				
 				this.getMoney()
 				console.log(this.info.orderPrice);
 				const pages = uni.$u.pages()

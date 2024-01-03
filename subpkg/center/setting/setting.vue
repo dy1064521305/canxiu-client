@@ -2,34 +2,29 @@
 	<view class="">
 		<view style="background-color: #fff;margin-top: 20rpx;">
 			<a @click='goInfo'>
-				<image src="../../../static/center/info.png"
-					style="width: 32rpx;height: 32rpx;"></image>
+				<image src="../../../static/center/info.png"></image>
 				<text>个人信息</text>
-				<u-icon name="arrow-right" color="#909399"></u-icon>
+				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
 			</a>
 			<a @click='goAboutUs'>
-				<image src="../../../static/center/aboutUs.png"
-					style="width: 32rpx;height: 32rpx;"></image>
+				<image src="../../../static/center/aboutUs.png"></image>
 				<text>关于我们</text>
-				<u-icon name="arrow-right" color="#909399"></u-icon>
+				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
 			</a>
 			<a  @click='goUrl(0)'>
-				<image src="../../../static/center/zc.png"
-					style="width: 32rpx;height: 32rpx;"></image>
+				<image src="../../../static/center/zc.png"></image>
 				<text>隐私政策</text>
-				<u-icon name="arrow-right" color="#909399"></u-icon>
+				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
 			</a>
 			<a @click='goUrl(1)'>
-				<image src="../../../static/center/xieyi.png"
-					style="width: 32rpx;height: 32rpx;"></image>
+				<image src="../../../static/center/xieyi.png"></image>
 				<text>注册协议</text>
-				<u-icon name="arrow-right" color="#909399"></u-icon>
+				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
 			</a>
 			<a @click='isCancellation=true'>
-				<image src="../../../static/center/reset.png"
-					style="width: 32rpx;height: 32rpx;"></image>
+				<image src="../../../static/center/reset.png"></image>
 				<text>注销账号</text>
-				<u-icon name="arrow-right" color="#909399"></u-icon>
+				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
 			</a>
 
 
@@ -47,14 +42,14 @@
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
 						style="width: 32rpx;height: 32rpx;"></image>
 					<text>隐私政策</text>
-					<u-icon name="arrow-right" color="#909399"></u-icon>
+					<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
 				</a>
 				<a href="static/registrationAgreement.html">
 					<image
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/39968dbaf39248618dbbbeef564e5c91.png"
 						style="width: 32rpx;height: 32rpx;"></image>
 					<text>注册协议</text>
-					<u-icon name="arrow-right" color="#909399"></u-icon>
+					<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
 				</a>
 
 				<u-cell
@@ -141,6 +136,7 @@
 							userInfo: userInfo,
 							type: 'info'
 						}
+					
 						uni.navigateTo({
 
 							url: '../personalInfo/personalInfo?item=' + JSON.stringify(list)
@@ -216,13 +212,20 @@
 		color: #303133;
 		display: flex;
 		border-bottom: 2rpx solid #f0f0f1;
-		padding: 18rpx 20rpx;
+		padding:0 28rpx;
 		font-size: 25rpx;
+		height: 112rpx;
 		align-items: center;
+		image{
+			width: 39rpx;
+			height: 39rpx;
+		}
 		text {
 			margin-left: 10rpx;
 			display: inline-block;
 			width: 90%;
+			font-size: 29rpx;
+			font-weight: bold;
 		}
 	}
 </style>

@@ -23,7 +23,7 @@
 
 				<view class="info" @click="editInfo">
 					<view>
-						<image v-if="userInfo.storeImg==null" style="width: 136rpx;height: 136rpx;"
+						<image v-if="userInfo.storeImg==null||userInfo.storeImg==''" style="width: 136rpx;height: 136rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
 						</image>
 						<u--image v-else width='136rpx' height='136rpx' :src="userInfo.storeImg" shape="circle">

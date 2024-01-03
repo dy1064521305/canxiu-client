@@ -28,16 +28,17 @@
 			};
 		},
 		created() {
+			// https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/6cfc99b225184b0eafbed58cd5c6ede5.json
 			var that=this
 			uni.request({
-				url: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/6cfc99b225184b0eafbed58cd5c6ede5.json',
+				url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/30/78ed8008c9ef4aa6a6c29f101bb0c9ec.json',
 				method: 'GET',
 				complete(res) {
-					 console.log('...res...', res);
+					 // console.log('...res...', res);
 					// console.log(res.data);
 					
 					that.addressData=res.data
-					console.log(that.addressData,'11111111111');
+					// console.log(that.addressData,'11111111111');
 					
 					that.province=that.addressData.map(it => it.name)
 					that.city=that.addressData[0].children.map(it => it.name)

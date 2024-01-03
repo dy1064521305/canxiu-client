@@ -247,7 +247,6 @@
 					<view v-for="(item,index) in coudanList" :key="index">
 						<coudan-card :item='item' />
 					</view>
-
 				</view>
 				<u-empty v-else mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" text='没有找到哦，换个关键词试一下吧'>
 				</u-empty>

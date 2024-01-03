@@ -26,8 +26,10 @@
 				<u--input v-model="userInfo.beInvitedCode" border="none" placeholder="请输入邀请码"></u--input>
 			</u-form-item>
 			<u-form-item label="门头图" ref="item1">
-				<view class="imags" >	<uploadFile :fileListt="fileList" @getUrl='getUrl' :limit='1' types='image'/></view>
-			
+				<view class="imags">
+					<uploadFile :fileListt="fileList" @getUrl='getUrl' :limit='1' types='image' />
+				</view>
+
 			</u-form-item>
 
 		</u--form>
@@ -79,21 +81,21 @@
 			getInfoById(option.id).then(res => {
 				console.log(res);
 				this.userInfo = res.data
-				if(this.userInfo.storeTypeId!=null){
+				if (this.userInfo.storeTypeId != null) {
 					console.log(this.storeTypeList);
-					this.storeTypeList.forEach((item,index1)=>{
-						if(item.typeId==this.userInfo.storeTypeId){
-							this.index=index1
+					this.storeTypeList.forEach((item, index1) => {
+						if (item.typeId == this.userInfo.storeTypeId) {
+							this.index = index1
 							console.log(this.index);
 						}
 					})
 				}
-				
-				let arr = res.data.storeImg!=null?res.data.storeImg.split(','):[]
-				this.fileList=arr
+
+				let arr = res.data.storeImg != null&& res.data.storeImg!='' ? res.data.storeImg.split(',') : []
+				this.fileList = arr
 				console.log(this.fileList);
 			})
-			
+
 		},
 		watch: {
 
@@ -103,7 +105,7 @@
 			getList() {
 				getStoreType().then(res => {
 					this.storeTypeList = res.data
-					console.log(this.storeTypeList ,'11111111');
+					console.log(this.storeTypeList, '11111111');
 				})
 			},
 			bindPickerChange(e) {
@@ -128,7 +130,7 @@
 
 				refine(this.userInfo).then(res => {
 					console.log(res);
-					
+
 					// uni.$TUIKit.updateMyProfile({
 					// 	nick: this.userInfo.clientName,
 					// 	avatar: this.userInfo.avatarUrl,
@@ -138,9 +140,9 @@
 					// 	console.info(res);
 					// 	console.info(res);
 					// })
-					
+
 					this.reset()
-						const apps = getApp()
+					const apps = getApp()
 					apps.type = 'login'
 					uni.switchTab({
 						url: '/pages/home/index'
@@ -159,8 +161,8 @@
 </script>
 
 <style>
-	page{
-			background: #fff;
+	page {
+		background: #fff;
 	}
 </style>
 <style lang="scss" scoped>
@@ -168,14 +170,16 @@
 		::v-deep.u-form-item__body {
 			height: 70rpx;
 		}
-		.imags{
+
+		.imags {
 			/* #ifdef APP-PLUS */
-			margin-top: 40rpx;
+			// margin-top: 40rpx;
 			/* #endif */
-			
+
 		}
+
 		.button {
-			width: 663rpx;
+			width: 90%;
 			height: 91rpx;
 			background: #A4D091;
 			border-radius: 45rpx;
@@ -183,10 +187,9 @@
 			color: #FFFFFF;
 			line-height: 91rpx;
 			text-align: center;
-			margin: 200rpx auto;
-			// position: absolute;
-			// bottom: 300rpx;
-			// left: 43rpx;
+			position: fixed;
+			bottom: 200rpx;
+			margin: 0 5%;
 		}
 	}
 </style>
