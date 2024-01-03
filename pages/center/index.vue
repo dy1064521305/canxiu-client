@@ -238,7 +238,7 @@
 			return {
 				balance: '', //账户余额
 				actionList: [{
-						name: '19157668838'
+						name: '0571-88387761'
 					},
 					{
 						name: '呼叫'
@@ -398,15 +398,14 @@
 			},
 			actionSelect(e) {
 				console.log(e);
-				let phone = '19157668838'
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
 					// #ifdef APP-PLUS
-					callPhone(phone, 'app')
+					callPhone(e.name, 'app')
 					// #endif
 					// #ifdef MP-WEIXIN
-					callPhone(phone, 'wx')
+					callPhone(e.name, 'wx')
 					// #endif
 					this.showPhone = false
 				}

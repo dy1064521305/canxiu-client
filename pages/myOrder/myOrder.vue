@@ -289,7 +289,7 @@
 					pageSize: 10,
 					pageNum: 1,
 					endTime: '',
-					beginTime: ''
+					beginTime: '',
 				},
 				endTime: '', //显示的时间
 				beginTime: '',

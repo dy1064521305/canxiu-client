@@ -563,7 +563,6 @@
 		//下载
 		actionSelect(e) {
 			console.log(e);
-			let phone = '19157668838'
 			if (e.name == '取消') {
 				this.showDownLoad = false
 			} else {
