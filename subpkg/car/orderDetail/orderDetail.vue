@@ -107,7 +107,7 @@
 
 
 
-		<view v-if="(newProject.length!=0||showMelList.length!=0)&&info.orderStatus!='服务中【审核驳回】'&&info.orderStatus!='服务中【待上级审核】'" class="bg">
+		<view v-if="(newProject.length!=0||showMelList.length!=0)&&info.orderStatus!='服务中【审核驳回】'&&info.orderStatus!='服务中【待上级审核】'&&info.orderStatus!='服务中【客户驳回】'" class="bg">
 			<view v-if="newProject.length!=0" class="projec">
 				<view style="font-size: 33rpx;font-weight: bold;">
 					变更后服务项<image style="width: 62rpx;height: 27rpx;margin-left: 20rpx;"
@@ -576,7 +576,7 @@
 					token: storage.get('AccessToken')
 				},
 				actionList: [{
-						name: '19157668838'
+						name: '0571-88387761'
 					},
 					{
 						name: '呼叫'
@@ -972,15 +972,14 @@
 			},
 			actionSelect(e) {
 				console.log(e);
-				let phone = '19157668838'
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
 					// #ifdef APP-PLUS
-					callPhone(phone, 'app')
+					callPhone(e.name, 'app')
 					// #endif
 					// #ifdef MP-WEIXIN
-					callPhone(phone, 'wx')
+					callPhone(e.name, 'wx')
 					// #endif
 					this.showPhone = false
 				}
