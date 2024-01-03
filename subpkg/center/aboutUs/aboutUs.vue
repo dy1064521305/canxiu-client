@@ -16,7 +16,7 @@
 			<u-cell size="large">
 				<view slot="title">
 					<text class="u-cell-text">版权所有</text>
-					<text>杭州餐修科技有限公司</text>
+					<text>浙江餐修科技有限公司</text>
 				</view>
 			</u-cell>
 			<u-cell size="large">
