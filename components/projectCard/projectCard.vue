@@ -32,19 +32,19 @@
 					<view style="width: 80%;">
 						{{info.projectName}}
 					</view>
-					<view v-if="type!='myOrder'" style="width: 20%;text-align: end;">
+					<view v-if="type!='myOrder'" style="width: 20%;text-align: end;color: #EC5722;">
 						¥{{info.price}}
 					</view>
 				</view>
 
-				<view class="">
+				<view style="color: #A5A7A7;">
 					{{info.typeName}}
 				</view>
 				<view style="display: flex;justify-content: space-between;">
-					<text>工时：{{info.projectHours}}小时</text>
+					<text style="color: #A5A7A7;">工时：{{info.projectHours}}小时</text>
 					<text v-if="type=='myOrder'" style="font-size: 30rpx">￥{{info.discountPrice}}</text>
 					<text v-else
-						style="font-size: 30rpx;color: #EC5722;">工时费：¥{{Number(info.price)*Number(info.projectNumber)}}</text>
+						style="font-size: 30rpx;color: #EC5722;">服务费：¥{{Number(info.price)*Number(info.projectNumber)}}</text>
 				</view>
 			</view>
 		</view>

@@ -31,7 +31,7 @@
 			</view>
 		</view>
 
-		<view class="worker bg" @click="workerDetailed" v-if="info.workerId!=null">
+		<view class="worker bg" @click="workerDetailed" v-if="workerInfo.workerName">
 			<view class="title">
 				本单维修师
 			</view>
@@ -237,7 +237,7 @@
 				<text class="ziduan">品牌折扣：</text>
 				<text style="color: #EC5722;">-¥{{info.favorablePrice}}</text>
 			</view>
-			<view v-if="info.subsidyPrice!=null" style="margin-left: 20rpx;color: #A5A7A7;"
+			<view v-if="info.subsidyPrice!=0&&info.subsidyPrice!=null" style="margin-left: 20rpx;color: #A5A7A7;"
 				class="line">
 				<text class="ziduan">价格优惠：</text>
 				<text style="color: #EC5722;">-¥{{info.subsidyPrice}}</text>
@@ -416,7 +416,7 @@
 				生成维修报告
 			</view>
 			<!-- 	<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white"
-				@click="repairOrderShow=true">
+				@click="repairOrder">
 				申请返修
 			</view> -->
 			<view v-if="info.orderStatus=='待评价'" class="btn-green" @click="appraiseHandle">
@@ -1060,6 +1060,23 @@
 				//this.url=reslut.data.url
 
 			},
+			//返修订单
+			repairOrder(){
+				console.log(this.newProject);
+				let info={
+					list:[]
+				}
+				if (this.newProject.length!=0) {
+					info.list=this.newProject
+					info.type='new'
+				} else{
+					info.list=this.info.projectDataVoList
+					info.type='old'
+				}
+				uni.navigateTo({
+					url:'../repairOrder/repairOrder?info='+encodeURIComponent(JSON.stringify(info))
+				})
+			}
 
 
 		}
