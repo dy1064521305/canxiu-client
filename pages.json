@@ -303,7 +303,25 @@
 					}
 
 				}
-			]
+			    ,{
+                    "path" : "repairOrder/repairOrder",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "发起返修",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+                ,{
+                    "path" : "repairOrderInfo/repairOrderInfo",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "发起返修",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
 		},
 		{
 			"root": "subpkg/center",
