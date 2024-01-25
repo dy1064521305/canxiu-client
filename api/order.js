@@ -52,3 +52,10 @@ export const confirmScenario = (data) => request.put('/client/order/confirmScena
 
 //客户重新发起订单
 export const reissueOrder = (data) => request.put('/client/order/reissue',data)
+
+//查询我的订单各状态数量
+export const queryOrderCount = (params) => request.get('/client/order/queryOrderCount',params)
+
+//查询我的全部订单各状态数量
+export const queryAllOrderCount = (params) => request.get('/client/order/queryAllOrderCount',params)
+

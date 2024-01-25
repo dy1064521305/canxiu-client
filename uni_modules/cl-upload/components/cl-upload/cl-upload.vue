@@ -61,8 +61,12 @@
 				</view>
 			</view>
 
-			<view v-if="add && FileList.length < max" @tap="selectFileTypeOnAdd" :style="[rowStyle]"
+			<view v-if="add && FileList.length < max" @tap="uploadImg" :style="[rowStyle]"
 				class="file-list-row">
+				<yk-authpup ref="authpupStorage" type="top" @changeAuth="changeAuthStorage"
+					permissionID="WRITE_EXTERNAL_STORAGE"> </yk-authpup>
+				<yk-authpup ref="authpupCamera" type="top" @changeAuth="changeAuthCamera" permissionID="CAMERA">
+				</yk-authpup>
 				<slot name="addImg">
 					<div class="add-image">
 						<image class="_image" :src="addImg" mode="widthFix"></image>
@@ -87,13 +91,15 @@
 	import {
 		delossByurl
 	} from '@/api/oss.js'
+	import ykAuthpup from "@/components/yk-authpup/yk-authpup";
 	import {
 		delCarUrl
 	} from '@/api/car.js'
 	export default {
 		name: "cl-upload",
 		components: {
-			ClImage
+			ClImage,
+			ykAuthpup
 		},
 		props: {
 
@@ -260,6 +266,8 @@
 				// 临时文件列表
 				tempFile_paths: [],
 
+				camera: false,
+				storagee: false
 			};
 		},
 		watch: {
@@ -431,12 +439,26 @@
 					index
 				})
 			},
+			changeAuthCamera() {
+				this.camera = true
+			
+			},
 
+			changeAuthStorage() {
+				this.storagee = true
+				if (this.camera && this.storagee) {
+					this.selectFileTypeOnAdd()
+				}
+			},
+			uploadImg() {
+				this.$refs['authpupCamera'].open()
+				this.$refs['authpupStorage'].open()
+			},
 			/**
 			 * 点击选择图片按钮
 			 * */
 			selectFileTypeOnAdd() {
-
+				console.log('chosechose');
 				switch (this.fileType) {
 					case 'image':
 						this.handleFileSelection(1);

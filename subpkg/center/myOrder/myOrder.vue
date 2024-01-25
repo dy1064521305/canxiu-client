@@ -2,8 +2,14 @@
 	<view class="my-order">
 		<z-paging ref="paging" v-model="orderList" @query="getOrderlistHandle" @onRefresh="refresh">
 			<view slot='top'>
-				<u-navbar title="我的订单" placeholder :safeAreaInsetTop="true">
-					<view class="u-nav-slot" slot="right" @click="show">
+				<u-navbar :title="title" placeholder :safeAreaInsetTop="true" :autoBack="true">
+					<view v-if="statusType=='all'" class="u-nav-slot" slot="center" style="width: 81%;">
+						<view>
+							<u-search v-model="queryParams.projectName" @search="queryList" @clear="queryList"
+								placeholder="搜索项目名称" :clearabled="true" :showAction='false'></u-search>
+						</view>
+					</view>
+					<view v-if="statusType=='all'" class="u-nav-slot" slot="right" @click="show">
 						<image
 							:style="{'width': '29rpx','margin-right':menuButtonInfoWidth+'rpx','padding-top':'15rpx'}"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/eb78f3eb65ec46fc92b1245b17c64838.png"
@@ -11,56 +17,47 @@
 					</view>
 
 				</u-navbar>
-				<view class="top">
+				<view v-if="statusType=='all'" class="top">
 					<!-- 	<view class="type">
 						<text @click='checkType(0)' :class="[type==0?'text-active':'']">维修</text>
 						<text @click='checkType(1)' :class="[type==1?'text-active':'']">维保</text>
 					</view> -->
-					<view style="padding: 20rpx 20rpx 0 20rpx;">
-						<u-search v-model="queryParams.projectName" @search="queryList" @clear="queryList"
-							placeholder="搜索项目名称" :clearabled="true" :showAction='false'></u-search>
-					</view>
-					<u-tabs style='margin-top: 20rpx;' :current='current' :list="list1" @click="statusClick"
-						lineColor='#A4D091' lineWidth="50" lineHeight='8' :inactiveStyle="{
+
+					<u-tabs :current='current' :list="list1" @click="statusClick" lineColor='#A4D091' lineWidth="50"
+						lineHeight='8' :inactiveStyle="{
 					        color: '#A5A7A7',
 					    }"></u-tabs>
 				</view>
 			</view>
 
-			<view class="orders" @click="orderDetail(item.orderId)" v-for='(item,index) in orderList' :key='index'>
+			<view class="orders" @click="orderDetail(item.orderId,item.orderStatus)" v-for='(item,index) in orderList'
+				:key='index'>
 				<view class="main">
 					<view class="title">
-						<!-- <text
-							:style="{'font-weight': 'bold','width':item.isUrgent==1?'61%':'65%'}">下单时间：{{item.orderTime}}</text>
-						<text style="font-size: 25rpx;text-align: end;width:40%;">
-							<text>{{item.orderStatus}}</text>
-						</text>
-						<view v-if="item.isUrgent==1" style="position: absolute;top: 0;right:0">
-							<image style="width: 54rpx;height: 54rpx;"
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/01/2889ed6d29b441d9a6da3c69af618f96.png"
-								mode=""></image>
-						</view> -->
 						<view class="top">
-						<!-- 	<view class="left"> -->
-								<view style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
-									{{item.warrantyStore}}
-									<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
-										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
+							<view
+								style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
+								{{item.warrantyStore}}
+								<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
+							</view>
+							<view style="display: flex;margin: 7rpx 0;">
+								{{item.orderStatus=='售后中'&&statusType!='all'?'返修单号':'订单号'}}：{{item.orderStatus=='售后中'&&statusType!='all'?item.repairNumber:item.orderNumber}}
+								<view @click.stop="copy(item.orderStatus=='售后中'?item.repairNumber:item.orderNumber)">
+									<image
+										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/57de362ad312499d93634d2ae9021099.png"
+										style="width: 29rpx;height: 29rpx;margin-left: 10rpx;"></image>
 								</view>
-								<view style="display: flex;margin: 7rpx 0;">
-									订单号：{{item.orderNumber}}
-									<view @click.stop="copy(item.orderNumber)">
-										<image
-											src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/57de362ad312499d93634d2ae9021099.png"
-											style="width: 29rpx;height: 29rpx;margin-left: 10rpx;"></image>
-									</view>
-								</view>
-						<!-- 	</view> -->
+							</view>
 
 						</view>
 						<view class="bottom">
 							<view>下单时间：{{item.orderTime}}</view>
-							<view>{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.orderStatus}}</view>
+							<view :style="{'color':item.orderStatus=='待接单'||item.orderStatus=='售后中'||item.orderStatus=='待评价'?'#F3B133':
+								item.orderStatus=='待上门'?'#3398F3':
+								item.orderStatus=='已完成'?'#A5A7A7':'#A4D091'}">
+								{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.orderStatus=='售后中'&&statusType!='all'?item.repairStatus:item.orderStatus}}
+							</view>
 						</view>
 					</view>
 					<view class="">
@@ -68,40 +65,11 @@
 					</view>
 					<view v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
 						v-for="(pro,i) in item.projectDataVoList" :key="i" style="margin: 20rpx 0;">
-						<!-- 	<view style="display: flex;height: 156rpx;">
-							<view style="position: relative;">
-								<image style="width: 156rpx;height:100%;" :src="pro.projectImg[0]">
-								</image>
-								<view class="weixiu">
-									维修
-								</view>
-							</view>
-							<view
-								style="width: 76%;display: flex;flex-direction: column; padding-left:20rpx;justify-content: space-between;height: 100%;font-size: 25rpx;">
-								<view style="display: flex;">
-									<view style="width: 80%;color: #3D3F3E;font-weight: bold;font-size: 35rpx;">
-										{{pro.productName}}
-									</view>
-									<view style="width: 20%;color: #A5A7A7;text-align: end;">
-										x{{pro.projectNumber}}
-									</view>
-								</view>
-								<view class="">
-									{{pro.projectName}}
-								</view>
-								<view class="">
-									{{pro.typeName}}
-								</view>
-								<view style="display: flex;justify-content: space-between;">
-									<text>工时：{{pro.projectHours}}小时</text>
-									<text style="font-size: 30rpx">￥{{pro.discountPrice}}</text>
-								</view>
-							</view>
-						</view> -->
+
 						<project-card :pro='pro' type='myOrder' />
 					</view>
-					<view style="color: #EC5722;text-align: end;">
-						小计：￥{{item.orderPrice}}
+					<view style="color: #EC5722;text-align: end;font-weight: bold;margin-bottom: 21rpx;">
+						应付款：￥{{item.orderPrice}}
 					</view>
 					<view class="time">
 						<text>预约上门时间：{{item.expectTime}}</text>
@@ -112,8 +80,8 @@
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view> -->
 						<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
 							@click="handleRoute(item)">联系师傅</view>
-						<!-- 	<view @click.stop='orderDetail(item.orderId)' class="btn-white" v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
-								返修</view> -->
+							<view @click.stop='orderDetail(item.orderId)' class="btn-white" v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
+								返修</view>
 						<view @click.stop='orderDetail(item.orderId)' class="btn-green" v-if="item.orderStatus=='待评价'">
 							去评价</view>
 						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
@@ -212,7 +180,8 @@
 <script>
 	import {
 		getOrderList,
-		repairOrder
+		repairOrder,
+		queryAllOrderCount
 	} from '@/api/order.js'
 	import storage from '@/utils/storage'
 	import formatter from '@/utils/formatter.js'
@@ -237,52 +206,75 @@
 				menuButtonInfoWidth: 0,
 				type: 0,
 				list1: [{
-					name: '全部',
-					badge: {
-						value: 0,
-					}
+						name: '全部',
+						badge: {
+							value: 0,
+						},
+						val: 'total'
 
-				}, {
-					name: '待接单',
-					badge: {
-						value: 0,
+					},
+					{
+						name: '待审核',
+						badge: {
+							value: 0,
+						},
+						val: 'waitExamine'
+					}, {
+						name: '待接单',
+						badge: {
+							value: 0,
+						},
+						val: 'grabOrder'
+					}, {
+						name: '待签到',
+						badge: {
+							value: 0,
+						},
+						val: 'waitDoor'
+					}, {
+						name: '待服务',
+						badge: {
+							value: 0,
+						},
+						val: 'waitService'
+					}, {
+						name: '服务中',
+						badge: {
+							value: 0,
+						},
+						val: 'servicing'
+					}, {
+						name: '待验收',
+						badge: {
+							value: 0,
+						},
+						val: 'waitAcc'
+					}, {
+						name: '待付款',
+						badge: {
+							value: 0,
+						},
+						val: 'waitPay'
+					}, {
+						name: '待评价',
+						badge: {
+							value: 0,
+						},
+						val: 'waitAppraise'
+					}, {
+						name: '已完成',
+						badge: {
+							value: 0,
+						},
+						val: 'finish'
+					}, {
+						name: '已关闭',
+						badge: {
+							value: 0,
+						},
+						val: 'close'
 					}
-				}, {
-					name: '待上门',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '服务中',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '待验收',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '待支付',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '待评价',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '已完成',
-					badge: {
-						value: 0,
-					}
-				}, {
-					name: '售后中',
-					badge: {
-						value: 0,
-					}
-				}],
+				],
 				times: ['最近三天', '最近7天', '最近15天', '近1月', '近2月', '近3月'],
 				orderList: [], //订单数据
 				current: 0, //当前选中的索引
@@ -295,6 +287,8 @@
 				},
 				endTime: '', //显示的时间
 				beginTime: '',
+				statusType: 'all',
+				title: ''
 			};
 		},
 		computed: {
@@ -312,30 +306,19 @@
 			// #endif
 
 		},
-		onShow() {
-			this.getOrderlistHandle(1, 10)
-			this.getNum()
-		},
+
 		onLoad(option) {
-			console.log(option.item);
+			console.log(option.name);
 			this.queryParams.clientId = storage.get('ClientId')
-			// getInfoById(storage.get('ClientId')).then(res => {
-			// 	console.log(res);
-			// 	this.clientName=res.data.clientName
-			// 	//	this.fileList.push({url:arr[0]})
-			// })
-			if (option.item == undefined) {
+			this.statusType = option.name == '待服务' || option.name == '服务中' || option.name == '待付款' || option.name == '返修' ?
+				'status' : 'all'
+			console.log(this.statusType);
+
+			this.title = option.name
+			this.queryParams.queryStatus = option.name
+			if (this.statusType == 'all') {
 				this.statusClick({
 					name: '全部'
-				})
-			} else {
-				let item = JSON.parse(option.item)
-				//	this.$refs.paging.reload();
-				this.currentIndex = this.list1.findIndex(c => {
-					return c.name == item.name
-				})
-				this.statusClick({
-					name: item.name
 				})
 			}
 
@@ -388,40 +371,41 @@
 					console.log(res);
 					res.rows.forEach(i => {
 						i.projectDataVoList && i.projectDataVoList.forEach(item => {
-							item.img = item.projectImg != null ? item.projectImg.split(
-								',') : []
+							item.img = i.orderStatus != '售后中' ? (item.projectImg != null ? item
+								.projectImg.split(',') : []) : (item.projectUrl != null ? item
+								.projectUrl.split(',') : [])
 						})
 					})
 					console.log(res, '.......2');
 					uni.hideLoading();
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})
-			},
-			getNum() {
-				this.list1.forEach(item => {
-					console.log(item.name, '3293293299*999999');
-					getOrderList({
-						pageSize: 10,
-						pageNum: 1,
-						clientId: storage.get('ClientId'),
-						orderStatus: item.name == '全部' ? '' : item.name
-					}).then(res => {
+				queryAllOrderCount({
+					clientId: storage.get('ClientId'),
+					projectName:this.queryParams.projectName,
+					beginTime:this.queryParams.beginTime,
+					endTime:this.queryParams.endTime
+				}).then(res => {
+					console.log(res);
 
-						console.log(res, 'ressssssssss');
-						item.badge.value = res.total
-						this.current = this.currentIndex
+					this.list1.forEach(item => {
+
+						item.badge.value = res.data[item.val]
 					})
 				})
+			},
+			getNum() {
+
 			},
 			//条件查询
 			queryList() {
 				console.log(this.queryParams);
-				this.getNum()
+				// this.getNum()
 				this.$refs.paging.reload();
 			},
 			refresh() {
 				this.reset()
-				this.getNum()
+				// this.getNum()
 				console.log(1111);
 				this.$refs.paging.reload();
 			},
@@ -446,10 +430,17 @@
 				this.activeTimes = ''
 			},
 			//订单详情
-			orderDetail(id) {
-				uni.navigateTo({
-					url: '../../subpkg/car/orderDetail/orderDetail?id=' + id
-				})
+			orderDetail(id, type) {
+				if (type == '售后中') {
+					uni.navigateTo({
+						url: '../../car/repairingOrder/repairingOrder?id=' + id
+					})
+				} else {
+					uni.navigateTo({
+						url: '../../car/orderDetail/orderDetail?id=' + id
+					})
+				}
+
 			},
 			checkboxChange(n) {
 				console.log('change', n);
@@ -519,7 +510,7 @@
 					});
 					this.repairOrderShow = false
 					this.getOrderlistHandle(1, 10)
-					this.getNum()
+					// this.getNum()
 				})
 			},
 			//复制单号
@@ -546,9 +537,7 @@
 
 <style lang="scss">
 	.my-order {
-		::v-deep.u-navbar__content__left {
-			display: none !important;
-		}
+
 
 		.top {
 			background: #fff;

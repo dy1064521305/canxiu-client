@@ -32,13 +32,29 @@
 						</view>
 					</view>
 				</view>
+
 				<view class="remark">
+					<view v-if="info.finish" >
+						<view class="before">
+							返修前
+						</view>
+						<upLoadFile :fileListt='info.finish.deliveryImg!=null?info.finish.deliveryImg.split(",") : []'
+							types='image' :isDel='false' :isInfo='true' />
+					</view>
+					<view v-if="info.finish&&info.finish.remark!=''">
+						<view style="margin:28rpx 0 10rpx 0">
+							备注
+						</view>
+						<view class="right" style="color: #707271;">
+							{{info.finish.remark}}
+						</view>
+					</view>
 					<view>
 						<view style="margin:28rpx 0 10rpx 0">返修问题描述</view>
 						<view style='width: 100%'>
 							<u--textarea height='72' border='none' maxlength='50' confirmType="done"
 								v-model="item.repairRemark" placeholder="请输入内容" count
-								@input='textareaInput'></u--textarea>
+							></u--textarea>
 						</view>
 					</view>
 					<view>
@@ -65,43 +81,72 @@
 
 
 			</view>
-			<view class="time-two" @click="timeShowHandle(index)">
-					<text style="color: #3D3F3E;font-weight: bold;padding-left: 15rpx;">选择上门时间</text>
+			<view class="time-two" @click="isShow=true">
+				<text style="color: #3D3F3E;font-weight: bold;">选择上门时间</text>
 				<view>
-					<text
-						style='text-align: end;margin-right: 22rpx;'>{{item.expectTime==undefined?'时间':item.expectTime}}</text>
-					<image style="width: 14rpx;height: 25rpx;    margin-right: 20rpx;"
+					<text style='text-align: end;margin-right: 22rpx;'>{{!expectTime?'时间':expectTime}}</text>
+					<image style="width: 14rpx;height: 25rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
 						mode=""></image>
 				</view>
 			</view>
+			<view style="height: 150rpx;">
+				<view class="button" @click="repairOrderHandle">
+					申请返修
+				</view>
+			</view>
 		</view>
+
+
+		<hTimeAlert title="选择上门时间" rangeStartTime="00:00:00" rangeEndTime="23:59:59" defaultTime="2020/3/29 18:00:00"
+			rangeDay="7" :isShow="isShow" :maskHide="maskHide" :isUrgentIndex='3' :rangeType="rangeType" :isCar='true'
+			:closeBtn="closeBtn" @closeAlert="handelClose">
+		</hTimeAlert>
+		
+		
+			<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 
 <script>
 	import storage from '@/utils/storage'
+	import hTimeAlert from "@/components/h-time-alert/h-time-alert.vue"
+	import upLoadFile from '../../../components/uploadFile/uploadFile.vue'
+	import {
+		repairOrder
+	} from '@/api/order.js'
 	const {
 		environment
 	} = require('../../../config/environment')
 	export default {
+		components: {
+			hTimeAlert,
+			upLoadFile
+		},
 		data() {
 			return {
 				action: environment.baseURL + '/system/oss/upload',
 				headers: {
 					token: storage.get('AccessToken')
 				},
-				projectList: []
+				projectList: [],
+				isShow: false,
+				maskHide: false,
+				closeBtn: true,
+				rangeType: true,
+				expectTime: undefined,
+				info: {}
 			};
 		},
 		onLoad(option) {
-			let info = JSON.parse(decodeURIComponent(option.info))
-			this.projectList = info.list
-			console.log(info);
+			this.info = JSON.parse(decodeURIComponent(option.info))
+			this.projectList = this.info.list
+			console.log(this.info);
 			this.projectList.forEach(item => {
-				item.name = info.type == 'new' ? item.serviceProductName : item.productName
-				item.type = info.type == 'new' ? item.serviceTypeName : item.typeName
-				item.time = info.type == 'new' ? item.serviceTime : item.projectHours
+				item.name = this.info.type == 'new' ? item.serviceProductName : item.productName
+				item.type = this.info.type == 'new' ? item.serviceTypeName : item.typeName
+				item.time = this.info.type == 'new' ? item.serviceTime : item.projectHours
+
 				item.repairRemark = ''
 				item.repairImg = []
 			})
@@ -109,7 +154,11 @@
 		methods: {
 			onSuccesss(reslut) {
 				console.log(reslut);
-				this.projectList[index].repairImg.push(reslut.data.url)
+				 this.projectList[reslut.data.index].repairImg.push(reslut.data.url)
+				// let arr=this.projectList[reslut.data.index].repairImg
+				// arr.push(reslut.data.url)
+				// this.$set(this.projectList[reslut.data.index],'repairImg',arr)
+				this.$forceUpdate()
 			},
 			onInput(data) {
 				console.log(data);
@@ -118,26 +167,45 @@
 			handelClose(data) {
 				this.isShow = false;
 				console.log(data);
-				this.showListByType[this.timeIndex].expectTime = data.endDate
-				console.log(this.showListByType);
-				this.info.isUrgent = data.isUrgent && !this.isCar ? 1 : 0
-				if (data.isUrgent) {
-					this.urgentPriceTotal = this.submitList.reduce((pre, item) => {
-						return pre + Number(item.urgentPrice)
-					}, 0)
-					this.info.orderPrice = this.info.orderPrice + this.urgentPriceTotal
-				} else {
-					this.info.orderPrice = this.info.orderPrice - this.urgentPriceTotal
-					this.urgentPriceTotal = 0
+				this.expectTime = data.endDate
+			},
+			repairOrderHandle() {
+				if (!this.expectTime ) {
+					uni.showToast({
+						title: '请选择上门时间',
+						duration: 800,
+						icon: 'none'
+					});
+					return
 				}
-				//this.dateRange = data._dateRange
-				console.log(this.submitList);
-			},
+				let info = {
+					orderId: this.info.orderId,
+					appointmentTime: this.expectTime+ ':00',
+				}
+				let arr = []
+				this.projectList.forEach(item => {
+					item.remark = item.repairRemark
+					item.projectImg =item.repairImg.length==0?'':item.repairImg.toString()
+				})
+				
+				info.projectBoList = this.projectList
+				console.log(info, '1700000000');
+				repairOrder(info).then(res => {
+					console.log(res);
+					this.$refs.uToast.show({
+						type: 'default',
+						message: res.data.msg,
+					});
+					setTimeout(()=>{
+						uni.switchTab({
+							url:'/pages/order/order'
+						})
+					},1000)
 
-			timeShowHandle(i) {
-				this.isShow = true
-				this.timeIndex = i
-			},
+
+				})
+			}
+
 		}
 	}
 </script>
@@ -146,9 +214,10 @@
 	.repair {
 		.card {
 			.time-two {
+				margin-top: 18rpx;
 				font-size: 30rpx;
 				height: 85rpx;
-				width: 100%;
+				padding: 0 29rpx;
 				background: #fff;
 				display: flex;
 				align-items: center;
@@ -159,6 +228,18 @@
 				font-size: 29rpx;
 				color: #3D3F3E;
 				font-weight: bold;
+
+				.before {
+					width: 130rpx;
+					height: 47rpx;
+					text-align: center;
+					line-height: 47rpx;
+					background: #F3B133;
+					border-radius: 24rpx;
+					font-size: 29rpx;
+					color: #FFFFFF;
+					margin: 28rpx 0 10rpx 0
+				}
 
 				::v-deep.u-textarea {
 					background: rgba(165, 167, 167, 0.05);
@@ -185,5 +266,18 @@
 				}
 			}
 		}
+
+		.button {
+			width: 663rpx;
+			height: 91rpx;
+			background: #A4D091;
+			border-radius: 45rpx;
+			font-size: 36rpx;
+			color: #FFFFFF;
+			line-height: 91rpx;
+			text-align: center;
+			margin: 48rpx auto;
+		}
+
 	}
 </style>

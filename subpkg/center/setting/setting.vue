@@ -11,12 +11,12 @@
 				<text>关于我们</text>
 				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
 			</a>
-			<a  @click='goUrl(0)'>
+			<a @click='goUrl(0,"隐私协议")'>
 				<image src="../../../static/center/zc.png"></image>
-				<text>隐私政策</text>
+				<text>隐私协议</text>
 				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
 			</a>
-			<a @click='goUrl(1)'>
+			<a @click='goUrl(1,"注册协议")'>
 				<image src="../../../static/center/xieyi.png"></image>
 				<text>注册协议</text>
 				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
@@ -30,7 +30,7 @@
 
 
 
-		<!-- 	<u-cell-group>
+			<!-- 	<u-cell-group>
 				<u-cell
 					icon='http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/218734d44ff9424eb9d9ef890a54d97e.png'
 					title="个人信息" isLink ></u-cell>
@@ -88,14 +88,25 @@
 		getInfoById,
 		deleteUser
 	} from '@/api/user.js'
+	import {
+		getAgreement
+	} from '@/api/login.js'
 	export default {
 		data() {
 			return {
 				showLoginOut: false, //是否退出提示框
 				isCancellation: false, //是否注销账号
+				agreementList: []
 			};
 		},
-
+		onLoad() {
+			getAgreement({
+				type: '用户端'
+			}).then(res => {
+				console.log(res);
+				this.agreementList = res.data
+			})
+		},
 		methods: {
 
 			loginOut() {
@@ -136,7 +147,7 @@
 							userInfo: userInfo,
 							type: 'info'
 						}
-					
+
 						uni.navigateTo({
 
 							url: '../personalInfo/personalInfo?item=' + JSON.stringify(list)
@@ -163,22 +174,33 @@
 					}, 800)
 				})
 			},
-			goAboutUs(){
+			goAboutUs() {
 				uni.navigateTo({
 					url: '../aboutUs/aboutUs'
 				})
 			},
-			goUrl(i){
-				if (i==1) {
-					uni.navigateTo({
-						url:'./registrationAgreement/registrationAgreement',
-					
+			goUrl(i,type) {
+				console.log(this.agreementList);
+				let info={
+					name:type,
+					content:getContent(this.agreementList, type)
+				}
+			
+				uni.navigateTo({
+					url: './privacyRegistrationAgreement/privacyRegistrationAgreement?info=' + encodeURIComponent(JSON
+						.stringify(info)),
+
+				})
+
+				function getContent(arr, str) {
+					let remark = ''
+
+					arr.forEach(item => {
+						if (item.agreementName.indexOf(str) != -1) {
+							remark = item.remark
+						}
 					})
-				} else{
-					uni.navigateTo({
-						url:'./privacyAgreement/privacyAgreement',
-					
-					})
+					return remark
 				}
 			}
 		}
@@ -192,7 +214,7 @@
 </style>
 <style lang="scss" scoped>
 	.button {
-	
+
 		width: 663rpx;
 		height: 91rpx;
 		background: #A4D091;
@@ -204,7 +226,7 @@
 		position: absolute;
 		bottom: 200rpx;
 		left: 43rpx;
-		
+
 	}
 
 	a {
@@ -212,14 +234,16 @@
 		color: #303133;
 		display: flex;
 		border-bottom: 2rpx solid #f0f0f1;
-		padding:0 28rpx;
+		padding: 0 28rpx;
 		font-size: 25rpx;
 		height: 112rpx;
 		align-items: center;
-		image{
+
+		image {
 			width: 39rpx;
 			height: 39rpx;
 		}
+
 		text {
 			margin-left: 10rpx;
 			display: inline-block;

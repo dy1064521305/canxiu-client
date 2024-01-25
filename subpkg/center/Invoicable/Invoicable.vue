@@ -6,7 +6,7 @@
 					<view style="display: flex;align-items: center;margin: 0 20rpx;">
 						<view v-if="item.checked" @click="checkHandle(item,false)">
 							<image style="width: 33rpx;height: 33rpx;margin-top: 8rpx;"
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/12/6f382d27520e4c9382df591a76fe29ee.png">
 							</image>
 						</view>
 						<view v-else class="un" @click="checkHandle(item,true)">
@@ -43,7 +43,7 @@
 
 			</view>
 			<view v-if="allCheck" @click="allCheckHandle">
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png"
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/12/6f382d27520e4c9382df591a76fe29ee.png"
 					mode="widthFix"></image>
 			</view>
 			<text style="font-size: 29rpx;color: #3D3F3E;">全选</text>

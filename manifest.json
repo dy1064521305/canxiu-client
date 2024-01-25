@@ -64,9 +64,9 @@
                     "NSLocationAlwaysAndWhenInUseUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
                     "NSLocationWhenInUseUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
                     "NSLocationAlwaysUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
-                    "NSPhotoLibraryUsageDescription" : "需要获取个人照片进行编辑是否允许此App获取相册权限",
+                    "NSPhotoLibraryUsageDescription" : "允许读取存储种的图片、视频、文件等内容，主要用于调取您手机中的照片或图片，进行头像设置、订单完成等操作",
                     "NSPhotoLibraryAddUsageDescription" : "生成维修报告保存本地",
-                    "NSCameraUsageDescription" : "我们需要访问您的相机来拍摄照片"
+                    "NSCameraUsageDescription" : "我们访问您的相机是为了使您可以使用摄像头进行拍摄上传拍照的照片来做头像、订单完成等操作"
                 }
             },
             /* SDK配置 */

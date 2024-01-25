@@ -224,7 +224,9 @@
 			// #endif
 
 		},
-
+		onLoad() {
+			 this.getCarList()
+		},
 		onShow() {
 
 			// #ifdef APP-PLUS
@@ -238,11 +240,12 @@
 			//this.getList()
 			this.isLogin = storage.get('AccessToken')
 
-			if (this.isLogin) {
-				this.getCarList()
-				this.allNum = 0
-				this.checkedList = []
-			}
+			// if (this.isLogin) {
+			// 	 // this.getCarList()
+			// 	this.allNum = 0
+			// 	this.checkedList = []
+			// 	console.log('2455555555555555555555');
+			// }
 			uni.removeStorage({
 				key: 'service_info'
 			})

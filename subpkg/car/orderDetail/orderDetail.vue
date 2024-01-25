@@ -42,7 +42,7 @@
 					<image v-if="workerInfo.avatarUrl==null" style="width:98rpx;height: 98rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/11/10/38405b13b68b4ac3be692e812874e648.png">
 					</image>
-					<image v-else style="width:98rpx;height: 98rpx;" :src="workerInfo.avatarUrl"></image>
+					<image v-else style="width:98rpx;height: 98rpx;border-radius: 50%;" :src="workerInfo.avatarUrl"></image>
 					<view class="logo">
 						{{workerType}}
 					</view>
@@ -53,12 +53,11 @@
 						<text style="margin-right: 20rpx;"> {{workerInfo.workerName}}</text>
 						<!-- 	<img :src="workerInfo.levelIcon" style='width: 140rpx;height: 34rpx;margin-left: 20rpx;'> -->
 
-						<u-rate count="5" v-model="workerInfo.value" activeColor='#ec9322' size='32rpx'
-							readonly></u-rate>
 					</view>
-					<!-- 	<view style="font-size: 25rpx;color: #A5A7A7;">
-						{{workerInfo.workerPhone}}
-					</view> -->
+					<view style="margin-left: -9rpx;">
+						<u-rate count="5" v-model="workerInfo.value" activeColor='#ec9322' size='48rpx' readonly>
+						</u-rate>
+					</view>
 				</view>
 				<view class="back">
 					<image style="width:14rpx;height: 25rpx;"
@@ -70,7 +69,8 @@
 
 		</view>
 		<view class="project bg">
-			<view v-if="newProject.length!=0&&info.orderStatus!='服务中【审核驳回】'&&info.orderStatus!='服务中【待上级审核】'" style="font-size: 33rpx;font-weight: bold;">
+			<view v-if="newProject.length!=0&&info.orderStatus!='服务中【审核驳回】'&&info.orderStatus!='服务中【待上级审核】'"
+				style="font-size: 33rpx;font-weight: bold;">
 				原维修方案
 			</view>
 			<view v-for="(item,index) in info.projectDataVoList" :key="index" style="margin: 15rpx 0;">
@@ -107,7 +107,9 @@
 
 
 
-		<view v-if="(newProject.length!=0||showMelList.length!=0)&&info.orderStatus!='服务中【审核驳回】'&&info.orderStatus!='服务中【待上级审核】'&&info.orderStatus!='服务中【客户驳回】'" class="bg">
+		<view
+			v-if="(newProject.length!=0||showMelList.length!=0)&&info.orderStatus!='服务中【审核驳回】'&&info.orderStatus!='服务中【待上级审核】'&&info.orderStatus!='服务中【客户驳回】'"
+			class="bg">
 			<view v-if="newProject.length!=0" class="projec">
 				<view style="font-size: 33rpx;font-weight: bold;">
 					变更后服务项<image style="width: 62rpx;height: 27rpx;margin-left: 20rpx;"
@@ -124,44 +126,41 @@
 					<text>维修材料</text>
 					<!-- 	<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text> -->
 				</view>
-				<view v-for="(mel,mi) in showMelList" :key="mi">
+				<view v-for="(mfel,fmi) in showMelList" :key="fmi">
 					<view style="font-weight: bold;margin-top: 20rpx;">
-						{{mel[0].classifyName}}
+						{{mfel[0].classifyName}}
 					</view>
-					<view v-for="(chi,chii) in mel" :key="chii">
-						<view style="display: flex;margin-top: 20rpx;">
-							<u-image v-if="chi.img" radius='10rpx' width="140rpx" height="100%" :src="chi.img">
-							</u-image>
-							<view v-else class="no-img">
-								<image style="width:104rpx ;height: 70rpx;"
+					<view class="thumb-box" v-for="(mel,mi) in mfel" :key="mi">
+						<view class="no-imgs">
+							<image v-if="mel.materialImg!=null&&mel.materialImg!=''" :src="mel.materialImg"
+								style="width:100%;height:100%;border-radius: 10rpx;">
+							</image>
+							<view v-else style="width:100%;height:100%;" class="img-text">
+								<image style="width:90rpx ;height:68rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
 									mode=""></image>
 								<text>暂无图片</text>
 							</view>
-							<view
-								style="height: 100%;display: flex;flex-direction: column;justify-content: space-evenly;width: 100%;margin-left: 20rpx;">
-								<view style="width: 100%;">
-									<view>
-										{{chi.materialName}}
-									</view>
-									<view
-										style="display: flex;justify-content: space-between;color: #A5A7A7;margin-top: 10rpx;">
-										<text v-if="chi.materialSpecsList==null" style="margin-right: 10rpx;">无</text>
-										<text v-else style="margin-right: 10rpx;"
-											v-for="(gui,gi) in chi.materialSpecsList" :key="gi">{{gui}}</text>
-										<text> x{{chi.materialCount}}</text>
-									</view>
+						</view>
+						<view class="right flexCss">
+							<view class="flexCss" style="align-items: center;">
+								<text style="font-weight: bold;color: #3D3F3E;">{{mel.materialName}}</text>
+								<text style="color:#EC5722 ;">{{mel.materialCount}}{{mel.materialUnit}}</text>
+							</view>
+							<view style="color: #A5A7A7;">
+								<text v-if="mel.specsId==null"></text>
+								<text v-else v-for="(s,si) in Object.values(JSON.parse(mel.materialSpecs))" :key="si"
+									style="margin-right: 10rpx;">
+									{{s}}
+								</text>
+							</view>
+							<view style="color:#EC5722 ;" class="flexCss">
+								<view class="">
+									¥{{mel.materialPrice}}
 								</view>
-								<view
-									style="width: 100%;display: flex;justify-content: space-between;margin-top: 10rpx;">
-									<view>
-										¥{{chi.salePrice?chi.salePrice:chi.materialPrice}}</view>
-									<view>
-										小计：¥{{Number(chi.salePrice?chi.salePrice:chi.materialPrice)*Number(chi.materialCount)}}
-									</view>
+								<view style="font-weight: bold;margin-left: 21rpx;">
+									小计:¥{{Number(mel.materialPrice)*Number(mel.materialCount)}}
 								</view>
-
-
 							</view>
 						</view>
 
@@ -194,11 +193,13 @@
 					订单费用
 				</view>
 				<view class="img" v-if="isGet">
-					<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
+					<image style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/a5a0b58c2d674bacb335cb758d4fca3d.png">
+					</image>
 					未达标按起步价收取
 				</view>
 				<view v-else class="img">
-					<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
+					<image style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 					</image>已达到起步价
 				</view>
@@ -232,8 +233,7 @@
 				<text
 					style="color: #EC5722;">¥{{Number(info.orderPrice)+Number(info.favorablePrice)+Number(info.subsidyPrice)}}</text>
 			</view>
-			<view v-if="info.favorablePrice!=0" style="margin-left: 20rpx;color: #A5A7A7;"
-				class="line">
+			<view v-if="info.favorablePrice!=0" style="margin-left: 20rpx;color: #A5A7A7;" class="line">
 				<text class="ziduan">品牌折扣：</text>
 				<text style="color: #EC5722;">-¥{{info.favorablePrice}}</text>
 			</view>
@@ -248,7 +248,7 @@
 				<text style="color: #EC5722;">¥{{info.orderPrice}}</text>
 			</view>
 		</view>
-		<view v-if="info.deliveryVo" class="bg project">
+		<view v-if="info.deliveryVo&&info.orderStatus!='售后中'" class="bg project">
 			<view class="title">
 				维修详情
 			</view>
@@ -351,12 +351,13 @@
 						</view>
 						<view class="line">
 							<text class="ziduan">订单类型</text>
-							<text>维修</text>
+							<text><text style="width:14% ;" class="fanxiu">返修</text>维修</text>
 						</view>
-						<!-- 	<view class="line">
-							<text class="ziduan">订单优先级</text>
-							<text>{{info.isUrgent=='0'?'不加急':info.isUrgent=='1'?'客户加急':'实际加急'}}</text>
-						</view> -->
+						<view class="line">
+							<text class="ziduan">订单状态</text>
+							<text
+								style="color: #EC5722;">{{info.isUrgent=='0'?'不加急':info.isUrgent=='1'?'客户加急':'实际加急'}}</text>
+						</view>
 						<view class="line">
 							<text class="ziduan">下单时间</text>
 							<text>{{info.orderTime}}</text>
@@ -368,7 +369,7 @@
 			</u-collapse>
 		</view>
 
-		<view v-if="info.sign!=null&&info.sign!=''" class="title"
+		<view v-if="info.sign!=null&&info.sign!=''&&info.orderStatus!='售后中'" class="title"
 			style="display: flex;background-color: #fff;padding: 10rpx 28rpx;justify-content: space-between;">
 			<view style="width: 25%;">
 				客户签名：
@@ -394,6 +395,7 @@
 			有疑问？联系客服
 		</view> -->
 		<!--  -->
+
 		<view
 			v-if="info.orderStatus=='待上门'||info.orderStatus=='待接单'||info.orderStatus=='待服务'||info.orderStatus=='上级驳回,待处理'"
 			class="btns">
@@ -406,7 +408,8 @@
 			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="handleRoute()" class="btn-green">
 				联系维修师
 			</view>
-			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="showPhone=true" class="btn-green">
+			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="phoneAuth" class="btn-green">
+				<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="CALL_PHONE"> </yk-authpup>
 				联系客服
 			</view>
 		</view>
@@ -415,10 +418,9 @@
 			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="report('待评价')">
 				生成维修报告
 			</view>
-			<!-- 	<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white"
-				@click="repairOrder">
+			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="repairOrder">
 				申请返修
-			</view> -->
+			</view>
 			<view v-if="info.orderStatus=='待评价'" class="btn-green" @click="appraiseHandle">
 				评价
 			</view>
@@ -553,6 +555,7 @@
 	import * as order from '@/api/order.js'
 	import upLoadFile from '../../../components/uploadFile/uploadFile.vue'
 	import projectCard from '@/components/projectCard/projectCard.vue'
+	import ykAuthpup from "@/components/yk-authpup/yk-authpup";
 	import {
 		callPhone
 	} from '@/utils/phone.js'
@@ -565,7 +568,8 @@
 	export default {
 		components: {
 			upLoadFile,
-			projectCard
+			projectCard,
+			ykAuthpup
 		},
 		data() {
 			return {
@@ -803,7 +807,7 @@
 
 						//this.timeFn('2023-03-09 11:20:18')
 						console.log(this.info.projectDataVoList[0].workerType, '8000000000000000');
-						this.workerType=this.info.projectDataVoList[0].workerType
+						this.workerType = this.info.projectDataVoList[0].workerType
 						this.info.projectDataVoList.forEach(item => {
 							item.projectImg = item.projectImg != '' ? item.projectImg.split(',') : []
 							// item.projectVideo = item.projectVideo != '' ? item.projectVideo.split(',') : []
@@ -847,11 +851,18 @@
 						//	this.melTotal =this.melTotal+ Number(item.materialPrice) * Number(item.materialCount)
 						//console.log(this.melTotal);
 						item.materialSpecsList = JSON.parse(item.materialSpecs)
-						listByIds(item.materialImg).then(res => {
-							// item.img = res.data[0].url
-							console.log(res, 'imgggggggggggg');
-							this.$set(arr[index], 'img', res.data[0].url)
-						})
+						// listByIds(item.materialImg).then(res => {
+						// 	// item.img = res.data[0].url
+						// 	console.log(res, 'imgggggggggggg');
+						// 	this.$set(arr[index], 'img', res.data[0].url)
+						// })
+						if (item.materialImg != null) {
+							// listByIds(item.materialImg).then(res => {
+							// 	// item.img = res.data[0].url
+							// 	this.$set(arr[index], 'img', res.data[0].url)
+							// })
+							item.img = item.materialImg.split(',')[0]
+						}
 						if (!map.has(item.classifyId)) {
 							map.set(
 								item.classifyId,
@@ -970,6 +981,13 @@
 					url: '../accept/accept?info=' + JSON.stringify(info)
 				})
 			},
+			phoneAuth() {
+				console.log(1111111111);
+				this.$refs['authpup'].open()
+			},
+			changeAuth() {
+				this.showPhone = true
+			},
 			actionSelect(e) {
 				console.log(e);
 				if (e.name == '取消') {
@@ -1061,20 +1079,24 @@
 
 			},
 			//返修订单
-			repairOrder(){
+			repairOrder() {
 				console.log(this.newProject);
-				let info={
-					list:[]
+				let info = {
+					list: []
 				}
-				if (this.newProject.length!=0) {
-					info.list=this.newProject
-					info.type='new'
-				} else{
-					info.list=this.info.projectDataVoList
-					info.type='old'
+				if (this.newProject.length != 0) {
+					info.list = this.newProject
+					info.type = 'new'
+
+				} else {
+					info.list = this.info.projectDataVoList
+					info.type = 'old'
+
 				}
+				info.finish = this.info.deliveryVo,
+					info.orderId = this.info.orderId
 				uni.navigateTo({
-					url:'../repairOrder/repairOrder?info='+encodeURIComponent(JSON.stringify(info))
+					url: '../repairOrder/repairOrder?info=' + encodeURIComponent(JSON.stringify(info))
 				})
 			}
 
@@ -1207,6 +1229,18 @@
 			}
 		}
 
+		.fanxiu {
+			height: 36rpx;
+			background: #FFFFFF;
+			border-radius: 7rpx;
+			border: 2rpx solid #A4D091;
+			font-size: 22rpx;
+			color: #A4D091;
+			line-height: 36rpx;
+			text-align: center;
+			margin-right: 8rpx;
+		}
+
 		.btn-white,
 		.btn-green {
 			height: 85rpx;
@@ -1312,19 +1346,50 @@
 			}
 		}
 
-		.no-img {
-			width: 181rpx;
-			background: #F4F4F4;
-			border-radius: 11rpx;
+		.thumb-box {
+			height: 130rpx;
+			margin-top: 20rpx;
 			display: flex;
-			flex-direction: column;
 			align-items: center;
-			justify-content: center;
 
-			text {
-				font-size: 21rpx;
-				color: #A4D091;
+			.right {
+				height: 100%;
+				flex-direction: column;
+				margin-left: 14rpx;
+				width: 79%;
 			}
+
+			.flexCss {
+				display: flex;
+				justify-content: space-between;
+			}
+
+
+			.no-imgs {
+				width: 130rpx;
+				height: 100%;
+
+
+				.img-text {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					height: 100%;
+					background: #F4F4F4;
+					border-radius: 11rpx;
+
+					text {
+						font-size: 21rpx;
+						color: #A4D091;
+					}
+				}
+
+
+			}
+
+
 		}
+
 	}
 </style>
