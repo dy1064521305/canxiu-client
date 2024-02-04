@@ -17,7 +17,7 @@
 				<text style="display: inline-block;width:85%;">{{item.name}}</text>
 				<view v-if="currentIndex==index" style="display: flex;align-items: center;">
 					<image style="width: 32rpx;margin-right: 11rpx;"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png"
 						mode="widthFix"></image>
 				</view>
 				<view v-else class="un" @click="choseMethod(index,item.name)">
@@ -129,7 +129,8 @@
 					if (type == 'JSAPI') {
 						pay.weChatPay({
 							orderId: this.info.orderId,
-							code: this.wxCode
+							code: this.wxCode,
+							repairId: this.info.repairId?this.info.repairId:undefined
 						}).then(res => {
 							console.log(res);
 							let data = res.data.data
@@ -154,6 +155,7 @@
 					} else {
 						pay.appWeChatPay({
 							orderId: this.info.orderId,
+							repairId: this.info.repairId?this.info.repairId:undefined
 						}).then(res => {
 							console.log(res);
 							let data = res.data.data
@@ -188,6 +190,7 @@
 				} else if (this.type == '支付宝支付') {
 					pay.alipay({
 						orderId: this.info.orderId,
+						repairId: this.info.repairId?this.info.repairId:undefined
 					}).then(res => {
 						console.log(res);
 						console.log(res.data.orderStr);
@@ -207,6 +210,7 @@
 				} else if (this.type == '集团代付') {
 					pay.payOnBehalf({
 						orderId: this.info.orderId,
+						repairId: this.info.repairId?this.info.repairId:undefined
 					}).then(res => {
 						uni.showToast({
 							title: '操作成功',

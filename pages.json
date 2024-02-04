@@ -64,13 +64,7 @@
 				"disableScroll": true
 			}
 		},
-		{
-			"path": "pages/myOrder/myOrder",
-			"style": {
-				"navigationBarTitleText": "订单",
-				"navigationStyle": "custom"
-			}
-		},
+	
 
 		// {
 		// 		"path": "pages/message/TUI-Login/login",
@@ -85,18 +79,24 @@
 		{
 			"path": "pages/TUI-Conversation/conversation/conversation",
 			"style": {
-				"navigationBarTitleText": "会话列表",
-				"navigationBarBackgroundColor": "#A4D091",
-				"backgroundColor": "#FFFFFF",
-				"navigationBarTextStyle": "white"
+				"navigationBarTitleText": "消息",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"backgroundColor": "#FFFFFF"
 			}
 		}
 
 
-
-
-
-	],
+	    ,{
+            "path" : "pages/order/order",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的订单",
+                "enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#fff"
+            }
+            
+        }
+    ],
 	"subPackages": [{
 			"root": "subpkgChat",
 			"pages": [
@@ -113,16 +113,17 @@
 						"navigationStyle": "custom"
 					}
 				}
-				// ,
-				// {
-				//                 "path" : "order-push-list/index",
-				//                 "style" :                                                                                    
-				//             {
-				//                 "navigationBarTitleText": "工单助手",
-				//                 "enablePullDownRefresh": false
-				//             }
+				,
+				{
+				                "path" : "order-push-list/index",
+				                "style" :                                                                                    
+				            {
+				                "navigationBarTitleText": "工单助手",
+				                "enablePullDownRefresh": false,
+									"navigationBarBackgroundColor": "#FFFFFF"
+				            }
 
-				//             }
+				            }
 			]
 
 		},
@@ -195,6 +196,7 @@
 		{
 			"root": "subpkg/car",
 			"pages": [
+			
 				{
 					"path": "goodDetails/goodDetails",
 					"style": {
@@ -321,6 +323,15 @@
                 }
                 
                 }
+                ,{
+                    "path" : "repairingOrder/repairingOrder",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "订单详情",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
             ]
 		},
 		{
@@ -337,6 +348,13 @@
 				// }
 
 				// , 
+				{
+					"path": "myOrder/myOrder",
+					"style": {
+						"navigationBarTitleText": "订单",
+						"navigationStyle": "custom"
+					}
+				},
 				{
 					"path": "workerDetailed/workerDetailed",
 					"style": {
@@ -394,14 +412,7 @@
 					}
 
 				},
-				{
-					"path": "setting/registrationAgreement/registrationAgreement",
-					"style": {
-						"navigationBarTitleText": "注册协议",
-						"enablePullDownRefresh": false
-					}
-
-				},
+			
 				{
 					"path": "personalInfo/personalInfo",
 					"style": {
@@ -412,8 +423,7 @@
 				}, {
 					"path": "myMoney/myMoney",
 					"style": {
-						"navigationBarTitleText": "我的余额",
-						"enablePullDownRefresh": false
+						"navigationBarTitleText": "我的余额"
 					}
 
 				},
@@ -513,7 +523,7 @@
 					}
 
 				}, {
-					"path": "setting/privacyAgreement/privacyAgreement",
+					"path": "setting/privacyRegistrationAgreement/privacyRegistrationAgreement",
 					"style": {
 						"navigationBarTitleText": "隐私政策",
 						"enablePullDownRefresh": false
@@ -549,7 +559,7 @@
 				"text": "消息"
 			},
 			{
-				"pagePath": "pages/myOrder/myOrder",
+				"pagePath": "pages/order/order",
 				"iconPath": "./static/img/tabbar/order-unactive.png",
 				"selectedIconPath": "./static/img/tabbar/order-active.png",
 				"text": "订单",

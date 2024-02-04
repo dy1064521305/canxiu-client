@@ -170,6 +170,12 @@
 					this.swichMenu(getApp().index)
 				})
 			}
+			// getOrderNum().then(res => {
+			// 	uni.setTabBarBadge({
+			// 		index: 3,
+			// 		text: res
+			// 	})
+			// })
 
 		},
 		onHide() {

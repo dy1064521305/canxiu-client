@@ -15,11 +15,24 @@
 			</view>
 		</view>
 		<view v-else class="">
-			<uni-list>
+			
+			<!-- <uni-list>
 				<uni-list-chat title="工单助手" avatar="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/gdzs.png"
 					:note="content" :time="time" badge-positon="left"
 					:badge-text="num" link to="/subpkgChat/order-push-list/index"></uni-list-chat>
-			</uni-list>
+			</uni-list> -->
+				<view  style="background-color: #fff;justify-content: space-evenly;
+    display: flex;margin-top: 18rpx;">
+					<view @click="goUrl(index)"  v-for="(item, index) in topList" :index="index" :key="index">
+							<uni-badge  :customStyle="{background: '#EC5722',zIndex:'100'}"  :is-dot="item.num==1?true:false" :offset="[-55,8]" :text="item.num" absolute="rightTop" size="normal" />
+						<view class="grid-item-box">
+							<image style="width: 108rpx;height: 108rpx;" :src="item.img"></image>
+							<text style="margin-top: 10rpx;font-size: 31rpx;">{{item.title}}</text>
+						</view>
+					</view>
+				</view>
+			
+		
 
 			<view class="scroll-box">
 				<view class="uni-list margintop-bar" style="margin-top: 5px;">
@@ -77,7 +90,16 @@
 				gdzsData: {},
 				content: '',
 				time: '',
-				num: 0
+				num: 0,
+				topList:[{
+					title:'工单助手',
+					img:'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/gdzs.png',
+					num:0
+				},
+				{
+					title:'通讯录',
+					img:'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/30/6f32fb36a5c04cf096ce765d2c2d5603.png'
+				}]
 			};
 		},
 
@@ -109,12 +131,14 @@
 				this.queryState();
 				getC2cUnreadMsgNum().then(res => {
 					queryUnreadNum().then(ress => {
-
+					console.log(res);
 						// this.gdzsData = ress.data;
 						this.content = ress.data.data.content;
 						this.time = ress.data.data.time;
 						this.num = ress.data.num;
+						this.topList[0].num=ress.data.num
 						let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
+						console.log(num);
 						if (num > 0) {
 							uni.setTabBarBadge({
 								index: 2,
@@ -195,7 +219,13 @@
 				})
 
 			},
-
+			goUrl(i){
+				if (i==0) {
+					uni.navigateTo({
+						url:'../../../subpkgChat/order-push-list/index'
+					})
+				}
+			},
 			getConversationList() {
 				uni.$TUIKit.getConversationList().then(imResponse => {
 					logger.log(
@@ -283,6 +313,18 @@
 		position: relative;
 	}
 
+	.grid-item-box {
+		
+		// position: relative;
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding-bottom: 28rpx;
+		margin-top: -13rpx;
+	}
 	.btns {
 		display: flex;
 		justify-content: space-evenly;

@@ -1,5 +1,5 @@
 <template>
-	<view class="accept" >
+	<view class="accept">
 		<view id='poster'>
 			<!-- <image v-for="(item,index) in urlImg " :key="index" @click="billViewImage(item)" :src="item"></image> -->
 			<view class="bg info">
@@ -8,49 +8,136 @@
 				</view>
 				<view class="line">
 					<text class="ziduan">报修门店</text>
-					<text>{{info.info.warrantyStore}}</text>
+					<text>{{orderInfo.warrantyStore}}</text>
 				</view>
 				<view class="line">
 					<text class="ziduan">预约上门时间</text>
-					<text>{{info.info.expectTime}}</text>
+					<text>{{orderInfo.expectTime}}</text>
 				</view>
 				<view class="line">
 					<text class="ziduan">服务地址</text>
-					<text>{{info.info.addressVo.addressRegion}}{{info.info.addressVo.addressDetailed}}</text>
-			
+					<text>{{orderInfo.addressVo.addressRegion}}{{orderInfo.addressVo.addressDetailed}}</text>
+
 				</view>
 				<view class="line">
 					<text class="ziduan"></text>
-					<text>{{info.info.addressVo.contact}} {{info.info.addressVo.phone}}</text>
-			
+					<text>{{orderInfo.addressVo.contact}} {{orderInfo.addressVo.phone}}</text>
+
 				</view>
 			</view>
-			
-			
+
+
 			<view class="bg info">
 				<view class="title">
 					订单信息
 				</view>
+				<view v-if="orderInfo.repairNumber" class="line">
+					<text class="ziduan">返修编号</text>
+					<text>{{orderInfo.repairNumber}}</text>
+				</view>
 				<view class="line">
 					<text class="ziduan">订单编号</text>
-					<text>{{info.info.orderNumber}}</text>
+					<text>{{orderInfo.orderNumber}}</text>
 				</view>
 				<view class="line">
 					<text class="ziduan">订单类型</text>
-					<text>维修</text>
+					<text><text style="width:14% ;" class="fanxiu">返修</text>维修</text>
 				</view>
-			
+
 				<view class="line">
 					<text class="ziduan">下单时间</text>
-					<text>{{info.info.orderTime}}</text>
+					<text>{{orderInfo.orderTime}}</text>
 				</view>
 			</view>
-			
-			<view class="project bg">
+
+			<view v-if="orderInfo.repairId" v-for="(item,index) in orderInfo.projectDataVoList" :key="index" style="margin: 15rpx 0;"
+				class="project bg">
+				<project-card :pro='item' />
+
+				<view v-if="orderInfo.deliveryVo!=null&&orderInfo.deliveryVo.deliveryImg.length!=0">
+					<view>
+						<view style="background-color: #A4D091;" class="before">
+							服务后
+						</view>
+						<cl-upload :listStyle="{
+											columnGap: '10rpx',
+											columns:'4',
+											rowGap:'10rpx'
+											}" :imageFormData="{
+												size:10
+											}" :videoFromData="{
+												size:10
+											}" v-model="orderInfo.deliveryVo.deliveryImg" :add="false" :remove="false"></cl-upload>
+					</view>
+					<view v-if="orderInfo.deliveryVo.remark!=''">
+						<view style="margin:28rpx 0 10rpx 0">
+							备注
+						</view>
+						<view class="right" style="color: #707271;">
+							{{orderInfo.deliveryVo.remark}}
+						</view>
+					</view>
+				</view>
+				<view>
+					<view>
+						<view class="before">
+							返修前
+						</view>
+						<cl-upload :listStyle="{
+						columnGap: '10rpx',
+						columns:'4',
+						rowGap:'10rpx'
+						}" :imageFormData="{
+							size:10
+						}" :videoFromData="{
+							size:10
+						}" v-model="item.projectImg" :add="false" :remove="false"></cl-upload>
+
+					</view>
+					<view v-if="item.remark!=''">
+						<view style="margin:28rpx 0 10rpx 0">
+							备注
+						</view>
+						<view class="right" style="color: #707271;">
+							{{item.remark}}
+						</view>
+					</view>
+				</view>
+				<view v-if="item.repairImgg.length!=0">
+					<view>
+						<view style="background-color: #A4D091;" class="before">
+							返修后
+						</view>
+						<cl-upload :listStyle="{
+															columnGap: '10rpx',
+															columns:'4',
+															rowGap:'10rpx'
+															}" :imageFormData="{
+																size:10
+															}" :videoFromData="{
+																size:10
+															}" v-model="item.repairImgg" :add="false" :remove="false"></cl-upload>
+					</view>
+					<view v-if="item.repairRemark!=''&&item.repairRemark!=null">
+						<view style="margin:28rpx 0 10rpx 0">
+							备注
+						</view>
+						<view class="right" style="color: #707271;">
+							{{item.repairRemark}}
+						</view>
+					</view>
+
+				</view>
+			</view>
+
+
+
+
+			<view v-if="!info.repairId" class="project bg">
 				<view v-if="JSON.stringify(info.newProject)!='[]'" style="font-size: 33rpx;font-weight: bold;">
 					原维修方案
 				</view>
-				<view v-for="(item,index) in info.info.projectDataVoList" :key="index" style="margin: 15rpx 0;">
+				<view v-for="(item,index) in orderInfo.projectDataVoList" :key="index" style="margin: 15rpx 0;">
 					<project-card :pro='item' />
 					<view class="info-box">
 						<view class="font">
@@ -78,11 +165,12 @@
 						</view>
 					</view>
 				</view>
-			
-			
+
+
 			</view>
-			
-			<view v-if="JSON.stringify(info.newProject)!='[]'||JSON.stringify(info.showMelList)!='[]'" class="bg">
+
+			<view v-if="(JSON.stringify(info.newProject)!='[]'||JSON.stringify(info.showMelList)!='[]')&&!info.repairId"
+				class="bg">
 				<view v-if="JSON.stringify(info.newProject)!='[]'" class="projec">
 					<view style="font-size: 33rpx;font-weight: bold;">
 						变更后服务项<image style="width: 62rpx;height: 27rpx;margin-left: 20rpx;"
@@ -99,45 +187,48 @@
 						<text>维修材料</text>
 						<!-- 	<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text> -->
 					</view>
-					<view v-for="(mel,mi) in info.showMelList" :key="mi">
+					<view v-for="(mfel,fmi) in info.showMelList" :key="fmi">
 						<view style="font-weight: bold;margin-top: 20rpx;">
-							{{mel[0].classifyName}}
+							{{mfel[0].classifyName}}
 						</view>
-						<view v-for="(chi,chii) in mel" :key="chii">
-							<view style="display: flex;margin-top: 20rpx;">
-								<u-image v-if="chi.img" radius='10rpx' width="140rpx" height="100%" :src="chi.img">
-								</u-image>
-								<view
-									style="height: 100%;display: flex;flex-direction: column;justify-content: space-evenly;width: 100%;margin-left: 20rpx;">
-									<view style="width: 100%;">
-										<view>
-											{{chi.materialName}}
-										</view>
-										<view
-											style="display: flex;justify-content: space-between;color: #A5A7A7;margin-top: 10rpx;">
-											<text v-if="chi.materialSpecsList==null" style="margin-right: 10rpx;">无</text>
-											<text v-else style="margin-right: 10rpx;"
-												v-for="(gui,gi) in chi.materialSpecsList" :key="gi">{{gui}}</text>
-											<text> x{{chi.materialCount}}</text>
-										</view>
-									</view>
-									<view
-										style="width: 100%;display: flex;justify-content: space-between;margin-top: 10rpx;">
-										<view>
-											¥{{chi.salePrice?chi.salePrice:chi.materialPrice}}</view>
-										<view>
-											小计：¥{{Number(chi.salePrice?chi.salePrice:chi.materialPrice)*Number(chi.materialCount)}}
-										</view>
-									</view>
-			
-			
+						<view class="thumb-box" v-for="(mel,mi) in mfel" :key="mi">
+							<view class="no-imgs">
+								<image v-if="mel.materialImg!=null&&mel.materialImg!=''" :src="mel.materialImg"
+									style="width:100%;height:100%;border-radius: 10rpx;">
+								</image>
+								<view v-else style="width:100%;height:100%;" class="img-text">
+									<image style="width:90rpx ;height:68rpx;"
+										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+										mode=""></image>
+									<text>暂无图片</text>
 								</view>
 							</view>
-			
-			
+							<view class="right flexCss">
+								<view class="flexCss" style="align-items: center;">
+									<text style="font-weight: bold;color: #3D3F3E;">{{mel.materialName}}</text>
+									<text style="color:#EC5722 ;">{{mel.materialCount}}{{mel.materialUnit}}</text>
+								</view>
+								<view style="color: #A5A7A7;">
+									<text v-if="mel.specsId==null"></text>
+									<text v-else v-for="(s,si) in Object.values(JSON.parse(mel.materialSpecs))"
+										:key="si" style="margin-right: 10rpx;">
+										{{s}}
+									</text>
+								</view>
+								<view style="color:#EC5722 ;" class="flexCss">
+									<view class="">
+										¥{{mel.materialPrice}}
+									</view>
+									<view style="font-weight: bold;margin-left: 21rpx;">
+										小计:¥{{Number(mel.materialPrice)*Number(mel.materialCount)}}
+									</view>
+								</view>
+							</view>
+
+
 						</view>
 					</view>
-			
+
 				</view>
 			</view>
 			<view class="bg info" style="margin-top: -20rpx;">
@@ -145,55 +236,56 @@
 					<view class="">
 						订单费用
 					</view>
-					<view class="img"
-						v-if="info.isGet">
-						<u-icon name="info-circle-fill" color="#faad14" size="22"></u-icon>
+					<view class="img" v-if="info.isGet">
+						<image style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/a5a0b58c2d674bacb335cb758d4fca3d.png">
+						</image>
 						未达标按起步价收取
 					</view>
-					<view
-					 v-else
-						class="img">
-						<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
+					<view v-else class="img">
+						<image style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 						</image>已达到起步价
 					</view>
 				</view>
 				<view class="line">
 					<text class="ziduan">起步价</text>
-				<text :style="{'text-decoration':!info.isGet?'line-through':'','color':!info.isGet?'#A5A7A7':'#EC5722'}"
-					v-if="info.info.beforeStartingFree!=null">¥{{info.info.beforeStartingFree}}</text>
+					<text
+						:style="{'text-decoration':!info.isGet?'line-through':'','color':!info.isGet?'#A5A7A7':'#EC5722'}"
+						v-if="orderInfo.beforeStartingFree!=null">¥{{orderInfo.beforeStartingFree}}</text>
 				</view>
 				<view class="line">
 					<text class="ziduan">工时费</text>
-				<text :style="{'text-decoration':info.isGet?'line-through':'','color':info.isGet?'#A5A7A7':'#EC5722'}"
-					v-if="info.info.servicePrice!=null">¥{{info.info.servicePrice}}</text>
+					<text
+						:style="{'text-decoration':info.isGet?'line-through':'','color':info.isGet?'#A5A7A7':'#EC5722'}"
+						v-if="orderInfo.servicePrice!=null">¥{{orderInfo.servicePrice}}</text>
 				</view>
-				<view class="line">
+				<view v-if="orderInfo.additionalPrice!=0" class="line">
 					<text class="ziduan">加急费</text>
-					<text>¥{{info.info.additionalPrice!=null?info.info.additionalPrice:0}}</text>
+					<text>¥{{orderInfo.additionalPrice}}</text>
 				</view>
-				<view v-if="info.info.materialPrice!=null" class="line">
+				<view v-if="orderInfo.materialPrice!=0" class="line">
 					<text class="ziduan">材料费</text>
-					<text>¥{{info.info.materialPrice}}</text>
+					<text>¥{{orderInfo.materialPrice}}</text>
 				</view>
 				<view class="line">
 					<text class="ziduan">小计：</text>
-			
+
 					<text
-						style="color: #EC5722;">¥{{info.info.favorablePrice!=0&&info.info.favorablePrice!=null?Number(info.info.orderPrice)+Number(info.info.favorablePrice):Number(info.info.orderPrice)}}</text>
+						style="color: #EC5722;">¥{{Number(orderInfo.orderPrice)+Number(orderInfo.favorablePrice)}}</text>
 				</view>
-				<view v-if="info.info.favorablePrice!=0&&info.info.favorablePrice!=null"
-					style="margin-left: 20rpx;color: #A5A7A7;" class="line">
-					<text class="ziduan">品牌折扣：</text>
-					<text style="color: #EC5722;">-¥{{info.info.favorablePrice}}</text>
+				<view v-if="orderInfo.favorablePrice!=0" style="margin-left: 20rpx;color: #A5A7A7;" class="line">
+					<text class="ziduan" style="width:58%;">品牌折扣：<text
+							v-if="orderInfo.favorableDiscount!=null">({{orderInfo.favorableDiscount}}折)</text></text>
+					<text style="color: #EC5722;width:42%;">-¥{{orderInfo.favorablePrice}}</text>
 				</view>
 				<view class="line">
 					<text class="ziduan">合计</text>
 					<!-- info.additionalPrice!=null?Number(info.additionalPrice)+Number(info.preferentialPrice):Number(info.preferentialPrice) -->
-					<text style="color: #EC5722;">¥{{info.info.orderPrice}}</text>
+					<text style="color: #EC5722;">¥{{orderInfo.orderPrice}}</text>
 				</view>
 			</view>
-			<view v-if="info.info.deliveryVo" class="bg project">
+			<view v-if="orderInfo.deliveryVo&&!info.repairId" class="bg project">
 				<view class="title">
 					维修详情
 				</view>
@@ -203,7 +295,7 @@
 					</view>
 					<view>
 						<upLoadFile
-							:fileListt='info.info.deliveryVo.deliveryImg!=null?info.info.deliveryVo.deliveryImg.split(",") : []'
+							:fileListt='orderInfo.deliveryVo.deliveryImg!=null?orderInfo.deliveryVo.deliveryImg.split(",") : []'
 							types='image' :isDel='false' :isInfo='true' />
 					</view>
 				</view>
@@ -212,20 +304,21 @@
 						订单备注
 					</view>
 					<view>
-						{{info.info.deliveryVo.remark}}
+						{{orderInfo.deliveryVo.remark}}
 					</view>
 				</view>
 			</view>
-			
+
 			<view v-if="signUrl!=''&&signUrl!=null" class=" title"
 				style="display: flex;background-color: #fff;padding: 10rpx 28rpx;justify-content: space-between;">
 				<view style="width: 25%;">
 					客户签名：
 				</view>
 				<view style="width: 70%;">
-			
-					<img  :src="signUrl" :style="{'transform':'rotate(-90deg)','width':big?'100%':'14%','height':big?'477rpx':'121rpx'}"
-					 alt="">
+
+					<img :src="signUrl"
+						:style="{'transform':'rotate(-90deg)','width':big?'100%':'14%','height':big?'477rpx':'121rpx'}"
+						alt="">
 				</view>
 				<view @click="big=!big">
 					<img style='width:50rpx ;height: 50rpx;' v-if="big"
@@ -317,9 +410,9 @@
 
 <script>
 	import storage from '@/utils/storage'
-		import {
-			base64ToPath
-		} from '../../../js_sdk/mmmm-image-tools/index.js'
+	import {
+		base64ToPath
+	} from '../../../js_sdk/mmmm-image-tools/index.js'
 
 	import {
 		generateReports,
@@ -363,15 +456,19 @@
 				item: undefined,
 				count: undefined,
 				signUrl: '', //签字图片
+				orderInfo: {}, //订单信息
 			};
 		},
 		onLoad(option) {
 			this.info = JSON.parse(option.info)
+			this.orderInfo = this.info.info
 			console.log(this.info);
-			this.signUrl = this.info.info.sign
+			this.signUrl = this.orderInfo.sign
 			uni.setNavigationBarTitle({
 				title: this.info.name
 			})
+
+
 			// uni.showLoading({
 			// 	title: '生成中',
 			// 	mask: true
@@ -407,188 +504,193 @@
 					title: "加载中"
 				})
 			},
-		
-		billViewImage(e) {
-			uni.previewImage({
-				urls: this.urlImg,
-				current: e,
 
-			});
-		},
-		//签字版关闭
-		popupClose() {
-			this.cavShow = false
-			this.showAccept = false
-		},
-		//取消
-		back() {
-			uni.navigateBack()
-		},
-		// 笔迹开始
-		uploadScaleStart(e) {
-			this.startX = e.changedTouches[0].x
-			this.startY = e.changedTouches[0].y
-			//设置画笔参数
-			//画笔颜色
-			this.ctx.setStrokeStyle(this.lineColor)
-			//设置线条粗细
-			this.ctx.setLineWidth(this.lineSize)
-			//设置线条的结束端点样式
-			this.ctx.setLineCap("round") //'butt'、'round'、'square'
-			//开始画笔
-			this.ctx.beginPath()
-		},
-		// 笔迹移动
-		uploadScaleMove(e) {
-			//	console.log(e);
-			//取点
-			let temX = e.changedTouches[0].x
-			let temY = e.changedTouches[0].y
-			//画线条
-			this.ctx.moveTo(this.startX, this.startY)
-			this.ctx.lineTo(temX, temY)
-			this.ctx.stroke()
-			this.startX = temX
-			this.startY = temY
-			this.ctx.draw(true)
-		},
-		//验收
-		sign() {
-			this.showAccept = true
-			this.cavShow = true
-			this.ctx = uni.createCanvasContext("handWriting");
-			this.$nextTick(() => {
-				uni.createSelectorQuery().select('.handCenter').boundingClientRect(rect => {
-						console.log(rect);
-						this.canvasWidth = rect.width;
-						this.canvasHeight = rect.height;
-						/* 将canvas背景设置为 白底，不设置  导出的canvas的背景为透明 */
-						this.setCanvasBg('#fff');
-					})
-					.exec();
-			});
-		},
-		//设置canvas背景色  不设置  导出的canvas的背景为透明
-		//@params：字符串  color
-		setCanvasBg(color) {
+			billViewImage(e) {
+				uni.previewImage({
+					urls: this.urlImg,
+					current: e,
 
-			/* 将canvas背景设置为 白底，不设置  导出的canvas的背景为透明 */
-			//rect() 参数说明  矩形路径左上角的横坐标，左上角的纵坐标, 矩形路径的宽度, 矩形路径的高度
-			//这里是 canvasHeight - 4 是因为下边盖住边框了，所以手动减了写
-			this.ctx.rect(0, 0, this.canvasWidth, this.canvasHeight - 4);
-			// ctx.setFillStyle('red')
-			this.ctx.setFillStyle(color);
-			this.ctx.fill(); //设置填充
-			this.ctx.draw(); //开画
-		},
-
-		/**
-		 * 重写
-		 */
-		retDraw() {
-			this.ctx.clearRect(0, 0, 700, 730);
-			this.ctx.draw();
-			//设置canvas背景
-			this.setCanvasBg('#fff');
-		},
-		//完成
-		subCanvas() {
-			let that = this;
-			let length = this.ctx.subpath.length;
-
-			if (length !== 2) {
-				uni.showToast({
-					title: '未检测到您签字',
-					duration: 2000,
-					icon: 'error'
 				});
-			} else {
-				let key = this.item;
-				uni.canvasToTempFilePath({
-					canvasId: 'handWriting',
-					fileType: 'png',
-					quality: 1, //图片质量
-					success(res) {
-						uni.uploadFile({
-							url: environment.baseURL + '/system/oss/upload',
-							filePath: res.tempFilePath,
-							name: 'file',
-							header: {
-								Authorization: "Bearer " + storage.get('AccessToken')
-							},
-							success: res => {
-								let data = JSON.parse(res.data);
-								if (data.code == 200) {
-									console.log(data);
-									that.signUrl = data.data.url
-									console.log();
-									acceptance({
-										sign: data.data.url,
-										orderId: that.info.id
-									}).then(res => {
-										console.log(res);
-										uni.showToast({
-											title: '签字成功',
-											duration: 2000,
-										});
-										that.retDraw()
-										that.cavShow = false
-										that.showAccept = false
-										let pages = getCurrentPages()
-										let prevPage = pages[pages.length - 2]
-										prevPage.$vm.acceptRefresh()
-										uni.navigateBack()
-									})
+			},
+			//签字版关闭
+			popupClose() {
+				this.cavShow = false
+				this.showAccept = false
+			},
+			//取消
+			back() {
+				uni.navigateBack()
+			},
+			// 笔迹开始
+			uploadScaleStart(e) {
+				this.startX = e.changedTouches[0].x
+				this.startY = e.changedTouches[0].y
+				//设置画笔参数
+				//画笔颜色
+				this.ctx.setStrokeStyle(this.lineColor)
+				//设置线条粗细
+				this.ctx.setLineWidth(this.lineSize)
+				//设置线条的结束端点样式
+				this.ctx.setLineCap("round") //'butt'、'round'、'square'
+				//开始画笔
+				this.ctx.beginPath()
+			},
+			// 笔迹移动
+			uploadScaleMove(e) {
+				//	console.log(e);
+				//取点
+				let temX = e.changedTouches[0].x
+				let temY = e.changedTouches[0].y
+				//画线条
+				this.ctx.moveTo(this.startX, this.startY)
+				this.ctx.lineTo(temX, temY)
+				this.ctx.stroke()
+				this.startX = temX
+				this.startY = temY
+				this.ctx.draw(true)
+			},
+			//验收
+			sign() {
+				this.showAccept = true
+				this.cavShow = true
+				this.ctx = uni.createCanvasContext("handWriting");
+				this.$nextTick(() => {
+					uni.createSelectorQuery().select('.handCenter').boundingClientRect(rect => {
+							console.log(rect);
+							this.canvasWidth = rect.width;
+							this.canvasHeight = rect.height;
+							/* 将canvas背景设置为 白底，不设置  导出的canvas的背景为透明 */
+							this.setCanvasBg('#fff');
+						})
+						.exec();
+				});
+			},
+			//设置canvas背景色  不设置  导出的canvas的背景为透明
+			//@params：字符串  color
+			setCanvasBg(color) {
 
+				/* 将canvas背景设置为 白底，不设置  导出的canvas的背景为透明 */
+				//rect() 参数说明  矩形路径左上角的横坐标，左上角的纵坐标, 矩形路径的宽度, 矩形路径的高度
+				//这里是 canvasHeight - 4 是因为下边盖住边框了，所以手动减了写
+				this.ctx.rect(0, 0, this.canvasWidth, this.canvasHeight - 4);
+				// ctx.setFillStyle('red')
+				this.ctx.setFillStyle(color);
+				this.ctx.fill(); //设置填充
+				this.ctx.draw(); //开画
+			},
+
+			/**
+			 * 重写
+			 */
+			retDraw() {
+				this.ctx.clearRect(0, 0, 700, 730);
+				this.ctx.draw();
+				//设置canvas背景
+				this.setCanvasBg('#fff');
+			},
+			//完成
+			subCanvas() {
+				let that = this;
+				let length = this.ctx.subpath.length;
+
+				if (length !== 2) {
+					uni.showToast({
+						title: '未检测到您签字',
+						duration: 2000,
+						icon: 'error'
+					});
+				} else {
+					let key = this.item;
+				
+					uni.canvasToTempFilePath({
+						canvasId: 'handWriting',
+						fileType: 'png',
+						quality: 1, //图片质量
+						success(res) {
+							uni.uploadFile({
+								url: environment.baseURL + '/system/oss/upload',
+								filePath: res.tempFilePath,
+								name: 'file',
+								header: {
+									Authorization: "Bearer " + storage.get('AccessToken')
+								},
+								success: res => {
+									let data = JSON.parse(res.data);
+									if (data.code == 200) {
+										console.log(data);
+										that.signUrl = data.data.url
+										console.log();
+										acceptance({
+											sign: data.data.url,
+											orderId: that.info.id,
+											repairId: that.info.repairId ? that.info.repairId :
+												undefined
+										}).then(res => {
+											console.log(res);
+											uni.showToast({
+												title: '签字成功',
+												duration: 2000,
+											});
+											that.retDraw()
+											that.cavShow = false
+											that.showAccept = false
+											if (!that.info.repairId) {
+												let pages = getCurrentPages()
+												let prevPage = pages[pages.length - 2]
+												prevPage.$vm.acceptRefresh()
+											}
+											uni.navigateBack()
+										})
+
+									}
 								}
-							}
-						});
-					},
-					fail(res) {
-						uni.showToast({
-							title: '签字失败',
-							duration: 2000,
-							icon: 'error'
-						});
-					}
-				});
-			}
-		},
-		//支付
-		pay() {
-			uni.navigateTo({
-				url: '../pay/pay?item=' + encodeURIComponent(JSON.stringify(this.info.info))
-			})
-		},
-		//下载
-		actionSelect(e) {
-			console.log(e);
-			if (e.name == '取消') {
-				this.showDownLoad = false
-			} else {
-				console.log(this.urlImg);
-				h
-				// let that=this
-				// that.urlImg.forEach((img,index) => {
-				// 	uni.saveImageToPhotosAlbum({
-				// 		filePath: img,
-				// 		success: function() {
-				// 			if ((index+1)==that.urlImg.length) {
-				// 				uni.showToast({
-				// 					title: '保存成功',
-				// 					duration: 2000,
-				// 					icon: 'success'
-				// 				});
-				// 			}
-				// 			console.log('save success');
-				// 		}
-				// 	});
-				// })
+							});
+						},
+						fail(res) {
+							uni.showToast({
+								title: '签字失败',
+								duration: 2000,
+								icon: 'error'
+							});
+						}
+					});
+				}
+			},
+			//支付
+			pay() {
+				uni.navigateTo({
+					url: '../pay/pay?item=' + encodeURIComponent(JSON.stringify(this.orderInfo))
+				})
+			},
+			//下载
+			actionSelect(e) {
+				console.log(e);
+				if (e.name == '取消') {
+					this.showDownLoad = false
+				} else {
+					console.log(this.urlImg);
+					h
+					// let that=this
+					// that.urlImg.forEach((img,index) => {
+					// 	uni.saveImageToPhotosAlbum({
+					// 		filePath: img,
+					// 		success: function() {
+					// 			if ((index+1)==that.urlImg.length) {
+					// 				uni.showToast({
+					// 					title: '保存成功',
+					// 					duration: 2000,
+					// 					icon: 'success'
+					// 				});
+					// 			}
+					// 			console.log('save success');
+					// 		}
+					// 	});
+					// })
 
-				// that.showDownLoad = false
-			}
-		},
-	}
+					// that.showDownLoad = false
+				}
+			},
+		}
 	}
 </script>
 
@@ -615,10 +717,80 @@
 			}
 		}
 
+		.before {
+			width: 130rpx;
+			height: 47rpx;
+			text-align: center;
+			line-height: 47rpx;
+			background: #F3B133;
+			border-radius: 24rpx;
+			font-size: 29rpx;
+			color: #FFFFFF;
+			margin: 28rpx 0 10rpx 0
+		}
+
+		.fanxiu {
+			height: 36rpx;
+			background: #FFFFFF;
+			border-radius: 7rpx;
+			border: 2rpx solid #A4D091;
+			font-size: 22rpx;
+			color: #A4D091;
+			line-height: 36rpx;
+			text-align: center;
+			margin-right: 8rpx;
+		}
+
+		.thumb-box {
+			height: 130rpx;
+			margin-top: 20rpx;
+			display: flex;
+			align-items: center;
+
+			.right {
+				height: 100%;
+				flex-direction: column;
+				margin-left: 14rpx;
+				width: 79%;
+			}
+
+			.flexCss {
+				display: flex;
+				justify-content: space-between;
+			}
+
+
+			.no-imgs {
+				width: 130rpx;
+				height: 100%;
+
+
+				.img-text {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					height: 100%;
+					background: #F4F4F4;
+					border-radius: 11rpx;
+
+					text {
+						font-size: 21rpx;
+						color: #A4D091;
+					}
+				}
+
+
+			}
+
+
+		}
+
 		.project {
 			.info-box {
 				margin-top: 20rpx;
 				display: flex;
+
 
 				.font {
 					width: 20%;

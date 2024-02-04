@@ -1,6 +1,7 @@
 <template>
 	<view class="agree-ment">
 			<u-parse :content="content"></u-parse>
+			
 	</view>
 </template>
 
@@ -15,8 +16,13 @@
 			};
 		},
 		onLoad(options) {
-			console.log(options);
-			this.content=JSON.parse(decodeURIComponent(options.remark))
+			
+			let info=JSON.parse(decodeURIComponent(options.info))
+			console.log(info);
+			this.content=info.content
+			uni.setNavigationBarTitle({
+				title:info.name
+			})
 		},
 		methods: {
 		}
@@ -24,6 +30,12 @@
 	}
 </script>
 
+<style>
+	page{
+		
+		background-color: #fff;
+	}
+</style>
 <style lang="scss" scoped>
 .agree-ment{
 	padding: 20rpx;

@@ -13,19 +13,19 @@
 			<view class="boxs">
 				<view class="box" @click="into('title')">
 					<view class='img'>
-						<image style="width: 71rpx;" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/8029833faf854775b10f19929c7904df.png" mode="widthFix"></image>
+						<image style="width: 71rpx;" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/19/983967ca14bc489ca3121af56a69f93d.png" mode="widthFix"></image>
 					</view>
 					<text>常用抬头</text>
 				</view>
 				<view class="box" @click="into('record')">
 					<view class='img'>
-						<image style="width: 61rpx;" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/a984c45e52d54f74a02a33b52592165c.png" mode="widthFix"></image>
+						<image style="width: 61rpx;" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/14/d4bf09fb6edc489791bc7e9d4f626460.png" mode="widthFix"></image>
 					</view>
 					<text>开票记录</text>
 				</view>
 				<view class="box">
 					<view class='img'>
-						<image style="width: 62rpx;" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/ed00f6e17dcf41fea5d1fd96aa3c64d1.png" mode="widthFix"></image>
+						<image style="width: 62rpx;" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/14/e228771a125e448a8eb500fda7c4a68c.png" mode="widthFix"></image>
 					</view>
 					<text>开票帮助</text>
 				</view>

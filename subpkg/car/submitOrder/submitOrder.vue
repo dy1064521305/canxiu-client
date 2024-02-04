@@ -150,7 +150,7 @@
 					v-if="item.list.reduce((p, c) => p + ((Number(c.projectPrice)*Number(c.projectNumber))-(Number(c.discountPrice)*Number(c.projectNumber))), 0)!=0"
 					class="line" style="margin-left: 20rpx;font-size: 26rpx;">
 					<view style="color: #A5A7A7;">
-						品牌折扣：
+						品牌折扣<text v-if="item.list[0].finalRatio&&item.list[0].finalRatio!=null">({{item.list[0].finalRatio}}折)</text>
 					</view>
 					<!-- 未达到起步价 -->
 					<view
@@ -258,7 +258,8 @@
 				timeIndex: undefined,
 				isCar: false, //是从购物车下单还是立即下单
 				isAgain: false,
-				projectDataVoList: []
+				projectDataVoList: [],
+				isRepair:false,//是否是返修
 			};
 		},
 		onShow() {
@@ -271,8 +272,18 @@
 			this.submitList = item.checkedList
 			this.isCar = item.isCar
 			this.isAgain = item.isAgain
+			this.projectDataVoList=this.isAgain?item.checkedList:[]
 			console.log(this.isAgain);
-			this.projectDataVoList = item.checkedList
+			this.isRepair=item.isRepair
+			if (item.isRepair) {
+				this.addressInfo=item.info.addressVo
+				this.submitList.forEach(item=>{
+						item.serviceProjectImg=item.projectImg
+						item.projectImg=''
+						item.remark=''
+						item.clientId=storage.get('ClientId')
+				})
+			}
 
 			//	this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
 			console.log(this.showListByType, this.submitList, '.........103');
@@ -424,14 +435,20 @@
 				
 				this.getMoney()
 				console.log(this.info.orderPrice);
-				const pages = uni.$u.pages()
-				pages[pages.length - 2].$vm.changeData([data.item])
+				if (!this.isRepair) {
+					const pages = uni.$u.pages()
+					pages[pages.length - 2].$vm.changeData([data.item])
+				}
+			
 			},
 			//删除url
 			getDeleteUrlList(data) {
 				console.log(data);
-				const pages = uni.$u.pages()
-				pages[pages.length - 2].$vm.changeData(data)
+				if (!this.isRepair) {
+					const pages = uni.$u.pages()
+					pages[pages.length - 2].$vm.changeData(data)
+				}
+
 				uni.setStorage({
 					key: 'submit_order',
 					data: data,
@@ -554,6 +571,7 @@
 						item.projectImg = this.toStrings(item.projectImg)
 						item.shoppingCartStatus = 1
 						item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
+						item.remark=item.remarks
 					})
 					let timeObj = {}
 					let startingFree = {}
@@ -643,8 +661,11 @@
 			textConfirm(arr) {
 				console.log(arr);
 				this.submitList = arr
-				const pages = uni.$u.pages()
+				if(!this.isRepair){
+						const pages = uni.$u.pages()
 				pages[pages.length - 2].$vm.changeData(arr)
+				}
+			
 			}
 
 		}

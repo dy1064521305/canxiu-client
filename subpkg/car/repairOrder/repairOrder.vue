@@ -6,7 +6,7 @@
 					<u-checkbox   :name="item.projectId"  shape='circle' activeColor="#A4D091">
 					
 					</u-checkbox>
-					<project-card :pro='item' style="width: 100%;"/>
+					<project-card :pro='item' style="width: 100%;" type="repair" :height="156"/>
 				</view>
 			</view>
 
@@ -29,13 +29,12 @@
 				projectList: [],
 				checkboxValue1:[],
 				choseList:[],
-				type:''
+				info:{}
 			};
 		},
 		onLoad(option) {
-			let info = JSON.parse(decodeURIComponent(option.info))
-			this.projectList=info.list
-			this.type=info.type
+			this.info = JSON.parse(decodeURIComponent(option.info))
+			this.projectList=this.info.list
 			console.log(this.projectList);
 			
 		},
@@ -54,7 +53,9 @@
 			repairOrderHandle(){
 				let info={
 					list:this.choseList,
-					type:this.type
+					type:this.info.type,
+					finish:this.info.finish,
+					orderId:this.info.orderId
 				}
 				console.log(1111);
 				uni.navigateTo({

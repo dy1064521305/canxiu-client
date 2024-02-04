@@ -1,9 +1,14 @@
 <template>
 	<view>
-		<u-navbar placeholder :leftText="type=='edit'?'确定':''" @leftClick='leftClick' title="门店头像" :titleStyle="{'color':'#fff'}" bgColor="#333"
-			leftIconColor='#fff'>
-			<view  class="u-nav-slot" slot="right" @click="billChooseImage">
-				<view v-if="type=='edit'" :style="{'width': '29rpx','margin-right':menuButtonInfoWidth+'rpx','padding-top':'5rpx'}">
+		<u-navbar placeholder :leftText="type=='edit'?'确定':''" @leftClick='leftClick' title="门店头像"
+			:titleStyle="{'color':'#fff'}" bgColor="#333" leftIconColor='#fff'>
+			<view class="u-nav-slot" slot="right" @click="editLogo">
+				<yk-authpup ref="authpupStorage" type="top" @changeAuth="changeAuthStorage"
+					permissionID="WRITE_EXTERNAL_STORAGE"> </yk-authpup>
+				<yk-authpup ref="authpupCamera" type="top" @changeAuth="changeAuthCamera" permissionID="CAMERA">
+				</yk-authpup>
+				<view v-if="type=='edit'"
+					:style="{'width': '29rpx','margin-right':menuButtonInfoWidth+'rpx','padding-top':'5rpx'}">
 					<u-icon name="more-dot-fill" color="#fff"></u-icon>
 				</view>
 
@@ -21,17 +26,23 @@
 </template>
 
 <script>
+	import ykAuthpup from "@/components/yk-authpup/yk-authpup";
 	import storage from '@/utils/storage'
 	const {
 		environment
 	} = require('../../../config/environment')
 	export default {
+		components: {
+			ykAuthpup
+		},
 		data() {
 			return {
 				urls: '',
 				menuButtonInfoWidth: 30,
 				userInfo: {},
-				type:''
+				type: '',
+				camera: false,
+				storagee: false
 			};
 		},
 		onReady() {
@@ -47,6 +58,23 @@
 			console.log(this.type);
 		},
 		methods: {
+			changeAuthCamera() {
+				this.camera = true
+				if (this.camera && this.storagee) {
+					this.billChooseImage()
+				}
+			},
+
+			changeAuthStorage() {
+				this.storagee = true
+				if (this.camera && this.storagee) {
+					this.billChooseImage()
+				}
+			},
+			editLogo() {
+				this.$refs['authpupCamera'].open()
+				this.$refs['authpupStorage'].open()
+			},
 			billChooseImage() {
 				let that = this
 				uni.chooseImage({

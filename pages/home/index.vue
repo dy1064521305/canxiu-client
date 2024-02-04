@@ -3,9 +3,10 @@
 		<view v-if="locationStatus=='authorized'||locationStatus==''" class="home">
 			<u-navbar :height="navHeight" placeholder :bgColor="'RGBA(147, 189, 134, '+opacity+')'">
 				<view slot='left'>
-					
+
 				</view>
-				<view slot='center' :style="{'padding-bottom':'50rpx','margin-top':titleHeight+'rpx','display':'flex','width':'93%'}">
+				<view slot='center'
+					:style="{'padding-bottom':'50rpx','margin-top':titleHeight+'rpx','display':'flex','width':'93%'}">
 					<view class="citys">
 						<view @click.stop="choseCity">{{cityName}}
 						</view>
@@ -14,7 +15,7 @@
 							mode="">
 						</image>
 					</view>
-					<view class="search"  @click="goSearch">
+					<view class="search" @click="goSearch">
 						<view class="left">
 							<!-- 
 							<view class="line">|</view> -->
@@ -29,7 +30,11 @@
 			</u-navbar>
 			<view class="content">
 				<view class="types">
+					<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth"
+						permissionID="ACCESS_FINE_LOCATION">
+					</yk-authpup>
 					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(item.typeName)'>
+						
 						<image :src="item.iconUrl" mode=""></image>
 						<view class="">
 							{{item.typeName}}
@@ -176,6 +181,7 @@
 		getOrderNum
 	} from '@/utils/api.js'
 	var QQMapWX = require('@/utils/qqmap-wx-jssdk.js')
+	import ykAuthpup from "@/components/yk-authpup/yk-authpup";
 	import {
 		getServiceType,
 		getServiceSymptoms,
@@ -197,7 +203,8 @@
 	} from '@/api/service.js'
 	export default {
 		components: {
-			goodCard
+			goodCard,
+			ykAuthpup
 		},
 		data() {
 			return {
@@ -334,7 +341,8 @@
 				locationStatus: '', //定位权限
 				timer: '',
 				promiseList: [false, false],
-				carNum: 0
+				carNum: 0,
+				typeName: undefined
 			}
 		},
 		onReady() {
@@ -383,7 +391,7 @@
 		onShow() {
 			if (storage.get('AccessToken')) {
 				getCarNum().then(res => {
-				this.carNum = res
+					this.carNum = res
 
 				});
 				getOrderNum().then(res => {
@@ -876,7 +884,13 @@
 			},
 			//跳转服务页
 			goService(name) {
-
+				
+				this.typeName = name
+					console.log(this.$refs['authpup']);
+				this.$refs['authpup'].open()
+			
+			},
+			changeAuth() {
 				this.timer = setInterval(() => {
 					this.getCityName()
 
@@ -887,17 +901,15 @@
 				}, 800)
 
 				this.serviceTypesList.forEach((item, indexx) => {
-					if (item.typeName == name) {
+					if (item.typeName == this.typeName) {
 						getApp().index = indexx
 						uni.switchTab({
 							url: '/pages/service/service'
 						})
 					}
 				})
-
-
-
 			},
+			
 			goCar() {
 				uni.navigateTo({
 					url: '../../subpkg/car/car/car'
@@ -949,7 +961,7 @@
 			border-radius: 36rpx;
 			padding-right: 10rpx;
 			margin-left: 20rpx;
-			    width: 77%;
+			width: 77%;
 
 			.left {
 				height: 100%;
@@ -1165,7 +1177,7 @@
 		position: fixed;
 		right: 36.23rpx;
 		bottom: 39.86rpx;
-
+		z-index: 10000;
 		.dot {
 			z-index: 10;
 			position: absolute;
