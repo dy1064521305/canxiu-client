@@ -270,19 +270,19 @@
 		methods: {
 
 			getCarNumHandle() {
-				getCarNum().then(res => {
-					if (res != 0) {
-						uni.setTabBarBadge({
-							index: 2,
-							text: res
-						})
-					} else {
-						uni.removeTabBarBadge({
-							index: 2
-						})
+				// getCarNum().then(res => {
+				// 	if (res != 0) {
+				// 		uni.setTabBarBadge({
+				// 			index: 2,
+				// 			text: res
+				// 		})
+				// 	} else {
+				// 		uni.removeTabBarBadge({
+				// 			index: 2
+				// 		})
 
-					}
-				})
+				// 	}
+				// })
 			},
 			getDeleteUrlList(data) {
 				console.log(this.dataList);

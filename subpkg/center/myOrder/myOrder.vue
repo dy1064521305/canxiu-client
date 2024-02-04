@@ -78,10 +78,10 @@
 					<view class="btns">
 						<!-- 	<view @click.stop='backFix(item)' class="btn-white"
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view> -->
-						<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
-							@click="handleRoute(item)">联系师傅</view>
-							<view @click.stop='orderDetail(item.orderId)' class="btn-white" v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
-								返修</view>
+					<!-- 	<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
+							@click="handleRoute(item)">联系师傅</view> -->
+						<!-- 	<view @click.stop='orderDetail(item.orderId)' class="btn-white" v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
+								返修</view> -->
 						<view @click.stop='orderDetail(item.orderId)' class="btn-green" v-if="item.orderStatus=='待评价'">
 							去评价</view>
 						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>

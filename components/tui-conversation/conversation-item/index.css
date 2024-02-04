@@ -20,14 +20,14 @@
 }
 .t-conversation-item-avatar{
   position: relative;
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 14rpx;
+  width: 86rpx;
+  height: 86rpx;
+  border-radius: 50%;
   /*padding-left: 40rpx;*/
   /*padding-right: 24rpx;*/
   /*padding-bottom: 28rpx;*/
   /*padding-top: 28rpx;*/
-  margin: 0 16rpx;
+  margin: 0 20rpx 0 35rpx;
   overflow: auto;
 }
 .t-conversation-item-content {

@@ -13,12 +13,16 @@
 			<u-form-item label="门店名称" prop="storeName" borderBottom ref="item1">
 				<u--input v-model="userInfo.storeName" border="none" placeholder="请输入门店名称"></u--input>
 			</u-form-item>
-			<u-form-item label="门店地址" borderBottom ref="item1">
-				<pickers @address="address">
-					<view v-if="userInfo.region!=undefined">{{userInfo.region}}</view>
-					<view v-else style="color: rgb(192, 196, 204);">请选择门店地址</view>
-				</pickers>
-			</u-form-item>
+			<view style="display: flex;">
+				<text style="color: red;margin: auto 0;">*</text>
+				<u-form-item style="margin-left: -19rpx;" label="门店地址" borderBottom ref="item1" prop="region">
+					<pickers @address="address">
+						<view v-if="userInfo.region!=undefined">{{userInfo.region}}</view>
+						<view v-else style="color: rgb(192, 196, 204);">请选择门店地址</view>
+					</pickers>
+				</u-form-item>
+			</view>
+
 			<u-form-item label="详细地址" prop="detailAddress" borderBottom ref="item1">
 				<u--input v-model="userInfo.detailAddress" border="none" placeholder="请输入详细地址"></u--input>
 			</u-form-item>
@@ -70,7 +74,6 @@
 					clientId: storage.get('ClientId'),
 					region: undefined
 				},
-				rules: {},
 				storeTypeList: [], //店铺类型
 				fileList: [],
 			};
@@ -91,7 +94,7 @@
 					})
 				}
 
-				let arr = res.data.storeImg != null&& res.data.storeImg!='' ? res.data.storeImg.split(',') : []
+				let arr = res.data.storeImg != null && res.data.storeImg != '' ? res.data.storeImg.split(',') : []
 				this.fileList = arr
 				console.log(this.fileList);
 			})
@@ -127,7 +130,11 @@
 			},
 			goHome() {
 				console.log(this.userInfo);
-
+				if (!this.userInfo.region||this.userInfo.region=='') {
+					uni.$u.toast('请选择门店地址')
+					return
+				}
+			
 				refine(this.userInfo).then(res => {
 					console.log(res);
 

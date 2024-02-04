@@ -79,10 +79,9 @@
 		{
 			"path": "pages/TUI-Conversation/conversation/conversation",
 			"style": {
-				"navigationBarTitleText": "会话列表",
-				"navigationBarBackgroundColor": "#A4D091",
-				"backgroundColor": "#FFFFFF",
-				"navigationBarTextStyle": "white"
+				"navigationBarTitleText": "消息",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"backgroundColor": "#FFFFFF"
 			}
 		}
 
@@ -114,16 +113,17 @@
 						"navigationStyle": "custom"
 					}
 				}
-				// ,
-				// {
-				//                 "path" : "order-push-list/index",
-				//                 "style" :                                                                                    
-				//             {
-				//                 "navigationBarTitleText": "工单助手",
-				//                 "enablePullDownRefresh": false
-				//             }
+				,
+				{
+				                "path" : "order-push-list/index",
+				                "style" :                                                                                    
+				            {
+				                "navigationBarTitleText": "工单助手",
+				                "enablePullDownRefresh": false,
+									"navigationBarBackgroundColor": "#FFFFFF"
+				            }
 
-				//             }
+				            }
 			]
 
 		},

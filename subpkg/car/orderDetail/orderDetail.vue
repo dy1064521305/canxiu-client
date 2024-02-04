@@ -418,9 +418,9 @@
 			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="report('待评价')">
 				生成维修报告
 			</view>
-			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="repairOrder">
+		<!-- 	<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="repairOrder">
 				申请返修
-			</view>
+			</view> -->
 			<view v-if="info.orderStatus=='待评价'" class="btn-green" @click="appraiseHandle">
 				评价
 			</view>
