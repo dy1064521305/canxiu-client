@@ -57,7 +57,7 @@
 			//查看订单
 			goDetailed(){
 				uni.switchTab({
-					url:'/pages/myOrder/myOrder'
+					url:'/pages/order/order'
 				})
 				// uni.navigateTo({
 				// 	url: '../../car/orderDetail/orderDetail?id=' + this.info.orderId

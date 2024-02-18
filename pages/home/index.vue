@@ -342,7 +342,8 @@
 				timer: '',
 				promiseList: [false, false],
 				carNum: 0,
-				typeName: undefined
+				typeName: undefined,
+				isIos: false
 			}
 		},
 		onReady() {
@@ -411,6 +412,7 @@
 
 			// #endif
 			//this.queryParams.pageNum = 1
+		
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
@@ -468,6 +470,16 @@
 						}
 					})
 				})
+			})
+			
+			let that = this
+			uni.getStorage({
+				key: 'SYSTEM_INFO',
+				success(res) {
+			
+					that.isIos = res.data.osName == 'ios'
+					console.log(that.isIos, '29888888888888');
+				}
 			})
 
 		},
@@ -886,8 +898,13 @@
 			goService(name) {
 				
 				this.typeName = name
-					console.log(this.$refs['authpup']);
-				this.$refs['authpup'].open()
+				
+				if (this.isIos) {
+					this.changeAuth()
+				} else{
+					this.$refs['authpup'].open()
+				}
+				
 			
 			},
 			changeAuth() {

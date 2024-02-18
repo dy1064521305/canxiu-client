@@ -61,8 +61,7 @@
 				</view>
 			</view>
 
-			<view v-if="add && FileList.length < max" @tap="uploadImg" :style="[rowStyle]"
-				class="file-list-row">
+			<view v-if="add && FileList.length < max" @tap="uploadImg" :style="[rowStyle]" class="file-list-row">
 				<yk-authpup ref="authpupStorage" type="top" @changeAuth="changeAuthStorage"
 					permissionID="WRITE_EXTERNAL_STORAGE"> </yk-authpup>
 				<yk-authpup ref="authpupCamera" type="top" @changeAuth="changeAuthCamera" permissionID="CAMERA">
@@ -73,6 +72,7 @@
 					</div>
 				</slot>
 			</view>
+
 		</view>
 
 
@@ -267,7 +267,8 @@
 				tempFile_paths: [],
 
 				camera: false,
-				storagee: false
+				storagee: false,
+				isIos: false
 			};
 		},
 		watch: {
@@ -290,6 +291,17 @@
 				immediate: true
 			},
 			// #endif
+		},
+		mounted() {
+			let that = this
+			uni.getStorage({
+				key: 'SYSTEM_INFO',
+				success(res) {
+
+					that.isIos = res.data.osName == 'ios'
+					console.log(that.isIos, '29888888888888');
+				}
+			})
 		},
 		computed: {
 			previewList() {
@@ -441,7 +453,7 @@
 			},
 			changeAuthCamera() {
 				this.camera = true
-			
+
 			},
 
 			changeAuthStorage() {
@@ -451,8 +463,13 @@
 				}
 			},
 			uploadImg() {
-				this.$refs['authpupCamera'].open()
-				this.$refs['authpupStorage'].open()
+				if (this.isIos) {
+					this.selectFileTypeOnAdd()
+				} else {
+					this.$refs['authpupCamera'].open()
+					this.$refs['authpupStorage'].open()
+				}
+
 			},
 			/**
 			 * 点击选择图片按钮
