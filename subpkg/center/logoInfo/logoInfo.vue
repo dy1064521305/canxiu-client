@@ -42,7 +42,8 @@
 				userInfo: {},
 				type: '',
 				camera: false,
-				storagee: false
+				storagee: false,
+				isIos: false
 			};
 		},
 		onReady() {
@@ -51,6 +52,17 @@
 			this.menuButtonInfoWidth = uni.getMenuButtonBoundingClientRect().width + 80
 			// #endif
 
+		},
+		onShow() {
+			let that = this
+			uni.getStorage({
+				key: 'SYSTEM_INFO',
+				success(res) {
+
+					that.isIos = res.data.osName == 'ios'
+					console.log(that.isIos, '29888888888888');
+				}
+			})
 		},
 		onLoad(option) {
 			this.userInfo = JSON.parse(option.item).userInfo
@@ -72,8 +84,13 @@
 				}
 			},
 			editLogo() {
-				this.$refs['authpupCamera'].open()
-				this.$refs['authpupStorage'].open()
+				if (this.isIos) {
+					this.billChooseImage()
+				} else{
+					this.$refs['authpupCamera'].open()
+					this.$refs['authpupStorage'].open()
+				}
+				
 			},
 			billChooseImage() {
 				let that = this

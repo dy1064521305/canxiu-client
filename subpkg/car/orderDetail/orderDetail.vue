@@ -42,7 +42,8 @@
 					<image v-if="workerInfo.avatarUrl==null" style="width:98rpx;height: 98rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/11/10/38405b13b68b4ac3be692e812874e648.png">
 					</image>
-					<image v-else style="width:98rpx;height: 98rpx;border-radius: 50%;" :src="workerInfo.avatarUrl"></image>
+					<image v-else style="width:98rpx;height: 98rpx;border-radius: 50%;" :src="workerInfo.avatarUrl">
+					</image>
 					<view class="logo">
 						{{workerType}}
 					</view>
@@ -351,7 +352,7 @@
 						</view>
 						<view class="line">
 							<text class="ziduan">订单类型</text>
-							<text><text style="width:14% ;" class="fanxiu">返修</text>维修</text>
+							<text><text v-if="info.repairId!=null" style="width:14% ;" class="fanxiu">返修</text>维修</text>
 						</view>
 						<view class="line">
 							<text class="ziduan">订单状态</text>
@@ -418,7 +419,7 @@
 			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="report('待评价')">
 				生成维修报告
 			</view>
-		<!-- 	<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="repairOrder">
+			<!-- 	<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="repairOrder">
 				申请返修
 			</view> -->
 			<view v-if="info.orderStatus=='待评价'" class="btn-green" @click="appraiseHandle">
@@ -657,7 +658,7 @@
 				melTotal: 0, //材料总钱数,
 				isGet: false, //是否达到起步价
 				workerType: undefined,
-
+				isIos: false
 			};
 		},
 		onLoad(option) {
@@ -667,6 +668,15 @@
 		},
 		onShow() {
 			this.getList()
+			let that = this
+			uni.getStorage({
+				key: 'SYSTEM_INFO',
+				success(res) {
+
+					that.isIos = res.data.osName == 'ios'
+					console.log(that.isIos, '29888888888888');
+				}
+			})
 		},
 		computed: {
 			newTotalPrice() {
@@ -983,7 +993,12 @@
 			},
 			phoneAuth() {
 				console.log(1111111111);
-				this.$refs['authpup'].open()
+				if (this.isIos) {
+					this.changeAuth()
+				} else{
+					this.$refs['authpup'].open()
+				}
+				
 			},
 			changeAuth() {
 				this.showPhone = true
