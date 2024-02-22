@@ -396,10 +396,13 @@
 
 				});
 				getOrderNum().then(res => {
-					uni.setTabBarBadge({
+					res==0?uni.removeTabBarBadge({
+						index:3
+					}):uni.setTabBarBadge({
 						index: 3,
 						text: res
 					})
+					
 				})
 			}
 
@@ -422,8 +425,10 @@
 					if (this.isShowMoney) {
 						this.queryState();
 						getC2cUnreadMsgNum().then(res => {
+							console.log(res,'4266666666');
 							queryUnreadNum().then(ress => {
-								let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress
+								
+								let num = (parseInt(res.data.AllC2CUnreadMsgNum)?parseInt(res.data.AllC2CUnreadMsgNum):0) + parseInt(ress
 									.data.num)
 								if (num > 0) {
 									uni.setTabBarBadge({

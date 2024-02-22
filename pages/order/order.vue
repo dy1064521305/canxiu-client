@@ -92,6 +92,9 @@
 		repairOrder,
 		queryOrderCount
 	} from '@/api/order.js'
+	import {
+		getOrderNum
+	} from '@/utils/api.js'
 	import storage from '@/utils/storage'
 	import formatter from '@/utils/formatter.js'
 	import projectCard from '@/components/projectCard/projectCard.vue'
@@ -143,6 +146,15 @@
 		onShow() {
 			this.getOrderlistHandle(1, 10)
 			this.queryParams.clientId = storage.get('ClientId')
+			if (storage.get('AccessToken')) {
+			
+				getOrderNum().then(res => {
+					uni.setTabBarBadge({
+						index: 3,
+						text: res
+					})
+				})
+			}
 		},
 		methods: {
 			click(e) {
