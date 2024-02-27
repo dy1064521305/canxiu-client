@@ -130,11 +130,11 @@
 			},
 			goHome() {
 				console.log(this.userInfo);
-				if (!this.userInfo.region||this.userInfo.region=='') {
+				if (!this.userInfo.region || this.userInfo.region == '') {
 					uni.$u.toast('请选择门店地址')
 					return
 				}
-			
+
 				refine(this.userInfo).then(res => {
 					console.log(res);
 
@@ -186,17 +186,14 @@
 		}
 
 		.button {
-			width: 90%;
+			width: 663rpx;
 			height: 91rpx;
-			background: #A4D091;
-			border-radius: 45rpx;
-			font-size: 36rpx;
-			color: #FFFFFF;
+			color: #fff;
 			line-height: 91rpx;
 			text-align: center;
-			position: fixed;
-			bottom: 200rpx;
-			margin: 0 5%;
+			border-radius: 70rpx;
+			margin:516rpx auto;
+			background: #A4D091;
 		}
 	}
 </style>

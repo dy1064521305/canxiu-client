@@ -30,11 +30,10 @@
 			</u-navbar>
 			<view class="content">
 				<view class="types">
-					<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth"
-						permissionID="ACCESS_FINE_LOCATION">
+					<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="ACCESS_FINE_LOCATION">
 					</yk-authpup>
 					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(item.typeName)'>
-						
+
 						<image :src="item.iconUrl" mode=""></image>
 						<view class="">
 							{{item.typeName}}
@@ -343,7 +342,6 @@
 				promiseList: [false, false],
 				carNum: 0,
 				typeName: undefined,
-				isIos: false
 			}
 		},
 		onReady() {
@@ -396,13 +394,13 @@
 
 				});
 				getOrderNum().then(res => {
-					res==0?uni.removeTabBarBadge({
-						index:3
-					}):uni.setTabBarBadge({
+					res == 0 ? uni.removeTabBarBadge({
+						index: 3
+					}) : uni.setTabBarBadge({
 						index: 3,
 						text: res
 					})
-					
+
 				})
 			}
 
@@ -415,7 +413,7 @@
 
 			// #endif
 			//this.queryParams.pageNum = 1
-		
+
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
@@ -425,15 +423,16 @@
 					if (this.isShowMoney) {
 						this.queryState();
 						getC2cUnreadMsgNum().then(res => {
-							console.log(res,'4266666666');
+							console.log(res, '4266666666');
 							queryUnreadNum().then(ress => {
-								
-								let num = (parseInt(res.data.AllC2CUnreadMsgNum)?parseInt(res.data.AllC2CUnreadMsgNum):0) + parseInt(ress
+
+								let num = (parseInt(res.data.AllC2CUnreadMsgNum) ? parseInt(res
+									.data.AllC2CUnreadMsgNum) : 0) + parseInt(ress
 									.data.num)
 								if (num > 0) {
 									uni.setTabBarBadge({
 										index: 2,
-										text: num + ''
+										text: num > 99 ? '99+' : num + ''
 									})
 								} else {
 									uni.removeTabBarBadge({
@@ -462,11 +461,14 @@
 				console.log('监听到事件来自 update ，携带参数 msg 为：' + data.msg);
 				getC2cUnreadMsgNum().then(res => {
 					queryUnreadNum().then(ress => {
-						let num = parseInt(res.data.AllC2CUnreadMsgNum) + parseInt(ress.data.num)
+
+						let num = (parseInt(res.data.AllC2CUnreadMsgNum) ? parseInt(res.data
+							.AllC2CUnreadMsgNum) : 0) + parseInt(ress
+							.data.num)
 						if (num > 0) {
 							uni.setTabBarBadge({
 								index: 2,
-								text: num + ''
+								text: num > 99 ? '99+' : num + ''
 							})
 						} else {
 							uni.removeTabBarBadge({
@@ -476,16 +478,7 @@
 					})
 				})
 			})
-			
-			let that = this
-			uni.getStorage({
-				key: 'SYSTEM_INFO',
-				success(res) {
-			
-					that.isIos = res.data.osName == 'ios'
-					console.log(that.isIos, '29888888888888');
-				}
-			})
+
 
 		},
 		onHide() {
@@ -901,16 +894,11 @@
 			},
 			//跳转服务页
 			goService(name) {
-				
+
 				this.typeName = name
-				
-				if (this.isIos) {
-					this.changeAuth()
-				} else{
-					this.$refs['authpup'].open()
-				}
-				
-			
+				this.$refs['authpup'].open()
+
+
 			},
 			changeAuth() {
 				this.timer = setInterval(() => {
@@ -931,7 +919,7 @@
 					}
 				})
 			},
-			
+
 			goCar() {
 				uni.navigateTo({
 					url: '../../subpkg/car/car/car'
@@ -1200,6 +1188,7 @@
 		right: 36.23rpx;
 		bottom: 39.86rpx;
 		z-index: 10000;
+
 		.dot {
 			z-index: 10;
 			position: absolute;

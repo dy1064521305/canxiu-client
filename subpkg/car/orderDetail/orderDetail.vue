@@ -658,7 +658,6 @@
 				melTotal: 0, //材料总钱数,
 				isGet: false, //是否达到起步价
 				workerType: undefined,
-				isIos: false
 			};
 		},
 		onLoad(option) {
@@ -668,15 +667,6 @@
 		},
 		onShow() {
 			this.getList()
-			let that = this
-			uni.getStorage({
-				key: 'SYSTEM_INFO',
-				success(res) {
-
-					that.isIos = res.data.osName == 'ios'
-					console.log(that.isIos, '29888888888888');
-				}
-			})
 		},
 		computed: {
 			newTotalPrice() {
@@ -993,11 +983,7 @@
 			},
 			phoneAuth() {
 				console.log(1111111111);
-				if (this.isIos) {
-					this.changeAuth()
-				} else{
-					this.$refs['authpup'].open()
-				}
+			this.$refs['authpup'].open()
 				
 			},
 			changeAuth() {

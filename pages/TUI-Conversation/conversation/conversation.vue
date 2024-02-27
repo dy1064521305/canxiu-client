@@ -1,5 +1,9 @@
 <template>
 	<view class="container-conversation">
+		<u-navbar :title="num==0?'信息':'信息'+'('+num+')'" placeholder :safeAreaInsetTop="true" :titleStyle="{
+					'fontWeight':'bold'
+				}">
+		</u-navbar>
 		<view v-if="!isLogin" style="padding-top: 330rpx;">
 			<u-empty mode="permission"
 				icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
@@ -146,14 +150,15 @@
 						this.time = ress.data.data.time;
 						this.num = ress.data.num;
 						this.topList[0].num = ress.data.num
-						let num = (parseInt(res.data.AllC2CUnreadMsgNum) ? parseInt(res.data
+						this.num = (parseInt(res.data.AllC2CUnreadMsgNum) ? parseInt(res.data
 							.AllC2CUnreadMsgNum) : 0) + parseInt(ress
 							.data.num)
-						console.log(num);
-						if (num > 0) {
+						this.num = this.num > 99 ? '99+' : this.num
+						console.log(this.num);
+						if (parseInt(this.num) > 0) {
 							uni.setTabBarBadge({
 								index: 2,
-								text: num + ''
+								text: this.num + ''
 							})
 						} else {
 							uni.removeTabBarBadge({
@@ -216,11 +221,12 @@
 				let totalUnreadCount = event.data;
 				console.info(event)
 				queryUnreadNum().then(ress => {
-					let num = parseInt(totalUnreadCount) + parseInt(ress.data.num)
-					if (num > 0) {
+					 this.num = (parseInt(totalUnreadCount) + parseInt(ress.data.num))>99?'99+': parseInt(totalUnreadCount) + parseInt(ress.data.num)
+					
+					if (this.num > 0) {
 						uni.setTabBarBadge({
 							index: 2,
-							text: num + ''
+							text: this.num+ ''
 						})
 					} else {
 						uni.removeTabBarBadge({
@@ -319,47 +325,54 @@
 </script>
 <style scoped lang="scss">
 	@import './conversation.css';
-
-	.center-con {
-		position: relative;
-	}
-
-	.grid-item-box {
-
-		/* position: relative; */
-		/* #ifndef APP-NVUE */
-		display: flex;
-		/* #endif */
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		padding: 35rpx 0 28rpx;
-	}
-
-	.btns {
-		display: flex;
-		justify-content: space-evenly;
-		margin: 50rpx auto;
-		width: 63%;
-
-		view {
-			width: 180rpx;
-			height: 60rpx;
-			border-radius: 45rpx;
-			text-align: center;
-			line-height: 60rpx;
-			font-size: 28rpx;
+	.container-conversation{
+		::v-deep.u-navbar__content__left {
+			display: none !important;
 		}
-
-		view:first-child {
-			background: #A4D091;
-			color: #fff;
+		
+		.center-con {
+			position: relative;
 		}
-
-		view:nth-child(2) {
-			background: #FFFFFF;
-			border: 4rpx solid #A4D091;
-			color: #A4D091;
+		
+		.grid-item-box {
+		
+			/* position: relative; */
+			/* #ifndef APP-NVUE */
+			display: flex;
+			/* #endif */
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding: 35rpx 0 28rpx;
+		}
+		
+		.btns {
+			display: flex;
+			justify-content: space-evenly;
+			margin: 50rpx auto;
+			width: 63%;
+		
+			view {
+				width: 180rpx;
+				height: 60rpx;
+				border-radius: 45rpx;
+				text-align: center;
+				line-height: 60rpx;
+				font-size: 28rpx;
+			}
+		
+			view:first-child {
+				background: #A4D091;
+				color: #fff;
+			}
+		
+			view:nth-child(2) {
+				background: #FFFFFF;
+				border: 4rpx solid #A4D091;
+				color: #A4D091;
+			}
 		}
 	}
+	
+	
 </style>
