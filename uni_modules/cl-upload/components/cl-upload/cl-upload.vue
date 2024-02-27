@@ -268,7 +268,6 @@
 
 				camera: false,
 				storagee: false,
-				isIos: false
 			};
 		},
 		watch: {
@@ -293,15 +292,6 @@
 			// #endif
 		},
 		mounted() {
-			let that = this
-			uni.getStorage({
-				key: 'SYSTEM_INFO',
-				success(res) {
-
-					that.isIos = res.data.osName == 'ios'
-					console.log(that.isIos, '29888888888888');
-				}
-			})
 		},
 		computed: {
 			previewList() {
@@ -463,12 +453,8 @@
 				}
 			},
 			uploadImg() {
-				if (this.isIos) {
-					this.selectFileTypeOnAdd()
-				} else {
-					this.$refs['authpupCamera'].open()
-					this.$refs['authpupStorage'].open()
-				}
+				this.$refs['authpupCamera'].open()
+				this.$refs['authpupStorage'].open()
 
 			},
 			/**
