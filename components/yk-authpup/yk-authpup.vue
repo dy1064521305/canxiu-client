@@ -98,6 +98,7 @@
 				// #ifdef APP-PLUS
 				//判断安卓与ios设备
 				if (plus.os.name == 'Android') {
+					
 					let _permissionID = 'android.permission.' + permissionID;
 					plus.android.checkPermission(_permissionID,
 						granted => {
@@ -148,6 +149,12 @@
 							}
 						})
 				} else {
+					
+					console.log('102222222222222222');
+					_this.$emit('changeAuth');
+					return
+					
+					
 					//IOS不需要添加自定义弹框来描述权限目的，因为在配置文件的隐私信息访问的许可描述里可添加
 					//正常可以直接调用uni的API调起权限询问弹框使用各种权限，下面的判断使用场景主要是在IOS禁用某权限后，这个可以判断有无权限，进而引导用户跳转设置开启，仅列出了位置、相册、通讯录、相机、录音等权限，其他IOS权限可具体参考 https://ext.dcloud.net.cn/plugin?id=15787
 					let result = 0;

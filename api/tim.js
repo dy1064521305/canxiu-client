@@ -19,7 +19,7 @@ export const adminSetMsgRead = (params) => request.get('/tim/adminSetMsgRead',pa
 export const getC2cUnreadMsgNum = () => request.get('/tim/getC2cUnreadMsgNum')
 
 
-export const queryList = (params) => request.get('/common/getui/queryList')
+export const queryList = (params) => request.get('/common/getui/queryList',params)
 export const queryUnreadNum = () => request.get('/common/getui/queryUnreadNum')
 
 export const editRead = (data) => request.put('/common/getui',data)

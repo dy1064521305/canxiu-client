@@ -95,6 +95,7 @@
 	import {
 		getOrderNum
 	} from '@/utils/api.js'
+	import {queryUnreadNum} from '@/api/tim.js'
 	import storage from '@/utils/storage'
 	import formatter from '@/utils/formatter.js'
 	import projectCard from '@/components/projectCard/projectCard.vue'
@@ -153,6 +154,20 @@
 						index: 3,
 						text: res
 					})
+				})
+				queryUnreadNum().then(ress => {
+					 let num = (parseInt(totalUnreadCount) + parseInt(ress.data.num))>99?'99+': parseInt(totalUnreadCount) + parseInt(ress.data.num)
+					
+					if (num > 0) {
+						uni.setTabBarBadge({
+							index: 2,
+							text:num+ ''
+						})
+					} else {
+						uni.removeTabBarBadge({
+							index: 2
+						})
+					}
 				})
 			}
 		},

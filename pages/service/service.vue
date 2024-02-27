@@ -126,30 +126,6 @@
 					this.swichMenu(getApp().index)
 				})
 			}
-			// else {
-			// 	let that = this
-			// 	uni.getStorage({
-			// 		key: 'service_info',
-			// 		success(info) {
-			// 			console.log(info);
-			// 			that.current = info.data.current
-
-			// 			// that.storgeTop=info.data.scrollTop
-			// 			// that.rightScroll({
-			// 			//  detail:{
-			// 			// 	 scrollTop:info.data.scrollTop
-			// 			//  }
-			// 			// })
-
-			// 			that.swichMenu(that.current)
-
-			// 		}
-			// 	})
-			// }
-
-
-
-
 		},
 		onTabItemTap: function() {
 			this.getList()
@@ -208,15 +184,6 @@
 
 					} else {
 						console.log(11111);
-
-						// res.data.forEach((item,index)=>{
-						// 	this.typesList.push({
-						// 		typeId: item.typeId,
-						// 		typeLevel: item.typeLevel,
-						// 		typeName: item.typeName,
-						// 		children:index==0?item.children:[]
-						// 	})
-						// })
 						this.typesList = res.data
 						this.isSearch = false
 					}
