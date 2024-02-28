@@ -1,34 +1,30 @@
 <template>
 	<view>
 		<z-paging ref="paging" v-model="dataList" @query="queryList" :default-page-size="20">
-			<view style="margin-top:30rpx;">
-				<view v-for="(item,index) in dataList" :key="index" @click="toOrderDetail(item)">
-
-					<uni-badge :customStyle="{background: '#EC5722'}" class="uni-badge-left-margin" :is-dot="true"
-						:offset="[20,20]" :text="item.readStatus == 0 ? 1 : 0" absolute="rightTop" size="normal">
-
-						<uni-card :title="item.title" :extra="item.time" :border="false">
-
-							<view class="uni-body" style="font-size: 26rpx;">
-								{{item.before}}
-								<text style="color:#3398F3 ;" @click.stop="copy(item.orderNumber)">{{item.orderNumber}}</text>
-								{{item.after}}
+			<view v-for="(item,index) in dataList" :key="index" @click="toOrderDetail(item)">
+			
+				<uni-badge :customStyle="{background: '#EC5722'}"  :is-dot="true"
+					:offset="[20,20]" :text="item.readStatus == 0 ? 1 : 0" absolute="rightTop" size="normal">
+			
+					<uni-card :title="item.title" :extra="item.time" :border="false">
+			
+						<view class="uni-body" style="font-size: 26rpx;">
+							{{item.before}}
+							<text style="color:#3398F3 ;" @click.stop="copy(item.orderNumber)">{{item.orderNumber}}</text>
+							{{item.after}}
+						</view>
+						<view slot="actions" class="card-actions">
+							<view class="card-actions-item"
+								style="float: right;margin: 0 0 10px 0;font-size: 26rpx;display: flex;align-items: center;">
+								<text class="card-actions-item-text" style="color: #3398F3;">查看详情</text>
+								<uni-icons type="right" size="15" color="#3398F3"></uni-icons>
 							</view>
-							<view slot="actions" class="card-actions">
-								<view class="card-actions-item"
-									style="float: right;margin: 0 0 10px 0;font-size: 26rpx;display: flex;align-items: center;">
-									<text class="card-actions-item-text" style="color: #3398F3;">查看详情</text>
-									<uni-icons type="right" size="15" color="#3398F3"></uni-icons>
-								</view>
-							</view>
-
-						</uni-card>
-
-					</uni-badge>
-				</view>
+						</view>
+			
+					</uni-card>
+			
+				</uni-badge>
 			</view>
-
-
 		</z-paging>
 	</view>
 </template>
@@ -99,9 +95,12 @@
 </script>
 
 <style scoped>
+	.uni-badge-left-margin{
+		margin: 10rpx  0;
+	}
 	/deep/.uni-badge--x {
 		width: 100%;
-		margin: -32rpx 0;
+		/* margin: -32rpx 0; */
 	}
 
 	/deep/.uni-card__header-content-title {
