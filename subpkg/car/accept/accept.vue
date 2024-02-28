@@ -41,7 +41,7 @@
 				</view>
 				<view class="line">
 					<text class="ziduan">订单类型</text>
-					<text><text style="width:14% ;" class="fanxiu">返修</text>维修</text>
+					<text><text v-if="orderInfo.repairId!=null" style="width:14% ;" class="fanxiu">返修</text>维修</text>
 				</view>
 
 				<view class="line">
