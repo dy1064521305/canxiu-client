@@ -31,7 +31,7 @@
 
 			</view>
 
-<!--&&index<2  -->
+			<!--&&index<2  -->
 			<view v-if="types=='image'" v-for="(item, index) in billImgList" :key="index" @tap="billViewImage"
 				:data-url="billImgList[index]">
 				<view style="position: relative;margin-right:10rpx;">
@@ -48,8 +48,8 @@
 			</view>
 
 			<!-- :style="{ background: `url(${billImgList[1]})`,width:'125rpx',height:'125rpx',borderRadius:'14rpx' }" -->
-		<!-- 	<view style="position:relative;" v-if="types=='image'&&billImgList.length > 2"> -->
-				<!-- 	<view style="text-align: center;padding-top: 80rpx;">
+			<!-- 	<view style="position:relative;" v-if="types=='image'&&billImgList.length > 2"> -->
+			<!-- 	<view style="text-align: center;padding-top: 80rpx;">
 					+{{ billImgList.length - 1 }}
 				</view> -->
 			<!-- 	<image style="width: 125rpx;border-radius:14rpx;height: 125rpx;" :src="billImgList[2]">
@@ -63,7 +63,11 @@
 			</view> -->
 
 
-			<view @tap="billChooseImage" v-if="billImgList.length < limit">
+			<view @tap="uploadImg" v-if="billImgList.length < limit">
+				<yk-authpup ref="authpupStorage" type="top" @changeAuth="changeAuthStorage"
+					permissionID="WRITE_EXTERNAL_STORAGE"> </yk-authpup>
+				<yk-authpup ref="authpupCamera" type="top" @changeAuth="changeAuthCamera" permissionID="CAMERA">
+				</yk-authpup>
 				<image style="width: 125rpx;height: 125rpx;"
 					:src="isOrder&&types=='image'?imageUrl:isOrder&&types=='video'?videoUrl:otherUrl">
 				</image>
@@ -109,6 +113,7 @@
 
 <script>
 	import storage from '@/utils/storage'
+	import ykAuthpup from "@/components/yk-authpup/yk-authpup";
 	import {
 		delossByurl
 	} from '@/api/oss.js'
@@ -158,7 +163,9 @@
 				//billImgList: [],
 				otherUrl: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/25/90db8b3c2cb341fca89284d3f08214f4.png',
 				imageUrl: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/06/44b24e8072e4498aae3e51a3602a313d.png',
-				videoUrl: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/06/f65617ac6030423da443fa93b2334db5.png'
+				videoUrl: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/06/f65617ac6030423da443fa93b2334db5.png',
+				camera: false,
+				storagee: false
 			};
 		},
 		watch: {
@@ -190,7 +197,7 @@
 			imageClick(src) {
 				// #ifdef MP-WEIXIN
 				uni.navigateTo({
-					url:'/subpkg/home/video-container/video-container?src='+src
+					url: '/subpkg/home/video-container/video-container?src=' + src
 				})
 				// #endif
 				// #ifdef APP
@@ -203,7 +210,7 @@
 				})
 				// #endif
 				console.log(1111111111);
-			
+
 			},
 			swiperChange(e) {
 				console.log(e);
@@ -229,6 +236,29 @@
 
 				// });
 
+			},
+			changeAuthCamera() {
+				this.camera = true
+				if (this.camera && this.storagee) {
+					this.billChooseImage()
+				}
+			},
+
+			changeAuthStorage() {
+				this.storagee = true
+				if (this.camera && this.storagee) {
+					this.billChooseImage()
+				}
+			},
+			uploadImg() {
+				console.log(11111);
+				// #ifdef APP-PLUS
+				this.$refs['authpupCamera'].open()
+				this.$refs['authpupStorage'].open()
+				// #endif
+				// #ifdef MP-WEIXIN
+				this.billChooseImage()
+				// #endif
 			},
 			billDelImg(e) {
 				console.log(this.billImgList);
@@ -309,10 +339,10 @@
 			upLoadHandle(res) {
 				let that = this
 				console.log(res);
-				let size=res.size
-				if ((size/1048576)>=10) {
+				let size = res.size
+				if ((size / 1048576) >= 10) {
 					uni.showToast({
-						icon:'error',
+						icon: 'error',
 						title: '文件大小过大',
 						duration: 2000
 					});

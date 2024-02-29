@@ -81,7 +81,9 @@
 
 		</z-paging>
 
-
+		<view class="index" style="z-index: 100000;">
+				<wu-app-update></wu-app-update>
+			</view>
 
 	</view>
 </template>
@@ -168,6 +170,10 @@
 							index: 2
 						})
 					}
+				})
+			}else{
+				uni.navigateTo({
+					url:'/pages/login/index'
 				})
 			}
 		},
