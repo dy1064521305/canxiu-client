@@ -1,10 +1,19 @@
 <template>
 	<view class="appraise">
 		<view v-for="(item,index) in projectData" :key='index' class="box">
-			<view class="">
-				<image style="width: 130rpx;height: 130rpx;margin: 20rpx;
-border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
+			
+			<view class="no-imgs">
+				<image v-if="item.projectUrl.length!=0" style="width: 130rpx;height: 130rpx;margin: 20rpx;
+				border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
+				<view v-else style="width:100%;height:100%;" class="img-text">
+					<image style="width:113rpx ;height:83rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+						mode=""></image>
+					<text>暂无图片</text>
+				</view>
 			</view>
+			
+			
 			<view style="display: flex;flex-direction: column;margin-top:41rpx;height: 100%;width: 72%;">
 				<view style="display: flex;justify-content: space-between;">
 					<view style="color: #3D3F3E;font-weight: 600;">
@@ -84,9 +93,11 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 				})
 				this.projectData.forEach(item => {
 					item.name = this.info.newProject.length != 0 ? item.serviceProductName : item.productName
-					item.projectUrl = this.info.newProject.length != 0 ? item.projectImg.split(
-						',') : item.img
+					item.projectUrl = this.info.newProject.length != 0 ? (item.projectImg != '' ? item.projectImg
+						.split(
+							',') : []) : item.img
 				})
+				console.log(this.projectData);
 				// order.getOrderInfo(this.id).then(res => {
 				// 	console.log(res);
 				// 	this.info= res.data
@@ -131,7 +142,28 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 
 <style lang="scss" scoped>
 	.appraise {
-
+		.no-imgs {
+			    width: 160rpx;
+			    height: 86%;
+			    margin: 0 10rpx;
+		
+			.img-text {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100%;
+				background: #F4F4F4;
+				border-radius: 11rpx;
+		
+				text {
+					font-size: 23rpx;
+					color: #A4D091;
+				}
+			}
+		
+		
+		}
 		.box,
 		.main {
 			width: 707rpx;

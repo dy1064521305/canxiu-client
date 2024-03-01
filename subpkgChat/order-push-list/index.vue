@@ -4,7 +4,7 @@
 			<view v-for="(item,index) in dataList" :key="index" @click="toOrderDetail(item)">
 			
 				<uni-badge :customStyle="{background: '#EC5722'}"  :is-dot="true"
-					:offset="[20,20]" :text="item.readStatus == 0 ? 1 : 0" absolute="rightTop" size="normal">
+					:offset="[20,2]" :text="item.readStatus == 0 ? 1 : 0" absolute="rightTop" size="normal">
 			
 					<uni-card :title="item.title" :extra="item.time" :border="false">
 			
@@ -100,9 +100,10 @@
 	}
 	/deep/.uni-badge--x {
 		width: 100%;
+		display: block;
 		/* margin: -32rpx 0; */
 	}
-
+	
 	/deep/.uni-card__header-content-title {
 		font-weight: bold;
 		font-size: 33rpx !important;
