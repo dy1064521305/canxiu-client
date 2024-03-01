@@ -15,7 +15,7 @@
 			</u-form-item>
 			<view style="display: flex;">
 				<text style="color: red;margin: auto 0;">*</text>
-				<u-form-item style="margin-left: -19rpx;" label="门店地址" borderBottom ref="item1" prop="region">
+				<u-form-item style="margin-left: -19rpx;width: 100%;" label="门店地址" borderBottom ref="item1" prop="region">
 					<pickers @address="address">
 						<view v-if="userInfo.region!=undefined">{{userInfo.region}}</view>
 						<view v-else style="color: rgb(192, 196, 204);">请选择门店地址</view>
@@ -174,6 +174,7 @@
 </style>
 <style lang="scss" scoped>
 	.info {
+		height: 100vh;
 		::v-deep.u-form-item__body {
 			height: 70rpx;
 		}
@@ -192,7 +193,7 @@
 			line-height: 91rpx;
 			text-align: center;
 			border-radius: 70rpx;
-			margin:516rpx auto;
+			margin:516rpx auto 0;
 			background: #A4D091;
 		}
 	}

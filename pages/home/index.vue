@@ -165,7 +165,7 @@
 			</view>
 		</view>
 
-		<view class="index" style="z-index: 99999999;">
+		<view class="index">
 			<wu-app-update></wu-app-update>
 		</view>
 

@@ -157,10 +157,10 @@
 							</view>
 							<view style="color:#EC5722 ;" class="flexCss">
 								<view class="">
-									¥{{mel.materialPrice}}
+									¥{{Number(mel.materialPrice).toFixed(0)}}
 								</view>
 								<view style="font-weight: bold;margin-left: 21rpx;">
-									小计:¥{{Number(mel.materialPrice)*Number(mel.materialCount)}}
+									小计:¥{{(Number(mel.materialPrice)*Number(mel.materialCount)).toFixed(0)}}
 								</view>
 							</view>
 						</view>

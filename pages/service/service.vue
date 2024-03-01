@@ -84,6 +84,10 @@
 		</view>
 
 		<u-toast ref="uToast"></u-toast>
+		
+		<view class="index" >
+			<wu-app-update></wu-app-update>
+		</view>
 	</view>
 </template>
 
@@ -394,7 +398,7 @@
 			//height: 190rpx;
 			background-color: #fff;
 			position: relative;
-			z-index: 99999;
+			// z-index: 9999;
 
 			.search {
 				align-items: center;
