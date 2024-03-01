@@ -1,211 +1,205 @@
 {
-	"name": "餐修",
-	"appid": "__UNI__16112CC",
-	"description": "",
-	"versionName": "1.4.0",
-	"versionCode": 140,
-	"transformPx": false,
-	/* 5+App特有相关 */
-	"app-plus": {
-		"usingComponents": true,
-		"nvueStyleCompiler": "uni-app",
-		"compilerVersion": 3,
-		"splashscreen": {
-			"alwaysShowBeforeRender": true,
-			"waiting": true,
-			"autoclose": true,
-			"delay": 0
-		},
-		"safearea": {
-			"bottom": {
-				"offset": "none"
-			}
-		},
-		/* 模块配置 */
-		"modules": {
-			"Geolocation": {},
-			"Push": {},
-			"Camera": {},
-			"Payment": {},
-			"VideoPlayer": {},
-			"Maps": {},
-			"Record": {},
-			"Contacts": {},
-			"UIWebview": {}
-		},
-
-		/* 应用发布信息 */
-		"distribute": {
-			/* android打包配置 */
-			"android": {
-				"permissions": [
-					"<uses-feature android:name=\"android.hardware.camera\"/>",
-					"<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
-					"<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
-					"<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
-					"<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
-					"<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
-					"<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
-					"<uses-permission android:name=\"android.permission.CAMERA\"/>",
-					"<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
-					"<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
-					"<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
-					"<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
-					"<uses-permission android:name=\"android.permission.INTERNET\"/>",
-					"<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
-					"<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
-					"<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
-					"<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
-					"<uses-permission android:name=\"android.permission.VIBRATE\"/>",
-					"<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
-					"<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
-					"<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
-					"<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
-				],
-				"abiFilters": ["armeabi-v7a", "arm64-v8a"]
-			},
-			/* ios打包配置 */
-			"ios": {
-				"dSYMs": false,
-				"privacyDescription": {
-					"NSLocationAlwaysAndWhenInUseUsageDescription": "为您推荐您所在区域可以购买的产品与/或服务",
-					"NSLocationWhenInUseUsageDescription": "为您推荐您所在区域可以购买的产品与/或服务",
-					"NSLocationAlwaysUsageDescription": "为您推荐您所在区域可以购买的产品与/或服务",
-					"NSPhotoLibraryUsageDescription": "允许读取存储种的图片、视频、文件等内容，主要用于调取您手机中的照片或图片，进行头像设置、订单完成等操作",
-					"NSPhotoLibraryAddUsageDescription": "生成维修报告保存本地",
-					"NSCameraUsageDescription": "我们访问您的相机是为了使您可以使用摄像头进行拍摄上传拍照的照片来做头像、订单完成等操作"
-				}
-			},
-			/* SDK配置 */
-			"sdkConfigs": {
-				"oauth": {},
-				"geolocation": {
-					"system": {
-						"__platform__": ["ios", "android"]
-					},
-					"amap": {
-						"__platform__": ["ios", "android"],
-						"appkey_ios": "1556ed4d42b1f10806f14ec319cdd3f0",
-						"appkey_android": "8270ece1b27e6e52fafa7241b5580ad7"
-					}
-				},
-				"ad": {},
-				"push": {
-					"unipush": {
-						"icons": {
-							"small": {
-								"ldpi": "unpackage/res/icons/20x20.png",
-								"mdpi": "unpackage/res/icons/29x29.png",
-								"hdpi": "unpackage/res/icons/40x40.png",
-								"xhdpi": "unpackage/res/icons/58x58.png",
-								"xxhdpi": "unpackage/res/icons/72x72.png"
-							}
-						}
-					}
-				},
-				"maps": {
-					"amap": {
-						"appkey_ios": "1556ed4d42b1f10806f14ec319cdd3f0",
-						"appkey_android": "8270ece1b27e6e52fafa7241b5580ad7"
-					}
-				},
-				"payment": {
-					"alipay": {
-						"__platform__": ["ios", "android"]
-					},
-					"weixin": {
-						"__platform__": ["android"],
-						"appid": "wxfa2f854719fe847e"
-					}
-				}
-			},
-			"splashscreen": {
-				"androidStyle": "common",
-				"useOriginalMsgbox": true
-			},
-			"icons": {
-				"android": {
-					"hdpi": "unpackage/res/icons/72x72.png",
-					"xhdpi": "unpackage/res/icons/96x96.png",
-					"xxhdpi": "unpackage/res/icons/144x144.png",
-					"xxxhdpi": "unpackage/res/icons/192x192.png"
-				},
-				"ios": {
-					"appstore": "unpackage/res/icons/1024x1024.png",
-					"ipad": {
-						"app": "unpackage/res/icons/76x76.png",
-						"app@2x": "unpackage/res/icons/152x152.png",
-						"notification": "unpackage/res/icons/20x20.png",
-						"notification@2x": "unpackage/res/icons/40x40.png",
-						"proapp@2x": "unpackage/res/icons/167x167.png",
-						"settings": "unpackage/res/icons/29x29.png",
-						"settings@2x": "unpackage/res/icons/58x58.png",
-						"spotlight": "unpackage/res/icons/40x40.png",
-						"spotlight@2x": "unpackage/res/icons/80x80.png"
-					},
-					"iphone": {
-						"app@2x": "unpackage/res/icons/120x120.png",
-						"app@3x": "unpackage/res/icons/180x180.png",
-						"notification@2x": "unpackage/res/icons/40x40.png",
-						"notification@3x": "unpackage/res/icons/60x60.png",
-						"settings@2x": "unpackage/res/icons/58x58.png",
-						"settings@3x": "unpackage/res/icons/87x87.png",
-						"spotlight@2x": "unpackage/res/icons/80x80.png",
-						"spotlight@3x": "unpackage/res/icons/120x120.png"
-					}
-				}
-			}
-		},
-		"uniStatistics": {
-			"enable": true
-		}
-	},
-	/* 快应用特有相关 */
-	"quickapp": {},
-	/* 小程序特有相关 */
-	"mp-weixin": {
-		"appid": "wx365a28a668734937",
-		"setting": {
-			"urlCheck": true,
-			"es6": true,
-			"postcss": true,
-			"minified": true
-		},
-		"usingComponents": true,
-		"requiredPrivateInfos": ["getLocation", "chooseLocation"],
-		"permission": {
-			"scope.userLocation": {
-				"desc": "你的位置信息将用于小程序定位"
-			}
-		},
-		"unipush": {
-			"enable": false
-		},
-		"uniStatistics": {
-			"enable": true
-		},
-		"optimization": {
-			"subPackages": true
-		}
-	},
-	"mp-alipay": {
-		"usingComponents": true
-	},
-	"mp-baidu": {
-		"usingComponents": true
-	},
-	"mp-toutiao": {
-		"usingComponents": true
-	},
-	"uniStatistics": {
-		"enable": false,
-		"version": "2"
-	},
-	"vueVersion": "2",
-	/* h5不能配置devServer属性,需要配置可修改vue.config.js文件 */
-	"h5": {
-		"template": "template.h5.html"
-	},
-	"locale": "auto",
-	"fallbackLocale": "zh-Hans"
+    "name" : "餐修",
+    "appid" : "__UNI__16112CC",
+    "description" : "",
+    "versionName" : "1.4.2",
+    "versionCode" : 142,
+    "transformPx" : false,
+    /* 5+App特有相关 */
+    "app-plus" : {
+        "usingComponents" : true,
+        "nvueStyleCompiler" : "uni-app",
+        "compilerVersion" : 3,
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : true,
+            "waiting" : true,
+            "autoclose" : true,
+            "delay" : 0
+        },
+        /* 模块配置 */
+        "modules" : {
+            "Geolocation" : {},
+            "Push" : {},
+            "Camera" : {},
+            "Payment" : {},
+            "VideoPlayer" : {},
+            "Maps" : {},
+            "Record" : {},
+            "Contacts" : {}
+        },
+        /* 应用发布信息 */
+        "distribute" : {
+            /* android打包配置 */
+            "android" : {
+                "permissions" : [
+                    "<uses-feature android:name=\"android.hardware.camera\"/>",
+                    "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+                    "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+                    "<uses-permission android:name=\"android.permission.INTERNET\"/>",
+                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                ],
+                "abiFilters" : [ "armeabi-v7a", "arm64-v8a" ],
+                "targetSdkVersion" : 30
+            },
+            /* ios打包配置 */
+            "ios" : {
+                "dSYMs" : false,
+                "privacyDescription" : {
+                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
+                    "NSLocationWhenInUseUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
+                    "NSLocationAlwaysUsageDescription" : "为您推荐您所在区域可以购买的产品与/或服务",
+                    "NSPhotoLibraryUsageDescription" : "允许读取存储种的图片、视频、文件等内容，主要用于调取您手机中的照片或图片，进行头像设置、订单完成等操作",
+                    "NSPhotoLibraryAddUsageDescription" : "生成维修报告保存本地",
+                    "NSCameraUsageDescription" : "我们访问您的相机是为了使您可以使用摄像头进行拍摄上传拍照的照片来做头像、订单完成等操作"
+                }
+            },
+            /* SDK配置 */
+            "sdkConfigs" : {
+                "oauth" : {},
+                "geolocation" : {
+                    "system" : {
+                        "__platform__" : [ "ios", "android" ]
+                    },
+                    "amap" : {
+                        "__platform__" : [ "ios", "android" ],
+                        "appkey_ios" : "1556ed4d42b1f10806f14ec319cdd3f0",
+                        "appkey_android" : "8270ece1b27e6e52fafa7241b5580ad7"
+                    }
+                },
+                "ad" : {},
+                "push" : {
+                    "unipush" : {
+                        "icons" : {
+                            "small" : {
+                                "ldpi" : "unpackage/res/icons/20x20.png",
+                                "mdpi" : "unpackage/res/icons/29x29.png",
+                                "hdpi" : "unpackage/res/icons/40x40.png",
+                                "xhdpi" : "unpackage/res/icons/58x58.png",
+                                "xxhdpi" : "unpackage/res/icons/72x72.png"
+                            }
+                        }
+                    }
+                },
+                "maps" : {
+                    "amap" : {
+                        "appkey_ios" : "1556ed4d42b1f10806f14ec319cdd3f0",
+                        "appkey_android" : "8270ece1b27e6e52fafa7241b5580ad7"
+                    }
+                },
+                "payment" : {
+                    "alipay" : {
+                        "__platform__" : [ "ios", "android" ]
+                    },
+                    "weixin" : {
+                        "__platform__" : [ "android" ],
+                        "appid" : "wxfa2f854719fe847e"
+                    }
+                }
+            },
+            "splashscreen" : {
+                "androidStyle" : "common",
+                "useOriginalMsgbox" : true
+            },
+            "icons" : {
+                "android" : {
+                    "hdpi" : "unpackage/res/icons/72x72.png",
+                    "xhdpi" : "unpackage/res/icons/96x96.png",
+                    "xxhdpi" : "unpackage/res/icons/144x144.png",
+                    "xxxhdpi" : "unpackage/res/icons/192x192.png"
+                },
+                "ios" : {
+                    "appstore" : "unpackage/res/icons/1024x1024.png",
+                    "ipad" : {
+                        "app" : "unpackage/res/icons/76x76.png",
+                        "app@2x" : "unpackage/res/icons/152x152.png",
+                        "notification" : "unpackage/res/icons/20x20.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png",
+                        "proapp@2x" : "unpackage/res/icons/167x167.png",
+                        "settings" : "unpackage/res/icons/29x29.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "spotlight" : "unpackage/res/icons/40x40.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png"
+                    },
+                    "iphone" : {
+                        "app@2x" : "unpackage/res/icons/120x120.png",
+                        "app@3x" : "unpackage/res/icons/180x180.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png",
+                        "notification@3x" : "unpackage/res/icons/60x60.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "settings@3x" : "unpackage/res/icons/87x87.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png",
+                        "spotlight@3x" : "unpackage/res/icons/120x120.png"
+                    }
+                }
+            }
+        },
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    /* 快应用特有相关 */
+    "quickapp" : {},
+    /* 小程序特有相关 */
+    "mp-weixin" : {
+        "appid" : "wx365a28a668734937",
+        "setting" : {
+            "urlCheck" : true,
+            "es6" : true,
+            "postcss" : true,
+            "minified" : true
+        },
+        "usingComponents" : true,
+        "requiredPrivateInfos" : [ "getLocation", "chooseLocation" ],
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "你的位置信息将用于小程序定位"
+            }
+        },
+        "unipush" : {
+            "enable" : false
+        },
+        "uniStatistics" : {
+            "enable" : true
+        },
+        "optimization" : {
+            "subPackages" : true
+        }
+    },
+    "mp-alipay" : {
+        "usingComponents" : true
+    },
+    "mp-baidu" : {
+        "usingComponents" : true
+    },
+    "mp-toutiao" : {
+        "usingComponents" : true
+    },
+    "uniStatistics" : {
+        "enable" : false,
+        "version" : "2"
+    },
+    "vueVersion" : "2",
+    /* h5不能配置devServer属性,需要配置可修改vue.config.js文件 */
+    "h5" : {
+        "template" : "template.h5.html"
+    },
+    "locale" : "auto",
+    "fallbackLocale" : "zh-Hans"
 }
