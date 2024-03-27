@@ -30,8 +30,7 @@
             "VideoPlayer" : {},
             "Maps" : {},
             "Record" : {},
-            "Contacts" : {},
-            "UIWebview" : {}
+            "Contacts" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -61,7 +60,8 @@
                     "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ],
-                "abiFilters" : [ "armeabi-v7a", "arm64-v8a" ]
+                "abiFilters" : [ "armeabi-v7a", "arm64-v8a" ],
+                "targetSdkVersion" : 30
             },
             /* ios打包配置 */
             "ios" : {
