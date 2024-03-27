@@ -5,9 +5,9 @@
 			<view v-for="(item, index) in previewList" @tap="clickSelectedFile(item, index)" class="file-list-row"
 				:style="[rowStyle]" :key="index">
 
-				<image class="_image" v-if="fileUrlType(item) === 'image'" :src="item.path" :style="[imgStyle]"
-					mode="aspectFill">
-				</image>
+				<img crossorigin="anonymous" class="_image" v-if="fileUrlType(item) === 'image'" :src="item.path"
+					:style="[imgStyle]" mode="aspectFill">
+				</img>
 
 				<view v-else class="_video" :style="[imgStyle]">
 
@@ -16,7 +16,7 @@
 						:src="item.path" :show-center-play-btn="false" :show-fullscreen-btn="false"
 						:show-play-btn="false" :show-loading="false" :enable-progress-gesture="false" :controls="false">
 						<view @tap="previewVideo(item, index)" class="play">
-							<image style="width: 100%;" :src="playImg" mode="widthFix"></image>
+							<img crossorigin="anonymous" style="width: 100%;" :src="playImg" mode="widthFix"></img>
 						</view>
 					</video>
 
@@ -50,14 +50,14 @@
 							:src="(item.poster || item.path)"></cl-image>
 
 						<view class="play" @tap="previewVideo(item, index)">
-							<image class="play-img" :src="playImg" mode="widthFix"></image>
+							<img crossorigin="anonymous" class="play-img" :src="playImg"></img>
 						</view>
 					</template>
 
 				</view>
 
 				<view class="remove" v-if="remove" @tap.stop="deleteSelectedFile(item, index)">
-					<image class="image" :src="deleteImg" mode="widthFix"></image>
+					<img crossorigin="anonymous" class="image" :src="deleteImg" mode="widthFix"></img>
 				</view>
 			</view>
 
@@ -68,7 +68,7 @@
 				</yk-authpup>
 				<slot name="addImg">
 					<div class="add-image">
-						<image class="_image" :src="addImg" mode="widthFix"></image>
+						<img crossorigin="anonymous" class="_image" :src="addImg" ></img>
 					</div>
 				</slot>
 			</view>
@@ -77,7 +77,7 @@
 
 
 		<view v-if="tempVideoUrl" class="mask">
-			<image @tap="tempVideoUrl = ''" class="_root" :src="closeImg" mode="widthFix"></image>
+			<img crossorigin="anonymous" @tap="tempVideoUrl = ''" class="_root" :src="closeImg" mode="widthFix"></img>
 
 			<view class="block" @tap.stop>
 				<video class="block_video" autoplay :src="tempVideoUrl"></video>
@@ -291,8 +291,7 @@
 			},
 			// #endif
 		},
-		mounted() {
-		},
+		mounted() {},
 		computed: {
 			previewList() {
 				return this.moveZero(this.FileList).map(item => {
@@ -453,8 +452,13 @@
 				}
 			},
 			uploadImg() {
+				// #ifdef APP-PLUS
 				this.$refs['authpupCamera'].open()
 				this.$refs['authpupStorage'].open()
+				// #endif
+				// #ifdef MP-WEIXIN
+				this.selectFileTypeOnAdd()
+				// #endif
 
 			},
 			/**
@@ -970,6 +974,7 @@
 
 				.play-img {
 					width: 100%;
+					height: 100%;
 				}
 
 				._image {
@@ -1048,6 +1053,7 @@
 
 				._image {
 					width: 40%;
+					height: 40%;
 				}
 			}
 		}

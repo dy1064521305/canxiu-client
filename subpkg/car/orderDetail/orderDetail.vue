@@ -188,7 +188,7 @@
 				</view>
 			</view>-->
 		</view>
-		<view class="bg info" style="margin-top: -20rpx;">
+		<view v-if="info.priceFlag == 0" class="bg info" style="margin-top: -20rpx;">
 			<view class="title" style="display: flex;justify-content: space-between;align-items: center;">
 				<view class="">
 					订单费用
@@ -249,6 +249,24 @@
 				<text style="color: #EC5722;">¥{{info.orderPrice}}</text>
 			</view>
 		</view>
+		
+		
+		
+		<view class="bg info" v-if="info.priceFlag != 0">
+			<view class="title">
+				订单费用
+			</view>
+			<view class="line">
+				<text class="ziduan">服务费</text>
+				<text>¥{{info.orderPrice}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">合计</text>
+				<text style="color: #EC5722;">¥{{info.orderPrice}}</text>
+			</view>
+		</view>
+	
+		
 		<view v-if="info.deliveryVo&&info.orderStatus!='售后中'" class="bg project">
 			<view class="title">
 				维修详情
@@ -780,7 +798,8 @@
 						}
 						//获取追踪列表
 						order.orderTrackList({
-							orderId: this.id
+							orderId: this.id,
+							requester:'c'
 						}).then(res => {
 							//	console.log(res);
 							this.step = []

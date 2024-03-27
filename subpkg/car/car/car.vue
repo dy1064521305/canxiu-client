@@ -159,7 +159,7 @@
 
 
 				<view v-if="coudanList.length!=0" class="main">
-					<view v-for="(item,index) in coudanList" :key="index" class="box" >
+					<view v-for="(item,index) in coudanList" :key="index" class="box">
 						<coudan-card :item='item' />
 
 
@@ -225,13 +225,14 @@
 
 		},
 		onLoad() {
-			 this.getCarList()
+			this.getCarList()
 		},
+
 		onShow() {
 
 			// #ifdef APP-PLUS
 			this.tabbarHeight = uni.getSystemInfoSync().windowBottom
-			console.log();
+
 			// #endif
 			// #ifdef H5
 			this.tabbarHeight = uni.getSystemInfoSync().windowBottom
@@ -239,7 +240,13 @@
 			// #endif	
 			//this.getList()
 			this.isLogin = storage.get('AccessToken')
-
+			let that=this
+			uni.$on('updateNote', function(data) {
+					console.log(data, '245555555555');
+					that.getCarList()
+			})
+		
+			//this.getCarList()
 			// if (this.isLogin) {
 			// 	 // this.getCarList()
 			// 	this.allNum = 0

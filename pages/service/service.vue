@@ -85,9 +85,6 @@
 
 		<u-toast ref="uToast"></u-toast>
 		
-		<view class="index" >
-			<wu-app-update></wu-app-update>
-		</view>
 	</view>
 </template>
 

@@ -81,9 +81,6 @@
 
 		</z-paging>
 
-		<view class="index" style="z-index: 100000;">
-				<wu-app-update></wu-app-update>
-			</view>
 
 	</view>
 </template>
