@@ -317,7 +317,7 @@
 			},
 			textareaInput(arr) {
 				console.log(arr);
-				this.projectVoList[0].remarks=arr[0].remarks
+				this.projectVoList[0].remarks = arr[0].remarks
 			},
 			getDeleteUrlList(list) {
 				console.log(list);
@@ -364,6 +364,7 @@
 							title: '操作成功',
 							duration: 2000
 						});
+					uni.$emit('updateNote', 'coudan');
 						setTimeout(() => {
 							uni.navigateBack()
 						}, 800)

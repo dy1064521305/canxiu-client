@@ -50,8 +50,8 @@
 				</view>
 			</view>
 
-			<view v-if="orderInfo.repairId" v-for="(item,index) in orderInfo.projectDataVoList" :key="index" style="margin: 15rpx 0;"
-				class="project bg">
+			<view v-if="orderInfo.repairId" v-for="(item,index) in orderInfo.projectDataVoList" :key="index"
+				style="margin: 15rpx 0;" class="project bg">
 				<project-card :pro='item' />
 
 				<view v-if="orderInfo.deliveryVo!=null&&orderInfo.deliveryVo.deliveryImg.length!=0">
@@ -193,13 +193,13 @@
 						</view>
 						<view class="thumb-box" v-for="(mel,mi) in mfel" :key="mi">
 							<view class="no-imgs">
-								<image v-if="mel.materialImg!=null&&mel.materialImg!=''" :src="mel.materialImg"
-									style="width:100%;height:100%;border-radius: 10rpx;">
-								</image>
+								<img crossorigin="anonymous" v-if="mel.materialImg!=null&&mel.materialImg!=''"
+									:src="mel.materialImg" style="width:100%;height:100%;border-radius: 10rpx;">
+								</img>
 								<view v-else style="width:100%;height:100%;" class="img-text">
-									<image style="width:90rpx ;height:68rpx;"
+									<img crossorigin="anonymous" style="width:90rpx ;height:68rpx;"
 										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
-										mode=""></image>
+										mode=""></img>
 									<text>暂无图片</text>
 								</view>
 							</view>
@@ -231,21 +231,21 @@
 
 				</view>
 			</view>
-			<view class="bg info" style="margin-top: -20rpx;">
+			<view v-if="orderInfo.priceFlag== 0" class="bg info" style="margin-top: -20rpx;">
 				<view class="title" style="display: flex;justify-content: space-between;align-items: center;">
 					<view class="">
 						订单费用
 					</view>
 					<view class="img" v-if="info.isGet">
-						<image style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
+						<img crossorigin="anonymous" style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/a5a0b58c2d674bacb335cb758d4fca3d.png">
-						</image>
+						</img>
 						未达标按起步价收取
 					</view>
 					<view v-else class="img">
-						<image style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
+						<img crossorigin="anonymous" style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
-						</image>已达到起步价
+						</img>已达到起步价
 					</view>
 				</view>
 				<view class="line">
@@ -285,6 +285,23 @@
 					<text style="color: #EC5722;">¥{{orderInfo.orderPrice}}</text>
 				</view>
 			</view>
+			
+			<view class="bg info" v-if="orderInfo.priceFlag != 0">
+				<view class="title">
+					订单费用
+				</view>
+				<view class="line">
+					<text class="ziduan">服务费</text>
+					<text>¥{{orderInfo.orderPrice}}</text>
+				</view>
+				<view class="line">
+					<text class="ziduan">合计</text>
+					<text style="color: #EC5722;">¥{{orderInfo.orderPrice}}</text>
+				</view>
+			</view>
+				
+			
+			
 			<view v-if="orderInfo.deliveryVo&&!info.repairId" class="bg project">
 				<view class="title">
 					维修详情
@@ -293,7 +310,9 @@
 					<view class="font">
 						图片
 					</view>
-					<view>
+					<!-- v-for="(item,index) in orderInfo.deliveryVo.deliveryImg!=null?orderInfo.deliveryVo.deliveryImg.split(',') : []" :key="index" -->
+					<view >
+					<!-- 	<img  style="width: 71px;border-radius: 7px;height: 71px;" :src="item" /> -->
 						<upLoadFile
 							:fileListt='orderInfo.deliveryVo.deliveryImg!=null?orderInfo.deliveryVo.deliveryImg.split(",") : []'
 							types='image' :isDel='false' :isInfo='true' />
@@ -316,7 +335,7 @@
 				</view>
 				<view style="width: 70%;">
 
-					<img :src="signUrl"
+					<img crossorigin="anonymous" :src="signUrl"
 						:style="{'transform':'rotate(-90deg)','width':big?'100%':'14%','height':big?'477rpx':'121rpx'}"
 						alt="">
 				</view>
@@ -601,7 +620,7 @@
 					});
 				} else {
 					let key = this.item;
-				
+
 					uni.canvasToTempFilePath({
 						canvasId: 'handWriting',
 						fileType: 'png',

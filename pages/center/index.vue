@@ -214,9 +214,6 @@
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="actionList" :show="showPhone"></u-action-sheet>
 			
-			<view class="index">
-				<wu-app-update></wu-app-update>
-			</view>
 
 	</view>
 

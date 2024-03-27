@@ -400,9 +400,9 @@
 			//获取购物车数量
 			if (this.isLogin) {
 				this.getCarList()
-				this.getInfo()
-				this.priceDifference = 0
-				this.projectNumber = 0
+				// this.getInfo()
+				 this.priceDifference = 0
+				 this.projectNumber = 0
 			}
 
 		},
@@ -412,7 +412,7 @@
 				getCarNum().then(res => {
 
 					this.allNum = res
-
+					
 					// car.getCarList({
 					// 	clientId: storage.get('ClientId')
 					// }).then(res => {
