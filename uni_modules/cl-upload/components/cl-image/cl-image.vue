@@ -1,5 +1,5 @@
 <template>
-	<img crossorigin="anonymous" class="image" :src="imgSrc" mode="aspectFill" :disabled="false" :controls='false' @error="imgerror"></img>
+	<img   class="image" :src="imgSrc" mode="aspectFill" :disabled="false" :controls='false' @error="imgerror"></img>
 </template>
 
 <script>

@@ -193,11 +193,11 @@
 						</view>
 						<view class="thumb-box" v-for="(mel,mi) in mfel" :key="mi">
 							<view class="no-imgs">
-								<img crossorigin="anonymous" v-if="mel.materialImg!=null&&mel.materialImg!=''"
+								<img   v-if="mel.materialImg!=null&&mel.materialImg!=''"
 									:src="mel.materialImg" style="width:100%;height:100%;border-radius: 10rpx;">
 								</img>
 								<view v-else style="width:100%;height:100%;" class="img-text">
-									<img crossorigin="anonymous" style="width:90rpx ;height:68rpx;"
+									<img   style="width:90rpx ;height:68rpx;"
 										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
 										mode=""></img>
 									<text>暂无图片</text>
@@ -237,13 +237,13 @@
 						订单费用
 					</view>
 					<view class="img" v-if="info.isGet">
-						<img crossorigin="anonymous" style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
+						<img  referrerpolicy="no-referrer"  style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/a5a0b58c2d674bacb335cb758d4fca3d.png">
 						</img>
 						未达标按起步价收取
 					</view>
 					<view v-else class="img">
-						<img crossorigin="anonymous" style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
+						<img  referrerpolicy="no-referrer"  style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 						</img>已达到起步价
 					</view>
@@ -335,7 +335,7 @@
 				</view>
 				<view style="width: 70%;">
 
-					<img crossorigin="anonymous" :src="signUrl"
+					<img   :src="signUrl"
 						:style="{'transform':'rotate(-90deg)','width':big?'100%':'14%','height':big?'477rpx':'121rpx'}"
 						alt="">
 				</view>

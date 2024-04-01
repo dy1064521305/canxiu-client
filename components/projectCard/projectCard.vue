@@ -3,7 +3,7 @@
 		<view class="">
 			<view :style="{'display':'flex','height':height+'rpx'}">
 				<view v-if="info.img.length==0||info.img[0]==''" :style="{'width':height+'rpx'}" class="no-img">
-					<img crossorigin="anonymous" style="width:110rpx ;height: 77rpx;"
+					<img   style="width:110rpx ;height: 77rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
 						mode=""></img>
 					<text>暂无图片</text>
@@ -13,7 +13,7 @@
 						:class="!info.projectType||info.projectType==0?'weixiu':info.projectType==1?'baoyang':''">
 						{{!info.projectType||info.projectType==0?'维修':info.projectType==1?'维保':''}}
 					</view>
-					<img crossorigin="anonymous" :style="{'width':height+'rpx','height':'100%','border-radius':'11rpx'}" :src="info.img[0]">
+					<img   :style="{'width':height+'rpx','height':'100%','border-radius':'11rpx'}" :src="info.img[0]">
 					</img>
 					<!-- 	<view class="weixiu" >
 					维修
