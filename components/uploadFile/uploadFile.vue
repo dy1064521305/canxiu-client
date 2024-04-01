@@ -6,15 +6,15 @@
 
 					<view style="position: relative;width: 125rpx;height: 125rpx;">
 
-						<img crossorigin="anonymous" style="width: 100%;height:100%;"
+						<img   style="width: 100%;height:100%;"
 							:src="itemm+'?x-oss-process=video/snapshot,t_3210,f_jpg'" mode="">
 
 						</img>
-						<img crossorigin="anonymous" style="position: absolute;top:30%; right: 30%;width: 54rpx;height: 54rpx;"
+						<img   style="position: absolute;top:30%; right: 30%;width: 54rpx;height: 54rpx;"
 							@click="imageClick(itemm)"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/05/10/ce99ac9d33214a1f958390f9a0d3345c.png" />
 						</img>
-						<img crossorigin="anonymous" v-if="isDel" style="position: absolute;top: 0; right: 0;width: 40rpx;height: 40rpx;"
+						<img   v-if="isDel" style="position: absolute;top: 0; right: 0;width: 40rpx;height: 40rpx;"
 							@tap.stop="billDelImg" :data-index="index"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/25/067d6e5b8f6a4b9c8362040b84e5a03a.png" />
 						</img>
@@ -35,11 +35,11 @@
 			<view v-if="types=='image'" v-for="(item, index) in billImgList" :key="index" @tap="billViewImage"
 				:data-url="billImgList[index]">
 				<view style="position: relative;margin-right:10rpx;">
-					<img crossorigin="anonymous" style="width: 125rpx;border-radius:14rpx;height: 125rpx;" :src="item">
+					<img   style="width: 125rpx;border-radius:14rpx;height: 125rpx;" :src="item">
 					</img>
 
 					<view v-if="isDel" style="position: absolute;top: 0; right: 0;">
-						<img crossorigin="anonymous" style="width: 40rpx;height: 40rpx;" @tap.stop="billDelImg(index)" :data-index="index"
+						<img   style="width: 40rpx;height: 40rpx;" @tap.stop="billDelImg(index)" :data-index="index"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/25/067d6e5b8f6a4b9c8362040b84e5a03a.png">
 						</img>
 					</view>
@@ -68,7 +68,7 @@
 					permissionID="WRITE_EXTERNAL_STORAGE"> </yk-authpup>
 				<yk-authpup ref="authpupCamera" type="top" @changeAuth="changeAuthCamera" permissionID="CAMERA">
 				</yk-authpup>
-				<img  crossorigin="anonymous" style="width: 125rpx;height: 125rpx;"
+				<img    style="width: 125rpx;height: 125rpx;"
 					:src="isOrder&&types=='image'?imageUrl:isOrder&&types=='video'?videoUrl:otherUrl">
 				</img>
 			</view>
@@ -88,7 +88,7 @@
 				<swiper @change='swiperChange' style="height: 100%;">
 					<swiper-item style="display: flex;align-items: center;" v-for="(item,index) in billImgList"
 						:key="index">
-						<img crossorigin="anonymous" style="width: 100%;" :src="item" mode='widthFix'></img>
+						<img   style="width: 100%;" :src="item" mode='widthFix'></img>
 					</swiper-item>
 
 
