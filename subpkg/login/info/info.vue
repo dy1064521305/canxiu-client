@@ -15,7 +15,8 @@
 			</u-form-item>
 			<view style="display: flex;">
 				<text style="color: red;margin: auto 0;">*</text>
-				<u-form-item style="margin-left: -19rpx;width: 100%;" label="门店地址" borderBottom ref="item1" prop="region">
+				<u-form-item style="margin-left: -19rpx;width: 100%;" label="门店地址" borderBottom ref="item1"
+					prop="region">
 					<pickers @address="address">
 						<view v-if="userInfo.region!=undefined">{{userInfo.region}}</view>
 						<view v-else style="color: rgb(192, 196, 204);">请选择门店地址</view>
@@ -35,7 +36,14 @@
 				</view>
 
 			</u-form-item>
-
+			<view v-if="isSingle">
+				<u-form-item label="联系人" prop="contacts" borderBottom ref="item1">
+					<u--input v-model="userInfo.contacts" border="none" placeholder="请输入联系人"></u--input>
+				</u-form-item>
+				<u-form-item label="电话" prop="contactPhone" borderBottom ref="item1">
+					<u--input v-model="userInfo.contactPhone" border="none" placeholder="请输入电话"></u--input>
+				</u-form-item>
+			</view>
 		</u--form>
 
 
@@ -54,7 +62,8 @@
 	} from '@/api/user.js'
 	import {
 		refine,
-		getStoreType
+		getStoreType,
+		isSingle
 	} from '@/api/login.js'
 	export default {
 		components: {
@@ -76,11 +85,13 @@
 				},
 				storeTypeList: [], //店铺类型
 				fileList: [],
+				isSingle: undefined, //是否是单门店
 			};
 		},
 		onLoad(option) {
 			this.getList()
 			console.log(option.id);
+
 			getInfoById(option.id).then(res => {
 				console.log(res);
 				this.userInfo = res.data
@@ -109,6 +120,11 @@
 				getStoreType().then(res => {
 					this.storeTypeList = res.data
 					console.log(this.storeTypeList, '11111111');
+				})
+				//判断是否是单门店
+				isSingle(storage.get('ClientId')).then(res => {
+					console.log(res);
+					this.isSingle=res.data.flag=='true'
 				})
 			},
 			bindPickerChange(e) {
@@ -175,6 +191,7 @@
 <style lang="scss" scoped>
 	.info {
 		height: 100vh;
+
 		::v-deep.u-form-item__body {
 			height: 70rpx;
 		}
@@ -193,7 +210,7 @@
 			line-height: 91rpx;
 			text-align: center;
 			border-radius: 70rpx;
-			margin:516rpx auto 0;
+			margin: 516rpx auto 0;
 			background: #A4D091;
 		}
 	}

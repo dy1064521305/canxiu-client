@@ -1011,10 +1011,10 @@
 
 
 			.types {
-				padding-top: 25rpx;
+				// padding-top: 25rpx;
 				margin: 0rpx 20rpx 0 20rpx;
 				//width: 100%;
-				height: 696rpx;
+				// height: 696rpx;
 				background: #FFFFFF;
 				box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.05);
 				border-radius: 14rpx;
@@ -1022,14 +1022,14 @@
 				flex-wrap: wrap;
 
 				.box {
-					height: 100rpx;
+					// height: 120rpx;
 					font-size: 25rpx;
 					color: #3D3F3E;
 					width: 20%;
 
 					text-align: center;
-					margin-top: 10rpx;
-
+					// margin-top: 10rpx;
+					margin: 20rpx 0;
 					image {
 						width: 91rpx;
 						height: 91rpx;

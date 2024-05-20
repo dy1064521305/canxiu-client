@@ -21,3 +21,6 @@ export const getStoreType = () => request.get('/client/user/queryStoreType')
 
 //绑定用户id和cid
 export const bindIds= (data) => request.post('/common/getui/bind',data)
+
+//判断是否为单门店
+export const isSingle = (clientld) => request.get('/client/user/isSingle/'+clientld)
