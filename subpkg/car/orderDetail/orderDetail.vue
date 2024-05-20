@@ -30,6 +30,46 @@
 				</image>
 			</view>
 		</view>
+		
+		
+		
+		<view class="bg info">
+			<view class="title">
+				服务信息
+			</view>
+			<view class="line">
+				<text class="ziduan">客户经理</text>
+				<text>{{info.clientManager}} {{info.clientManagerPhone}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">下单人</text>
+				<text>{{info.orderPerson}} {{info.orderPersonPhone}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">服务门店</text>
+				<text>{{info.warrantyStore}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">服务联系人</text>
+				<text>{{addressVo.contact}} {{addressVo.phone}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">预约上门时间</text>
+				<text>{{info.expectTime}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">所属区域</text>
+				<text>{{addressVo.addressRegion}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">详情地址</text>
+				<text>{{addressVo.addressDetailed}}</text>
+		
+			</view>
+		
+		</view>
+		
+		
 
 		<view class="worker bg" @click="workerDetailed" v-if="workerInfo.workerName">
 			<view class="title">
@@ -326,7 +366,7 @@
 			</view>
 		</view>
 
-		<view class="info" style="background-color: #fff;margin-top: 20rpx;">
+			<!--<view class="info" style="background-color: #fff;margin-top: 20rpx;">
 			<u-collapse>
 				<u-collapse-item title="服务信息" name="Docs guide">
 					<view style="margin:-10rpx 0;">
@@ -334,10 +374,10 @@
 							<text class="ziduan">报修门店</text>
 							<text>{{info.warrantyStore}}</text>
 						</view>
-						<!-- 	<view class="line">
+					 	<view class="line">
 							<text class="ziduan">下单人</text>
 							<text>{{info.warrantyStore}}</text>
-						</view> -->
+						</view> 
 						<view class="line">
 							<text class="ziduan">预约上门时间</text>
 							<text>{{info.expectTime}}</text>
@@ -359,7 +399,7 @@
 
 			</u-collapse>
 		</view>
-
+-->
 		<view class="info" style="background-color: #fff;margin: 20rpx 0 40rpx;">
 			<u-collapse>
 				<u-collapse-item title="订单信息" name="Docs guide">
@@ -370,7 +410,7 @@
 						</view>
 						<view class="line">
 							<text class="ziduan">订单类型</text>
-							<text><text v-if="info.repairId!=null" style="width:14% ;" class="fanxiu">返修</text>维修</text>
+							<text><text v-if="info.repairId!=null" style="width:14% ;" class="fanxiu">返修</text>{{info.orderType=='1'?'保养':'维修'}}</text>
 						</view>
 						<view class="line">
 							<text class="ziduan">订单状态</text>
@@ -437,9 +477,9 @@
 			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="report('待评价')">
 				生成维修报告
 			</view>
-			<!-- 	<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="repairOrder">
+				<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="repairOrder">
 				申请返修
-			</view> -->
+			</view>
 			<view v-if="info.orderStatus=='待评价'" class="btn-green" @click="appraiseHandle">
 				评价
 			</view>

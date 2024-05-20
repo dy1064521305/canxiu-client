@@ -13,7 +13,34 @@
 				</image>
 			</view>
 		</view>
+		<view class="bg info">
+			<view class="title">
+				服务信息
+			</view>
+		<view class="line">
+			<text class="ziduan">报修门店</text>
+			<text>{{info.warrantyStore}}</text>
+		</view>
+		<!-- 	<view class="line">
+			<text class="ziduan">下单人</text>
+			<text>{{info.warrantyStore}}</text>
+		</view> -->
+		<view class="line">
+			<text class="ziduan">预约上门时间</text>
+			<text>{{info.expectTime}}</text>
+		</view>
+		<view class="line">
+			<text class="ziduan">服务地址</text>
+			<text>{{addressVo.addressRegion}}{{addressVo.addressDetailed}}</text>
+		
+		</view>
+		<view class="line">
+			<text class="ziduan"></text>
+			<text>{{addressVo.contact}} {{addressVo.showPhone}}</text>
+		
+		</view>
 
+		</view>
 		<view class="worker bg" @click="workerDetailed" v-if="workerInfo.workerName">
 			<view class="title">
 				本单维修师
@@ -192,42 +219,6 @@
 				<!-- info.additionalPrice!=null?Number(info.additionalPrice)+Number(info.preferentialPrice):Number(info.preferentialPrice) -->
 				<text style="color: #EC5722;">¥{{info.orderPrice}}</text>
 			</view>
-		</view>
-
-
-
-		<view class="info" style="background-color: #fff;margin-top: 20rpx;">
-			<u-collapse>
-				<u-collapse-item title="服务信息" name="Docs guide">
-					<view style="margin:-10rpx 0;">
-						<view class="line">
-							<text class="ziduan">报修门店</text>
-							<text>{{info.warrantyStore}}</text>
-						</view>
-						<!-- 	<view class="line">
-							<text class="ziduan">下单人</text>
-							<text>{{info.warrantyStore}}</text>
-						</view> -->
-						<view class="line">
-							<text class="ziduan">预约上门时间</text>
-							<text>{{info.expectTime}}</text>
-						</view>
-						<view class="line">
-							<text class="ziduan">服务地址</text>
-							<text>{{addressVo.addressRegion}}{{addressVo.addressDetailed}}</text>
-
-						</view>
-						<view class="line">
-							<text class="ziduan"></text>
-							<text>{{addressVo.contact}} {{addressVo.showPhone}}</text>
-
-						</view>
-					</view>
-
-				</u-collapse-item>
-
-
-			</u-collapse>
 		</view>
 
 		<view class="info" style="background-color: #fff;margin: 20rpx 0 20rpx;">
@@ -485,7 +476,7 @@
 		},
 
 		methods: {
-			
+
 			getList() {
 				//详情
 				order.getOrderInfo(this.id).then(res => {
@@ -604,7 +595,7 @@
 				console.log(e.value[0])
 				order.cancelOrder({
 					orderId: this.info.orderId,
-					repairId:this.info.repairId
+					repairId: this.info.repairId
 				}).then(res => {
 					uni.showToast({
 						title: '取消成功',
