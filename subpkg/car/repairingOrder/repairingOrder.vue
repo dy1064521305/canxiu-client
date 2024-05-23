@@ -496,7 +496,7 @@
 					})
 					this.rollBackProject = this.info.newRepairProject != null ? this.info.newRepairProject : []
 					this.getRollBackTotal()
-					this.isGet = Number(this.info.startingFree) > Number(this.info.preferentialPrice)
+					this.isGet = Number(this.info.startingFree) >= Number(this.info.preferentialPrice)
 					if (this.info.deliveryVo != null) {
 						this.info.deliveryVo.deliveryImg = this.info.deliveryVo.deliveryImg != null && this.info
 							.deliveryVo.deliveryImg != '' ? this.info.deliveryVo.deliveryImg.split(',') : []
@@ -592,7 +592,7 @@
 			},
 			//取消
 			cancelOrder() {
-				console.log(e.value[0])
+				
 				order.cancelOrder({
 					orderId: this.info.orderId,
 					repairId: this.info.repairId

@@ -95,7 +95,7 @@
 				if (pages.some(p => p.route.includes('accept'))) {
 					uni.navigateBack({
 						delta: 2, //返回上上一级注意这里要设置为2
-					})
+					})  
 				} else {
 					uni.navigateBack()
 				}
@@ -158,29 +158,37 @@
 							repairId: this.info.repairId?this.info.repairId:undefined
 						}).then(res => {
 							console.log(res);
-							let data = res.data.data
-							var orderInfos = {
-								"appid": data.appid, // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
-								"noncestr": data.noncestr, // 随机字符串
-								"package": data.package, // 固定值
-								"partnerid": data.partnerid, // 微信支付商户号
-								"prepayid": data.prepayid, // 统一下单订单号 
-								"timestamp": data.timestamp, // 时间戳（单位：秒）
-								"sign": data.sign, // 签名，这里用的 MD5/RSA 签名
-							}
-							let that = this
-							uni.requestPayment({
-								provider: "wxpay",
-								orderInfo: orderInfos,
-								success(res) {
-									console.log(res);
-									that.weChatSuccess(data.outTradeNo)
-								},
-								fail(e) {
-									console.log(orderInfos);
-									console.log(e);
+							if (res.data.code==200) {
+								let data = res.data.data
+								var orderInfos = {
+									"appid": data.appid, // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
+									"noncestr": data.noncestr, // 随机字符串
+									"package": data.package, // 固定值
+									"partnerid": data.partnerid, // 微信支付商户号
+									"prepayid": data.prepayid, // 统一下单订单号 
+									"timestamp": data.timestamp, // 时间戳（单位：秒）
+									"sign": data.sign, // 签名，这里用的 MD5/RSA 签名
 								}
-							})
+								let that = this
+								uni.requestPayment({
+									provider: "wxpay",
+									orderInfo: orderInfos,
+									success(res) {
+										console.log(res);
+										that.weChatSuccess(data.outTradeNo)
+									},
+									fail(e) {
+										console.log(orderInfos);
+										console.log(e);
+									}
+								})
+							} else{
+								this.$refs.uToast.show({
+									type: 'error',
+									message: res.data.data.message
+								});
+							}
+						
 						})
 
 					}
