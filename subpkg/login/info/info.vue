@@ -15,13 +15,16 @@
 			</u-form-item>
 			<view style="display: flex;">
 				<text style="color: red;margin: auto 0;">*</text>
-				<u-form-item style="margin-left: -19rpx;width: 100%;" label="门店地址" borderBottom ref="item1"
-					prop="region">
-					<pickers @address="address">
-						<view v-if="userInfo.region!=undefined">{{userInfo.region}}</view>
-						<view v-else style="color: rgb(192, 196, 204);">请选择门店地址</view>
-					</pickers>
-				</u-form-item>
+				<view style="margin-left: -16rpx;width: 100%;">
+					<u-form-item  label="门店地址" borderBottom
+						ref="item1" prop="region">
+						<pickers @address="address">
+							<view v-if="userInfo.region!=undefined">{{userInfo.region}}</view>
+							<view v-else style="color: rgb(192, 196, 204);">请选择门店地址</view>
+						</pickers>
+					</u-form-item>
+				</view>
+
 			</view>
 
 			<u-form-item label="详细地址" prop="detailAddress" borderBottom ref="item1">
@@ -124,7 +127,7 @@
 				//判断是否是单门店
 				isSingle(storage.get('ClientId')).then(res => {
 					console.log(res);
-					this.isSingle=res.data.flag=='true'
+					this.isSingle = res.data.flag == 'true'
 				})
 			},
 			bindPickerChange(e) {
