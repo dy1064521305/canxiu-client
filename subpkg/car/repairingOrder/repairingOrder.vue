@@ -613,7 +613,11 @@
 						title: '取消成功',
 						duration: 2000
 					});
-					this.getList()
+					setTimeout(()=>{
+							uni.navigateBack()
+					},800)
+				
+				
 					this.show = false
 				})
 			},

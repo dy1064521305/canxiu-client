@@ -99,7 +99,6 @@
 				} else {
 					uni.navigateBack()
 				}
-				console.log(page);
 			},
 
 			weChatSuccess(number) {
