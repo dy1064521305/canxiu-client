@@ -59,3 +59,7 @@ export const queryOrderCount = (params) => request.get('/client/order/queryOrder
 //查询我的全部订单各状态数量
 export const queryAllOrderCount = (params) => request.get('/client/order/queryAllOrderCount',params)
 
+
+//获取客户端返修订单详细信息
+export const getRepairOrderInfo = (repairId) => request.get('client/order/queryRepair/'+repairId)
+

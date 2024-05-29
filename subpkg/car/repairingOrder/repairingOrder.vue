@@ -17,28 +17,28 @@
 			<view class="title">
 				服务信息
 			</view>
-		<view class="line">
-			<text class="ziduan">报修门店</text>
-			<text>{{info.warrantyStore}}</text>
-		</view>
-		<!-- 	<view class="line">
+			<view class="line">
+				<text class="ziduan">报修门店</text>
+				<text>{{info.warrantyStore}}</text>
+			</view>
+			<!-- 	<view class="line">
 			<text class="ziduan">下单人</text>
 			<text>{{info.warrantyStore}}</text>
 		</view> -->
-		<view class="line">
-			<text class="ziduan">预约上门时间</text>
-			<text>{{info.expectTime}}</text>
-		</view>
-		<view class="line">
-			<text class="ziduan">服务地址</text>
-			<text>{{addressVo.addressRegion}}{{addressVo.addressDetailed}}</text>
-		
-		</view>
-		<view class="line">
-			<text class="ziduan"></text>
-			<text>{{addressVo.contact}} {{addressVo.showPhone}}</text>
-		
-		</view>
+			<view class="line">
+				<text class="ziduan">预约上门时间</text>
+				<text>{{info.expectTime}}</text>
+			</view>
+			<view class="line">
+				<text class="ziduan">服务地址</text>
+				<text>{{addressVo.addressRegion}}{{addressVo.addressDetailed}}</text>
+
+			</view>
+			<view class="line">
+				<text class="ziduan"></text>
+				<text>{{addressVo.contact}} {{addressVo.showPhone}}</text>
+
+			</view>
 
 		</view>
 		<view class="worker bg" @click="workerDetailed" v-if="workerInfo.workerName">
@@ -464,11 +464,14 @@
 				rollBackTotalMel: 0, //材料总钱数,
 				rollBackTotalPro: 0, //服务价格
 				isRollBackGet: false, //返修方案是否达到起步价
+
+				optionInfo: {}
 			};
 		},
 		onLoad(option) {
-			console.log(option);
-			this.id = option.id
+			console.log(JSON.parse(option.info));
+			this.optionInfo = JSON.parse(option.info)
+			// this.id = option.id
 			this.getList()
 		},
 		onShow() {
@@ -479,104 +482,111 @@
 
 			getList() {
 				//详情
-				order.getOrderInfo(this.id).then(res => {
+				this.optionInfo.type == '返修' ? order.getRepairOrderInfo(this.optionInfo.id).then(res => {
 					console.log(res);
-					if (res.data.addressVo != null) {
-						this.addressVo = res.data.addressVo
-						this.addressVo.addressRegion = this.addressVo.addressRegion.replace(/\//g, '')
-						var reg = /^(\d{3})\d{4}(\d{4})$/;
-						this.addressVo.showPhone = this.addressVo.phone.replace(reg, "$1****$2");
-
-					}
-
 					this.info = res.data
-					this.rollBackMel = this.info.newRepairMaterial != null ? this.info.newRepairMaterial : []
-					this.info.newRepairProject != null && this.info.newRepairProject.forEach(item => {
-						item.img = item.projectImg != null ? item.projectImg.split(',') : []
-					})
-					this.rollBackProject = this.info.newRepairProject != null ? this.info.newRepairProject : []
-					this.getRollBackTotal()
-					this.isGet = Number(this.info.startingFree) >= Number(this.info.preferentialPrice)
-					if (this.info.deliveryVo != null) {
-						this.info.deliveryVo.deliveryImg = this.info.deliveryVo.deliveryImg != null && this.info
-							.deliveryVo.deliveryImg != '' ? this.info.deliveryVo.deliveryImg.split(',') : []
-					} else {
-						this.info.deliveryVo = {
-							'deliveryImg': [],
-							'remark': ''
-						}
-						// this.info.deliveryVo.deliveryImg=[]
-						// this.info.deliveryVo.remark=''
-						console.log(this.info.deliveryVo);
-					}
+					this.getInfo()
+				}) : order.getOrderInfo(this.optionInfo.id).then(res => {
+					console.log(res);
+					this.info = res.data
+					this.getInfo()
 
-					if (this.status == '') {
-						this.status = this.info.orderStatus
-						this.content = this.info.orderStatus
-						console.log(this.status, '7066666666666');
-					}
-					//师傅信息
-					this.info.workerId != null && order.getWorkerInfo(this.info.workerId).then(res => {
-						this.workerInfo = res.data
-						switch (this.workerInfo.levelName) {
-							case '一星匠人':
-								this.workerInfo.value = 1
-								break;
-							case '二星匠人':
-								this.workerInfo.value = 2
-								break;
-							case '三星匠人':
-								this.workerInfo.value = 3
-								break;
-							case '四星匠人':
-								this.workerInfo.value = 4
-								break;
-							case '五星匠人':
-								this.workerInfo.value = 5
-								break;
-						}
-					})
-					console.log(this.info.orderStatus);
-
-					//获取追踪列表
-					order.orderTrackList({
-						orderId: this.id
-					}).then(res => {
-						//	console.log(res);
-						this.step = []
-						res.data.forEach(item => {
-							this.step.push({
-								name: item.trackStatus,
-								time: item.trackTime,
-								content: item.trackContent
-							})
-						})
-						console.log(this.content);
-						this.step.push({
-							name: this.status,
-							content: this.content,
-						})
-						console.log(this.step);
-						this.step = this.step.reverse()
-					})
-					console.log(this.status);
-
-					console.log(this.info.projectDataVoList[0].workerType, '8000000000000000');
-					this.workerType = this.info.projectDataVoList[0].workerType
-					this.info.projectDataVoList.forEach(item => {
-						item.projectImg = item.projectImg != null && item.projectImg != '' ? item
-							.projectImg.split(',') : [],
-							item.repairImgg = item.repairImg != null && item.repairImg != '' ? item
-							.repairImg.split(',') : [],
-							// item.projectVideo = item.projectVideo != '' ? item.projectVideo.split(',') : []
-							item.img = item.projectUrl != null ? item.projectUrl.split(',') : []
-					})
 				})
 
 
-
 			},
+			getInfo() {
+				if (this.info.addressVo != null) {
+					this.addressVo = this.info.addressVo
+					this.addressVo.addressRegion = this.addressVo.addressRegion.replace(/\//g, '')
+					var reg = /^(\d{3})\d{4}(\d{4})$/;
+					this.addressVo.showPhone = this.addressVo.phone.replace(reg, "$1****$2");
 
+				}
+
+
+				this.rollBackMel = this.info.newRepairMaterial != null ? this.info.newRepairMaterial : []
+				this.info.newRepairProject != null && this.info.newRepairProject.forEach(item => {
+					item.img = item.projectImg != null ? item.projectImg.split(',') : []
+				})
+				this.rollBackProject = this.info.newRepairProject != null ? this.info.newRepairProject : []
+				this.getRollBackTotal()
+				this.isGet = Number(this.info.startingFree) >= Number(this.info.preferentialPrice)
+				if (this.info.deliveryVo != null) {
+					this.info.deliveryVo.deliveryImg = this.info.deliveryVo.deliveryImg != null && this.info
+						.deliveryVo.deliveryImg != '' ? this.info.deliveryVo.deliveryImg.split(',') : []
+				} else {
+					this.info.deliveryVo = {
+						'deliveryImg': [],
+						'remark': ''
+					}
+					// this.info.deliveryVo.deliveryImg=[]
+					// this.info.deliveryVo.remark=''
+					console.log(this.info.deliveryVo);
+				}
+
+				if (this.status == '') {
+					this.status = this.info.orderStatus
+					this.content = this.info.orderStatus
+					console.log(this.status, '7066666666666');
+				}
+				//师傅信息
+				this.info.workerId != null && order.getWorkerInfo(this.info.workerId).then(res => {
+					this.workerInfo = res.data
+					switch (this.workerInfo.levelName) {
+						case '一星匠人':
+							this.workerInfo.value = 1
+							break;
+						case '二星匠人':
+							this.workerInfo.value = 2
+							break;
+						case '三星匠人':
+							this.workerInfo.value = 3
+							break;
+						case '四星匠人':
+							this.workerInfo.value = 4
+							break;
+						case '五星匠人':
+							this.workerInfo.value = 5
+							break;
+					}
+				})
+				console.log(this.info.orderStatus);
+
+				//获取追踪列表
+				order.orderTrackList({
+					orderId: this.info.orderId
+				}).then(res => {
+					//	console.log(res);
+					this.step = []
+					res.data.forEach(item => {
+						this.step.push({
+							name: item.trackStatus,
+							time: item.trackTime,
+							content: item.trackContent
+						})
+					})
+					console.log(this.content);
+					this.step.push({
+						name: this.status,
+						content: this.content,
+					})
+					console.log(this.step);
+					this.step = this.step.reverse()
+				})
+				console.log(this.status);
+
+				console.log(this.info.projectDataVoList[0].workerType, '8000000000000000');
+				this.workerType = this.info.projectDataVoList[0].workerType
+				this.info.projectDataVoList.forEach(item => {
+					item.projectImg = item.projectImg != null && item.projectImg != '' ? item
+						.projectImg.split(',') : [],
+						item.repairImgg = item.repairImg != null && item.repairImg != '' ? item
+						.repairImg.split(',') : [],
+						// item.projectVideo = item.projectVideo != '' ? item.projectVideo.split(',') : []
+						item.img = item.projectUrl != null ? item.projectUrl.split(',') : []
+				})
+			},
 			//计算返修方案价格
 			getRollBackTotal() {
 				console.log(this.rollBackProject);
@@ -592,7 +602,7 @@
 			},
 			//取消
 			cancelOrder() {
-				
+
 				order.cancelOrder({
 					orderId: this.info.orderId,
 					repairId: this.info.repairId

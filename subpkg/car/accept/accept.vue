@@ -193,11 +193,11 @@
 						</view>
 						<view class="thumb-box" v-for="(mel,mi) in mfel" :key="mi">
 							<view class="no-imgs">
-								<img   v-if="mel.materialImg!=null&&mel.materialImg!=''"
-									:src="mel.materialImg" style="width:100%;height:100%;border-radius: 10rpx;">
+								<img v-if="mel.materialImg!=null&&mel.materialImg!=''" :src="mel.materialImg"
+									style="width:100%;height:100%;border-radius: 10rpx;">
 								</img>
 								<view v-else style="width:100%;height:100%;" class="img-text">
-									<img   style="width:90rpx ;height:68rpx;"
+									<img style="width:90rpx ;height:68rpx;"
 										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
 										mode=""></img>
 									<text>暂无图片</text>
@@ -211,7 +211,7 @@
 								<view style="color: #A5A7A7;">
 									<text v-if="mel.specsId==null"></text>
 									<text v-else v-for="(s,si) in Object.values(JSON.parse(mel.materialSpecs))"
-										:key="si" style="margin-right: 10rpx;">
+										:key="si" class="mel_style">
 										{{s}}
 									</text>
 								</view>
@@ -237,13 +237,13 @@
 						订单费用
 					</view>
 					<view class="img" v-if="info.isGet">
-						<img  referrerpolicy="no-referrer"  style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
+						<img referrerpolicy="no-referrer" style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/a5a0b58c2d674bacb335cb758d4fca3d.png">
 						</img>
 						未达标按起步价收取
 					</view>
 					<view v-else class="img">
-						<img  referrerpolicy="no-referrer"  style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
+						<img referrerpolicy="no-referrer" style="width: 32rpx;height: 32rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 						</img>已达到起步价
 					</view>
@@ -285,7 +285,7 @@
 					<text style="color: #EC5722;">¥{{orderInfo.orderPrice}}</text>
 				</view>
 			</view>
-			
+
 			<view class="bg info" v-if="orderInfo.priceFlag != 0">
 				<view class="title">
 					订单费用
@@ -299,9 +299,9 @@
 					<text style="color: #EC5722;">¥{{orderInfo.orderPrice}}</text>
 				</view>
 			</view>
-				
-			
-			
+
+
+
 			<view v-if="orderInfo.deliveryVo&&!info.repairId" class="bg project">
 				<view class="title">
 					维修详情
@@ -311,8 +311,8 @@
 						图片
 					</view>
 					<!-- v-for="(item,index) in orderInfo.deliveryVo.deliveryImg!=null?orderInfo.deliveryVo.deliveryImg.split(',') : []" :key="index" -->
-					<view >
-					<!-- 	<img  style="width: 71px;border-radius: 7px;height: 71px;" :src="item" /> -->
+					<view>
+						<!-- 	<img  style="width: 71px;border-radius: 7px;height: 71px;" :src="item" /> -->
 						<upLoadFile
 							:fileListt='orderInfo.deliveryVo.deliveryImg!=null?orderInfo.deliveryVo.deliveryImg.split(",") : []'
 							types='image' :isDel='false' :isInfo='true' />
@@ -335,7 +335,7 @@
 				</view>
 				<view style="width: 70%;">
 
-					<img   :src="signUrl"
+					<img :src="signUrl"
 						:style="{'transform':'rotate(-90deg)','width':big?'100%':'14%','height':big?'477rpx':'121rpx'}"
 						alt="">
 				</view>
@@ -833,6 +833,15 @@
 				font-weight: bold;
 				background: rgba(159, 214, 186, 0.2);
 				padding: 0 20rpx;
+			}
+
+			.mel_style {
+				margin-right: 10rpx;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				width: 95%;
+				display: inline-block;
 			}
 
 			.line {

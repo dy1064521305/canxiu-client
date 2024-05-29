@@ -30,7 +30,7 @@
 				</view>
 			</view>
 
-			<view class="orders" @click="orderDetail(item.orderId,item.orderStatus)" v-for='(item,index) in orderList'
+			<view class="orders" @click="orderDetail(item)" v-for='(item,index) in orderList'
 				:key='index'>
 				<view class="main">
 					<view class="title">
@@ -80,12 +80,12 @@
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view> -->
 					<!-- 	<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
 							@click="handleRoute(item)">联系师傅</view> -->
-							<view @click.stop='orderDetail(item.orderId)' class="btn-white" v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
+							<view @click.stop='orderDetail(item)' class="btn-white" v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
 								返修</view>
-						<view @click.stop='orderDetail(item.orderId)' class="btn-green" v-if="item.orderStatus=='待评价'">
+						<view @click.stop='orderDetail(item)' class="btn-green" v-if="item.orderStatus=='待评价'">
 							去评价</view>
 						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
-						<view @click.stop='orderDetail(item.orderId)' class="btn-green"
+						<view @click.stop='orderDetail(item)' class="btn-green"
 							v-if="item.orderStatus=='服务中【审核通过】'">确认方案</view>
 					</view>
 				</view>
@@ -430,14 +430,18 @@
 				this.activeTimes = ''
 			},
 			//订单详情
-			orderDetail(id, type) {
-				if (type == '售后中') {
+			orderDetail(item) {
+				if (item.orderStatus == '售后中') {
+					let info={
+						type:this.title,
+						id:this.title=='返修'?item.repairId:item.orderId
+					}
 					uni.navigateTo({
-						url: '../../car/repairingOrder/repairingOrder?id=' + id
+						url: '../../car/repairingOrder/repairingOrder?info=' +JSON.stringify(info)
 					})
 				} else {
 					uni.navigateTo({
-						url: '../../car/orderDetail/orderDetail?id=' + id
+						url: '../../car/orderDetail/orderDetail?id=' + item.orderId
 					})
 				}
 
