@@ -287,10 +287,12 @@
 							</view>
 							<view style="color: #A5A7A7;">
 								<text v-if="mel.specsId==null"></text>
-								<text v-else v-for="(s,si) in Object.values(JSON.parse(mel.materialSpecs))" :key="si"
-									style="margin-right: 10rpx;">
-									<text v-if="s">{{s}}</text>
+								<text v-else class="mel_style">
+									<text v-for="(s,si) in Object.values(JSON.parse(mel.materialSpecs))" :key="si">
+										<text v-if="s">{{s}}</text>
+									</text>
 								</text>
+
 							</view>
 							<view style="color:#EC5722 ;" class="flexCss">
 								<view class="">
@@ -795,6 +797,16 @@
 			justify-content: space-between;
 		}
 
+		.mel_style {
+			overflow: hidden;
+			-webkit-line-clamp: 2;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			width: 95%;
+			margin-right: 10rpx;
+		}
+
 		.info {
 			.line {
 				margin-top: 15rpx;
@@ -920,7 +932,7 @@
 
 
 		.thumb-box {
-			height: 130rpx;
+			// height: 130rpx;
 			margin-top: 20rpx;
 			display: flex;
 			align-items: center;
@@ -940,7 +952,7 @@
 
 			.no-imgs {
 				width: 130rpx;
-				height: 100%;
+				height: 130rpx;
 
 
 				.img-text {
