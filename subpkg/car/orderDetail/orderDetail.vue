@@ -30,9 +30,9 @@
 				</image>
 			</view>
 		</view>
-		
-		
-		
+
+
+
 		<view class="bg info">
 			<view class="title">
 				服务信息
@@ -64,12 +64,12 @@
 			<view class="line">
 				<text class="ziduan">详情地址</text>
 				<text>{{addressVo.addressDetailed}}</text>
-		
+
 			</view>
-		
+
 		</view>
-		
-		
+
+
 
 		<view class="worker bg" @click="workerDetailed" v-if="workerInfo.workerName">
 			<view class="title">
@@ -190,10 +190,12 @@
 							</view>
 							<view style="color: #A5A7A7;">
 								<text v-if="mel.specsId==null"></text>
-								<text v-else v-for="(s,si) in Object.values(JSON.parse(mel.materialSpecs))" :key="si"
-									style="margin-right: 10rpx;">
-									{{s}}
+								<text v-else class="mel_style">
+									<text v-for="(s,si) in Object.values(JSON.parse(mel.materialSpecs))" :key="si">
+										{{s}}
+									</text>
 								</text>
+
 							</view>
 							<view style="color:#EC5722 ;" class="flexCss">
 								<view class="">
@@ -289,9 +291,9 @@
 				<text style="color: #EC5722;">¥{{info.orderPrice}}</text>
 			</view>
 		</view>
-		
-		
-		
+
+
+
 		<view class="bg info" v-if="info.priceFlag != 0">
 			<view class="title">
 				订单费用
@@ -305,8 +307,8 @@
 				<text style="color: #EC5722;">¥{{info.orderPrice}}</text>
 			</view>
 		</view>
-	
-		
+
+
 		<view v-if="info.deliveryVo&&info.orderStatus!='售后中'" class="bg project">
 			<view class="title">
 				维修详情
@@ -366,7 +368,7 @@
 			</view>
 		</view>
 
-			<!--<view class="info" style="background-color: #fff;margin-top: 20rpx;">
+		<!--<view class="info" style="background-color: #fff;margin-top: 20rpx;">
 			<u-collapse>
 				<u-collapse-item title="服务信息" name="Docs guide">
 					<view style="margin:-10rpx 0;">
@@ -410,7 +412,8 @@
 						</view>
 						<view class="line">
 							<text class="ziduan">订单类型</text>
-							<text><text v-if="info.repairId!=null" style="width:14% ;" class="fanxiu">返修</text>{{info.orderType=='1'?'保养':'维修'}}</text>
+							<text><text v-if="info.repairId!=null" style="width:14% ;"
+									class="fanxiu">返修</text>{{info.orderType=='1'?'保养':'维修'}}</text>
 						</view>
 						<view class="line">
 							<text class="ziduan">订单状态</text>
@@ -477,7 +480,7 @@
 			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="report('待评价')">
 				生成维修报告
 			</view>
-				<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="repairOrder">
+			<view v-if="info.orderStatus=='待评价'||info.orderStatus=='已完成'" class="btn-white" @click="repairOrder">
 				申请返修
 			</view>
 			<view v-if="info.orderStatus=='待评价'" class="btn-green" @click="appraiseHandle">
@@ -839,7 +842,7 @@
 						//获取追踪列表
 						order.orderTrackList({
 							orderId: this.id,
-							requester:'c'
+							requester: 'c'
 						}).then(res => {
 							//	console.log(res);
 							this.step = []
@@ -1042,8 +1045,8 @@
 			},
 			phoneAuth() {
 				console.log(1111111111);
-			this.$refs['authpup'].open()
-				
+				this.$refs['authpup'].open()
+
 			},
 			changeAuth() {
 				this.showPhone = true
@@ -1268,6 +1271,16 @@
 			justify-content: space-between;
 		}
 
+		.mel_style {
+			overflow: hidden;
+			-webkit-line-clamp: 2;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			width: 95%;
+			margin-right: 10rpx;
+		}
+
 		.info {
 			.line {
 				margin-top: 15rpx;
@@ -1407,7 +1420,7 @@
 		}
 
 		.thumb-box {
-			height: 130rpx;
+			// height: 130rpx;
 			margin-top: 20rpx;
 			display: flex;
 			align-items: center;
@@ -1427,7 +1440,7 @@
 
 			.no-imgs {
 				width: 130rpx;
-				height: 100%;
+				height: 130rpx;
 
 
 				.img-text {
