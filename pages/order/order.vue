@@ -253,8 +253,11 @@
 			//订单详情
 			orderDetail(id, type) {
 				if (type == '售后中') {
+					let info={
+						id:id
+					}
 					uni.navigateTo({
-						url: '../../subpkg/car/repairingOrder/repairingOrder?id=' + id
+						url: '../../subpkg/car/repairingOrder/repairingOrder?info=' + JSON.stringify(info)
 					})
 				} else {
 					uni.navigateTo({

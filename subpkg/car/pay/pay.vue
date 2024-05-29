@@ -95,7 +95,7 @@
 				if (pages.some(p => p.route.includes('accept'))) {
 					uni.navigateBack({
 						delta: 2, //返回上上一级注意这里要设置为2
-					})  
+					})
 				} else {
 					uni.navigateBack()
 				}
@@ -104,7 +104,7 @@
 
 			weChatSuccess(number) {
 				pay.payByOrderNumber(number).then(res => {
-				
+
 					this.$refs.uToast.show({
 						type: 'default',
 						message: res.data.message
@@ -130,35 +130,44 @@
 						pay.weChatPay({
 							orderId: this.info.orderId,
 							code: this.wxCode,
-							repairId: this.info.repairId?this.info.repairId:undefined
+							repairId: this.info.repairId ? this.info.repairId : undefined
 						}).then(res => {
 							console.log(res);
-							let data = res.data.data
-							let that = this
-							uni.requestPayment({
-								appid: data.appid,
-								provider: 'wxpay',
-								timeStamp: data.timestamp,
-								nonceStr: data.noncestr,
-								package: data.package,
-								signType: 'RSA',
-								paySign: data.paySign,
-								success(res) {
-									console.log('success:' + JSON.stringify(res));
-									that.weChatSuccess(data.outTradeNo)
-								},
-								fail(e) {
-									console.log(e);
-								}
-							});
+							if (res.data.code!=200) {
+								this.$refs.uToast.show({
+									type: 'error',
+									message: res.data.message
+								});
+							} else{
+								console.log(res);
+								let data = res.data.data
+								let that = this
+								uni.requestPayment({
+									appid: data.appid,
+									provider: 'wxpay',
+									timeStamp: data.timestamp,
+									nonceStr: data.noncestr,
+									package: data.package,
+									signType: 'RSA',
+									paySign: data.paySign,
+									success(res) {
+										console.log('success:' + JSON.stringify(res));
+										that.weChatSuccess(data.outTradeNo)
+									},
+									fail(e) {
+										console.log(e);
+									}
+								});
+							}
+						
 						})
 					} else {
 						pay.appWeChatPay({
 							orderId: this.info.orderId,
-							repairId: this.info.repairId?this.info.repairId:undefined
+							repairId: this.info.repairId ? this.info.repairId : undefined
 						}).then(res => {
 							console.log(res);
-							if (res.data.code==200) {
+							if (res.data.code == 200) {
 								let data = res.data.data
 								var orderInfos = {
 									"appid": data.appid, // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
@@ -182,13 +191,15 @@
 										console.log(e);
 									}
 								})
-							} else{
+							} else {
+								let data = JSON.parse(res.data.data)
+								console.log(data);
 								this.$refs.uToast.show({
 									type: 'error',
-									message: res.data.data.message
+									message: data.message
 								});
 							}
-						
+
 						})
 
 					}
@@ -198,7 +209,7 @@
 				} else if (this.type == '支付宝支付') {
 					pay.alipay({
 						orderId: this.info.orderId,
-						repairId: this.info.repairId?this.info.repairId:undefined
+						repairId: this.info.repairId ? this.info.repairId : undefined
 					}).then(res => {
 						console.log(res);
 						console.log(res.data.orderStr);
@@ -218,7 +229,7 @@
 				} else if (this.type == '集团代付') {
 					pay.payOnBehalf({
 						orderId: this.info.orderId,
-						repairId: this.info.repairId?this.info.repairId:undefined
+						repairId: this.info.repairId ? this.info.repairId : undefined
 					}).then(res => {
 						uni.showToast({
 							title: '操作成功',
