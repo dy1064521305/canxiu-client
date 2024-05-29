@@ -42,8 +42,8 @@
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
 							</view>
 							<view style="display: flex;margin: 7rpx 0;">
-								{{item.orderStatus=='售后中'&&statusType!='all'?'返修单号':'订单号'}}：{{item.orderStatus=='售后中'&&statusType!='all'?item.repairNumber:item.orderNumber}}
-								<view @click.stop="copy(item.orderStatus=='售后中'?item.repairNumber:item.orderNumber)">
+								{{item.repairId!=null&&statusType!='all'?'返修单号':'订单号'}}：{{item.repairId!=null&&statusType!='all'?item.repairNumber:item.orderNumber}}
+								<view @click.stop="copy(item.repairId!=null?item.repairNumber:item.orderNumber)">
 									<image
 										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/57de362ad312499d93634d2ae9021099.png"
 										style="width: 29rpx;height: 29rpx;margin-left: 10rpx;"></image>
@@ -56,7 +56,7 @@
 							<view :style="{'color':item.orderStatus=='待接单'||item.orderStatus=='售后中'||item.orderStatus=='待评价'?'#F3B133':
 								item.orderStatus=='待上门'?'#3398F3':
 								item.orderStatus=='已完成'?'#A5A7A7':'#A4D091'}">
-								{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.orderStatus=='售后中'&&statusType!='all'?item.repairStatus:item.orderStatus}}
+								{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.repairId!=null&&statusType!='all'?item.repairStatus:item.orderStatus}}
 							</view>
 						</view>
 					</view>
@@ -75,7 +75,7 @@
 						<text>预约上门时间：{{item.expectTime}}</text>
 						<text>由{{item.workerType!=null&&item.workerType}}维修</text>
 					</view>
-					<view class="btns">
+					<view class="btns" v-if="!item.repairId">
 						<!-- 	<view @click.stop='backFix(item)' class="btn-white"
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view> -->
 					<!-- 	<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
@@ -306,7 +306,9 @@
 			// #endif
 
 		},
-
+		onShow() {
+				this.getOrderlistHandle(1, 10)
+		},
 		onLoad(option) {
 			console.log(option.name);
 			this.queryParams.clientId = storage.get('ClientId')
@@ -371,9 +373,10 @@
 					console.log(res);
 					res.rows.forEach(i => {
 						i.projectDataVoList && i.projectDataVoList.forEach(item => {
-							item.img = i.orderStatus != '售后中' ? (item.projectImg != null ? item
-								.projectImg.split(',') : []) : (item.projectUrl != null ? item
-								.projectUrl.split(',') : [])
+							item.img=i.repairId !=null? (item.projectUrl != null ? item
+								.projectUrl.split(',') : []): (item.projectImg != null ? item
+								.projectImg.split(',') : []) 
+					
 						})
 					})
 					console.log(res, '.......2');
@@ -431,7 +434,7 @@
 			},
 			//订单详情
 			orderDetail(item) {
-				if (item.orderStatus == '售后中') {
+				if (item.repairId!=null) {
 					let info={
 						type:this.title,
 						id:this.title=='返修'?item.repairId:item.orderId
