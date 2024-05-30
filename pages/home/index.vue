@@ -164,10 +164,8 @@
 				去设置
 			</view>
 		</view>
-
-		<view class="index">
-			<wu-app-update></wu-app-update>
-		</view>
+·
+	
 
 	</view>
 </template>
