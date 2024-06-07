@@ -1,24 +1,34 @@
 <template>
 	<view>
 		<view v-if="locationStatus=='authorized'||locationStatus==''" class="home">
-			<u-navbar :height="navHeight" placeholder :bgColor="'RGBA(147, 189, 134, '+opacity+')'">
+			<view class="swiper_style">
+				<u-swiper height='700rpx' :list="list5" @change="e => current = e.current" :autoplay="false">
+					<view slot="indicator" class="indicator">
+						<view class="indicator__dot" v-for="(item, index) in list5" :key="index"
+							:class="[index === current && 'indicator__dot--active']">
+						</view>
+					</view>
+				</u-swiper>
+			</view>
+			<u-navbar :height="navHeight" :bgColor="'RGBA(147, 189, 134, '+opacity+')'">
 				<view slot='left'>
 
 				</view>
 				<view slot='center'
 					:style="{'padding-bottom':'50rpx','margin-top':titleHeight+'rpx','display':'flex','width':'93%'}">
-					<view class="citys">
-						<view @click.stop="choseCity">{{cityName}}
-						</view>
-						<image @click.stop="choseCity" style="width: 25rpx;height: 16rpx;"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/330ef3078c78421bb695ed0d1f82c5c8.png"
-							mode="">
-						</image>
-					</view>
+
 					<view class="search" @click="goSearch">
 						<view class="left">
-							<!-- 
-							<view class="line">|</view> -->
+							<view class="citys">
+								<view @click.stop="choseCity">{{cityName}}
+								</view>
+								<image @click.stop="choseCity" style="width: 25rpx;height: 16rpx;"
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/9f18ad7cede3427ab1d2bb6c4f1d0a8e.png"
+									mode="">
+								</image>
+							</view>
+
+							<view class="line">|</view>
 							<image class="search-icon"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png"
 								mode=""></image>
@@ -28,10 +38,12 @@
 					</view>
 				</view>
 			</u-navbar>
+
 			<view class="content">
 				<view class="types">
 					<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="ACCESS_FINE_LOCATION">
 					</yk-authpup>
+
 					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(item.typeName)'>
 
 						<image :src="item.iconUrl" mode=""></image>
@@ -85,7 +97,7 @@
 						<view
 							:style="{'margin':index==0?'10.87rpx 10.87rpx 14.49rpx 0':index==1?'10.87rpx 0 14.49rpx 10.87rpx':index==2?'14.49rpx 10.87rpx 0 0':'14.49rpx 0 0 10.87rpx'}"
 							class="box" v-for="(item,index) in regionService" :key='index'
-							@click="goMore(item.regionName,item.productVoList)">
+							@click="goMore(item.regionName)">
 							<image style="height: 100%;width: 100%;border-radius: 14rpx;" :src="item.regionImage">
 							</image>
 							<view class="mask">
@@ -96,6 +108,8 @@
 					</view>
 				</view>
 				<view class="home-bottom" id='bottom' :style="{minHeight:scrollHeight+'px'}">
+					<view class="flag" :key="statusBarHeight"
+						:style="{height:navHeight+statusBarHeight+'px'}"></view>
 					<view class="tabs"
 						:style="{backgroundColor:tabsBg,position:tabsBg === '#fff'&&'sticky',zIndex:3,top:tabHeight+'px'}">
 						<u-tabs :current="currentIndex" :list="serviceSymptomsName" lineWidth="60" lineHeight="7"
@@ -116,8 +130,7 @@
 							<view class="scroll-view">
 								<view v-for="(item1,index1) in item.list" :key="index1">
 									<view v-if="item.list.length!=0">
-										<goodCard @getCityNameEmit='detailedName' :item='item1' :isLogin='isShowMoney'
-											type='pro' />
+										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
 									</view>
 									<!-- 	<view v-if="item.list.length!=0&&isShowMoney&&item1.servicePrice.indexOf('x')==-1">
 										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
@@ -164,8 +177,11 @@
 				去设置
 			</view>
 		</view>
-·
-	
+
+
+		<!-- 	<view class="index" style="z-index: 999999999999;">
+		<wu-app-update></wu-app-update>
+	</view> -->
 
 	</view>
 </template>
@@ -183,7 +199,8 @@
 		getServiceType,
 		getServiceSymptoms,
 		getHotService,
-		getRegionService
+		getRegionService,
+		getRegion
 	} from '@/api/home.js';
 
 	import {
@@ -336,10 +353,18 @@
 				bottomNum: 0,
 				cityName: '获取位置中...',
 				locationStatus: '', //定位权限
-				timer: '',
 				promiseList: [false, false],
 				carNum: 0,
 				typeName: undefined,
+				list5: [
+					'https://cdn.uviewui.com/uview/swiper/swiper3.png',
+					'https://cdn.uviewui.com/uview/swiper/swiper2.png',
+					'https://cdn.uviewui.com/uview/swiper/swiper1.png',
+				],
+				current: 0,
+				addressName: undefined,
+				statusHeight: 0,
+				statusBarHeight: 0
 			}
 		},
 		onReady() {
@@ -351,12 +376,17 @@
 					console.log(n, '<<<0---------------n', this.tabHeight);
 					if (n.every(item => item)) {
 						this.$nextTick(() => {
+							// uni.createSelectorQuery().in(this).select('.search').boundingClientRect(data =>{
+							// this.scrollTop = data.bottom
+							// }).exec()
 							uni.createSelectorQuery().in(this).select('#bottom')
 								.boundingClientRect(data => {
-									uni.createSelectorQuery().in(this).select('.content')
+									this.scrollTop = data.top - (this.navHeight + this.statusHeight)
+
+									uni.createSelectorQuery().in(this).select('.search')
 										.boundingClientRect(data1 => {
 											console.log(data1, data);
-											this.scrollTop = data.top - data1.top
+											// this.scrollTop = data.top - data1.bottom
 											if (this.tabHeight == 0) {
 												console.log(1111111111111, '22222222222');
 												this.tabHeight = data1.top
@@ -375,15 +405,25 @@
 			}
 		},
 		onPageScroll(e) {
-			// console.log((e.scrollTop).toFixed(0),(this.scrollTop).toFixed(0));
-			if ((e.scrollTop).toFixed(0) * 1 >= (this.scrollTop).toFixed(0) * 1) {
-				//	console.log(this.tabsBg, 'lllllllllllllllllllllllllllll---216', e.scrollTop, this.scrollTop + 55);
-				this.tabsBg = '#fff'
-			} else {
-				this.tabsBg = '#F5F9FA'
-			}
+			// // console.log((e.scrollTop).toFixed(0),(this.scrollTop).toFixed(0));
+			// if ((e.scrollTop).toFixed(0) * 1 >= (this.navHeight+this.statusBarHeight).toFixed(0) * 1) {
+			// 	//	console.log(this.tabsBg, 'lllllllllllllllllllllllllllll---216', e.scrollTop, this.scrollTop + 55);
+			// 	this.tabsBg = '#fff'
+			// } else {
+			// 	this.tabsBg = '#F5F9FA'
+			// }
+			this.statusBarHeight||uni.getSystemInfo({
+				success: (info) => {
+					console.log('状态栏的高度：' + info.statusBarHeight + 'px');
+					this.statusBarHeight = info.statusBarHeight
+					console.log('===========================================405================>>>>>', this
+						.statusBarHeight);
+					// 你可以根据这个高度来设置你的内容区域的padding-top等
+				}
+			});
 			this.opacity = parseFloat((e.scrollTop / 80).toFixed(1) * 1) > 1 ? 1 : parseFloat((e.scrollTop / 80).toFixed(
 				1) * 1)
+			if(this.tabsBg !== '#F5F9FA')this.tabsBg = '#F5F9FA'
 		},
 		onShow() {
 			if (storage.get('AccessToken')) {
@@ -400,6 +440,14 @@
 					})
 
 				})
+				// #ifdef MP-WEIXIN
+				this.getLoction()
+				console.log('微信            ');
+				// #endif
+				// #ifdef APP-PLUS
+				this.$refs['authpup'].open()
+
+				// #endif
 			}
 
 			console.log('onshowinshow');
@@ -417,7 +465,7 @@
 				complete: (res) => {
 					console.log();
 					this.isShowMoney = Boolean(res.data)
-					this.getList()
+
 					if (this.isShowMoney) {
 						this.queryState();
 						getC2cUnreadMsgNum().then(res => {
@@ -453,8 +501,6 @@
 
 
 
-			this.getCityName('unInit')
-
 			uni.$on('totalUnreadCount', function(data) {
 				console.log('监听到事件来自 update ，携带参数 msg 为：' + data.msg);
 				getC2cUnreadMsgNum().then(res => {
@@ -483,7 +529,6 @@
 			console.log('onhide');
 			const apps = getApp()
 			apps.type = undefined
-			//	clearInterval(this.timer);
 		},
 		onLoad() {
 			this.getServiceTypesList()
@@ -494,26 +539,21 @@
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
-					this.getServiceSymptomsHandle()
+
 					this.isShowMoney = Boolean(res.data)
 					if (this.isShowMoney) {
+						// #ifdef APP-PLUS
+						this.$nextTick(() => {
+							this.$refs['authpup'].open()
+						})
+						// #endif
+						// #ifdef MP-WEIXIN
+						this.getLoction()
+						// #endif
 						this.queryState();
 					}
 				}
 			})
-
-
-			console.log(this.cityName, '255555555555');
-			// //this.timer = setInterval(() => {
-			// 	this.getCityName()
-
-			// 	if (this.cityName != '获取位置中...') {
-			// 		clearInterval(this.timer);
-
-			// 	}
-			// }, 1000)
-
-
 
 		},
 
@@ -524,37 +564,7 @@
 					this.serviceTypesList = res.data
 				})
 			},
-			getCityName(type) {
 
-				var that = this
-				uni.getStorage({
-					key: 'city',
-					success: function(res) {
-						console.log(res);
-						that.cityName = res.data
-					},
-					fail(res) {
-						if (type != 'unInit') {
-							// #ifdef MP-WEIXIN
-							that.getLoction()
-							// #endif
-							// #ifdef APP-PLUS
-							that.getLoction()
-							// #endif
-							// this.timer = setInterval(() => {
-
-
-							// 	if (this.cityName != '获取位置中...') {
-							// 		clearInterval(this.timer);
-
-							// 	}
-							// }, 100)
-
-						}
-
-					}
-				});
-			},
 			queryState() {
 				accountQueryState().then(res => {
 					if (res.data.QueryResult[0].State == 'Offline') {
@@ -603,22 +613,8 @@
 				//console.log("下拉刷新...");
 				this.queryParams.pageNum = 1
 				this.getServiceSymptomsHandle()
-				var that = this
-				uni.getStorage({
-					key: 'city',
-					success: function(res) {
-						console.log(res);
-						that.cityName = res.data
-					},
-					fail(res) {
-						// #ifdef MP-WEIXIN
-						that.getLoction()
-						// #endif
-						// #ifdef APP-PLUS
-						that.getLoction()
-						// #endif
-					}
-				});
+				this.getLoction()
+
 
 			},
 			swiper_change(e) {
@@ -630,6 +626,7 @@
 				//获取故障现象
 				this.loading = true
 				console.log(this.isShowMoney, '.....328');
+				this.queryParams.address = this.addressName
 				console.log(this.queryParams.pageNum, 'numnum 111111111');
 				return getServiceSymptoms(this.queryParams).then(res => {
 					console.log(res, '.............331', this.queryParams);
@@ -661,10 +658,12 @@
 							}).exec();
 						this.scrollTop || uni.createSelectorQuery().in(this).select('#bottom')
 							.boundingClientRect(data => {
-								uni.createSelectorQuery().in(this).select('.content')
+								this.scrollTop = data.top - (this.navHeight + this.statusHeight)
+								uni.createSelectorQuery().in(this).select('.search')
 									.boundingClientRect(data1 => {
 										console.log(data1, data);
-										this.scrollTop = data.top - data1.top
+										this.scrollTop = data.top - (this.navHeight + this
+											.statusHeight)
 										this.tabHeight = data1.top
 										console.log(this.scrollTop, data.top, data1.top);
 									}).exec();
@@ -693,7 +692,6 @@
 				console.log(this.serviceSymptomsName);
 			},
 			getList() {
-				this.promiseList.splice(0, 1, false)
 				//获取一级分类
 				getServiceType().then(res => {
 					console.log(res);
@@ -710,33 +708,38 @@
 					console.log('580------>>>>');
 					this.promiseList.splice(0, 1, true)
 				})
-				//this.promiseList.splice(1, 1, false)
-				//获取热门报修
-				// getHotService().then(res => {
-				// 	//	console.log(res, '1111111111111');
+				if (this.addressName) {
+					console.log(this.addressName, 'nameeeeeeeeeeeeeeeeeee');
+					this.promiseList.splice(0, 1, false)
+					//this.promiseList.splice(1, 1, false)
+					//获取热门报修
+					// getHotService().then(res => {
+					// 	//	console.log(res, '1111111111111');
 
-				// 	if (res.data != []) {
-				// 		res.data.forEach(item => {
-				// 			item.imgs = item.serviceImg.split(',')
-				// 			item.servicePrice = !this.isShowMoney ? this.replaceMoney(item
-				// 					.servicePrice) :
-				// 				item.servicePrice
-				// 		})
-				// 	}
-				// 	this.hotServiceList = res.data
-				// 	this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
-				// }).finally(() => {
-				// 	this.promiseList.splice(1, 1, true)
-				// })
-				this.promiseList.splice(1, 1, false)
+					// 	if (res.data != []) {
+					// 		res.data.forEach(item => {
+					// 			item.imgs = item.serviceImg.split(',')
+					// 			item.servicePrice = !this.isShowMoney ? this.replaceMoney(item
+					// 					.servicePrice) :
+					// 				item.servicePrice
+					// 		})
+					// 	}
+					// 	this.hotServiceList = res.data
+					// 	this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
+					// }).finally(() => {
+					// 	this.promiseList.splice(1, 1, true)
+					// })
+					this.promiseList.splice(1, 1, false)
 
-				//获取故障区域
-				getRegionService().then(res => {
-					console.log(res);
-					this.regionService = res.data
-				}).finally(() => {
-					this.promiseList.splice(1, 1, true)
-				})
+					//获取故障区域
+					getRegion().then(res => {
+						console.log(res);
+						this.regionService = res.data
+					}).finally(() => {
+						this.promiseList.splice(1, 1, true)
+					})
+				}
+
 
 
 			},
@@ -747,9 +750,7 @@
 				//	this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
 
 				uni.getLocation({
-					isHighAccuracy: true,
-					highAccuracyExpireTime: 1234,
-					type: 'gcj02',
+
 					success: (suc) => {
 						// this.location.latitude = suc.latitude
 						// this.location.longitude = suc.longitude
@@ -759,13 +760,20 @@
 						demo.reverseGeocoder({
 							location: suc.latitude + "," + suc.longitude,
 							success: function(res) {
-								console.log(res)
+								console.log(res, '783333333333')
 								that.cityName = res.result
 									.address_component.city
+								let address = res.result
+									.address_component.province + '-' + res.result
+									.address_component.city + '-' + res.result
+									.address_component.district
 								uni.setStorage({
-									key: 'city',
-									data: that.cityName
+									key: 'address_refreash',
+									data: address
 								})
+								that.addressName = uni.getStorageSync('address_refreash')
+								that.getList()
+								that.getServiceSymptomsHandle()
 								console.log(that.cityName,
 									'37837888888888888888');
 								// that.position = res.result.address_component
@@ -824,22 +832,16 @@
 			},
 			//更多报修
 			goMore(type, arr) {
-				this.timer = setInterval(() => {
-					this.getCityName()
 
-					if (this.cityName != '获取位置中...') {
-						clearInterval(this.timer);
-
-					}
-				}, 800)
-				arr.forEach(item => {
-					item.servicePrice = !this.isShowMoney && item.servicePrice != null ? this.replaceMoney(item
-							.servicePrice) :
-						item.servicePrice
-				})
+				// arr.forEach(item => {
+				// 	item.servicePrice = !this.isShowMoney && item.servicePrice != null ? this.replaceMoney(item
+				// 			.servicePrice) :
+				// 		item.servicePrice
+				// })
 				let infos = {
 					list: [],
-					name: type
+					name: type,
+					isShowMoney:this.isShowMoney
 				}
 				infos.list = type == 'more' ? this.hotServiceList : arr
 				//	console.log(infos);
@@ -848,26 +850,10 @@
 						.stringify(infos))
 				})
 			},
-			detailedName() {
-				this.timer = setInterval(() => {
-					this.getCityName()
 
-					if (this.cityName != '获取位置中...') {
-						clearInterval(this.timer);
-
-					}
-				}, 800)
-			},
 			//详情
 			goDetailed(item) {
-				// this.timer = setInterval(() => {
-				// 	this.getCityName()
 
-				// 	if (this.cityName != '获取位置中...') {
-				// 		clearInterval(this.timer);
-
-				// 	}
-				// },100)
 				console.log(item);
 				uni.navigateTo({
 					url: '../../subpkg/car/goodDetails/goodDetails?serviceId=' + item.serviceId
@@ -881,10 +867,17 @@
 			},
 			//tab栏点击
 			tabClick(item, num) {
+
 				if (item.index === this.currentIndex) return
 				num != 1 &&
 					uni.pageScrollTo({
-						scrollTop: this.scrollTop
+						// scrollTop: this.scrollTop
+						selector: '.flag',
+						success: () => {
+							setTimeout(()=>{
+								this.tabsBg = '#fff'
+							},300)
+						}
 					});
 				this.currentIndex = item.index
 
@@ -894,20 +887,6 @@
 			goService(name) {
 
 				this.typeName = name
-				this.$refs['authpup'].open()
-
-
-			},
-			changeAuth() {
-				this.timer = setInterval(() => {
-					this.getCityName()
-
-					if (this.cityName != '获取位置中...') {
-						clearInterval(this.timer);
-
-					}
-				}, 800)
-
 				this.serviceTypesList.forEach((item, indexx) => {
 					if (item.typeName == this.typeName) {
 						getApp().index = indexx
@@ -916,6 +895,12 @@
 						})
 					}
 				})
+
+
+			},
+			changeAuth() {
+				this.getLoction()
+
 			},
 
 			goCar() {
@@ -934,12 +919,38 @@
 	.home {
 		position: relative;
 		// min-height: 100vh;
-		background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png) no-repeat;
-		background-size: 100% auto;
+		// background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png) no-repeat;
+		// background-size: 100% auto;
 
 		// overflow: unset;
 		.blod {
 			font-weight: bold;
+		}
+
+		.swiper_style {
+
+			// margin: 0 20rpx;
+			::v-deep.u-swiper__indicator {
+				bottom: 60rpx !important;
+			}
+
+			.indicator {
+				@include flex(row);
+				justify-content: center;
+
+				&__dot {
+					height: 6px;
+					width: 6px;
+					border-radius: 100px;
+					background-color: rgba(255, 255, 255, 0.35);
+					margin: 0 5px;
+					transition: background-color 0.3s;
+
+					&--active {
+						background-color: black;
+					}
+				}
+			}
 		}
 
 		//height: 100vh;
@@ -951,9 +962,10 @@
 
 
 		.citys {
-			color: #fff;
+			// color: #fff;
 			align-items: center;
 			display: flex;
+			margin-left: 10px;
 
 			image {
 				margin-left: 15rpx;
@@ -968,8 +980,8 @@
 			background: #FFFFFF;
 			border-radius: 36rpx;
 			padding-right: 10rpx;
-			margin-left: 20rpx;
-			width: 77%;
+			// margin-left: 20rpx;
+			width: 100%;
 
 			.left {
 				height: 100%;
@@ -1002,8 +1014,11 @@
 			}
 		}
 
+
 		.content {
-			// position: absolute;
+
+			position: relative;
+			top: -42rpx;
 			// top: 87rpx;
 			//margin: 0 20rpx;
 
@@ -1028,6 +1043,7 @@
 					text-align: center;
 					// margin-top: 10rpx;
 					margin: 20rpx 0;
+
 					image {
 						width: 91rpx;
 						height: 91rpx;
@@ -1152,7 +1168,12 @@
 			.home-bottom {
 				margin-top: 30rpx;
 				width: 100%;
-
+				position: relative;
+				.flag{
+					position: absolute;
+					top: 0;
+					transform: translateY(-100%);
+				}
 				.scroll-view {
 					margin: 0 20rpx 0 20rpx;
 				}

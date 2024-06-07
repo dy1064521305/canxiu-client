@@ -162,7 +162,8 @@
 			}
 		},
 		onLoad(options) {
-
+			let name = uni.getStorageSync('address_refreash')
+			this.query.address = name
 			// this.goodOptionInfo = item.goodInfo
 			this.query.clientId = storage.get('ClientId')
 			this.query.serviceId = options.serviceId
@@ -364,7 +365,7 @@
 							title: '操作成功',
 							duration: 2000
 						});
-					uni.$emit('updateNote', 'coudan');
+						uni.$emit('updateNote', 'coudan');
 						setTimeout(() => {
 							uni.navigateBack()
 						}, 800)

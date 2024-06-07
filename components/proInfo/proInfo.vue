@@ -38,23 +38,30 @@
 										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/94862fc485714c92b1cff30a2bf71425.png">
 									</image> -->
 								</view>
-								<view class="center">
+								<!-- 	<view class="center">
 									<view class="left">
-										<!-- 	<view class="">
-											{{item.serviceProjectName}}
-										</view> -->
+									
 										<view class="">
 											{{item.serviceTypeName}}
 										</view>
 									</view>
 
-								</view>
+								</view>-->
 								<view class="bottom">
-									<view class="left">
+									<!-- 	<view class="left">
 										工时:{{item.serviceTime}}小时
 
+									</view> -->
+									<view style="color: #EC5722;margin-right: 10rpx;font-size: 22rpx;">
+										维修服务费:<text
+											style="font-size: 40rpx;font-weight: bold;margin: 0 10rpx;">{{item.projectPrice}}</text>元
 									</view>
-
+									<view class="right">
+										<u-number-box min='1' v-model="item.projectNumber" class='number'
+											button-size="26px" color="#ffffff" bgColor="#A4D091"
+											@change='val=>numChange(item,val,index)' iconStyle="color: #fff">
+										</u-number-box>
+									</view>
 								</view>
 
 							</view>
@@ -62,7 +69,7 @@
 
 
 						</view>
-						<view class="top-bottom" :style="{'padding-left':!submit?'165rpx':'209rpx'}">
+						<!-- 	<view class="top-bottom" :style="{'padding-left':!submit?'165rpx':'209rpx'}">
 							<view style="color: #EC5722;margin-right: 10rpx;font-size: 22rpx;">
 								维修费:<text style="font-size: 40rpx;font-weight: bold;margin: 0 10rpx;">{{item.discountPrice}}</text>元
 							</view>
@@ -72,6 +79,14 @@
 									iconStyle="color: #fff">
 								</u-number-box>
 							</view>
+						</view> -->
+						<view style="margin-top: 24rpx;
+    padding-left: 10rpx;color: #EC5722;background-color: #ffede7;height: 58rpx;line-height: 58rpx;">
+							<text>服务费用小计：</text>
+							<text>¥{{(Number(item.projectNumber)*Number(item.projectPrice)).toFixed(2)}}</text>
+						</view>
+						<view @click="openHandle(item,index)" style="display: flex;justify-content: center;margin: 20rpx 0;cursor: pointer;">
+							展开报修详情<u-icon style="margin-left: 10rpx;" :name="!item.isOpen?'arrow-down':'arrow-up'" size="18"></u-icon>
 						</view>
 					</view>
 
@@ -135,12 +150,14 @@
 				</view>
 				<!--  ||!submit-->
 				<!-- v-if="checkboxValue1.includes(item.id?item.id:item.projectId)||isCar" -->
-				<view class="remark">
+				<view  v-if="item.isOpen" class="remark">
 					<view>
 						<view class="">
-							<text style="color: red">*</text><text style="margin:0 30rpx 0 10rpx;">视频/图片</text>
+							<text style="color: red">*</text><text style="margin:0 30rpx 14rpx 10rpx;">上传视频/图片</text>
 						</view>
-
+						<view style="color: #A5A7A7;font-size: 22rpx;margin: 17rpx 0;">
+							请上传1-9张现场环境或设备故障视频/图片信息
+						</view>
 						<view style="width: 100%;margin: 10.87rpx 0 28.99rpx 0;">
 							<cl-upload :listStyle="{
 							columnGap: '10rpx',
@@ -164,9 +181,10 @@
 						</view>
 					</view> -->
 					<view style="align-items: center;">
-						<view style="margin-right: 10rpx;">订单备注</view>
+						<view style="margin-bottom: 10rpx;">故障描述</view>
+						<view style="font-size: 22rpx;color: #A5A7A7;">请简单描述故障或特殊需求备注信息</view>
 						<view style='width: 100%'>
-							<u--textarea :height='!isCar?"72":"20"' border='none' maxlength='50' confirmType="done"
+							<u--textarea height='72' border='none' maxlength='50' confirmType="done"
 								v-model="item.remarks" placeholder="请输入内容" count @input='textareaInput'></u--textarea>
 						</view>
 					</view>
@@ -284,6 +302,7 @@
 								0) ? 0 : item.projectNumber
 							//		console.log(1111);
 						}
+						item.isOpen=false
 						//	console.log(item);
 						item.imgList = item.serviceProjectImg !== null && item.serviceProjectImg !== '' ? item
 							.serviceProjectImg.split(',') : [],
@@ -443,7 +462,12 @@
 			textareaInput() {
 				uni.$u.debounce(() => this.$emit('textareaInput', this.dataList), 200)
 			},
-
+			openHandle(item,i){
+				console.log(item,i);
+				// this.$set(this.dataList[i],'isOpen',true)
+				 item.isOpen=!item.isOpen
+				this.$forceUpdate()
+			}
 
 		}
 	}
@@ -461,6 +485,7 @@
 			.box {
 				width: 100%;
 				padding: 0 28rpx;
+
 				.top {
 					display: flex;
 					width: 100%;
@@ -491,10 +516,10 @@
 
 				.top-bottom {
 					display: flex;
-					    margin-top: 27rpx;
-					
-						justify-content: space-between;
-						align-items: baseline;
+					margin-top: 27rpx;
+
+					justify-content: space-between;
+					align-items: baseline;
 				}
 			}
 
@@ -567,8 +592,8 @@
 		}
 
 		.info-one {
-			padding-left:10rpx;
-			width: 68%;
+			padding-left: 10rpx;
+			width: 75%;
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;

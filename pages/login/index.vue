@@ -61,10 +61,9 @@
 			</view> -->
 		</view>
 		
-		<view class="index">
+		<view class="index" style="z-index: 999999999999;">
 			<wu-app-update></wu-app-update>
 		</view>
-		
 	</view>
 </template>
 <script>

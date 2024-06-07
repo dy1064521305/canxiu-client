@@ -20,20 +20,24 @@
 				<!-- 		<view v-if="type=='coudan'" class="title blod">
 					{{info.serviceProductName}}
 				</view> -->
-				<view class="small">
+				<!-- <view class="small">
 					{{info.serviceTypeName}}
-				</view>
+				</view> -->
+
+			</view>
+			<view class="center" v-if="info.preferentialPrice!=null">
+				<text>开城补贴</text><text>已补贴¥{{info.preferentialPrice}}</text>
 			</view>
 			<view class="bottom">
 				<view class="bleft">
 					<view style="margin-top: 10rpx;">
 						<text style="color: #EC5722;display:inline-block;font-size: 21rpx;" class="blod">¥<text
 								style="font-size: 40rpx;font-weight: bold;margin:0 7rpx;">{{info.discountPrice}}</text></text>
-						<text v-if="info.preferentialPrice!=0"
-							style="font-size: 21rpx;text-decoration:line-through;color: #A5A7A7;">¥{{info.servicePrice}}</text>
+						<!-- 	<text v-if="info.preferentialPrice!=0"
+							style="font-size: 21rpx;text-decoration:line-through;color: #A5A7A7;">¥{{info.servicePrice}}</text> -->
 					</view>
 
-					<view v-if="info.preferentialPrice!=0" class="price-info">
+					<!-- 	<view v-if="info.preferentialPrice!=0" class="price-info">
 						<view style="position: absolute;
 					top: -17rpx;
 					left: 17rpx;">
@@ -51,7 +55,7 @@
 						</view>
 
 
-					</view>
+					</view> -->
 				</view>
 				<view style="    display: flex;
     align-items: flex-end;">
@@ -80,7 +84,7 @@
 			type: {
 				type: String
 			},
-			
+
 		},
 		data() {
 			return {
@@ -162,7 +166,7 @@
 		margin-top: 20rpx;
 		display: flex;
 
-	
+
 
 		.no-img {
 			width: 181rpx;
@@ -186,6 +190,7 @@
 			height: 181rpx;
 			padding: 18rpx;
 			position: relative;
+
 			.weixiu,
 			.baoyang {
 				width: 65rpx;
@@ -199,14 +204,15 @@
 				position: absolute;
 				top: 37rpx;
 			}
-			
+
 			.weixiu {
 				background: #E1E9FC;
 			}
-			
+
 			.baoyang {
 				background: #E6F1EB;
 			}
+
 			image {
 				width: 100%;
 				height: 100%;
@@ -220,10 +226,11 @@
 			flex-direction: column;
 			padding: 21rpx 21rpx 21rpx 0;
 			width: 70%;
-			// height: 161rpx;
 
+			// height: 161rpx;
+			justify-content: space-between ;
 			.top {
-				height: 68%;
+				// height: 68%;
 
 				.title {
 					font-size: 29rpx;
@@ -238,6 +245,24 @@
 				}
 			}
 
+			.center {
+				text {
+					border-radius: 10rpx;
+					padding: 10rpx 20rpx;
+					font-size: 24rpx;
+				}
+
+				text:first-child {
+					background-color: #ed5724;
+					color: #ffeee8;
+				}
+
+				text:nth-child(2) {
+					background-color: #ffeee8;
+					color: #ed5724;
+					margin-left: 10rpx;
+				}
+			}
 
 			// .bottom {
 			// 	display: flex;

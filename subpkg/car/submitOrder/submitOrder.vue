@@ -3,17 +3,30 @@
 		<u-navbar placeholder @leftClick='leftClick' title="填写订单">
 
 		</u-navbar>
-		<view class="address" :style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'250rpx'}"
-			@click="myAddress">
+
+		<view class="time-two" @click="timeShowHandle(index)">
+			<view style="color: #3D3F3E;font-weight: bold;padding-left: 15rpx;font-size: 33rpx;">
+				上门服务时间
+			</view>
+			<view>
+				<text style='margin-right: 22rpx;'>{{expectTime==undefined?'请选择':expectTime}}</text>
+				<image style="width: 14rpx;height: 25rpx;    margin-right: 20rpx;"
+					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
+					mode=""></image>
+			</view>
+		</view>
+		<view class="address" @click="myAddress">
 			<view v-if='addressList.length!=0' class="left">
-				<view style="font-size: 36rpx;color: #3D3F3E;font-weight: bold;">
-					{{addressInfo.contact}}
+				<view style="font-size: 25rpx;">
+					{{addressPlace}}
 				</view>
-				<view style="font-size: 29rpx;color: #3D3F3E;margin-top: 18rpx;">
-					{{addressInfo.phone}}
+				<view style="font-size: 29rpx;margin-top: 18rpx;">
+					{{addressInfo.addressRegion.replaceAll('/','')}}{{addressInfo.addressDetailed}}
 				</view>
-				<view style="font-size: 25rpx;color: #A5A7A7;margin-top: 23rpx;">
-					{{addressInfo.addressRegion}}{{addressInfo.addressDetailed}}
+				<view style="font-size: 25rpx;margin-top: 23rpx;align-items: center;
+    display: flex;">
+					<text class="font">{{addressInfo.contact}}sfsafsafsafsafsafdasfsafsa</text><text
+						style="margin: 0 10rpx;">|</text>{{addressInfo.phone}}
 				</view>
 			</view>
 			<view v-else class="left" style="font-size: 36rpx;color: #A5A7A7;">
@@ -37,21 +50,18 @@
 		<view class="list">
 			<view v-for="(item,index) in showListByType" :key="index" style="margin-bottom: 10rpx;">
 				<view
-					style="display: flex;justify-content: space-between;align-items: center;background-color: #f5f9fa;">
+					style="display: flex;justify-content: space-between;align-items: center;background-color: #fff;padding: 20rpx 0;font-size: 33rpx;padding: 30rpx 23rpx;">
+					<text style="font-weight: bold;">{{item.list[0].workerType}}</text>
+					<view class="">
+						起步价:{{item.list[0].startingFreeDiscount}}元
 
-					<view class="time-two" @click="timeShowHandle(index)">
-						<view class="">
-							<text v-if="isCar"
-								style="font-weight: bold;margin-left: 28rpx;">{{item.list[0].workerType.replace('师傅','')}}</text>
-							<text style="color: #3D3F3E;font-weight: bold;padding-left: 15rpx;">选择上门时间</text>
-						</view>
-						<view>
-							<text
-								style='text-align: end;margin-right: 22rpx;'>{{item.expectTime==undefined?'时间':item.expectTime}}</text>
-							<image style="width: 14rpx;height: 25rpx;    margin-right: 20rpx;"
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
-								mode=""></image>
-						</view>
+						<text
+							v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0">
+							<!-- <image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
+							</image>已达到起步价 -->
+							（已满足）
+						</text>
 					</view>
 				</view>
 
@@ -99,39 +109,45 @@
 		</view>
 
 		<view class="priceList">
-			<view style="background-color: #fff;margin-bottom: 20rpx;width: 100%;"
-				v-for="(item,index) in showListByType" :key="index">
-				<view class="line">
-					<view style="font-size: 34rpx;font-weight: bold;">
-						{{isCar?item.list[0].workerType:'订单明细'}}
+			<view style="font-size: 34rpx;font-weight: bold;padding: 15rpx 20rpx;">
+				费用明细
+			</view>
+			<view style="margin-bottom: 20rpx;width: 100%;" v-for="(item,index) in showListByType" :key="index">
+				<view class="line" style="color: #3D3F3E;">
+					<view class="">
+						{{item.list[0].workerType}}
 					</view>
-					<view class="img"
-						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0">
-						<u-icon name="error-circle" color="#EC5722" size="22"></u-icon>
-						未达标按起步价收取
+					<view class="">
+							¥{{item.allMoney+urgentPriceTotal}}
 					</view>
-					<view
+			
+					<!-- 	<view
 						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0"
 						class="img">
 						<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 						</image>已达到起步价
-					</view>
+					</view> -->
 
 
 				</view>
+				<view class="line" style="color: #EC5722;justify-content: flex-end;"
+					v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0">
+					<!-- <u-icon name="error-circle" color="#EC5722" size="22"></u-icon> -->
+					未达到服务起步价，按起步价结算
+				</view>
 				<view class="line">
 					<view class="">
-						起步价：
+						服务起步价
 					</view>
 					<view
 						:style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'line-through':''}">
-						¥{{item.list[0].startingFree}}
+						¥{{item.list[0].startingFreeDiscount}}
 					</view>
 				</view>
 				<view class="line">
 					<view class="">
-						工时费：
+						维修服务费
 					</view>
 					<view
 						:style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'line-through':''}">
@@ -146,26 +162,8 @@
 						¥{{urgentPriceTotal}}
 					</view>
 				</view>
-				<view
-					v-if="item.list.reduce((p, c) => p + ((Number(c.projectPrice)*Number(c.projectNumber))-(Number(c.discountPrice)*Number(c.projectNumber))), 0)!=0"
-					class="line" style="margin-left: 20rpx;font-size: 26rpx;">
-					<view style="color: #A5A7A7;">
-						品牌折扣<text v-if="item.list[0].finalRatio&&item.list[0].finalRatio!=null">({{item.list[0].finalRatio}}折)</text>
-					</view>
-					<!-- 未达到起步价 -->
-					<view
-						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0"
-						style="color:  #EC5722;">
-						-¥{{Number(item.list[0].startingFree)-Number(item.list[0].startingFreeDiscount)}}
-					</view>
-					<!-- 达到起步价 -->
-					<view
-						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0"
-						style="color:  #EC5722;">
-						-¥{{item.list.reduce((p, c) => p + ((Number(c.projectPrice)*Number(c.projectNumber))-(Number(c.discountPrice)*Number(c.projectNumber))), 0)}}
-					</view>
-				</view>
-				<view class="line">
+
+				<!-- 	<view class="line">
 					<view class="">
 						{{isCar?'小计':'合计'}}：
 					</view>
@@ -173,25 +171,28 @@
 
 						¥{{item.allMoney+urgentPriceTotal}}
 					</view>
-				</view>
+				</view> -->
 			</view>
+
+
 		</view>
 
-		<view style="height: 122rpx;">
+
+		<view style="height: 141rpx;">
 
 		</view>
 
 		<view class="bottom">
-			<!-- 	<view class=""> -->
 			<view class="">
-				<text style="font-size: 22rpx;color: #A5A7A7;">合计费用:</text>
-				<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{info.orderPrice}}</text>
+				<view style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;text-align: end;">
+					<!-- 	<text style="font-size: 22rpx;color: #A5A7A7;">合计费用:</text> -->
+					费用:¥{{info.orderPrice}}
+				</view>
+				<view style="font-size: 22rpx;
+				color: #A5A7A7;">
+					*共{{submitList.reduce((p,c)=>p+Number(c.projectNumber),0)}}项服务， 合计(不含材料)
+				</view>
 			</view>
-			<!-- 	<view v-if="urgentPriceTotal!=0">
-					<text style="font-size: 22rpx;color: #A5A7A7;margin-left:180rpx;">加急费:</text>
-					<text style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;">¥{{urgentPriceTotal}}</text>
-				</view> -->
-			<!-- 	</view> -->
 
 			<view class="btn" @click.stop="submitOrder">立即下单</view>
 
@@ -259,7 +260,9 @@
 				isCar: false, //是从购物车下单还是立即下单
 				isAgain: false,
 				projectDataVoList: [],
-				isRepair:false,//是否是返修
+				isRepair: false, //是否是返修
+				addressPlace: undefined,
+				expectTime: undefined
 			};
 		},
 		onShow() {
@@ -267,21 +270,26 @@
 
 		},
 		onLoad(option) {
-			// console.log(decodeURIComponent(option.item));
+
 			let item = JSON.parse(decodeURIComponent(option.item))
+			console.log(item);
+
 			this.submitList = item.checkedList
 			this.isCar = item.isCar
 			this.isAgain = item.isAgain
-			this.projectDataVoList=this.isAgain?item.checkedList:[]
+			this.projectDataVoList = this.isAgain ? item.checkedList : []
 			console.log(this.isAgain);
-			this.isRepair=item.isRepair
+			this.isRepair = item.isRepair
 			if (item.isRepair) {
-				this.addressInfo=item.info.addressVo
-				this.submitList.forEach(item=>{
-						item.serviceProjectImg=item.projectImg
-						item.projectImg=''
-						item.remark=''
-						item.clientId=storage.get('ClientId')
+				this.addressInfo = item.info.addressVo
+				this.addressPlace = (this.addressInfo.addressRegion.substring((this.addressInfo
+					.addressRegion.indexOf('/')) + 1)).replace('/', '-')
+				console.log(this.addressPlace, '28888888888888');
+				this.submitList.forEach(item => {
+					item.serviceProjectImg = item.projectImg
+					item.projectImg = ''
+					item.remark = ''
+					item.clientId = storage.get('ClientId')
 				})
 			}
 
@@ -385,6 +393,8 @@
 										}
 									})
 								}
+								this.addressPlace = (this.addressInfo.addressRegion.substring((this.addressInfo
+									.addressRegion.indexOf('/')) + 1)).replace('/', '-')
 							} catch (e) {
 								// error
 								console.log(e);
@@ -398,10 +408,10 @@
 
 			//计算总钱数
 			getMoney(type) {
-				if (type=='init') {
-							this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
+				if (type == 'init') {
+					this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
 				}
-		
+
 				this.showListByType.forEach((item, index) => {
 					console.log(item);
 					let all = item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)),
@@ -432,14 +442,14 @@
 				// 		item.projectNumber = data.num.value
 				// 	}
 				// })
-				
+
 				this.getMoney()
 				console.log(this.info.orderPrice);
 				if (!this.isRepair) {
 					const pages = uni.$u.pages()
 					pages[pages.length - 2].$vm.changeData([data.item])
 				}
-			
+
 			},
 			//删除url
 			getDeleteUrlList(data) {
@@ -471,18 +481,20 @@
 			},
 			timeShowHandle(i) {
 				this.isShow = true
-				this.timeIndex = i
+				// this.timeIndex = i
 			},
 			handelClose(data) {
 				this.isShow = false;
 				console.log(data);
-				this.showListByType[this.timeIndex].expectTime = data.endDate
+				// this.showListByType[this.timeIndex].expectTime = data.endDate
+				this.expectTime = data.endDate
 				console.log(this.showListByType);
 				this.info.isUrgent = data.isUrgent && !this.isCar ? 1 : 0
-				if (data.isUrgent) {
-					this.urgentPriceTotal = this.submitList.reduce((pre, item) => {
-						return pre + Number(item.urgentPrice)
-					}, 0)
+				if (data.isUrgent&&this.submitList[0].isUrgent!='N') {
+					// this.urgentPriceTotal = this.submitList.reduce((pre, item) => {
+					// 	return pre + Number(item.urgentPrice)
+					// }, 0)
+					this.urgentPriceTotal=Number(this.submitList[0].urgentPrice)
 					this.info.orderPrice = this.info.orderPrice + this.urgentPriceTotal
 				} else {
 					this.info.orderPrice = this.info.orderPrice - this.urgentPriceTotal
@@ -494,11 +506,11 @@
 
 			//下单
 			submitOrder() {
-				let bool = this.showListByType.some(item => {
-					return item.expectTime == undefined
-				})
-				console.log(bool);
-				if (bool) {
+				// let bool = this.showListByType.some(item => {
+				// 	return item.expectTime == undefined
+				// })
+
+				if (!this.expectTime) {
 					uni.showToast({
 						title: '请选择上门时间',
 						duration: 2000,
@@ -515,20 +527,30 @@
 					});
 					return
 				}
-
-				if (this.isAgain) {
-					console.log({
-						orderId: this.showListByType[0].list[0].orderId,
-						expectTime: this.showListByType[0].expectTime + ':00'
+				let place = uni.getStorageSync('address_refreash')
+				if (this.addressInfo.addressRegion.replaceAll('/', '-') != place) {
+					uni.showToast({
+						title: `仅支持服务“${this.addressPlace}”地区`,
+						duration: 2000,
+						icon: 'none'
 					})
+					return
+				}
+
+			
+				if (this.isAgain) {
+					// console.log({
+					// 	orderId: this.showListByType[0].list[0].orderId,
+					// 	expectTime: this.showListByType[0].expectTime + ':00'
+					// })
 					reissueOrder({
 						orderId: this.showListByType[0].list[0].orderId,
-						expectTime: this.showListByType[0].expectTime + ':00'
-					}).then(res => {
+						expectTime: this.expectTime + ':00'
+						}).then(res => {
 						console.log(res);
 						let timeObj = {}
 						this.showListByType.forEach(item => {
-							timeObj[item.list[0].workerType] = item.expectTime + ':00'
+							timeObj[item.list[0].workerType] = this.expectTime + ':00'
 
 						})
 						let info = {
@@ -571,17 +593,19 @@
 						item.projectImg = this.toStrings(item.projectImg)
 						item.shoppingCartStatus = 1
 						item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
-						item.remark=item.remarks
+						item.remark = item.remarks
+						item.productId=item.serviceId
 					})
 					let timeObj = {}
 					let startingFree = {}
 					let beforeStartingFree = {}
 					let costStartingFreeMap = {}
 					this.showListByType.forEach(item => {
-						timeObj[item.list[0].workerType] = item.expectTime + ':00'
+						console.log( item.list[0]);
+						timeObj[item.list[0].workerType] = this.expectTime + ':00'
 						startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount,
-							beforeStartingFree[item.list[0].workerType] = item.list[0].startingFree,
-							costStartingFreeMap[item.list[0].workerType] = item.list[0].initialLabor
+							beforeStartingFree[item.list[0].workerType] = item.list[0].serviceStartingFree,
+							costStartingFreeMap[item.list[0].workerType] = item.list[0].workerStartingFree
 					})
 					console.log(timeObj, startingFree);
 					this.info.orderProjectBoList = arr
@@ -607,8 +631,15 @@
 							}
 							console.log(info);
 							uni.redirectTo({
-								url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(info)
+								url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(
+									info)
 							})
+						}else{
+							this.$refs.uToast.show({
+								type: 'error',
+								message: res.msg
+							});
+							return
 						}
 					})
 				}
@@ -661,11 +692,11 @@
 			textConfirm(arr) {
 				console.log(arr);
 				this.submitList = arr
-				if(!this.isRepair){
-						const pages = uni.$u.pages()
-				pages[pages.length - 2].$vm.changeData(arr)
+				if (!this.isRepair) {
+					const pages = uni.$u.pages()
+					pages[pages.length - 2].$vm.changeData(arr)
 				}
-			
+
 			}
 
 		}
@@ -684,7 +715,17 @@
 			//	width: 100%;
 			//height: 286rpx;
 			background: #fff;
+			color: #3D3F3E;
 			display: flex;
+
+			.font {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 100px;
+				display: inline-block;
+
+			}
 
 			.left {
 				padding: 46rpx 0;
@@ -694,7 +735,7 @@
 			}
 
 			.right {
-				height: 100%;
+				// height: 100%;
 				display: flex;
 				align-items: center;
 				width: 17%;
@@ -722,8 +763,9 @@
 		.time-two {
 			font-size: 30rpx;
 			height: 85rpx;
-			width: 100%;
+			// width: 100%;
 			background: #fff;
+			padding: 0 20rpx;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
@@ -756,11 +798,13 @@
 
 		.priceList {
 			width: 100%;
+			background-color: #fff;
 
 			.line {
 				display: flex;
 				justify-content: space-between;
 				padding: 10rpx 20rpx;
+				color: #A5A7A7;
 
 				.img {
 					align-items: center;
@@ -773,7 +817,7 @@
 
 		.bottom {
 			width: 100%;
-			height: 100rpx;
+			height: 137rpx;
 			background: #fff;
 			position: fixed;
 			display: flex;

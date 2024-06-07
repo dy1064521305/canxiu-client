@@ -202,7 +202,8 @@
 					"path": "goodDetails/goodDetails",
 					"style": {
 						"navigationBarTitleText": "",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": false,
+							"navigationStyle": "custom"
 					}
 
 				},
