@@ -203,7 +203,8 @@
 					"style": {
 						"navigationBarTitleText": "",
 						"enablePullDownRefresh": false,
-							"navigationStyle": "custom"
+							"navigationStyle": "custom",
+							"disableScroll": true
 					}
 
 				},
@@ -303,7 +304,8 @@
 					"path": "coudanDetail/coudanDetail",
 					"style": {
 						"navigationBarTitleText": "",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
 					}
 
 				}

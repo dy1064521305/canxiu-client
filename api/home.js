@@ -16,7 +16,6 @@ export const getHotCity = () => request.get('/client/home/listHotCity')
 // 获取故障现象
 export const getServiceSymptoms = (params) => request.get('/client/home/listServiceSymptoms',params)
 
-
 //城市选择列表
 export const getListCity = () => request.get('/client/home/listCity',  { custom: { auth: false } })
 

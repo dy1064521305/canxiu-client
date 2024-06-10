@@ -25,7 +25,7 @@
 				</view> -->
 
 			</view>
-			<view class="center" v-if="info.preferentialPrice!=null">
+			<view class="center" v-if="info.preferentialPrice!=0&&info.preferentialPrice!=null">
 				<text>开城补贴</text><text>已补贴¥{{info.preferentialPrice}}</text>
 			</view>
 			<view class="bottom">

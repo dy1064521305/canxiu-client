@@ -199,10 +199,10 @@
 							</view>
 							<view style="color:#EC5722 ;" class="flexCss">
 								<view class="">
-									¥{{Number(mel.materialPrice).toFixed(0)}}
+									¥{{Number(mel.materialPrice)}}
 								</view>
 								<view style="font-weight: bold;margin-left: 21rpx;">
-									小计:¥{{(Number(mel.materialPrice)*Number(mel.materialCount)).toFixed(0)}}
+									小计:¥{{Number(mel.materialPrice)*Number(mel.materialCount)}}
 								</view>
 							</view>
 						</view>
@@ -736,7 +736,7 @@
 					return pre + Number(item.projectPrice) * Number(item.projectNumber)
 				}, 0)
 				let total2 = this.melTotal
-				let total = (total1 + total2).toFixed(0)
+				let total = total1 + total2
 				return total
 			}
 		},

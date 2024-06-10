@@ -21,11 +21,11 @@
 					{{addressPlace}}
 				</view>
 				<view style="font-size: 29rpx;margin-top: 18rpx;">
-					{{addressInfo.addressRegion.replaceAll('/','')}}{{addressInfo.addressDetailed}}
+					{{addressRegion}}{{addressInfo.addressDetailed}}
 				</view>
 				<view style="font-size: 25rpx;margin-top: 23rpx;align-items: center;
     display: flex;">
-					<text class="font">{{addressInfo.contact}}sfsafsafsafsafsafdasfsafsa</text><text
+					<text class="font">{{addressInfo.contact}}</text><text
 						style="margin: 0 10rpx;">|</text>{{addressInfo.phone}}
 				</view>
 			</view>
@@ -62,6 +62,7 @@
 							</image>已达到起步价 -->
 							（已满足）
 						</text>
+						<text v-else @click="coudanShowHandle(item.list[0].workerType)"> | 去凑单></text>
 					</view>
 				</view>
 
@@ -99,7 +100,7 @@
 
 
 				<view v-else>
-					<proInfo :list="item.list" :isCar='true' :submit='false' @getCheck='getCheck'
+					<proInfo :list="item.list" :isCar='isCar' :submit='false' @getCheck='getCheck'
 						@getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
 				</view>
 
@@ -118,9 +119,9 @@
 						{{item.list[0].workerType}}
 					</view>
 					<view class="">
-							¥{{item.allMoney+urgentPriceTotal}}
+						¥{{item.allMoney+urgentPriceTotal}}
 					</view>
-			
+
 					<!-- 	<view
 						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0"
 						class="img">
@@ -209,6 +210,34 @@
 			@cancel='showModal=false' title="新建服务地址" :content='content' @confirm="addAddress"></u-modal>
 
 		<u-toast ref="uToast"></u-toast>
+
+
+		<!-- 凑单弹框 -->
+		<u-popup :show="coudanShow" closeable @close="coudanShow=false">
+			<view class="cou-dan">
+				<view class="title">服务橱窗</view>
+				<view style="padding:10rpx 20rpx;">
+					<u-search clearabled placeholder="请输入需要的服务" v-model="searchName" @clear="getCoudanList"
+						@search="getCoudanList" :show-action="false"></u-search>
+				</view>
+
+
+				<view v-if="coudanList.length!=0" class="main">
+					<view v-for="(item,index) in coudanList" :key="index" class="box">
+						<coudan-card :item='item' type='submit'/>
+
+
+
+					</view>
+
+				</view>
+				<u-empty v-else mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" text='没有找到哦，换个关键词试一下吧'>
+				</u-empty>
+			</view>
+		</u-popup>
+
+
+
 	</view>
 </template>
 <script>
@@ -217,14 +246,17 @@
 	import proInfo from '@/components/proInfo/proInfo.vue'
 	import formatter from '@/utils/formatter.js'
 	import projectCard from '@/components/projectCard/projectCard.vue'
+	import coudanCard from '../components/coudanCard/coudanCard.vue'
 	import {
 		getAddressList
 	} from "@/api/address.js"
 	import {
-		postOrder
+		postOrder,
+		listByWorkerType
 	} from '@/api/car.js'
 	import {
-		reissueOrder
+		reissueOrder,
+		orderSend
 	} from '@/api/order.js'
 	import {
 		getInfoById,
@@ -234,12 +266,15 @@
 		components: {
 			hTimeAlert,
 			proInfo,
-			projectCard
+			projectCard,
+			coudanCard
 		},
 		mixins: [],
 		props: {},
 		data() {
 			return {
+				searchName:"",
+				coudanList: [],
 				showModal: false,
 				content: '您还没有服务地址，请先添加一个新的服务地址',
 				allCheck: false,
@@ -262,7 +297,11 @@
 				projectDataVoList: [],
 				isRepair: false, //是否是返修
 				addressPlace: undefined,
-				expectTime: undefined
+				expectTime: undefined,
+				coudanShow: false,
+				addressRegion:undefined,
+				typename:undefined
+				
 			};
 		},
 		onShow() {
@@ -284,6 +323,7 @@
 				this.addressInfo = item.info.addressVo
 				this.addressPlace = (this.addressInfo.addressRegion.substring((this.addressInfo
 					.addressRegion.indexOf('/')) + 1)).replace('/', '-')
+					this.addressRegion=this.addressInfo.addressRegion.replaceAll('/','')
 				console.log(this.addressPlace, '28888888888888');
 				this.submitList.forEach(item => {
 					item.serviceProjectImg = item.projectImg
@@ -433,31 +473,17 @@
 					item.projectNumber = (item.id ? item.id : item.projectId) === id ? data.num.value : item
 						.projectNumber
 				})
-				// this.info.orderPrice = this.submitList.reduce((p, c) => p + (((c.id ? c.id : c.projectId) === id ? data.num.value : c.projectNumber) * Number(c.discountPrice)), 0)
-				// // this.urgentPriceTotal = this.info.isUrgent ? this.submitList.reduce((p, c) => p + (((c.id ? c.id : c
-				// // 		.projectId) === id ? data.num
-				// // 	.value : c.projectNumber) * Number(c.urgentPrice)), 0) : 0
-				// this.submitList.forEach(item => {
-				// 	if ((item.id ? item.id : item.projectId) === id) {
-				// 		item.projectNumber = data.num.value
-				// 	}
-				// })
 
 				this.getMoney()
-				console.log(this.info.orderPrice);
-				if (!this.isRepair) {
-					const pages = uni.$u.pages()
-					pages[pages.length - 2].$vm.changeData([data.item])
-				}
 
 			},
 			//删除url
 			getDeleteUrlList(data) {
 				console.log(data);
-				if (!this.isRepair) {
-					const pages = uni.$u.pages()
-					pages[pages.length - 2].$vm.changeData(data)
-				}
+				// if (!this.isRepair) {
+				// 	const pages = uni.$u.pages()
+				// 	pages[pages.length - 2].$vm.changeData(data)
+				// }
 
 				uni.setStorage({
 					key: 'submit_order',
@@ -490,11 +516,11 @@
 				this.expectTime = data.endDate
 				console.log(this.showListByType);
 				this.info.isUrgent = data.isUrgent && !this.isCar ? 1 : 0
-				if (data.isUrgent&&this.submitList[0].isUrgent!='N') {
+				if (data.isUrgent && this.submitList[0].isUrgent != 'N') {
 					// this.urgentPriceTotal = this.submitList.reduce((pre, item) => {
 					// 	return pre + Number(item.urgentPrice)
 					// }, 0)
-					this.urgentPriceTotal=Number(this.submitList[0].urgentPrice)
+					this.urgentPriceTotal = Number(this.submitList[0].urgentPrice)
 					this.info.orderPrice = this.info.orderPrice + this.urgentPriceTotal
 				} else {
 					this.info.orderPrice = this.info.orderPrice - this.urgentPriceTotal
@@ -503,7 +529,24 @@
 				//this.dateRange = data._dateRange
 				console.log(this.submitList);
 			},
-
+			
+			coudanShowHandle(name) {
+				this.typename=name
+				this.coudanShow = true
+				this.getCoudanList()
+			},
+			getCoudanList(){
+				//获取凑单列表
+				listByWorkerType({
+					clientId: storage.get('ClientId'),
+					type: this.typename,
+					name: this.searchName
+				}).then(res => {
+					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
+					this.coudanList = res.data
+				
+				})
+			},
 			//下单
 			submitOrder() {
 				// let bool = this.showListByType.some(item => {
@@ -537,7 +580,7 @@
 					return
 				}
 
-			
+
 				if (this.isAgain) {
 					// console.log({
 					// 	orderId: this.showListByType[0].list[0].orderId,
@@ -546,7 +589,7 @@
 					reissueOrder({
 						orderId: this.showListByType[0].list[0].orderId,
 						expectTime: this.expectTime + ':00'
-						}).then(res => {
+					}).then(res => {
 						console.log(res);
 						let timeObj = {}
 						this.showListByType.forEach(item => {
@@ -594,14 +637,14 @@
 						item.shoppingCartStatus = 1
 						item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
 						item.remark = item.remarks
-						item.productId=item.serviceId
+						item.productId = item.serviceId
 					})
 					let timeObj = {}
 					let startingFree = {}
 					let beforeStartingFree = {}
 					let costStartingFreeMap = {}
 					this.showListByType.forEach(item => {
-						console.log( item.list[0]);
+						console.log(item.list[0]);
 						timeObj[item.list[0].workerType] = this.expectTime + ':00'
 						startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount,
 							beforeStartingFree[item.list[0].workerType] = item.list[0].serviceStartingFree,
@@ -618,6 +661,7 @@
 					postOrder(this.info).then(res => {
 						console.log(res);
 						if (res.code == 200) {
+							orderSend(res.data).then(res=>{})
 							uni.removeStorage({
 								key: 'address_info'
 							})
@@ -634,7 +678,7 @@
 								url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(
 									info)
 							})
-						}else{
+						} else {
 							this.$refs.uToast.show({
 								type: 'error',
 								message: res.msg
@@ -692,11 +736,16 @@
 			textConfirm(arr) {
 				console.log(arr);
 				this.submitList = arr
-				if (!this.isRepair) {
-					const pages = uni.$u.pages()
-					pages[pages.length - 2].$vm.changeData(arr)
-				}
+				// if (!this.isRepair) {
+				// 	const pages = uni.$u.pages()
+				// 	pages[pages.length - 2].$vm.changeData(arr)
+				// }
 
+			},
+			changeData(obj){
+				this.submitList.push(obj)
+				this.getMoney('init')
+				this.coudanShow=false
 			}
 
 		}
@@ -710,6 +759,20 @@
 </style>
 <style lang="scss" scoped>
 	.page {
+		.cou-dan {
+			height: 85vh;
+		
+			.title {
+				margin: 20rpx;
+				font-size: 37rpx;
+				text-align: center;
+			}
+		
+			.main {
+				height: 90%;
+				overflow-y: scroll;
+			}
+		}
 		.address {
 			padding: 0 34rpx;
 			//	width: 100%;

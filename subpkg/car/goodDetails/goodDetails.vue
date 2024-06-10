@@ -1,215 +1,302 @@
 <template>
-	<scroll-view class="serviceInfo" ref="target" :scroll-y="true">
-
-		<!-- 服务详情 -->
-		<view class="top">
-			<view class="navbar" :style="{'top':(statusHeight*2)+'rpx'}">
-				<u-icon name="arrow-left" size="19" @click="goBack()"></u-icon>
-				<text>拱墅区</text>
-			</view>
-			<u-swiper v-if="serviceImgList.length!=0" height='564rpx' :list="serviceImgList"
-				@change="e => currentNum = e.current" :autoplay="false" indicatorStyle="right: 20px">
-				<view slot="indicator" class="indicator-num">
-
-					<text class="indicator-num__text">{{ currentNum + 1 }}/{{ serviceImgList.length }}</text>
-				</view>
-			</u-swiper>
-			<view v-else class="no-img">
-				<image style="width:500rpx ;height:400rpx;"
-					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
-					mode=""></image>
-				<text>暂无图片</text>
-			</view>
-			<view class="info bgf">
-				<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/0616977a744749ac86c5b97a1728f654.png"
-					mode=""></image> -->
-				<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
-				<view :class="['prices',goodInfo.preferentialPrice!=null?'price-img':'']">
-					<view class="top">
-						<text
-							style="font-size: 43rpx;">{{goodInfo.preferentialPrice!=null?goodInfo.discountPrice:goodInfo.projectAmount}}</text>
-						<text style="font-size: 27rpx;">元</text>
-						<text v-if="goodInfo.preferentialPrice!=null">已补贴￥{{goodInfo.preferentialPrice}}</text>
-					</view>
-					<view v-if="goodInfo.preferentialPrice!=null" style="font-size: 22rpx;">
-						日常价：{{goodInfo.projectAmount}}元
-					</view>
-
-				</view>
-				<view style="margin:15rpx 0 ;">{{goodInfo.serviceName}}</view>
-				<view>
-					{{goodInfo.serviceDescription}}
-				</view>
-			</view>
+	<view class="good-detail-page">
+		<view class="navbar"
+			:style="{padding:(statusHeight*2)+'rpx 0px 24rpx 16rpx',backgroundColor:'rgba(255,255,255,'+navbarColorOpacity+')'}">
+			<u-icon name="arrow-left" size="19" @click="goBack()"></u-icon>
+			<text>{{city}}</text>
 		</view>
 
-		<view class="services bgf">
-			<!-- :submit="projectVoList.length>1" -->
-			<!-- 	<proInfo :list='projectVoList' :isCar='false' :isJoinCar='isJoinCar' :question='true' @getCheck='getCheck'
-				:types='types' @textareaInput='textConfirm' ref="proInfo" @getDeleteUrlList='getDeleteUrlList' /> -->
-			<view class="service_top">
-				<view class="">
-					<view>服务数量<text style="color: #3D3F3E;">(单位：{{goodInfo.projectCompany}})</text></view>
-					<u-number-box min='1' disabledInput v-model="projectForm.projectNumber" class='number'
-						button-size="27" color="#ffffff" bgColor="#A4D091" :asyncChange="true" iconStyle="color: #fff"
-						@change='numChange'>
-					</u-number-box>
-				</view>
-				<view>
-					如有多处需要维修/维保，请按照数量加购
-				</view>
-			</view>
-			<view class="remark">
-				<view>
-					<view class="">
-						<text style="color: red">*</text><text
-							style="margin:0 30rpx 14rpx 10rpx;font-size: 33rpx;">上传视频/图片</text>
-					</view>
-					<view style="color: #A5A7A7;font-size: 22rpx;margin: 19rpx 0;">
-						请上传1-9张现场环境或设备故障视频/图片信息
-					</view>
-					<view style="width: 100%;margin: 10.87rpx 0 28.99rpx 0;">
-						<cl-upload :listStyle="{
-											columnGap: '10rpx',
-											columns:'4',
-											rowGap:'10rpx'
-											}" :imageFormData="{
-												size:10
-											}" :videoFromData="{
-												size:10
-											}" v-model="projectForm.projectImg" :headers="headers" :action="action" @onSuccess="onSuccesss"
-							@input='onInput'></cl-upload>
-					</view>
-				</view>
+		<scroll-view class="serviceInfo" ref="target" :scroll-y="true" :scroll-into-view="scrollIntoView"
+			@scroll="pageScroll">
 
-				<view style="align-items: center;">
-					<view style="font-size: 33rpx;">故障描述</view>
-					<view style="font-size: 22rpx;color: #A5A7A7;margin: 10rpx 0;">请简单描述故障或特殊需求备注信息</view>
-					<view style='width: 100%'>
-						<u--textarea height='72' maxlength='50' confirmType="done" v-model="projectForm.remarks"
-							placeholder="请输入内容" count></u--textarea>
+
+			<!-- 服务详情 -->
+			<view class="top">
+
+				<u-swiper v-if="serviceImgList.length!=0" height='564rpx' :list="serviceImgList"
+					@change="e => currentNum = e.current" :autoplay="false" indicatorStyle="right: 20px">
+					<view slot="indicator" class="indicator-num">
+
+						<text class="indicator-num__text">{{ currentNum + 1 }}/{{ serviceImgList.length }}</text>
 					</view>
-				</view>
-			</view>
-
-		</view>
-
-		<view class="comment bgf">
-			<view class="title">
-				<text>用户评论({{appraiseList.length}})</text>
-				<view v-if="appraiseList.length!=0" style="display:flex;align-items: center;" @click="allComment">
-					<view style="font-size: 25rpx;color: #CBCFCE;margin-right: 17rpx;">全部</view>
-					<image
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
+				</u-swiper>
+				<view v-else class="no-img">
+					<image style="width:500rpx ;height:400rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
 						mode=""></image>
+					<text>暂无图片</text>
 				</view>
-			</view>
-			<view v-if="appraiseList.length!=0" style="margin:30rpx 0 10rpx;display: flex;">
-				<u-avatar :src="appraiseList[0].avatarUrl" size="25"></u-avatar>
-				<!-- 	<image src="../../static/img/login/loginBg.png" mode=""></image> -->
-				<view
-					style="font-size: 25rpx;color: #3D3F3E;width:10%;height: 50rpx;line-height: 50rpx;margin-left: 20rpx;">
-					{{appraiseList[0].name}}
-				</view>
-				<u-rate :count="count" v-model="appraiseList[0].num" allowHalf activeColor='#ec9322' readonly></u-rate>
-				<view
-					style="font-size: 25rpx;color: #3D3F3E;height: 50rpx;line-height: 50rpx;width: 50%;text-align: end;">
-					{{appraiseList[0].time}}
-				</view>
-			</view>
-			<view v-if="appraiseList.length!=0">
-				<u--text :lines="2" :text="appraiseList[0].appraiseContent">
-				</u--text>
-			</view>
-			<view v-if="appraiseList.length!=0" style="display: flex;width:97%;overflow: hidden;">
-				<view style='margin:15rpx 10rpx;' v-for="(item, index) in appraiseList[0].imgs" :key="index"
-					v-if="index < 3">
-					<u-image radius='8px' width="156rpx" height="156rpx" :src="item" mode=""
-						@click="previewImage(item)">
-					</u-image>
-				</view>
-				<view v-if="appraiseList[0].imgs.length > 4"
-					:style="{ background: `url(${appraiseList[0].imgs[4]})`,margin:' 14rpx 0 0 14rpx',width:'158rpx',height:'156rpx',borderRadius:'14rpx' }">
-					<view style="text-align: center;line-height: 156rpx;">
-						+{{ appraiseList[0].imgs.length - 4 }}
+				<view class="info bgf">
+					<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/0616977a744749ac86c5b97a1728f654.png"
+					mode=""></image> -->
+					<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
+					<view :class="['prices',goodInfo.preferentialPrice!=null?'price-img':'']">
+						<view class="top">
+							<text
+								style="font-size: 43rpx;">{{goodInfo.preferentialPrice!=null?goodInfo.discountPrice:goodInfo.projectAmount}}</text>
+							<text style="font-size: 27rpx;">元</text>
+							<text v-if="goodInfo.preferentialPrice!=null">已补贴￥{{goodInfo.preferentialPrice}}</text>
+						</view>
+						<view v-if="goodInfo.preferentialPrice!=null" style="font-size: 22rpx;">
+							日常价：{{goodInfo.projectAmount}}元
+						</view>
+
+					</view>
+					<view style="margin:15rpx 0 ;">{{goodInfo.serviceName}}</view>
+					<view>
+						{{goodInfo.serviceDescription}}
 					</view>
 				</view>
 			</view>
-		</view>
-
-		<view class="detail bgf">
-			<u-tabs :list="list" @click="click" lineColor="black" :scrollable='false' placeholder></u-tabs>
-			<!-- 对应的盒子模块 -->
-			<view class="main0">
-				<view class="title">
-					服务内容
-				</view>
-				<view v-if="goodInfo.projectImg!=null">
-					<image v-for='(img,imgi) in goodInfo.projectImg.split(",")' :key="imgi" :src="img"
-						style="width:100%;"></image>
-				</view>
-			</view>
-			<view class="main1">
-				<view class="title">
-					<text>收费标准</text>
-					<view style="color: #A5A7A7;float: right;display: flex;">收费项说明<u-icon name="info-circle"></u-icon>
+			<view class="services bgf">
+				<!-- :submit="projectVoList.length>1" -->
+				<!-- 	<proInfo :list='projectVoList' :isCar='false' :isJoinCar='isJoinCar' :question='true' @getCheck='getCheck'
+					:types='types' @textareaInput='textConfirm' ref="proInfo" @getDeleteUrlList='getDeleteUrlList' /> -->
+				<view class="service_top">
+					<view class="">
+						<view>服务数量<text style="color: #3D3F3E;">(单位：{{goodInfo.projectCompany}})</text></view>
+						<u-number-box min='1' disabledInput v-model="projectForm.projectNumber" class='number'
+							button-size="27" color="#ffffff" bgColor="#A4D091" :asyncChange="true"
+							iconStyle="color: #fff" @change='numChange'>
+						</u-number-box>
+					</view>
+					<view>
+						如有多处需要维修/维保，请按照数量加购
 					</view>
 				</view>
-				<table style="width: 100%;">
-					<tr style="background-color: #ecf7f1;">
-						<td>费用名称</td>
-						<td>价格</td>
-					</tr>
-					<tr v-for='(item,index)  in priceList' :key="index">
-						<td>{{item.name}}</td>
-						<td>{{item.price}}</td>
-					</tr>
-				</table>
-			</view>
-			<view class="main2">
-				<view class="title">
-					材料清单
-				</view>
-				<view class="cell">
-					<u-collapse :border='false'>
+				<view class="remark">
+					<view>
+						<view class="">
+							<text style="color: red">*</text><text
+								style="margin:0 30rpx 14rpx 10rpx;font-size: 33rpx;">上传视频/图片</text>
+						</view>
+						<view style="color: #A5A7A7;font-size: 22rpx;margin: 19rpx 0;">
+							请上传1-9张现场环境或设备故障视频/图片信息
+						</view>
+						<view style="width: 100%;margin: 10.87rpx 0 28.99rpx 0;">
+							<cl-upload :listStyle="{
+												columnGap: '10rpx',
+												columns:'4',
+												rowGap:'10rpx'
+												}" :imageFormData="{
+													size:10
+												}" :videoFromData="{
+													size:10
+												}" v-model="projectForm.projectImg" :headers="headers" :action="action" @onSuccess="onSuccesss"
+								@input='onInput'></cl-upload>
+						</view>
+					</view>
 
-						<u-collapse-item v-for="(item,index) in melList" :key="index" :title="item.name"
-							name="Docs guide">
-							<view v-for="(ch,chindex) in item.list" :key='chindex'
-								style="display: flex;justify-content: space-between;margin-bottom: 20rpx;">
-								<text style="width: 70%;" v-for="(s,si) in Object.values(JSON.parse(ch.materialSpecs))"
-									:key="si">
-									{{s}}
-								</text>
-								<text>{{ch.salePrice}}元/{{ch.materialUnit}}</text>
+					<view style="align-items: center;">
+						<view style="font-size: 33rpx;">故障描述</view>
+						<view style="font-size: 22rpx;color: #A5A7A7;margin: 10rpx 0;">请简单描述故障或特殊需求备注信息</view>
+						<view style='width: 100%'>
+							<u--textarea height='72' maxlength='50' confirmType="done" v-model="projectForm.remarks"
+								placeholder="请输入内容" count></u--textarea>
+						</view>
+					</view>
+				</view>
+
+			</view>
+
+			<view class="comment bgf">
+				<view class="title">
+					<text>用户评论({{appraiseList.length}})</text>
+					<view v-if="appraiseList.length!=0" style="display:flex;align-items: center;" @click="allComment">
+						<view style="font-size: 25rpx;color: #CBCFCE;margin-right: 17rpx;">全部</view>
+						<image
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
+							mode=""></image>
+					</view>
+				</view>
+				<view v-if="appraiseList.length!=0" style="margin:30rpx 0 10rpx;display: flex;">
+					<u-avatar :src="appraiseList[0].avatarUrl" size="25"></u-avatar>
+					<!-- 	<image src="../../static/img/login/loginBg.png" mode=""></image> -->
+					<view
+						style="font-size: 25rpx;color: #3D3F3E;width:10%;height: 50rpx;line-height: 50rpx;margin-left: 20rpx;">
+						{{appraiseList[0].name}}
+					</view>
+					<u-rate :count="count" v-model="appraiseList[0].num" allowHalf activeColor='#ec9322'
+						readonly></u-rate>
+					<view
+						style="font-size: 25rpx;color: #3D3F3E;height: 50rpx;line-height: 50rpx;width: 50%;text-align: end;">
+						{{appraiseList[0].time}}
+					</view>
+				</view>
+				<view v-if="appraiseList.length!=0">
+					<u--text :lines="2" :text="appraiseList[0].appraiseContent">
+					</u--text>
+				</view>
+				<view v-if="appraiseList.length!=0" style="display: flex;width:97%;overflow: hidden;">
+					<view style='margin:15rpx 10rpx;' v-for="(item, index) in appraiseList[0].imgs" :key="index"
+						v-if="index < 3">
+						<u-image radius='8px' width="156rpx" height="156rpx" :src="item" mode=""
+							@click="previewImage(item)">
+						</u-image>
+					</view>
+					<view v-if="appraiseList[0].imgs.length > 4"
+						:style="{ background: `url(${appraiseList[0].imgs[4]})`,margin:' 14rpx 0 0 14rpx',width:'158rpx',height:'156rpx',borderRadius:'14rpx' }">
+						<view style="text-align: center;line-height: 156rpx;">
+							+{{ appraiseList[0].imgs.length - 4 }}
+						</view>
+					</view>
+				</view>
+			</view>
+
+			<view class="detail bgf">
+				<view class="tabs" :style="{top:navbarHeight+'px'}"><u-tabs :list="list" @change="tabChange"
+						lineColor="black" :scrollable='false' placeholder></u-tabs>
+				</view>
+				<!-- 对应的盒子模块 -->
+				<view class="main0">
+					<view class="main-flag" id="main-flag-0" :style="{height:navbarHeight+44+'px'}"></view>
+					<view class="title">
+						服务内容
+					</view>
+					<view v-if="goodInfo.projectImg!=null">
+						<image v-for='(img,imgi) in goodInfo.projectImg.split(",")' :key="imgi" :src="img"
+							style="width:100%;"></image>
+					</view>
+				</view>
+				<view class="main1">
+					<view class="main-flag" id="main-flag-1" :style="{height:navbarHeight+44+'px'}"></view>
+					<view class="title">
+						<text>收费标准</text>
+						<view style="color: #A5A7A7;float: right;display: flex;">收费项说明<u-icon
+								name="info-circle"></u-icon>
+						</view>
+					</view>
+					<table style="width: 100%;">
+						<tr style="background-color: #ecf7f1;">
+							<td>费用名称</td>
+							<td>价格</td>
+						</tr>
+						<tr v-for='(item,index)  in priceList' :key="index">
+							<td>{{item.name}}</td>
+							<td>{{item.price}}</td>
+						</tr>
+					</table>
+				</view>
+				<view class="main2">
+					<view class="main-flag" id="main-flag-2" :style="{height:navbarHeight+44+'px'}"></view>
+					<view class="title">
+						材料清单
+					</view>
+					<view class="cell">
+						<u-collapse :border='false'>
+
+							<u-collapse-item v-for="(item,index) in melList" :key="index" :title="item.name"
+								name="Docs guide">
+								<view v-for="(ch,chindex) in item.list" :key='chindex'
+									style="display: flex;justify-content: space-between;margin-bottom: 20rpx;">
+									<text v-for="(s,si) in Object.values(JSON.parse(ch.materialSpecs))" :key="si">
+										{{s}}
+									</text>
+									<text>{{ch.salePrice}}元/{{ch.materialUnit}}</text>
+								</view>
+							</u-collapse-item>
+
+						</u-collapse>
+					</view>
+				</view>
+			</view>
+
+			<view v-if="goodInfo.standard" class="bgf" style="margin-top: 20rpx;padding: 20rpx;">
+				<view style="font-size: 30rpx;">
+					维修小百科
+				</view>
+				<view style="margin: 10rpx 0 0 10rpx;">
+					{{goodInfo.standard.standardName}}
+					<view style="font-size: 22rpx;color: #A5A7A7;margin-top:20rpx ;">
+						服务分类：{{goodInfo.standard.serviceType}}
+					</view>
+				</view>
+			</view>
+
+			<view class="bgf" style="height:212rpx;">
+			</view>
+
+
+			<u-overlay :show="shows" @click="overlayClose">
+				<view class="warp">
+					<view class="rect">
+						<view style="width: 100vw;">
+							<image :src="imageUrl" mode="" style="height: 978rpx;"></image>
+
+						</view>
+						<view class="btn">
+							<view>
+								<image
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/b0615fa4f9774562bf1e8740d9e658f7.png"
+									mode="widthFix" @click.stop="shareLink" open-type="share"></image>
 							</view>
-						</u-collapse-item>
-
-					</u-collapse>
+							<view>
+								<image
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/625202a5c24344e7bcb630079764172e.png"
+									mode="widthFix" @click.stop="save"></image>
+							</view>
+						</view>
+					</view>
 				</view>
-			</view>
-		</view>
+			</u-overlay>
 
-		<view class="bgf" style="margin-top: 20rpx;padding: 20rpx;">
-			<view style="font-size: 30rpx;">
-				维修小百科
+
+			<view v-if="cardShow">
+				<!-- #ifdef H5 -->
+				<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position: relative;"
+					height="1624rpx" isCanvasToTempFilePath useCORS />
+				<!-- #endif -->
+				<!-- #ifdef MP-WEIXIN -->
+				<l-painter ref="painter" :board="base" @success="hldsz"
+					custom-style="position:relative;margin-left:1000rpx" height="978rpx" isCanvasToTempFilePath />
+				<!-- #endif -->
+				<!-- #ifdef APP-PLUS -->
+				<l-painter ref="painter" :board="base" @success="hldsz"
+					custom-style="position:relative;margin-left:1000rpx" height="978rpx" isCanvasToTempFilePath />
+				<!-- #endif -->
 			</view>
-			<view style="margin: 10rpx 0 0 10rpx;">
-				{{goodInfo.standard.standardName}}
-				<view style="font-size: 22rpx;color: #A5A7A7;margin-top:20rpx ;">服务分类：{{goodInfo.standard.serviceType}}
+
+			<!-- 未登录去登录 -->
+			<u-modal :show="isShowLogin" title="提示" width="400rpx" showCancelButton confirmText='去登录'
+				confirmColor='#A4D091' @cancel='isShowLogin = false' @confirm='confirm'>
+				<view class="slot-content">
+					您还未登录,是否去登录
 				</view>
-			</view>
-		</view>
+			</u-modal>
 
-		<view class="bgf" style="height:212rpx;">
-		</view>
+			<u-toast ref="uToast"></u-toast>
+			<!-- 凑单弹框 -->
+			<u-popup :show="coudanShow" closeable @close="coudanShow=false">
+				<view class="cou-dan">
+					<view class="title">服务橱窗</view>
+					<!-- 	<u--input @input='getListByWorkerType()' @clear="getListByWorkerType" @confirm="getListByWorkerType"
+						clearable v-model="searchName" type="text" placeholder="请输入需要的服务" /> -->
+					<view style="padding:10rpx 20rpx;">
+						<u-search clearabled placeholder="请输入需要的服务" v-model="searchName" @clear="getListByWorkerType"
+							@search="getListByWorkerType" :showAction="false"></u-search>
+					</view>
+
+					<view v-if="coudanList.length!=0" class="main">
+
+						<view v-for="(item,index) in coudanList" :key="index">
+							<coudan-card :item='item' />
+						</view>
+					</view>
+					<u-empty v-else mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png"
+						text='没有找到哦，换个关键词试一下吧'>
+					</u-empty>
+				</view>
+			</u-popup>
+		
+
+		</scroll-view>
 		<view class="bottom" v-if="preferentialShow==false&&coudanShow==false">
 
 			<view class="bottom-top" v-if='isLogin'>
 				<view class="">
-					共{{projectForm.projectNumber}}项,合计¥{{(Number(projectForm.projectNumber)*Number(goodInfo.discountPrice)).toFixed(2)}}
-					<text 
-						v-if="(Number(projectForm.projectNumber)*Number(goodInfo.discountPrice)).toFixed(2)<Number(goodInfo.startingFreeDiscount)">
+					共{{projectForm.projectNumber}}项,合计¥{{Number(projectForm.projectNumber)*Number(goodInfo.discountPrice)}}
+					<text
+						v-if="Number(projectForm.projectNumber)*Number(goodInfo.discountPrice)<Number(goodInfo.startingFreeDiscount)">
 						（*不足服务起步价）
 					</text>
 				</view>
@@ -229,18 +316,7 @@
 					<text style="margin-left: 8rpx;">维修车
 					</text>
 				</view>
-				<!-- 	<view class="detail-price">
-
-					<view v-if='isLogin' style="font-size: 34rpx;font-weight: bold;">
-						¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}
-					</view>
-					<view
-						v-if="projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)!=0"
-						style="margin-left: 5rpx;font-size: 21rpx;" @click="preferentialShow=true">
-						品牌优惠¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}>
-					</view>
-
-				</view> -->
+			
 				<view style="display: flex;">
 					<view class="btn-white" @click="getCheck">
 						+加购
@@ -253,109 +329,8 @@
 
 
 		</view>
+	</view>
 
-		<u-overlay :show="shows" @click="overlayClose">
-			<view class="warp">
-				<view class="rect">
-					<view style="width: 100vw;">
-						<image :src="imageUrl" mode="" style="height: 978rpx;"></image>
-
-					</view>
-					<view class="btn">
-						<view>
-							<image
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/b0615fa4f9774562bf1e8740d9e658f7.png"
-								mode="widthFix" @click.stop="shareLink" open-type="share"></image>
-						</view>
-						<view>
-							<image
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/625202a5c24344e7bcb630079764172e.png"
-								mode="widthFix" @click.stop="save"></image>
-						</view>
-					</view>
-				</view>
-			</view>
-		</u-overlay>
-
-
-		<view v-if="cardShow">
-			<!-- #ifdef H5 -->
-			<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position: relative;" height="1624rpx"
-				isCanvasToTempFilePath useCORS />
-			<!-- #endif -->
-			<!-- #ifdef MP-WEIXIN -->
-			<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position:relative;margin-left:1000rpx"
-				height="978rpx" isCanvasToTempFilePath />
-			<!-- #endif -->
-			<!-- #ifdef APP-PLUS -->
-			<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position:relative;margin-left:1000rpx"
-				height="978rpx" isCanvasToTempFilePath />
-			<!-- #endif -->
-		</view>
-
-		<!-- 未登录去登录 -->
-		<u-modal :show="isShowLogin" title="提示" width="400rpx" showCancelButton confirmText='去登录' confirmColor='#A4D091'
-			@cancel='isShowLogin = false' @confirm='confirm'>
-			<view class="slot-content">
-				您还未登录,是否去登录
-			</view>
-		</u-modal>
-
-		<u-toast ref="uToast"></u-toast>
-		<!-- 凑单弹框 -->
-		<u-popup :show="coudanShow" closeable @close="coudanShow=false">
-			<view class="cou-dan">
-				<view class="title">服务橱窗</view>
-				<!-- 	<u--input @input='getListByWorkerType()' @clear="getListByWorkerType" @confirm="getListByWorkerType"
-					clearable v-model="searchName" type="text" placeholder="请输入需要的服务" /> -->
-				<view style="padding:10rpx 20rpx;">
-					<u-search clearabled placeholder="请输入需要的服务" v-model="searchName" @clear="getListByWorkerType"
-						@search="getListByWorkerType" :showAction="false"></u-search>
-				</view>
-
-				<view v-if="coudanList.length!=0" class="main">
-
-					<view v-for="(item,index) in coudanList" :key="index">
-						<coudan-card :item='item' />
-					</view>
-				</view>
-				<u-empty v-else mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" text='没有找到哦，换个关键词试一下吧'>
-				</u-empty>
-			</view>
-		</u-popup>
-		<!-- 品牌优惠弹框 -->
-		<u-popup :show="preferentialShow" closeable @close="preferentialShow=false">
-			<view class="preferential">
-				<view class="title">优惠明细</view>
-				<view class="main">
-					<view class="line">
-						<text>服务合计(不含材料费)</text>
-						<text>¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.projectPrice)), 0)}}</text>
-					</view>
-					<view class="line">
-						<text>优惠合计(已下单为准)</text>
-						<text>-¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}</text>
-					</view>
-					<view style="margin-left: 20rpx;" class="line">
-						<text><text class="vip">会员</text>品牌会员优惠</text>
-						<text>¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}</text>
-					</view>
-
-				</view>
-				<view class="line">
-					<text>合计</text>
-					<text>¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}</text>
-				</view>
-				<view class="btn btn-green" @click="preferentialShow=false">
-					知道啦
-				</view>
-			</view>
-		</u-popup>
-
-
-
-
-	</scroll-view>
 
 
 
@@ -413,7 +388,6 @@
 				goodInfo: {},
 				serviceImgList: [],
 				currentNum: 0,
-				projectVoList: [], //服务项目
 				query: {},
 				isLogin: storage.get('AccessToken'),
 				isJoinCar: 0, //是否加入维修车
@@ -447,7 +421,12 @@
 					remarks: ''
 				},
 				priceList: [],
-				isShowLogin: false
+				isShowLogin: false,
+				scrollIntoView: '',
+				navbarHeight: 0,
+				navbarColorOpacity: 0,
+				mainFlagTop: 0,
+				city:undefined
 			}
 		},
 		onLoad(options) {
@@ -455,6 +434,7 @@
 			// console.log(options);
 			let name = uni.getStorageSync('address_refreash')
 			this.query.address = name
+		  this.city=this.query.address.split('-')[2] 
 			this.query.clientId = !storage.get('ClientId') ? '' : storage.get('ClientId')
 			// console.log(this.query);
 			if (options.typeId) {
@@ -485,13 +465,35 @@
 			// })
 		},
 		onShow() {
+			this.$nextTick(() => {
+				uni.createSelectorQuery().in(this)
+					.select(".navbar")
+					.boundingClientRect((data) => {
+						this.navbarHeight = data.height
+						console.log(this.navbarHeight, 'navbarHeight');
+					})
+					.exec();
+				uni.createSelectorQuery().in(this)
+					.select("#main-flag-0")
+					.boundingClientRect((data) => {
+						console.log(data, '......data.............510');
+						this.mainFlagTop = data.top
+					})
+					.exec();
+			})
 			console.log('onshowonshowwwwwww');
 			// #ifdef MP-WEIXIN
 			const res = uni.getMenuButtonBoundingClientRect()
 			this.statusHeight = res.top //胶囊距离顶部
 			// #endif
 			// #ifdef APP-PLUS
-			this.statusHeight = 0
+
+			uni.getSystemInfo({
+				success: (info) => {
+					this.statusHeight = info.statusBarHeight
+
+				}
+			});
 			// #endif
 			console.log(this.statusHeight, '448888888');
 			this.isLogin = storage.get('AccessToken')
@@ -505,9 +507,15 @@
 
 		},
 		methods: {
+			pageScroll(e) {
 
-			click(e) {
+				const rate = e.detail.scrollTop / 200
+				if (rate > 1 && this.navbarColorOpacity === 1) return (this.navbarColorOpacity = 1)
+				this.navbarColorOpacity = rate
+			},
+			tabChange(e) {
 				this.current = e
+				this.scrollIntoView = 'main-flag-' + e.index
 
 			},
 			getCarList() {
@@ -537,14 +545,12 @@
 
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
-					console.log(this.goodInfo, 'goodInfogoodInfogoodInfo');
 
 					// uni.setNavigationBarTitle({
 					// 	title: this.goodInfo.serviceName
 					// })
 
 					for (let key in this.goodInfo.materialVoMap) {
-						console.log(key, '1677777777');
 						this.melList.push({
 							name: key,
 							list: this.goodInfo.materialVoMap[key]
@@ -573,6 +579,11 @@
 					if (this.isLogin) {
 						// this.getCarList()
 						this.getListByWorkerType()
+					} else {
+						this.goodInfo.startingFreeDiscount = this.replaceMoney(this.goodInfo.startingFreeDiscount)
+						this.goodInfo.discountPrice = this.replaceMoney(this.goodInfo.discountPrice)
+						this.goodInfo.projectAmount = this.replaceMoney(this.goodInfo.projectAmount)
+						this.goodInfo.preferentialPrice = this.replaceMoney(this.goodInfo.preferentialPrice)
 					}
 
 					//获取评论
@@ -582,7 +593,6 @@
 						pageNum: 1,
 						pageSize: 10
 					}).then(res => {
-						console.log(res);
 						res.rows.forEach(item => {
 							let num = (Number(item.attitudeScore) + Number(item.technicalScore) +
 								Number(item.velocityScore)) / 3
@@ -609,28 +619,7 @@
 					})
 
 					this.serviceImgList = this.goodInfo.serviceImg !== null && this.goodInfo.serviceImg !== "" ?
-						this.goodInfo.serviceImg.split(',') : [],
-						this.goodInfo.projectVoList.forEach((p, i) => {
-							this.projectVoList.splice(i, 1, p)
-						})
-					this.projectVoList.forEach(item => {
-						item.serviceProjectImg = item.projectImg,
-							item.projectImg = '',
-							item.productId = this.goodInfo.serviceId
-						// item.remarks=''
-					})
-					console.log(this.projectVoList);
-					if (!this.isLogin) {
-						this.projectVoList.forEach(item => {
-							item.discountPrice = this.replaceMoney(item.discountPrice)
-						})
-						this.goodInfo.startingFreeDiscount = this.replaceMoney(this.goodInfo.startingFreeDiscount)
-					}
-					this.goodInfo.remark = this.goodInfo.remark != '' && this.goodInfo.remark != null ? this
-						.goodInfo.remark.replace(/<img/gi, '<img style="width:100%;height:auto"')
-						.replace(/<section/g, '<div')
-						.replace(/\/section>/g, '\div>') : ''
-					console.log(this.goodInfo, '11111111111372222222222');
+						this.goodInfo.serviceImg.split(',') : []
 
 				})
 
@@ -929,7 +918,7 @@
 			//下单
 			getOrderHandle() {
 				console.log(this.getRules());
-				// if (!this.getRules()) return
+				 if (!this.getRules()) return
 				// if (!this.isLogin) {
 				// 	this.isShowLogin = true
 				// 	return
@@ -949,7 +938,7 @@
 					...this.projectForm,
 					serviceProjectImg: this.goodInfo.serviceImg,
 					serviceProductName: this.goodInfo.serviceName,
-					projectPrice:this.goodInfo.projectAmount
+					projectPrice: this.goodInfo.projectAmount
 				})
 				console.log(newSetArray);
 				let info = {
@@ -977,53 +966,9 @@
 	.serviceInfo {
 		height: 100vh;
 
-		.btn-green {
-			height: 65rpx;
-			background: #A4D091;
-			border-radius: 0 34rpx 34rpx 0;
-			font-size: 29rpx;
-			color: #FFFFFF;
-			line-height: 65rpx;
-			text-align: center;
-			padding: 0 40rpx;
-			font-weight: bold;
-		}
-
-		.btn-white {
-			height: 65rpx;
-			background: rgba(159, 214, 163, 0.2);
-			border-radius: 34rpx 0 0 34rpx;
-			font-size: 29rpx;
-			color: #A4D091;
-			line-height: 65rpx;
-			text-align: center;
-			padding: 0 40rpx;
-			font-weight: bold;
-		}
-
-		.bgf {
-			background: #FFFFFF;
-		}
-
 		.top {
 
-			.navbar {
-				position: fixed;
-				// top: 105rpx;
-				display: flex;
-				padding-left: 16rpx;
-				z-index: 9999;
 
-				text {
-					display: inline-block;
-					background: rgba(0, 0, 0, 0.45);
-					padding: 10rpx 20rpx;
-					border-radius: 7rpx;
-					font-size: 29rpx;
-					color: #FFFFFF;
-					margin-left: 18rpx;
-				}
-			}
 
 			.no-img {
 				width: 100%;
@@ -1111,6 +1056,13 @@
 			}
 		}
 
+
+		.bgf {
+			background: #FFFFFF;
+		}
+
+
+
 		.services {
 			width: 100%;
 			margin-top: 20rpx;
@@ -1123,6 +1075,7 @@
 					display: flex;
 					font-size: 33rpx;
 					justify-content: space-between;
+					align-items: center;
 				}
 
 				view:nth-child(2) {
@@ -1163,6 +1116,24 @@
 			margin-top: 20rpx;
 			padding: 30rpx 20rpx;
 
+			.tabs {
+				z-index: 10;
+				position: sticky;
+				background-color: #fff;
+			}
+
+			.main0,
+			.main1,
+			.main2 {
+				position: relative;
+
+				.main-flag {
+					position: absolute;
+					top: 0%;
+					transform: translateY(-100%);
+				}
+			}
+
 			table {
 				margin-top: 10rpx;
 
@@ -1196,69 +1167,7 @@
 			}
 		}
 
-		.bottom {
 
-			width: 100%;
-			position: fixed;
-			bottom: 0;
-			font-size: 22rpx;
-			z-index: 100000;
-
-			.bottom-top {
-				color: #fff;
-				justify-content: space-between;
-				background: linear-gradient(270deg, #A4D091 0%, #769D71 100%);
-				border-radius: 14rpx 14rpx 1rpx 1rpx;
-				display: flex;
-				font-size: 25rpx;
-				height: 79rpx;
-				line-height: 79rpx;
-				padding: 0 20rpx;
-
-				.coudan {
-					display: flex;
-				}
-			}
-
-			.bottom-bottom {
-				height: 120rpx;
-				// width: 100%;
-				display: flex;
-				color: #3D3F3E;
-				text-align: center;
-				align-items: center;
-				background: #fff;
-				justify-content: space-between;
-				padding: 0 20rpx;
-
-				::v-deep.u-badge {
-					z-index: 100;
-				}
-
-				image {
-					width: 54rpx;
-					height: 54rpx;
-				}
-
-				// image:first-child {
-				// 	width: 47rpx;
-				// 	height: 43rpx;
-				// 	margin: 0 30rpx;
-				// }
-
-				.detail-price {
-					width: 34%;
-					text-align: start;
-					color: #EC5722;
-					display: flex;
-					align-items: center;
-				}
-
-			}
-
-
-
-		}
 
 		.rect {
 			text-align: center;
@@ -1323,5 +1232,118 @@
 				overflow-y: scroll;
 			}
 		}
+	}
+
+	.good-detail-page {
+		height: 100vh;
+
+		.navbar {
+			position: fixed;
+			top: 0px;
+			// top: 105rpx;
+			width: 100%;
+			display: flex;
+			padding-left: 16rpx;
+			z-index: 9999999;
+
+			text {
+				display: inline-block;
+				background: rgba(0, 0, 0, 0.45);
+				padding: 10rpx 20rpx;
+				border-radius: 7rpx;
+				font-size: 29rpx;
+				color: #FFFFFF;
+				margin-left: 18rpx;
+			}
+		}
+	}
+
+
+	.bottom {
+
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+		font-size: 22rpx;
+		z-index: 100000;
+
+		.btn-green {
+			height: 65rpx;
+			background: #A4D091;
+			border-radius: 0 34rpx 34rpx 0;
+			font-size: 29rpx;
+			color: #FFFFFF;
+			line-height: 65rpx;
+			text-align: center;
+			padding: 0 40rpx;
+			font-weight: bold;
+		}
+
+		.btn-white {
+			height: 65rpx;
+			background: rgba(159, 214, 163, 0.2);
+			border-radius: 34rpx 0 0 34rpx;
+			font-size: 29rpx;
+			color: #A4D091;
+			line-height: 65rpx;
+			text-align: center;
+			padding: 0 40rpx;
+			font-weight: bold;
+		}
+
+		.bottom-top {
+			color: #fff;
+			justify-content: space-between;
+			background: linear-gradient(270deg, #A4D091 0%, #769D71 100%);
+			border-radius: 14rpx 14rpx 1rpx 1rpx;
+			display: flex;
+			font-size: 25rpx;
+			height: 79rpx;
+			line-height: 79rpx;
+			padding: 0 20rpx;
+
+			.coudan {
+				display: flex;
+			}
+		}
+
+		.bottom-bottom {
+			height: 120rpx;
+			// width: 100%;
+			display: flex;
+			color: #3D3F3E;
+			text-align: center;
+			align-items: center;
+			background: #fff;
+			justify-content: space-between;
+			padding: 0 20rpx;
+
+			::v-deep.u-badge {
+				z-index: 100;
+			}
+
+			image {
+				width: 54rpx;
+				height: 54rpx;
+			}
+
+			// image:first-child {
+			// 	width: 47rpx;
+			// 	height: 43rpx;
+			// 	margin: 0 30rpx;
+			// }
+
+			.detail-price {
+				width: 34%;
+				text-align: start;
+				color: #EC5722;
+				display: flex;
+				align-items: center;
+			}
+
+		}
+
+
+
 	}
 </style>

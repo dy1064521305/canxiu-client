@@ -42,7 +42,11 @@
 			console.log(this.list, '24444444444444444444444');
 		},
 		methods: {
+		
 			queryList(pageNo, pageSize) {
+				uni.showLoading({
+					title: "加载中"
+				})
 				getRegionService({
 					pageNo,
 					pageSize,
@@ -58,6 +62,7 @@
 							item.servicePrice
 					})
 					this.$refs.paging.complete(res.rows);
+					uni.hideLoading();
 				}).catch(res => {
 					this.$refs.paging.complete(false);
 				})
