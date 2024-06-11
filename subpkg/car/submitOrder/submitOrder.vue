@@ -6,7 +6,8 @@
 
 		<view class="time-two" @click="timeShowHandle(index)">
 			<view style="color: #3D3F3E;font-weight: bold;padding-left: 15rpx;font-size: 33rpx;">
-				上门服务时间
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/11/e72bc126b96946b4935cf0c551a7045f.png"
+					style="width: 47rpx;height:43rpx;margin-right: 20rpx;"></image>上门服务时间
 			</view>
 			<view>
 				<text style='margin-right: 22rpx;'>{{expectTime==undefined?'请选择':expectTime}}</text>
@@ -15,19 +16,24 @@
 					mode=""></image>
 			</view>
 		</view>
-		<view class="address" @click="myAddress">
+		<view  class="address" @click="myAddress">
 			<view v-if='addressList.length!=0' class="left">
-				<view style="font-size: 25rpx;">
-					{{addressPlace}}
-				</view>
-				<view style="font-size: 29rpx;margin-top: 18rpx;">
-					{{addressRegion}}{{addressInfo.addressDetailed}}
-				</view>
-				<view style="font-size: 25rpx;margin-top: 23rpx;align-items: center;
-    display: flex;">
-					<text class="font">{{addressInfo.contact}}</text><text
-						style="margin: 0 10rpx;">|</text>{{addressInfo.phone}}
-				</view>
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/11/a7fe2594ad27432c8676c0b03bf22bb7.png"
+					style="width: 36rpx;height:43rpx;margin-right: 20rpx;" />
+					<view>
+						<view style="font-size: 25rpx;">
+							{{addressPlace}}
+						</view>
+						<view style="font-size: 29rpx;margin-top: 18rpx;">
+							{{addressRegion}}{{addressInfo.addressDetailed}}
+						</view>
+						<view style="font-size: 25rpx;margin-top: 23rpx;align-items: center;
+				display: flex;">
+							<text class="font"
+								:style="{'width':addressInfo.contact.length>8?'150rpx':''}">{{addressInfo.contact}}</text><text
+								style="margin: 0 10rpx;">|</text>{{addressInfo.phone}}
+						</view>
+					</view>
 			</view>
 			<view v-else class="left" style="font-size: 36rpx;color: #A5A7A7;">
 				请添加服务地址
@@ -224,7 +230,7 @@
 
 				<view v-if="coudanList.length!=0" class="main">
 					<view v-for="(item,index) in coudanList" :key="index" class="box">
-						<coudan-card :item='item' type='submit'/>
+						<coudan-card :item='item' type='submit' />
 
 
 
@@ -273,7 +279,7 @@
 		props: {},
 		data() {
 			return {
-				searchName:"",
+				searchName: "",
 				coudanList: [],
 				showModal: false,
 				content: '您还没有服务地址，请先添加一个新的服务地址',
@@ -299,9 +305,9 @@
 				addressPlace: undefined,
 				expectTime: undefined,
 				coudanShow: false,
-				addressRegion:undefined,
-				typename:undefined
-				
+				addressRegion: undefined,
+				typename: undefined
+
 			};
 		},
 		onShow() {
@@ -311,20 +317,17 @@
 		onLoad(option) {
 
 			let item = JSON.parse(decodeURIComponent(option.item))
-			console.log(item);
 
 			this.submitList = item.checkedList
 			this.isCar = item.isCar
 			this.isAgain = item.isAgain
 			this.projectDataVoList = this.isAgain ? item.checkedList : []
-			console.log(this.isAgain);
 			this.isRepair = item.isRepair
 			if (item.isRepair) {
 				this.addressInfo = item.info.addressVo
 				this.addressPlace = (this.addressInfo.addressRegion.substring((this.addressInfo
 					.addressRegion.indexOf('/')) + 1)).replace('/', '-')
-					this.addressRegion=this.addressInfo.addressRegion.replaceAll('/','')
-				console.log(this.addressPlace, '28888888888888');
+				this.addressRegion = this.addressInfo.addressRegion.replaceAll('/', '')
 				this.submitList.forEach(item => {
 					item.serviceProjectImg = item.projectImg
 					item.projectImg = ''
@@ -332,11 +335,7 @@
 					item.clientId = storage.get('ClientId')
 				})
 			}
-
-			//	this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
-			console.log(this.showListByType, this.submitList, '.........103');
 			this.getMoney('init')
-			console.log(this.showListByType);
 			// try {
 			// 	const value = uni.getStorageSync('submit_order');
 			// 	console.log(value);
@@ -404,7 +403,6 @@
 				if (storage.get('ClientId')) {
 					//查询门店名称
 					getInfoById(storage.get('ClientId')).then(res => {
-							console.log(res.data.storeName, '34666666666666');
 							this.info.warrantyStore = res.data.storeName
 							//	this.fileList.push({url:arr[0]})
 						}),
@@ -412,20 +410,16 @@
 						getAddressList({
 							clientId: storage.get('ClientId')
 						}).then(res => {
-							console.log(res);
 							this.addressList = res.rows
 							this.showModal = this.addressList.length == 0
 							try {
 								const value = uni.getStorageSync('address_info');
-								console.log(value);
 								if (value) {
 									this.addressInfo = value
-									console.log(value);
 								} else {
 									this.addressList.forEach(item => {
 										if (item.isDefault == 0) {
 											this.addressInfo = item
-											console.log(111, '118111111111111111111');
 											uni.setStorage({
 												key: 'address_info',
 												data: item,
@@ -435,6 +429,7 @@
 								}
 								this.addressPlace = (this.addressInfo.addressRegion.substring((this.addressInfo
 									.addressRegion.indexOf('/')) + 1)).replace('/', '-')
+								this.addressRegion = this.addressInfo.addressRegion.replaceAll('/', '')
 							} catch (e) {
 								// error
 								console.log(e);
@@ -453,19 +448,14 @@
 				}
 
 				this.showListByType.forEach((item, index) => {
-					console.log(item);
 					let all = item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)),
 						0)
-					console.log(all);
 					item.allMoney = all < Number(item.list[0].startingFreeDiscount) ? Number(item.list[0]
 						.startingFreeDiscount) : all
-					console.log(item.allMoney);
 				})
 				this.info.orderPrice = this.showListByType.reduce((p, c) => p + c.allMoney, 0) + this.urgentPriceTotal
 			},
 			getCheck(data) {
-				console.log(data);
-				console.log(this.submitList);
 
 				let id = data.item.id ? data.item.id : data.item.projectId
 				//console.log(id);
@@ -479,7 +469,6 @@
 			},
 			//删除url
 			getDeleteUrlList(data) {
-				console.log(data);
 				// if (!this.isRepair) {
 				// 	const pages = uni.$u.pages()
 				// 	pages[pages.length - 2].$vm.changeData(data)
@@ -489,7 +478,6 @@
 					key: 'submit_order',
 					data: data,
 				})
-				console.log(data);
 				this.submitList.forEach((fu, index) => {
 					//	fu.children.forEach((son, ind) => {
 					data.forEach(d => {
@@ -511,10 +499,8 @@
 			},
 			handelClose(data) {
 				this.isShow = false;
-				console.log(data);
 				// this.showListByType[this.timeIndex].expectTime = data.endDate
 				this.expectTime = data.endDate
-				console.log(this.showListByType);
 				this.info.isUrgent = data.isUrgent && !this.isCar ? 1 : 0
 				if (data.isUrgent && this.submitList[0].isUrgent != 'N') {
 					// this.urgentPriceTotal = this.submitList.reduce((pre, item) => {
@@ -526,25 +512,22 @@
 					this.info.orderPrice = this.info.orderPrice - this.urgentPriceTotal
 					this.urgentPriceTotal = 0
 				}
-				//this.dateRange = data._dateRange
-				console.log(this.submitList);
 			},
-			
+
 			coudanShowHandle(name) {
-				this.typename=name
+				this.typename = name
 				this.coudanShow = true
 				this.getCoudanList()
 			},
-			getCoudanList(){
+			getCoudanList() {
 				//获取凑单列表
 				listByWorkerType({
 					clientId: storage.get('ClientId'),
 					type: this.typename,
 					name: this.searchName
 				}).then(res => {
-					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
 					this.coudanList = res.data
-				
+
 				})
 			},
 			//下单
@@ -561,7 +544,6 @@
 					});
 					return
 				}
-				console.log(this.addressInfo.addressId, this.addressList.length);
 				if (!this.addressInfo.addressId || this.addressList.length == 0) {
 					uni.showToast({
 						title: '请选择地址',
@@ -590,7 +572,6 @@
 						orderId: this.showListByType[0].list[0].orderId,
 						expectTime: this.expectTime + ':00'
 					}).then(res => {
-						console.log(res);
 						let timeObj = {}
 						this.showListByType.forEach(item => {
 							timeObj[item.list[0].workerType] = this.expectTime + ':00'
@@ -601,20 +582,15 @@
 							time: timeObj,
 							orderId: this.showListByType[0].list[0].orderId
 						}
-						console.log(info);
 						uni.redirectTo({
 							url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(info)
 						})
 					})
 				} else {
 					//else {
-					console.log(this.addressInfo);
 					this.info.addressId = this.addressInfo.addressId
 					//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
 					this.info.clientId = storage.get('ClientId')
-
-					console.log(this.showListByType);
-					console.log(this.info);
 					let arr = JSON.parse(JSON.stringify(this.submitList))
 					console.log(arr);
 
@@ -650,7 +626,6 @@
 							beforeStartingFree[item.list[0].workerType] = item.list[0].serviceStartingFree,
 							costStartingFreeMap[item.list[0].workerType] = item.list[0].workerStartingFree
 					})
-					console.log(timeObj, startingFree);
 					this.info.orderProjectBoList = arr
 					this.info.startingFreeMap = startingFree
 					this.info.timeMap = timeObj
@@ -661,7 +636,7 @@
 					postOrder(this.info).then(res => {
 						console.log(res);
 						if (res.code == 200) {
-							orderSend(res.data).then(res=>{})
+							orderSend(res.data).then(res => {})
 							uni.removeStorage({
 								key: 'address_info'
 							})
@@ -742,10 +717,10 @@
 				// }
 
 			},
-			changeData(obj){
+			changeData(obj) {
 				this.submitList.push(obj)
 				this.getMoney('init')
-				this.coudanShow=false
+				this.coudanShow = false
 			}
 
 		}
@@ -761,18 +736,19 @@
 	.page {
 		.cou-dan {
 			height: 85vh;
-		
+
 			.title {
 				margin: 20rpx;
 				font-size: 37rpx;
 				text-align: center;
 			}
-		
+
 			.main {
 				height: 90%;
 				overflow-y: scroll;
 			}
 		}
+
 		.address {
 			padding: 0 34rpx;
 			//	width: 100%;
@@ -785,15 +761,14 @@
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-				width: 100px;
+
 				display: inline-block;
 
 			}
 
 			.left {
-				padding: 46rpx 0;
 				display: flex;
-				flex-direction: column;
+				padding: 46rpx 0;
 				width: 82%;
 			}
 
