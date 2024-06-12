@@ -184,7 +184,8 @@
 				this.isSearch = true
 				this.searchList = []
 				search({
-					serviceName: name
+					serviceName: name,
+					address:uni.getStorageSync('address_refreash')
 				}).then(res => {
 					console.log(this.serviceName);
 					this.searchList = res.data

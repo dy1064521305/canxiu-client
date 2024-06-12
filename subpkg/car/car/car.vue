@@ -77,34 +77,29 @@
 									@change='val=>typeCheckChange(val,item,index)'>
 								</u-checkbox>
 								<text
-									style="font-size:34rpx;font-weight: bold;color: #3D3F3E;">{{item.workerType.replace('师傅','')}}</text>
-								<text
-									style="font-size: 25rpx;margin-left: 10rpx;">起步价:{{item.startingFreeDiscount}}元</text>
+									style="font-size:34rpx;font-weight: bold;color: #3D3F3E;">{{item.workerType}}</text>
+
 
 							</view>
-							<view
-								v-if="Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))>0"
-								style="align-items: center;display: flex;">
-								<text style="font-size: 25rpx;">
-									还差<text
-										style="color:#EC5722;">{{Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))}}</text>元达到起步价
+							<view style="display: flex;">
+								起步价:{{item.startingFreeDiscount}}元
+								<text
+									v-if="Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0"
+									@click="coudanHandle(item.workerType)">
+									<text style="margin:0 10rpx;">|</text>去凑单 >
+									<!-- 	<text style="font-size: 25rpx;">
+										还差<text
+											style="color:#EC5722;">{{Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))}}</text>元达到起步价
+									</text> -->
+								</text>
+								<text v-else>
+									<!-- <image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
+										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
+									</image>已达到起步价 -->
+									（已满足）
 								</text>
 							</view>
-							<view v-else style="align-items: center;display: flex;font-size: 25rpx;">
-								<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
-								</image>已达到起步价
-							</view>
-							<text @click="coudanHandle(item.workerType)"
-								style="color:#EC5722;font-size: 25rpx;">去凑单></text>
-							<!-- 	</view> -->
-							<!-- 	<view style="font-size: 24rpx;display: flex;align-items: flex-end">
-							
-							</view> -->
-							<!-- <view class="">
-							
-							</view> -->
-							<!--  -->
+
 						</view>
 						<proInfo :list="item.children" :isCar='true' :isDelete='isDelete' @getCarList='getCarList'
 							@getCheck='getCheck' @check_change="checkChange" @deleteCarList="deleteList"
@@ -240,12 +235,12 @@
 			// #endif	
 			//this.getList()
 			this.isLogin = storage.get('AccessToken')
-			let that=this
+			let that = this
 			uni.$on('updateNote', function(data) {
-					console.log(data, '245555555555');
-					that.getCarList()
+				console.log(data, '245555555555');
+				that.getCarList()
 			})
-		
+
 			//this.getCarList()
 			// if (this.isLogin) {
 			// 	 // this.getCarList()

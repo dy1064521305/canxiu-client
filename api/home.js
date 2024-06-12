@@ -4,17 +4,17 @@ import request from '@/config/request.js';
 export const getServiceType = () => request.get('/client/home/queryServiceType')
 
 // 获取热门报修
-export const getHotService = () => request.get('/client/home/listHotService')
+export const getHotService = (params) => request.get('/client/home/listHotService',params)
 
 // 获取服务区域
-export const getRegionService = () => request.get('/client/home/listRegionService')
-
+export const getRegionService = (params) => request.get('/client/home/listRegionService',params)
+// 获取服务区域
+export const getRegion = () => request.get('/client/home/listRegion')
 // 获取热门城市
 export const getHotCity = () => request.get('/client/home/listHotCity')
 
 // 获取故障现象
 export const getServiceSymptoms = (params) => request.get('/client/home/listServiceSymptoms',params)
-
 
 //城市选择列表
 export const getListCity = () => request.get('/client/home/listCity',  { custom: { auth: false } })

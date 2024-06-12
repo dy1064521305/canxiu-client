@@ -40,7 +40,10 @@
 			item: {
 				type: Object
 			},
-		
+			type:{
+				type:String,
+				default:""
+			}
 		},
 		data() {
 			return {
@@ -70,9 +73,12 @@
 		},
 		methods: {
 			goDetailed() {
-			
+				let info={
+					serviceId: this.info.productId,
+					type:this.type
+				}
 				uni.navigateTo({
-					url: '/subpkg/car/coudanDetail/coudanDetail?serviceId=' + this.info.productId,
+					url: '/subpkg/car/coudanDetail/coudanDetail?info=' + JSON.stringify(info),
 					fail(res) {
 						console.log(res);
 					}

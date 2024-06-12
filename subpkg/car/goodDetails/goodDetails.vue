@@ -1,290 +1,336 @@
 <template>
-	<scroll-view class="serviceInfo" ref="target" :scroll-y="true">
-		<!-- 服务详情 -->
-		<view class="top">
-			<u-swiper v-if="serviceImgList.length!=0" height='746rpx' :list="serviceImgList"
-				@change="e => currentNum = e.current" :autoplay="false" indicatorStyle="right: 20px">
-				<view slot="indicator" class="indicator-num">
-					<text class="indicator-num__text">{{ currentNum + 1 }}/{{ serviceImgList.length }}</text>
-				</view>
-			</u-swiper>
-			<view v-else class="no-img">
-				<image style="width:500rpx ;height:400rpx;"
-					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
-					mode=""></image>
-				<text>暂无图片</text>
-			</view>
-
-			<view class="info bgf">
-				<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
-				<text style="font-weight: bold;">{{goodInfo.serviceName}}</text><text
-					style="font-size: 25rpx;margin:0 10rpx;">服务起步价：¥{{goodInfo.startingFreeDiscount==null?0:goodInfo.startingFreeDiscount}}</text>
-				<text v-if="goodInfo.startingFreeDiscount!=goodInfo.startingFree&&isLogin"
-					style="font-size: 25rpx;text-decoration:line-through">¥{{goodInfo.startingFree}}</text>
-				<!-- <u-icon name="share" color="#72DAA4" size="28" @click="shareInfo"></u-icon> -->
-				<!-- 	</view> -->
-				<!-- <view>
-					<text>¥</text><text style="font-size: 40rpx;">{{goodInfo.initialLabor}}</text>/台起
-				</view>
-				<view style="font-size: 22rpx;color: #A5A7A7;margin-top: 10rpx;">
-					起步人工费{{goodInfo.initialLabor}}元起，维修费不足{{goodInfo.initialLabor}}元时按照起步人工费收取
-				</view> -->
-
-			</view>
+	<view class="good-detail-page">
+		<view class="navbar"
+			:style="{padding:(statusHeight*2)+'rpx 0px 24rpx 16rpx',backgroundColor:'rgba(255,255,255,'+navbarColorOpacity+')'}">
+			<u-icon name="arrow-left" size="19" @click="goBack()"></u-icon>
+			<text>{{city}}</text>
 		</view>
 
-		<view class="services bgf">
-			<!-- :submit="projectVoList.length>1" -->
-			<proInfo :list='projectVoList' :isCar='false' :isJoinCar='isJoinCar' :question='true' @getCheck='getCheck'
-				:types='types' @textareaInput='textConfirm' ref="proInfo" @getDeleteUrlList='getDeleteUrlList' />
-		</view>
+		<scroll-view class="serviceInfo" ref="target" :scroll-y="true" :scroll-into-view="scrollIntoView"
+			@scroll="pageScroll">
 
-		<!-- <view class="price bgf">
-			<view style="font-size: 36rpx;color: #3D3F3E;margin-top:10rpx;">
-				收费标准
-			</view>
-			<view style="font-size: 22rpx;color: #A5A7A7;margin-top: 10rpx;">
-				因型号、维修难度、品牌不同最终价格会有所差异
-			</view>
-			<view class="cell" style="margin-top: 30rpx;">
-				<u-collapse :border='false'>
-					<u-collapse-item v-for="(item,index) in chargeList" :key="index" :title="item.typeName"
-						name="Docs guide">
-						<view v-for="(ch,chindex) in item.children" :key='chindex'
-							style="display: flex;justify-content: space-between;">
-							<text>{{ch.serviceName}}{{ch.standardCompany!=null?'('+ch.standardCompany+')':''}}</text>
-							<text>{{ch.standardPrice}}元{{ch.standardCompany!=null?'('+ch.standardCompany+')':''}}</text>
-						</view>
-					</u-collapse-item>
 
-				</u-collapse>
-			</view>
-		</view> -->
+			<!-- 服务详情 -->
+			<view class="top">
 
-		<view class="comment bgf">
-			<view class="title">
-				<text>用户评论({{appraiseList.length}})</text>
-				<view v-if="appraiseList.length!=0" style="display:flex;align-items: center;" @click="allComment">
-					<view style="font-size: 25rpx;color: #CBCFCE;margin-right: 17rpx;">全部</view>
-					<image
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
+				<u-swiper v-if="serviceImgList.length!=0" height='564rpx' :list="serviceImgList"
+					@change="e => currentNum = e.current" :autoplay="false" indicatorStyle="right: 20px">
+					<view slot="indicator" class="indicator-num">
+
+						<text class="indicator-num__text">{{ currentNum + 1 }}/{{ serviceImgList.length }}</text>
+					</view>
+				</u-swiper>
+				<view v-else class="no-img">
+					<image style="width:500rpx ;height:400rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
 						mode=""></image>
+					<text>暂无图片</text>
 				</view>
-			</view>
-			<view v-if="appraiseList.length!=0" style="margin:30rpx 0 10rpx;display: flex;">
-				<u-avatar :src="appraiseList[0].avatarUrl" size="25"></u-avatar>
-				<!-- 	<image src="../../static/img/login/loginBg.png" mode=""></image> -->
-				<view
-					style="font-size: 25rpx;color: #3D3F3E;width:10%;height: 50rpx;line-height: 50rpx;margin-left: 20rpx;">
-					{{appraiseList[0].name}}
-				</view>
-				<u-rate :count="count" v-model="appraiseList[0].num" allowHalf activeColor='#ec9322' readonly></u-rate>
-				<view
-					style="font-size: 25rpx;color: #3D3F3E;height: 50rpx;line-height: 50rpx;width: 50%;text-align: end;">
-					{{appraiseList[0].time}}
-				</view>
-			</view>
-			<view v-if="appraiseList.length!=0">
-				<u--text :lines="2" :text="appraiseList[0].appraiseContent">
-				</u--text>
-			</view>
-			<view v-if="appraiseList.length!=0" style="display: flex;width:97%;overflow: hidden;">
-				<view style='margin:15rpx 10rpx;' v-for="(item, index) in appraiseList[0].imgs" :key="index"
-					v-if="index < 3">
-					<u-image radius='8px' width="156rpx" height="156rpx" :src="item" mode=""
-						@click="previewImage(item)">
-					</u-image>
-				</view>
-				<view v-if="appraiseList[0].imgs.length > 4"
-					:style="{ background: `url(${appraiseList[0].imgs[4]})`,margin:' 14rpx 0 0 14rpx',width:'158rpx',height:'156rpx',borderRadius:'14rpx' }">
-					<view style="text-align: center;line-height: 156rpx;">
-						+{{ appraiseList[0].imgs.length - 4 }}
+				<view class="info bgf">
+					<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/0616977a744749ac86c5b97a1728f654.png"
+					mode=""></image> -->
+					<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
+					<view :class="['prices',goodInfo.preferentialPrice!=null?'price-img':'']">
+						<view class="top">
+							<text
+								style="font-size: 43rpx;">{{goodInfo.preferentialPrice!=null?goodInfo.discountPrice:goodInfo.projectAmount}}</text>
+							<text style="font-size: 27rpx;">元</text>
+							<text v-if="goodInfo.preferentialPrice!=null">已补贴￥{{goodInfo.preferentialPrice}}</text>
+						</view>
+						<view v-if="goodInfo.preferentialPrice!=null" style="font-size: 22rpx;">
+							日常价：{{goodInfo.projectAmount}}元
+						</view>
+
+					</view>
+					<view style="margin:15rpx 0 ;">{{goodInfo.serviceName}}</view>
+					<view>
+						{{goodInfo.serviceDescription}}
 					</view>
 				</view>
 			</view>
-		</view>
+			<view class="services bgf">
+				<!-- :submit="projectVoList.length>1" -->
+				<!-- 	<proInfo :list='projectVoList' :isCar='false' :isJoinCar='isJoinCar' :question='true' @getCheck='getCheck'
+					:types='types' @textareaInput='textConfirm' ref="proInfo" @getDeleteUrlList='getDeleteUrlList' /> -->
+				<view class="service_top">
+					<view class="">
+						<view>服务数量<text style="color: #3D3F3E;">(单位：{{goodInfo.projectCompany}})</text></view>
+						<u-number-box min='1' disabledInput v-model="projectForm.projectNumber" class='number'
+							button-size="27" color="#ffffff" bgColor="#A4D091" :asyncChange="true"
+							iconStyle="color: #fff" @change='numChange'>
+						</u-number-box>
+					</view>
+					<view>
+						如有多处需要维修/维保，请按照数量加购
+					</view>
+				</view>
+				<view class="remark">
+					<view>
+						<view class="">
+							<text style="color: red">*</text><text
+								style="margin:0 30rpx 14rpx 10rpx;font-size: 33rpx;">上传视频/图片</text>
+						</view>
+						<view style="color: #A5A7A7;font-size: 22rpx;margin: 19rpx 0;">
+							请上传1-9张现场环境或设备故障视频/图片信息
+						</view>
+						<view style="width: 100%;margin: 10.87rpx 0 28.99rpx 0;">
+							<cl-upload :listStyle="{
+												columnGap: '10rpx',
+												columns:'4',
+												rowGap:'10rpx'
+												}" :imageFormData="{
+													size:10
+												}" :videoFromData="{
+													size:10
+												}" v-model="projectForm.projectImg" :headers="headers" :action="action" @onSuccess="onSuccesss"
+								@input='onInput'></cl-upload>
+						</view>
+					</view>
 
-		<view class="detail bgf">
-			<view style="font-size: 36rpx;
-			color: #3D3F3E;">
-				服务详情
+					<view style="align-items: center;">
+						<view style="font-size: 33rpx;">故障描述</view>
+						<view style="font-size: 22rpx;color: #A5A7A7;margin: 10rpx 0;">请简单描述故障或特殊需求备注信息</view>
+						<view style='width: 100%'>
+							<u--textarea height='72' maxlength='50' confirmType="done" v-model="projectForm.remarks"
+								placeholder="请输入内容" count></u--textarea>
+						</view>
+					</view>
+				</view>
+
 			</view>
-			<rich-text v-if="goodInfo.remark!=null&&goodInfo.remark!=''" :nodes="goodInfo.remark"></rich-text>
-			<view v-if="goodInfo.remark==null||goodInfo.remark==''" style="margin-top: 15rpx;">
-				暂无详情
+
+			<view class="comment bgf">
+				<view class="title">
+					<text>用户评论({{appraiseList.length}})</text>
+					<view v-if="appraiseList.length!=0" style="display:flex;align-items: center;" @click="allComment">
+						<view style="font-size: 25rpx;color: #CBCFCE;margin-right: 17rpx;">全部</view>
+						<image
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
+							mode=""></image>
+					</view>
+				</view>
+				<view v-if="appraiseList.length!=0" style="margin:30rpx 0 10rpx;display: flex;">
+					<u-avatar :src="appraiseList[0].avatarUrl" size="25"></u-avatar>
+					<!-- 	<image src="../../static/img/login/loginBg.png" mode=""></image> -->
+					<view
+						style="font-size: 25rpx;color: #3D3F3E;width:10%;height: 50rpx;line-height: 50rpx;margin-left: 20rpx;">
+						{{appraiseList[0].name}}
+					</view>
+					<u-rate :count="count" v-model="appraiseList[0].num" allowHalf activeColor='#ec9322'
+						readonly></u-rate>
+					<view
+						style="font-size: 25rpx;color: #3D3F3E;height: 50rpx;line-height: 50rpx;width: 50%;text-align: end;">
+						{{appraiseList[0].time}}
+					</view>
+				</view>
+				<view v-if="appraiseList.length!=0">
+					<u--text :lines="2" :text="appraiseList[0].appraiseContent">
+					</u--text>
+				</view>
+				<view v-if="appraiseList.length!=0" style="display: flex;width:97%;overflow: hidden;">
+					<view style='margin:15rpx 10rpx;' v-for="(item, index) in appraiseList[0].imgs" :key="index"
+						v-if="index < 3">
+						<u-image radius='8px' width="156rpx" height="156rpx" :src="item" mode=""
+							@click="previewImage(item)">
+						</u-image>
+					</view>
+					<view v-if="appraiseList[0].imgs.length > 4"
+						:style="{ background: `url(${appraiseList[0].imgs[4]})`,margin:' 14rpx 0 0 14rpx',width:'158rpx',height:'156rpx',borderRadius:'14rpx' }">
+						<view style="text-align: center;line-height: 156rpx;">
+							+{{ appraiseList[0].imgs.length - 4 }}
+						</view>
+					</view>
+				</view>
 			</view>
-		</view>
-		<view class="bgf" style="height:212rpx;">
-		</view>
+
+			<view class="detail bgf">
+				<view class="tabs" :style="{top:navbarHeight+'px'}"><u-tabs :list="list" @change="tabChange"
+						lineColor="black" :scrollable='false' placeholder></u-tabs>
+				</view>
+				<!-- 对应的盒子模块 -->
+				<view class="main0">
+					<view class="main-flag" id="main-flag-0" :style="{height:navbarHeight+44+'px'}"></view>
+					<view class="title">
+						服务内容
+					</view>
+					<view v-if="goodInfo.projectImg!=null">
+						<image v-for='(img,imgi) in goodInfo.projectImg.split(",")' :key="imgi" :src="img"
+							style="width:100%;"></image>
+					</view>
+				</view>
+				<view class="main1">
+					<view class="main-flag" id="main-flag-1" :style="{height:navbarHeight+44+'px'}"></view>
+					<view class="title">
+						<text>收费标准</text>
+						<view style="color: #A5A7A7;float: right;display: flex;">收费项说明<u-icon
+								name="info-circle"></u-icon>
+						</view>
+					</view>
+					<table style="width: 100%;">
+						<tr style="background-color: #ecf7f1;">
+							<td>费用名称</td>
+							<td>价格</td>
+						</tr>
+						<tr v-for='(item,index)  in priceList' :key="index">
+							<td>{{item.name}}</td>
+							<td>{{item.price}}</td>
+						</tr>
+					</table>
+				</view>
+				<view class="main2">
+					<view class="main-flag" id="main-flag-2" :style="{height:navbarHeight+44+'px'}"></view>
+					<view class="title">
+						材料清单
+					</view>
+					<view class="cell">
+						<u-collapse :border='false'>
+
+							<u-collapse-item v-for="(item,index) in melList" :key="index" :title="item.name"
+								name="Docs guide">
+								<view v-for="(ch,chindex) in item.list" :key='chindex'
+									style="display: flex;justify-content: space-between;margin-bottom: 20rpx;">
+									<text v-for="(s,si) in Object.values(JSON.parse(ch.materialSpecs))" :key="si">
+										{{s}}
+									</text>
+									<text>{{ch.salePrice}}元/{{ch.materialUnit}}</text>
+								</view>
+							</u-collapse-item>
+
+						</u-collapse>
+					</view>
+				</view>
+			</view>
+
+			<view v-if="goodInfo.standard" class="bgf" style="margin-top: 20rpx;padding: 20rpx;">
+				<view style="font-size: 30rpx;">
+					维修小百科
+				</view>
+				<view style="margin: 10rpx 0 0 10rpx;">
+					{{goodInfo.standard.standardName}}
+					<view style="font-size: 22rpx;color: #A5A7A7;margin-top:20rpx ;">
+						服务分类：{{goodInfo.standard.serviceType}}
+					</view>
+				</view>
+			</view>
+
+			<view class="bgf" style="height:212rpx;">
+			</view>
+
+
+			<u-overlay :show="shows" @click="overlayClose">
+				<view class="warp">
+					<view class="rect">
+						<view style="width: 100vw;">
+							<image :src="imageUrl" mode="" style="height: 978rpx;"></image>
+
+						</view>
+						<view class="btn">
+							<view>
+								<image
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/b0615fa4f9774562bf1e8740d9e658f7.png"
+									mode="widthFix" @click.stop="shareLink" open-type="share"></image>
+							</view>
+							<view>
+								<image
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/625202a5c24344e7bcb630079764172e.png"
+									mode="widthFix" @click.stop="save"></image>
+							</view>
+						</view>
+					</view>
+				</view>
+			</u-overlay>
+
+
+			<view v-if="cardShow">
+				<!-- #ifdef H5 -->
+				<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position: relative;"
+					height="1624rpx" isCanvasToTempFilePath useCORS />
+				<!-- #endif -->
+				<!-- #ifdef MP-WEIXIN -->
+				<l-painter ref="painter" :board="base" @success="hldsz"
+					custom-style="position:relative;margin-left:1000rpx" height="978rpx" isCanvasToTempFilePath />
+				<!-- #endif -->
+				<!-- #ifdef APP-PLUS -->
+				<l-painter ref="painter" :board="base" @success="hldsz"
+					custom-style="position:relative;margin-left:1000rpx" height="978rpx" isCanvasToTempFilePath />
+				<!-- #endif -->
+			</view>
+
+			<!-- 未登录去登录 -->
+			<u-modal :show="isShowLogin" title="提示" width="400rpx" showCancelButton confirmText='去登录'
+				confirmColor='#A4D091' @cancel='isShowLogin = false' @confirm='confirm'>
+				<view class="slot-content">
+					您还未登录,是否去登录
+				</view>
+			</u-modal>
+
+			<u-toast ref="uToast"></u-toast>
+			<!-- 凑单弹框 -->
+			<u-popup :show="coudanShow" closeable @close="coudanShow=false">
+				<view class="cou-dan">
+					<view class="title">服务橱窗</view>
+					<!-- 	<u--input @input='getListByWorkerType()' @clear="getListByWorkerType" @confirm="getListByWorkerType"
+						clearable v-model="searchName" type="text" placeholder="请输入需要的服务" /> -->
+					<view style="padding:10rpx 20rpx;">
+						<u-search clearabled placeholder="请输入需要的服务" v-model="searchName" @clear="getListByWorkerType"
+							@search="getListByWorkerType" :showAction="false"></u-search>
+					</view>
+
+					<view v-if="coudanList.length!=0" class="main">
+
+						<view v-for="(item,index) in coudanList" :key="index">
+							<coudan-card :item='item' />
+						</view>
+					</view>
+					<u-empty v-else mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png"
+						text='没有找到哦，换个关键词试一下吧'>
+					</u-empty>
+				</view>
+			</u-popup>
+		
+
+		</scroll-view>
 		<view class="bottom" v-if="preferentialShow==false&&coudanShow==false">
-			<!-- 	<view style="display: flex;flex-direction: column;" @click="showPhone=true">
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/425df36a57004f1e8bd6c525a58bcd5a.png"
-					mode=""></image>
-				<text>客服</text>
-			</view> -->
-			<view class="bottom-top" v-if='isLogin&&projectNumber!=0'>
-				<view style="display: flex; justify-content: space-between; width: 82%;"
-					v-if="Number(priceDifference)>0">
-					<view class="coudan">
-						<u-icon name="info-circle" color="#fff" size="20"></u-icon>
-						<text style="margin-left: 20rpx;">还差{{priceDifference}}元达到起步价</text>
-					</view>
 
+			<view class="bottom-top" v-if='isLogin'>
+				<view class="">
+					共{{projectForm.projectNumber}}项,合计¥{{Number(projectForm.projectNumber)*Number(goodInfo.discountPrice)}}
+					<text
+						v-if="Number(projectForm.projectNumber)*Number(goodInfo.discountPrice)<Number(goodInfo.startingFreeDiscount)">
+						（*不足服务起步价）
+					</text>
 				</view>
-				<view v-else>
-					已达到起步价
-				</view>
+
+
 				<view @click="coudanShow=true">
-					{{Number(priceDifference)>0?'去凑单>':'继续加购>'}}
+					去凑单>
+					<!-- 	{{Number(priceDifference)>0?'去凑单>':'继续加购>'}} -->
 				</view>
 			</view>
 			<view class="bottom-bottom">
-				<view style="display: flex;flex-direction: column;position: relative;align-items: center;width:17%"
-					@click="goCar">
-					<u-badge type="error" max="99" :absolute="true" :offset="[-5,13]" :value="allNum"></u-badge>
+				<view style="display: flex;position: relative;align-items: center;" @click="goCar">
+					<u-badge type="error" max="99" :absolute="true" :offset="[-5,32]" :value="allNum"></u-badge>
 					<image
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/722e9538b21641bba55896f3a2c96eea.png"
 						mode=""></image>
 					<text style="margin-left: 8rpx;">维修车
 					</text>
 				</view>
-				<view class="detail-price">
-
-					<view v-if='isLogin' style="font-size: 34rpx;font-weight: bold;">
-						¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}
+			
+				<view style="display: flex;">
+					<view class="btn-white" @click="getCheck">
+						+加购
 					</view>
-					<view
-						v-if="projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)!=0"
-						style="margin-left: 5rpx;font-size: 21rpx;" @click="preferentialShow=true">
-						品牌优惠¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}>
+					<view class="btn-green btn-ban" @click="getOrderHandle">
+						立即下单
 					</view>
-
 				</view>
-
-				<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/b0566d28d45d47b2bf4b94356337615b.png"
-				mode="" @click="joinCar('car')"></image> -->
-				<view class="btn-green" @click="getOrderHandle">
-					立即下单
-				</view>
-				<!-- 	<view class="btn-green" style="margin-left: 20rpx;" @click="goCar">
-					去维修车
-				</view> -->
-
-				<!-- 	<image style="width: 220rpx;height: 69rpx;"
-					src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/dddcfdd8b2954673ae8d63397355ce95.png"
-					mode="" @click="getOrderHandle"></image> -->
 			</view>
 
 
 		</view>
+	</view>
 
-		<u-overlay :show="shows" @click="overlayClose">
-			<view class="warp">
-				<view class="rect">
-					<view style="width: 100vw;">
-						<image :src="imageUrl" mode="" style="height: 978rpx;"></image>
-
-					</view>
-					<view class="btn">
-						<view>
-							<image
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/b0615fa4f9774562bf1e8740d9e658f7.png"
-								mode="widthFix" @click.stop="shareLink" open-type="share"></image>
-						</view>
-						<view>
-							<image
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/23/625202a5c24344e7bcb630079764172e.png"
-								mode="widthFix" @click.stop="save"></image>
-						</view>
-					</view>
-				</view>
-			</view>
-		</u-overlay>
-
-
-		<view v-if="cardShow">
-			<!-- #ifdef H5 -->
-			<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position: relative;" height="1624rpx"
-				isCanvasToTempFilePath useCORS />
-			<!-- #endif -->
-			<!-- #ifdef MP-WEIXIN -->
-			<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position:relative;margin-left:1000rpx"
-				height="978rpx" isCanvasToTempFilePath />
-			<!-- #endif -->
-			<!-- #ifdef APP-PLUS -->
-			<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position:relative;margin-left:1000rpx"
-				height="978rpx" isCanvasToTempFilePath />
-			<!-- #endif -->
-		</view>
-
-		<!-- 未登录去登录 -->
-		<u-modal :show="isShowLogin" title="提示" width="400rpx" showCancelButton confirmText='去登录' confirmColor='#A4D091'
-			@cancel='isShowLogin = false' @confirm='confirm'>
-			<view class="slot-content">
-				您还未登录,是否去登录
-			</view>
-		</u-modal>
-
-
-		<!-- 拨打电话 -->
-		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
-			:actions="actionList" :show="showPhone"></u-action-sheet>
-
-		<u-toast ref="uToast"></u-toast>
-		<!-- 凑单弹框 -->
-		<u-popup :show="coudanShow" closeable @close="coudanShow=false">
-			<view class="cou-dan">
-				<view class="title">服务橱窗</view>
-				<!-- 	<u--input @input='getListByWorkerType()' @clear="getListByWorkerType" @confirm="getListByWorkerType"
-					clearable v-model="searchName" type="text" placeholder="请输入需要的服务" /> -->
-				<view style="padding:10rpx 20rpx;">
-					<u-search clearabled placeholder="请输入需要的服务" v-model="searchName" @clear="getListByWorkerType"
-						@search="getListByWorkerType" :showAction="false"></u-search>
-				</view>
-
-				<view v-if="coudanList.length!=0" class="main">
-
-					<view v-for="(item,index) in coudanList" :key="index">
-						<coudan-card :item='item' />
-					</view>
-				</view>
-				<u-empty v-else mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" text='没有找到哦，换个关键词试一下吧'>
-				</u-empty>
-			</view>
-		</u-popup>
-		<!-- 品牌优惠弹框 -->
-		<u-popup :show="preferentialShow" closeable @close="preferentialShow=false">
-			<view class="preferential">
-				<view class="title">优惠明细</view>
-				<view class="main">
-					<view class="line">
-						<text>服务合计(不含材料费)</text>
-						<text>¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.projectPrice)), 0)}}</text>
-					</view>
-					<view class="line">
-						<text>优惠合计(已下单为准)</text>
-						<text>-¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}</text>
-					</view>
-					<view style="margin-left: 20rpx;" class="line">
-						<text><text class="vip">会员</text>品牌会员优惠</text>
-						<text>¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.preferentialPrice)), 0)}}</text>
-					</view>
-
-				</view>
-				<view class="line">
-					<text>合计</text>
-					<text>¥{{projectVoList.reduce((p, c) => p + ((Number(c.projectNumber)?Number(c.projectNumber):0) * Number(c.discountPrice)), 0)}}</text>
-				</view>
-				<view class="btn btn-green" @click="preferentialShow=false">
-					知道啦
-				</view>
-			</view>
-		</u-popup>
-
-
-
-
-	</scroll-view>
 
 
 
@@ -311,6 +357,9 @@
 	import {
 		getCarNum
 	} from '@/utils/api.js'
+	const {
+		environment
+	} = require('../../../config/environment')
 	var checkValues = [];
 	export default {
 		components: {
@@ -320,38 +369,30 @@
 		},
 		data() {
 			return {
+				action: environment.baseURL + '/system/oss/upload',
+				headers: {
+					token: storage.get('AccessToken')
+				},
 				coudanList: [],
 				preferentialShow: false,
 				coudanShow: false,
-				actionList: [{
-						name: '19157668838'
-					},
-					{
-						name: '呼叫'
-					},
-					{
-						name: '取消'
-					},
-				], //拨打电话
-				showPhone: false, //底部电话显示
-				isShowLogin: false, //去登录显示框
+				//去登录显示框
 				info: {},
 				shows: false,
 				cardShow: false, //卡片的显示
 				imageUrl: '',
 				count: 5,
-				value: 2,
 				path: '',
 				base: {},
 				show: false,
 				goodInfo: {},
 				serviceImgList: [],
 				currentNum: 0,
-				projectVoList: [], //服务项目
 				query: {},
 				isLogin: storage.get('AccessToken'),
 				isJoinCar: 0, //是否加入维修车
 				chargeList: [], //收费标准
+				melList: [],
 				types: '',
 				appraiseList: [],
 				qrCode: '', //二维码
@@ -360,13 +401,42 @@
 				projectNumber: 0,
 				searchName: '',
 
+				list: [{
+						name: '服务内容'
+					},
+					{
+						name: '收费标准'
+					},
+					{
+						name: '材料清单'
+					}
+				],
+				current: '', //切换的下标
+				tops: [],
+				scrollTop: 0, //距离顶部的距离
+				statusHeight: 0,
+				projectForm: {
+					projectNumber: 1,
+					projectImg: [],
+					remarks: ''
+				},
+				priceList: [],
+				isShowLogin: false,
+				scrollIntoView: '',
+				navbarHeight: 0,
+				navbarColorOpacity: 0,
+				mainFlagTop: 0,
+				city:undefined
 			}
 		},
 		onLoad(options) {
-			console.log(this.isLogin);
-			console.log(options);
+			// console.log(this.isLogin);
+			// console.log(options);
+			let name = uni.getStorageSync('address_refreash')
+			this.query.address = name
+		  this.city=this.query.address.split('-')[2] 
 			this.query.clientId = !storage.get('ClientId') ? '' : storage.get('ClientId')
-			console.log(this.query);
+			// console.log(this.query);
 			if (options.typeId) {
 				this.query.typeId = options.typeId
 			} else {
@@ -380,13 +450,13 @@
 			uni.getStorage({
 				key: 'city',
 				success: function(res) {
-					console.log(res, '246246246');
+					// console.log(res, '246246246');
 					//获取收费标准
 					getListCharge({
 						city: res.data
 					}).then(res => {
 						that.chargeList = res.data
-						console.log(res);
+						// console.log(res);
 					})
 				}
 			});
@@ -395,62 +465,69 @@
 			// })
 		},
 		onShow() {
-			console.log(this.query);
+			this.$nextTick(() => {
+				uni.createSelectorQuery().in(this)
+					.select(".navbar")
+					.boundingClientRect((data) => {
+						this.navbarHeight = data.height
+						console.log(this.navbarHeight, 'navbarHeight');
+					})
+					.exec();
+				uni.createSelectorQuery().in(this)
+					.select("#main-flag-0")
+					.boundingClientRect((data) => {
+						console.log(data, '......data.............510');
+						this.mainFlagTop = data.top
+					})
+					.exec();
+			})
+			console.log('onshowonshowwwwwww');
+			// #ifdef MP-WEIXIN
+			const res = uni.getMenuButtonBoundingClientRect()
+			this.statusHeight = res.top //胶囊距离顶部
+			// #endif
+			// #ifdef APP-PLUS
+
+			uni.getSystemInfo({
+				success: (info) => {
+					this.statusHeight = info.statusBarHeight
+
+				}
+			});
+			// #endif
+			console.log(this.statusHeight, '448888888');
 			this.isLogin = storage.get('AccessToken')
 			//获取购物车数量
 			if (this.isLogin) {
 				this.getCarList()
 				// this.getInfo()
-				 this.priceDifference = 0
-				 this.projectNumber = 0
+				this.priceDifference = 0
+				this.projectNumber = 0
 			}
 
 		},
 		methods: {
+			pageScroll(e) {
+
+				const rate = e.detail.scrollTop / 200
+				if (rate > 1 && this.navbarColorOpacity === 1) return (this.navbarColorOpacity = 1)
+				this.navbarColorOpacity = rate
+			},
+			tabChange(e) {
+				this.current = e
+				this.scrollIntoView = 'main-flag-' + e.index
+
+			},
 			getCarList() {
 
 				getCarNum().then(res => {
-
 					this.allNum = res
-					
-					// car.getCarList({
-					// 	clientId: storage.get('ClientId')
-					// }).then(res => {
-					// 	console.log(res.data.length, 'carrrrrrrrrr');
-					// 	if (res.data.length != 0) {
-					// 		let bool = res.data.some(item => {
-					// 			return item.workerType == this.goodInfo.workerType
-					// 		})
-					// 		if (bool) {
-					// 			res.data.forEach(item => {
-					// 				if (item.workerType == this.goodInfo.workerType) {
-					// 					let money = 0
-					// 					money = Number(this.goodInfo.startingFreeDiscount) - item
-					// 						.children
-					// 						.reduce((p, c) => p + (Number(c.projectNumber) *
-					// 							Number(c
-					// 								.discountPrice)), 0)
-					// 					this.priceDifference = money
-					// 					console.log(this.priceDifference);
-					// 				}
-					// 			})
 
-					// 		} else {
-					// 			this.priceDifference = this.goodInfo.startingFreeDiscount
-					// 		}
-
-					// 	} else {
-					// 		console.log(this.goodInfo.startingFreeDiscount);
-					// 		this.priceDifference = this.goodInfo.startingFreeDiscount
-					// 	}
-
-					// 	console.log(this.priceDifference);
-					// })
 				})
 			},
 			otherFun(object) {
 				if (object) {
-					console.log(object, 'objectobjectobject')
+					// console.log(object, 'objectobjectobject')
 					this.getInfo()
 				}
 			},
@@ -460,27 +537,53 @@
 					type: this.goodInfo.workerType,
 					name: this.searchName
 				}).then(res => {
-					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
 					this.coudanList = res.data
 				})
 			},
 			//获取详细信息
 			getInfo() {
-				console.log(1111);
-				console.log(this.query, 'queryqueryqueryqueryquery');
+
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
-					console.log(this.goodInfo, 'goodInfogoodInfogoodInfo');
 
-					uni.setNavigationBarTitle({
-						title: this.goodInfo.serviceName
-					})
-					console.log(this.goodInfo);
+					// uni.setNavigationBarTitle({
+					// 	title: this.goodInfo.serviceName
+					// })
+
+					for (let key in this.goodInfo.materialVoMap) {
+						this.melList.push({
+							name: key,
+							list: this.goodInfo.materialVoMap[key]
+						})
+					}
+					//收费标准
+					this.priceList = [{
+							name: '维修服务费',
+							price: this.goodInfo.projectAmount + '元/次'
+						},
+						{
+							name: '检测费',
+							price: this.goodInfo.detectionAmount + '元/次'
+						},
+						{
+							name: '上门费',
+							price: this.goodInfo.doorFee + '元/趟'
+						},
+						{
+							name: '服务加急费',
+							price: this.goodInfo.urgentPrice + '元/次(订单金额' + this.goodInfo.urgentDivided + '%)',
+						},
+					]
 
 					//获取凑单列表
 					if (this.isLogin) {
 						// this.getCarList()
 						this.getListByWorkerType()
+					} else {
+						this.goodInfo.startingFreeDiscount = this.replaceMoney(this.goodInfo.startingFreeDiscount)
+						this.goodInfo.discountPrice = this.replaceMoney(this.goodInfo.discountPrice)
+						this.goodInfo.projectAmount = this.replaceMoney(this.goodInfo.projectAmount)
+						this.goodInfo.preferentialPrice = this.replaceMoney(this.goodInfo.preferentialPrice)
 					}
 
 					//获取评论
@@ -490,7 +593,6 @@
 						pageNum: 1,
 						pageSize: 10
 					}).then(res => {
-						console.log(res);
 						res.rows.forEach(item => {
 							let num = (Number(item.attitudeScore) + Number(item.technicalScore) +
 								Number(item.velocityScore)) / 3
@@ -517,32 +619,7 @@
 					})
 
 					this.serviceImgList = this.goodInfo.serviceImg !== null && this.goodInfo.serviceImg !== "" ?
-						this.goodInfo.serviceImg.split(',') : [],
-						console.log(this.serviceImgList, '514444444444');
-					this.goodInfo.projectVoList.forEach((p, i) => {
-						this.projectVoList.splice(i, 1, p)
-					})
-					this.projectVoList.forEach(item => {
-						item.serviceProjectImg = item.projectImg,
-							item.projectImg = '',
-							item.productId = this.goodInfo.serviceId
-							// item.remarks=''
-					})
-					console.log(this.projectVoList);
-					if (!this.isLogin) {
-						this.projectVoList.forEach(item => {
-							item.discountPrice = this.replaceMoney(item.discountPrice)
-						})
-						// this.goodInfo.maxPrice = this.replaceMoney(this.goodInfo.maxPrice)
-						// this.goodInfo.mixPrice = this.replaceMoney(this.goodInfo.mixPrice)
-						// this.goodInfo.initialLabor = this.replaceMoney(this.goodInfo.initialLabor)
-						this.goodInfo.startingFreeDiscount = this.replaceMoney(this.goodInfo.startingFreeDiscount)
-					}
-					this.goodInfo.remark = this.goodInfo.remark != '' && this.goodInfo.remark != null ? this
-						.goodInfo.remark.replace(/<img/gi, '<img style="width:100%;height:auto"')
-						.replace(/<section/g, '<div')
-						.replace(/\/section>/g, '\div>') : ''
-					console.log(this.goodInfo, '11111111111372222222222');
+						this.goodInfo.serviceImg.split(',') : []
 
 				})
 
@@ -559,14 +636,12 @@
 				uni.getImageInfo({
 					src: this.path,
 					success: (res) => {
-						console.log(res, 'res........');
 						this.imageUrl = res.path
 						this.cardShow = false
 					}
 				})
 			},
 			previewImage(e) {
-				console.log(e);
 				wx.previewImage({
 					current: e, // 当前显示图片的http链接
 					urls: this.appraiseList[0].imgs, // 需要预览的图片http链接列表
@@ -574,30 +649,13 @@
 			},
 			//所有评论
 			allComment() {
-				console.log(11111);
 				uni.navigateTo({
 					url: '../allComments/allComments?id=' + this.goodInfo.serviceId
 				})
 			},
-			actionSelect(e) {
-				console.log(e);
-				let phone = '19157668838'
-				if (e.name == '取消') {
-					this.showPhone = false
-				} else {
 
-					// #ifdef APP-PLUS
-					callPhone(phone, 'app')
-					// #endif
-					// #ifdef MP-WEIXIN
-					callPhone(phone, 'wx')
-					// #endif
-					this.showPhone = false
-				}
-			},
 			//分享
 			shareInfo() {
-				console.log(this.$refs);
 
 				this.base = {
 						width: '605rpx',
@@ -740,7 +798,6 @@
 			},
 			//分享链接
 			shareLink() {
-				console.log(11111);
 				wx.downloadFile({
 					url: this.imageUrl,
 					success: (res) => {
@@ -758,7 +815,6 @@
 					filePath: this.imageUrl,
 					success: function() {
 						uni.$u.toast('保存成功')
-						console.log('save success');
 					}
 				});
 			},
@@ -772,12 +828,12 @@
 				let type = 'goCar'
 				this.isLogin ? uni.navigateTo({
 					url: '../car/car'
-				}).then(res => {
-					console.log(res);
-				}) : this.isShowLogin = true
+				}).then(res => {}) : this.isShowLogin = true
 
 			},
-
+			goBack() {
+				uni.navigateBack()
+			},
 			//去登录
 			confirm() {
 				uni.navigateTo({
@@ -785,56 +841,44 @@
 				})
 				this.isShowLogin = false
 			},
-			// //是否是加入维修车
-			// joinCar(types) {
 
-			// 	this.types = types
-			// 	if (this.isLogin) {
-			// 		this.isJoinCar++
-			// 	} else {
-			// 		this.isShowLogin = true
-			// 	}
-			// },
-			textareaInput(arr) {
-				console.log(arr);
-				this.projectVoList[0].remarks = arr[0].remarks
+			onSuccesss(reslut) {
+				console.log(reslut);
+				this.projectForm.projectImg.push(reslut.data.url)
 			},
-			getCheck(item) {
-				console.log(item, 'itrwmmmmmmmmm');
-				if (!this.isLogin) {
-					this.isShowLogin = true
-					return
-				}
-				this.projectVoList[0].projectNumber = this.projectNumber = item.num.value
-
-				// this.projectVoList[0] = item.item
-				console.log(this.projectVoList[0], '8055555555555');
+			onInput(data) {
+				console.log(data);
+				this.projectForm.projectImg = data.list
+			},
+			getCheck() {
+				// if (!this.isLogin) {
+				// 	this.isShowLogin = true
+				// 	return
+				// }
+				console.log(this.getRules());
+				if (!this.getRules()) return
 				let carArr = []
 				carArr.push({
 					clientId: storage.get('ClientId'),
-					flag: item.flag,
 					productId: this.goodInfo.serviceId,
-					projectPrice: this.projectVoList[0].projectPrice,
-					projectNumber: item.item.projectNumber,
-					projectId: this.projectVoList[0].projectId,
-					projectImg: this.projectVoList[0].projectImg == [] ? undefined : this.projectVoList[0]
+					projectPrice: this.goodInfo.projectAmount,
+					projectNumber: this.projectForm.projectNumber,
+					projectId: this.goodInfo.projectId,
+					projectImg: this.projectForm.projectImg == [] ? undefined : this.projectForm
 						.projectImg.toString(),
-					remark: this.projectVoList[0].remarks,
+					remark: this.projectForm.remarks,
 					shoppingCartStatus: 0,
-					projectType: this.projectVoList[0].projectType,
-					discountPrice: this.projectVoList[0].discountPrice,
+					projectType: this.goodInfo.projectType,
+					discountPrice: this.goodInfo.discountPrice,
 					initialLabor: this.goodInfo.initialLabor,
 					// projectVideo: item.projectVideo != [] ? item.projectVideo.toString() :
 					// 	undefined,
 					workerType: this.goodInfo.workerType
 				})
 
-				console.log(carArr);
 				// //计算起步价差价
-				console.log(this.goodInfo);
-				let total = Number(this.projectVoList[0].projectPrice) * Number(item.item.projectNumber)
-				this.priceDifference = Number(this.goodInfo.startingFreeDiscount) - total
-				console.log(total);
+				// let total = Number(this.projectVoList[0].projectPrice) * Number(item.item.projectNumber)
+				// this.priceDifference = Number(this.goodInfo.startingFreeDiscount) - total
 				car.joinCar(carArr).then(res => {
 					console.log(res);
 					if (res.code == 200) {
@@ -842,105 +886,74 @@
 							title: '操作成功',
 							duration: 2000
 						});
-						//获取购物车数量
-						this.getCarList()
+						this.projectForm = {
+								projectNumber: 1,
+								projectImg: [],
+								remarks: ''
+							},
+							//获取购物车数量
+							this.getCarList()
 
 					}
 				})
-				console.log(this.projectVoList);
 			},
-			getDeleteUrlList(list) {
-				console.log(list);
-				this.projectVoList[0].projectImg = list[0].projectImg
+			numChange(val) {
+				console.log(val);
+				this.projectForm.projectNumber = val.value
 			},
-			//下单
-			getOrderHandle() {
-				// console.log(this.projectVoList[0].projectNumber==0);
-				// console.log(!this.projectVoList[0].projectNumber||this.projectVoList[0].projectNumber==0);
-				// if (!this.projectVoList[0].projectNumber||this.projectVoList[0].projectNumber==0) {
-				// 	this.$refs.uToast.show({
-				// 		type: 'error',
-				// 		message: '请选择数量'
-				// 	});
-				// 	return
-				// }
+			getRules() {
 				if (!this.isLogin) {
 					this.isShowLogin = true
-					return
+					return false
 				}
-				console.log(this.projectVoList);
-				if (this.projectVoList[0].projectImg == '' || this.projectVoList[0].projectImg.length == 0) {
+				if (this.projectForm.projectImg == '' || this.projectForm.projectImg.length == 0) {
 					this.$refs.uToast.show({
 						type: 'error',
 						message: '请上传图片/视频'
 					});
-					return
+					return false
 				}
-
-				// console.log(query.list);
-				// console.log(this.goodInfo, this.$refs.proInfo, '.......610');
-				// checkValues = this.$refs.proInfo.checkboxValue1
+				return true
+			},
+			//下单
+			getOrderHandle() {
+				console.log(this.getRules());
+				 if (!this.getRules()) return
+				// if (!this.isLogin) {
+				// 	this.isShowLogin = true
+				// 	return
+				// }
+				// if (this.projectForm.projectImg == '' || this.projectForm.projectImg.length == 0) {
+				// 	this.$refs.uToast.show({
+				// 		type: 'error',
+				// 		message: '请上传图片/视频'
+				// 	});
+				// 	return
+				// }
 				let newSetArray = [] //新数组
-				this.projectVoList.map((item, index) => {
-					newSetArray.push(Object.assign({}, item, {
-						clientId: storage.get('ClientId'),
-						workerType: this.goodInfo.workerType,
-						remark: item.remarks ? item.remarks : '',
-						projectNumber: item.projectNumber ? item.projectNumber : 1,
-						startingFreeDiscount: this.goodInfo.startingFreeDiscount,
-						startingFree: this.goodInfo.startingFree,
-						serviceTime: item.projectHours,
-						serviceProjectName: item.projectName,
-						projectType: item.projectType,
-						initialLabor: this.goodInfo.initialLabor
-					}, {
-						productId: this.goodInfo.serviceId
-					}))
+
+				newSetArray.push({
+					clientId: storage.get('ClientId'),
+					...this.goodInfo,
+					...this.projectForm,
+					serviceProjectImg: this.goodInfo.serviceImg,
+					serviceProductName: this.goodInfo.serviceName,
+					projectPrice: this.goodInfo.projectAmount
 				})
-				//console.log(this.projectVoList);
 				console.log(newSetArray);
 				let info = {
 					checkedList: newSetArray,
 					isCar: false
 				}
 				uni.navigateTo({
-					url: '../submitOrder/submitOrder?item=' + JSON.stringify(info)
+					url: '../submitOrder/submitOrder?item=' + encodeURIComponent(JSON.stringify(info))
 				})
 
 
-				//} 
-				// else {
-				// 	uni.showToast({
-				// 		title: '请选择项目',
-				// 		duration: 2000,
-				// 		icon: 'none'
-				// 	});
-				// }
-			},
-			//其他页面改变数据
-			changeData(data) {
-				this.projectNumber = this.projectVoList[0].projectNumber
-				this.projectVoList.forEach((fu, index) => {
-					data.forEach(d => {
-						if (fu.projectId == d.projectId) {
-							this.$set(this.projectVoList, index, d)
-							console.log(this.projectVoList, '....182');
-						}
-					})
-				})
-				this.$nextTick(() => {
-					this.$refs.proInfo.checkboxValue1 = checkValues
-					console.log(checkValues, 'checkValuescheckValuescheckValuescheckValues...', this.$refs
-						.proInfo);
-				})
 			},
 
-			textConfirm(arr) {
-				console.log(arr);
-				this.projectVoList[0].remarks = arr[0].remarks
-			},
 
-		}
+		},
 	}
 </script>
 
@@ -953,23 +966,10 @@
 	.serviceInfo {
 		height: 100vh;
 
-		.btn-green {
-			height: 65rpx;
-			background: #A4D091;
-			border-radius: 34rpx;
-			font-size: 29rpx;
-			color: #FFFFFF;
-			line-height: 65rpx;
-			text-align: center;
-			padding: 0 40rpx;
-			font-weight: bold;
-		}
-
-		.bgf {
-			background: #FFFFFF;
-		}
-
 		.top {
+
+
+
 			.no-img {
 				width: 100%;
 				height: 564rpx;
@@ -998,49 +998,99 @@
 				}
 			}
 
+
 			.info {
-				display: flex;
+				// display: flex;
 				padding: 25rpx;
 				font-size: 36rpx;
 				color: #3D3F3E;
 				align-items: baseline;
-				// view:nth-child(1) {
-				// 	display: flex;
-				// 	justify-content: space-between;
-				// }
 
-				// view:nth-child(2) {
-				// 	font-size: 27rpx;
-				// 	color: #EC5722;
-				// 	margin-top: 15rpx;
-				// }
+				image {
+					width: 100%;
+					height: 168rpx;
+				}
 
+				.price-img {
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					background-size: 100% auto !important;
+					height: 175rpx;
+					padding-left: 24rpx;
+					background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/0616977a744749ac86c5b97a1728f654.png) no-repeat;
+				}
 
+				.prices {
 
+					.top {
+						color: #EC5722;
+
+						text:nth-child(2) {
+							font-size: 15px;
+							display: inline-block;
+							margin: 0 20rpx 0 10rpx;
+						}
+
+						text:nth-child(3) {
+							display: inline-block;
+							background-color: #ffede7;
+							border-radius: 28rpx;
+							padding: 11rpx 27rpx;
+							font-size: 25rpx;
+						}
+					}
+
+				}
+
+				view:nth-child(2) {
+					font-weight: bold;
+					font-size: 36rpx;
+					color: #3D3F3E;
+				}
+
+				view:nth-child(3) {
+					font-size: 22rpx;
+					color: #A5A7A7;
+				}
 			}
 		}
+
+
+		.bgf {
+			background: #FFFFFF;
+		}
+
+
 
 		.services {
 			width: 100%;
 			margin-top: 20rpx;
 
+			.service_top {
+				padding: 28rpx;
+				border-bottom: 2rpx solid #F8F8F8;
 
-		}
-
-		.price {
-			margin-top: 20rpx;
-			padding: 20rpx;
-
-			.cell {
-				::v-deep.u-cell__body {
-					background: rgba(159, 214, 186, 0.2);
-					border-radius: 7rpx;
-					//margin-top: 10rpx !important;
+				view:first-child {
+					display: flex;
+					font-size: 33rpx;
+					justify-content: space-between;
+					align-items: center;
 				}
 
-				::v-deep.u-collapse-item {
-					margin-top: 10rpx;
+				view:nth-child(2) {
+					font-size: 22rpx;
+					color: #A5A7A7;
+					margin-top: 18rpx;
 				}
+			}
+
+			.remark {
+				font-size: 29rpx;
+				color: #3D3F3E;
+				font-weight: bold;
+				padding: 20rpx 28rpx;
+
 
 			}
 		}
@@ -1066,75 +1116,58 @@
 			margin-top: 20rpx;
 			padding: 30rpx 20rpx;
 
-			.fwb-img {
-				max-width: 100% !important;
-				width: 100% !important;
-				height: auto !important;
-				display: block
+			.tabs {
+				z-index: 10;
+				position: sticky;
+				background-color: #fff;
+			}
+
+			.main0,
+			.main1,
+			.main2 {
+				position: relative;
+
+				.main-flag {
+					position: absolute;
+					top: 0%;
+					transform: translateY(-100%);
+				}
+			}
+
+			table {
+				margin-top: 10rpx;
+
+				tr {
+					display: flex;
+					padding: 17rpx 0;
+
+					td {
+						flex: 1;
+						text-align: center;
+					}
+				}
+			}
+
+
+			.title {
+				margin: 14rpx 0;
+			}
+
+			.cell {
+				::v-deep.u-cell__body {
+					background: rgba(159, 214, 186, 0.2);
+					border-radius: 7rpx;
+					//margin-top: 10rpx !important;
+				}
+
+				::v-deep.u-collapse-item {
+					margin-top: 10rpx;
+				}
+
 			}
 		}
 
-		.bottom {
 
-			width: 100%;
-			position: fixed;
-			bottom: 0;
-			font-size: 22rpx;
-			z-index: 100000;
-
-			.bottom-top {
-				color: #fff;
-				justify-content: space-between;
-				background: linear-gradient(270deg, #A4D091 0%, #769D71 100%);
-				border-radius: 14rpx 14rpx 1rpx 1rpx;
-				display: flex;
-				font-size: 25rpx;
-				height: 55rpx;
-				line-height: 55rpx;
-				padding: 0 20rpx;
-
-				.coudan {
-					display: flex;
-				}
-			}
-
-			.bottom-bottom {
-				height: 120rpx;
-				width: 100%;
-				display: flex;
-				color: #3D3F3E;
-				text-align: center;
-				align-items: center;
-				background: #fff;
-
-				::v-deep.u-badge {
-					z-index: 100;
-				}
-
-				image {
-					width: 54rpx;
-					height: 54rpx;
-				}
-
-				// image:first-child {
-				// 	width: 47rpx;
-				// 	height: 43rpx;
-				// 	margin: 0 30rpx;
-				// }
-
-				.detail-price {
-					width: 55%;
-					text-align: start;
-					color: #EC5722;
-					display: flex;
-					align-items: center;
-				}
-
-			}
-
-
-
-		}
 
 		.rect {
 			text-align: center;
@@ -1199,5 +1232,118 @@
 				overflow-y: scroll;
 			}
 		}
+	}
+
+	.good-detail-page {
+		height: 100vh;
+
+		.navbar {
+			position: fixed;
+			top: 0px;
+			// top: 105rpx;
+			width: 100%;
+			display: flex;
+			padding-left: 16rpx;
+			z-index: 9999999;
+
+			text {
+				display: inline-block;
+				background: rgba(0, 0, 0, 0.45);
+				padding: 10rpx 20rpx;
+				border-radius: 7rpx;
+				font-size: 29rpx;
+				color: #FFFFFF;
+				margin-left: 18rpx;
+			}
+		}
+	}
+
+
+	.bottom {
+
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+		font-size: 22rpx;
+		z-index: 100000;
+
+		.btn-green {
+			height: 65rpx;
+			background: #A4D091;
+			border-radius: 0 34rpx 34rpx 0;
+			font-size: 29rpx;
+			color: #FFFFFF;
+			line-height: 65rpx;
+			text-align: center;
+			padding: 0 40rpx;
+			font-weight: bold;
+		}
+
+		.btn-white {
+			height: 65rpx;
+			background: rgba(159, 214, 163, 0.2);
+			border-radius: 34rpx 0 0 34rpx;
+			font-size: 29rpx;
+			color: #A4D091;
+			line-height: 65rpx;
+			text-align: center;
+			padding: 0 40rpx;
+			font-weight: bold;
+		}
+
+		.bottom-top {
+			color: #fff;
+			justify-content: space-between;
+			background: linear-gradient(270deg, #A4D091 0%, #769D71 100%);
+			border-radius: 14rpx 14rpx 1rpx 1rpx;
+			display: flex;
+			font-size: 25rpx;
+			height: 79rpx;
+			line-height: 79rpx;
+			padding: 0 20rpx;
+
+			.coudan {
+				display: flex;
+			}
+		}
+
+		.bottom-bottom {
+			height: 120rpx;
+			// width: 100%;
+			display: flex;
+			color: #3D3F3E;
+			text-align: center;
+			align-items: center;
+			background: #fff;
+			justify-content: space-between;
+			padding: 0 20rpx;
+
+			::v-deep.u-badge {
+				z-index: 100;
+			}
+
+			image {
+				width: 54rpx;
+				height: 54rpx;
+			}
+
+			// image:first-child {
+			// 	width: 47rpx;
+			// 	height: 43rpx;
+			// 	margin: 0 30rpx;
+			// }
+
+			.detail-price {
+				width: 34%;
+				text-align: start;
+				color: #EC5722;
+				display: flex;
+				align-items: center;
+			}
+
+		}
+
+
+
 	}
 </style>

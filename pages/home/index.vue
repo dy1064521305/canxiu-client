@@ -1,24 +1,34 @@
 <template>
 	<view>
 		<view v-if="locationStatus=='authorized'||locationStatus==''" class="home">
-			<u-navbar :height="navHeight" placeholder :bgColor="'RGBA(147, 189, 134, '+opacity+')'">
+			<view class="swiper_style">
+				<u-swiper height='700rpx' :list="list5" @change="e => current = e.current" :autoplay="false">
+					<view slot="indicator" class="indicator">
+						<view class="indicator__dot" v-for="(item, index) in list5" :key="index"
+							:class="[index === current && 'indicator__dot--active']">
+						</view>
+					</view>
+				</u-swiper>
+			</view>
+			<u-navbar :height="navHeight" :bgColor="'RGBA(147, 189, 134, '+opacity+')'">
 				<view slot='left'>
 
 				</view>
 				<view slot='center'
 					:style="{'padding-bottom':'50rpx','margin-top':titleHeight+'rpx','display':'flex','width':'93%'}">
-					<view class="citys">
-						<view @click.stop="choseCity">{{cityName}}
-						</view>
-						<image @click.stop="choseCity" style="width: 25rpx;height: 16rpx;"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/330ef3078c78421bb695ed0d1f82c5c8.png"
-							mode="">
-						</image>
-					</view>
+
 					<view class="search" @click="goSearch">
 						<view class="left">
-							<!-- 
-							<view class="line">|</view> -->
+							<view class="citys">
+								<view @click.stop="choseCity">{{cityName}}
+								</view>
+								<image @click.stop="choseCity" style="width: 25rpx;height: 16rpx;"
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/9f18ad7cede3427ab1d2bb6c4f1d0a8e.png"
+									mode="">
+								</image>
+							</view>
+
+							<view class="line">|</view>
 							<image class="search-icon"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png"
 								mode=""></image>
@@ -28,10 +38,12 @@
 					</view>
 				</view>
 			</u-navbar>
+
 			<view class="content">
 				<view class="types">
 					<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="ACCESS_FINE_LOCATION">
 					</yk-authpup>
+
 					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(item.typeName)'>
 
 						<image :src="item.iconUrl" mode=""></image>
@@ -40,43 +52,7 @@
 						</view>
 					</view>
 				</view>
-				<!-- 	<view class="project">
-					<view class="top">
-						<view class="title blod">
-							热门报修
-						</view>
-						<view v-if="hotServiceList.length>4" class="more" @click="goMore('more',[])">
-							<text>更多报修</text>
-							<view>
-								<image
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
-									mode=""></image>
-							</view>
-						</view>
-					</view>
-					<view class="bottom">
-						<view v-if="hotServiceListFour.length!=0" v-for="(item,index) in hotServiceListFour"
-							:key="index" class="box" @click="goDetailed(item)">
-							<image :src="item.imgs[0]" mode=""></image>
-							<view class="title blod">
-								{{item.serviceName}}
-							</view>
-							<view class="info">
-								<view style="color: #EC5722;">
-									<text style="font-size: 22rpx;">¥</text>
-									<text style="display:inline-block;margin: 0 12rpx;"
-										class="blod">{{item.servicePrice}}</text>
-								</view>
-								<view style="font-size: 22rpx;color: #A5A7A7;padding-top: 8rpx;width: 60%;"></view>
-								<image src="../../static/img/home/intoCar.png" mode=""></image>
-							</view>
 
-						</view>
-						<view style="margin: 0 auto;" v-if="hotServiceListFour.length==0">
-							暂无数据
-						</view>
-					</view>
-				</view> -->
 				<view class="fault-area">
 					<view class="title blod">
 						故障区域
@@ -85,7 +61,7 @@
 						<view
 							:style="{'margin':index==0?'10.87rpx 10.87rpx 14.49rpx 0':index==1?'10.87rpx 0 14.49rpx 10.87rpx':index==2?'14.49rpx 10.87rpx 0 0':'14.49rpx 0 0 10.87rpx'}"
 							class="box" v-for="(item,index) in regionService" :key='index'
-							@click="goMore(item.regionName,item.productVoList)">
+							@click="goMore(item.regionName)">
 							<image style="height: 100%;width: 100%;border-radius: 14rpx;" :src="item.regionImage">
 							</image>
 							<view class="mask">
@@ -96,8 +72,9 @@
 					</view>
 				</view>
 				<view class="home-bottom" id='bottom' :style="{minHeight:scrollHeight+'px'}">
+					<view class="flag" :key="statusBarHeight" :style="{height:navHeight+statusBarHeight+'px'}"></view>
 					<view class="tabs"
-						:style="{backgroundColor:tabsBg,position:tabsBg === '#fff'&&'sticky',zIndex:3,top:tabHeight+'px'}">
+						:style="{backgroundColor:tabsBg,position:'sticky',zIndex:3,top:navHeight+statusBarHeight+'px'}">
 						<u-tabs :current="currentIndex" :list="serviceSymptomsName" lineWidth="60" lineHeight="7"
 							lineColor='#A4D091' :activeStyle="{
 							    color: '#303133',
@@ -110,14 +87,14 @@
 							}" itemStyle="padding-left: 15px; padding-right: 15px; height: 45px;" @click="tabClick">
 						</u-tabs>
 					</view>
-					<swiper :style="{minHeight:'90vh',height:swiperHeight+'px'}" :current="currentIndex"
-						@change="swiper_change">
+					<swiper v-if="serviceSymptomsName.length>0"
+						:style="{minHeight:(serviceItemHeight*10)+'px',height:(serviceItemHeight*serviceSymptomsName[currentIndex].list.length)+'px'}"
+						:current="currentIndex" @change="swiper_change">
 						<swiper-item v-for="(item,index) in serviceSymptomsName" :key="index">
-							<view class="scroll-view">
-								<view v-for="(item1,index1) in item.list" :key="index1">
+							<view class="scroll-view" v-if="item.list">
+								<view v-for="(item1,index1) in item.list" :key="index1" class="service-item">
 									<view v-if="item.list.length!=0">
-										<goodCard @getCityNameEmit='detailedName' :item='item1' :isLogin='isShowMoney'
-											type='pro' />
+										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
 									</view>
 									<!-- 	<view v-if="item.list.length!=0&&isShowMoney&&item1.servicePrice.indexOf('x')==-1">
 										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
@@ -164,13 +141,17 @@
 				去设置
 			</view>
 		</view>
-·
-	
+
+
+		<!-- 	<view class="index" style="z-index: 999999999999;">
+		<wu-app-update></wu-app-update>
+	</view> -->
 
 	</view>
 </template>
 
 <script>
+	import homeList from './homeList.js'
 	import storage from '@/utils/storage'
 	import goodCard from '../../components/goodCard/goodCard.vue'
 	import {
@@ -183,7 +164,8 @@
 		getServiceType,
 		getServiceSymptoms,
 		getHotService,
-		getRegionService
+		getRegionService,
+		getRegion
 	} from '@/api/home.js';
 
 	import {
@@ -211,111 +193,10 @@
 				loaded: false, //是否展示 “已加载全部” 字样
 				titleHeight: 60, //小程序的搜索框顶部高度
 				typesList: [], //一级分类
-				iconList: [{
-						name: '水管台盆',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/dd229a61f282420dbd4834b7df8ff118.png",
-					},
-					{
-						name: '线路电器',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/931927a4bfda4cce9ea6c8ddb6833fcb.png",
-					},
-
-					{
-						name: '门窗维修',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/d70cff4580e343d0b476d614e6060d34.png",
-					},
-					{
-						name: '家俱维修',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/05/25/5c9d6721a9cc42d8b36055b44f44b3b1.png",
-					},
-					{
-						name: '金属制品',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/1f949be9b75146899ac5163dfb724f6c.png",
-					},
-					{
-						name: '油漆涂料',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/caf8ac6839ef4102a4fef58e623ae66b.png",
-					},
-					{
-						name: '厨具设备',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/f829573a5ff14a14aeb24cc29daccf42.png",
-					},
-					{
-						name: '制冷设备',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/aeb9f00486e74e2581ea821d3a62c7c5.png",
-
-					},
-					{
-						name: '灯具维修',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/41eb8bd3850d46eb8da998031132969b.png",
-					},
-					{
-						name: '空调维修',
-						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/919ae79b3192417387cbfe81c4f3d971.png'
-
-					},
-					{
-						name: '油烟排风',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/80da0c42b64b4503989c8ebf79ed3e6c.png",
-
-					},
-					{
-						name: '墙面维修',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/c9999ed56ab0408b9a8f81832c1a897a.png",
-
-					},
-					{
-						name: '地面维修',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/fa9899041b4b43f1b98ce2f6cd4da8a1.png",
-
-					},
-
-					{
-						name: '顶面维修',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/96b3449ca2f04f0f904ae049069f69eb.png",
-					},
-					{
-						name: '弱电设备',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/e4e296ff88864e45877ff619b8588b0a.png",
-					},
-					{
-						name: '景观维修',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/e3c94b4ad35b432ca9d808ebc2b9682f.png",
-					},
-					{
-						name: '软装配饰',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/2b6e994786e343ba9e2e97d178868732.png",
-					},
-					{
-						name: '广告招牌',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/4cb33e4d1a614bda86187d7fd7d1732e.png",
-					},
-					{
-						name: '清洗服务',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/07/8812ed60654c4087a5b1ca4d50932a06.png",
-					},
-					{
-						name: '装修维修',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/29/c47d79d25ff342b08afdb70e5eef7224.png",
-					},
-					{
-						name: '燃气设备',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/29/f92abc90e9ba4f17ad0443a2509a3c6c.png",
-					},
-					{
-						name: '电器设备',
-						url: "http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/29/69fa6dc417e446f08cb77b85a37d6198.png",
-					}
-				],
+				iconList: [],
 				hotServiceList: [], //热门报修
 				hotServiceListFour: [], //首页显示的四个
 				regionService: [], //故障区域
-				regionImg: [
-					'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/e1a97f4a6c8f4bc1a2d2ae473bcbdf20.png',
-					'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/2092a26ec7004e5cbd3c812d22051ccc.png',
-					'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/3529ea882ad94cbb8318e83054e6e5f8.png',
-					'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/22/d4d05c166eba49219d98070568886517.png'
-				],
 				serviceSymptoms: [], //故障现象
 				serviceSymptomsName: [], //故障现象名称
 				productVoList: [], //产品服务列表
@@ -328,18 +209,25 @@
 				navHeight: 70, //搜索框的高度
 				offsetTop: 90, //吸顶高度
 				scrollTop: 0,
-				swiperHeight: 0,
+				serviceItemHeight: 0,
 				tabsBg: '',
 				scrollHeight: 0,
 				tabHeight: 0,
 				opacity: 0,
-				bottomNum: 0,
 				cityName: '获取位置中...',
 				locationStatus: '', //定位权限
-				timer: '',
 				promiseList: [false, false],
 				carNum: 0,
 				typeName: undefined,
+				list5: [
+					'https://cdn.uviewui.com/uview/swiper/swiper3.png',
+					'https://cdn.uviewui.com/uview/swiper/swiper2.png',
+					'https://cdn.uviewui.com/uview/swiper/swiper1.png',
+				],
+				current: 0,
+				addressName: undefined,
+				statusHeight: 0,
+				statusBarHeight: 0
 			}
 		},
 		onReady() {
@@ -348,23 +236,21 @@
 		watch: {
 			promiseList: {
 				handler(n) {
-					console.log(n, '<<<0---------------n', this.tabHeight);
 					if (n.every(item => item)) {
 						this.$nextTick(() => {
+							// uni.createSelectorQuery().in(this).select('.search').boundingClientRect(data =>{
+							// this.scrollTop = data.bottom
+							// }).exec()
 							uni.createSelectorQuery().in(this).select('#bottom')
 								.boundingClientRect(data => {
-									uni.createSelectorQuery().in(this).select('.content')
+									this.scrollTop = data.top - (this.navHeight + this.statusHeight)
+
+									uni.createSelectorQuery().in(this).select('.search')
 										.boundingClientRect(data1 => {
-											console.log(data1, data);
-											this.scrollTop = data.top - data1.top
+											// this.scrollTop = data.top - data1.bottom
 											if (this.tabHeight == 0) {
-												console.log(1111111111111, '22222222222');
 												this.tabHeight = data1.top
 											}
-
-											console.log(this.scrollTop,
-												'<<<-----------------scrollTop----watch', this
-												.tabHeight);
 										}).exec();
 
 								}).exec();
@@ -375,15 +261,15 @@
 			}
 		},
 		onPageScroll(e) {
-			// console.log((e.scrollTop).toFixed(0),(this.scrollTop).toFixed(0));
-			if ((e.scrollTop).toFixed(0) * 1 >= (this.scrollTop).toFixed(0) * 1) {
-				//	console.log(this.tabsBg, 'lllllllllllllllllllllllllllll---216', e.scrollTop, this.scrollTop + 55);
-				this.tabsBg = '#fff'
-			} else {
-				this.tabsBg = '#F5F9FA'
-			}
+			this.statusBarHeight || uni.getSystemInfo({
+				success: (info) => {
+					this.statusBarHeight = info.statusBarHeight
+					// 你可以根据这个高度来设置你的内容区域的padding-top等
+				}
+			});
 			this.opacity = parseFloat((e.scrollTop / 80).toFixed(1) * 1) > 1 ? 1 : parseFloat((e.scrollTop / 80).toFixed(
 				1) * 1)
+			if (this.tabsBg !== '#F5F9FA') this.tabsBg = '#F5F9FA'
 		},
 		onShow() {
 			if (storage.get('AccessToken')) {
@@ -400,9 +286,14 @@
 					})
 
 				})
-			}
+				// #ifdef MP-WEIXIN
+				this.getLoction()
+				// #endif
+				// #ifdef APP-PLUS
+				this.$refs['authpup'].open()
 
-			console.log('onshowinshow');
+				// #endif
+			}
 			// #ifdef MP-WEIXIN
 			this.getHeight();
 			this.navHeight = 100
@@ -415,13 +306,11 @@
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
-					console.log();
 					this.isShowMoney = Boolean(res.data)
-					this.getList()
+
 					if (this.isShowMoney) {
 						this.queryState();
 						getC2cUnreadMsgNum().then(res => {
-							console.log(res, '4266666666');
 							queryUnreadNum().then(ress => {
 
 								let num = (parseInt(res.data.AllC2CUnreadMsgNum) ? parseInt(res
@@ -441,9 +330,9 @@
 						})
 					}
 					const apps = getApp()
-					console.log(apps.type);
 					if (apps.type == 'login') {
 						this.queryParams.pageNum = 1
+						console.log('335================================>>>>');
 						this.getServiceSymptomsHandle()
 					} else {
 						this.getServiceSymptoms()
@@ -453,10 +342,7 @@
 
 
 
-			this.getCityName('unInit')
-
 			uni.$on('totalUnreadCount', function(data) {
-				console.log('监听到事件来自 update ，携带参数 msg 为：' + data.msg);
 				getC2cUnreadMsgNum().then(res => {
 					queryUnreadNum().then(ress => {
 
@@ -480,81 +366,40 @@
 
 		},
 		onHide() {
-			console.log('onhide');
 			const apps = getApp()
 			apps.type = undefined
-			//	clearInterval(this.timer);
 		},
 		onLoad() {
 			this.getServiceTypesList()
-			console.log('onloadonload.......');
 			this.locationStatus = ''
-
-			console.log(this.locationStatus);
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
-					this.getServiceSymptomsHandle()
+
 					this.isShowMoney = Boolean(res.data)
 					if (this.isShowMoney) {
+						// #ifdef APP-PLUS
+						this.$nextTick(() => {
+							this.$refs['authpup'].open()
+						})
+						// #endif
+						// #ifdef MP-WEIXIN
+						this.getLoction()
+						// #endif
 						this.queryState();
 					}
 				}
 			})
-
-
-			console.log(this.cityName, '255555555555');
-			// //this.timer = setInterval(() => {
-			// 	this.getCityName()
-
-			// 	if (this.cityName != '获取位置中...') {
-			// 		clearInterval(this.timer);
-
-			// 	}
-			// }, 1000)
-
-
 
 		},
 
 		methods: {
 			getServiceTypesList() {
 				getService().then(res => {
-					console.log(res);
 					this.serviceTypesList = res.data
 				})
 			},
-			getCityName(type) {
 
-				var that = this
-				uni.getStorage({
-					key: 'city',
-					success: function(res) {
-						console.log(res);
-						that.cityName = res.data
-					},
-					fail(res) {
-						if (type != 'unInit') {
-							// #ifdef MP-WEIXIN
-							that.getLoction()
-							// #endif
-							// #ifdef APP-PLUS
-							that.getLoction()
-							// #endif
-							// this.timer = setInterval(() => {
-
-
-							// 	if (this.cityName != '获取位置中...') {
-							// 		clearInterval(this.timer);
-
-							// 	}
-							// }, 100)
-
-						}
-
-					}
-				});
-			},
 			queryState() {
 				accountQueryState().then(res => {
 					if (res.data.QueryResult[0].State == 'Offline') {
@@ -565,7 +410,6 @@
 							}).then(function(imResponse) {
 								if (imResponse.data.repeatLogin === true) {
 									// 标识帐号已登录，本次登录操作为重复登录。v2.5.1 起支持
-									console.log(imResponse.data.errorInfo);
 								}
 							}).catch((error) => {
 								console.info(error)
@@ -586,39 +430,19 @@
 
 			//触底函数
 			onReachBottom() {
-				console.log('触底');
-				this.bottomNum++
-				console.log(this.serviceSymptomsName[this.currentIndex]);
-				if (this.serviceSymptomsName[this.currentIndex].list.length < this.serviceSymptomsName[this.currentIndex]
-					.total) {
-					console.log(1111);
-					this.queryParams.pageNum++
-					this.getServiceSymptomsHandle()
-				}
-
-
+				this.serviceSymptomsName[this.currentIndex].params.pageNum++
+				if (!this.serviceSymptomsName[this.currentIndex].params.symptoms) this.serviceSymptomsName[this
+					.currentIndex].params.symptoms = this.serviceSymptomsName[this.currentIndex].name
+				this.getServiceSymptomsHandle()
 			},
 			// //上拉函数
 			onPullDownRefresh() {
-				//console.log("下拉刷新...");
-				this.queryParams.pageNum = 1
+				this.serviceSymptomsName.forEach(service => {
+					service.params.pageNum = 1
+				})
 				this.getServiceSymptomsHandle()
-				var that = this
-				uni.getStorage({
-					key: 'city',
-					success: function(res) {
-						console.log(res);
-						that.cityName = res.data
-					},
-					fail(res) {
-						// #ifdef MP-WEIXIN
-						that.getLoction()
-						// #endif
-						// #ifdef APP-PLUS
-						that.getLoction()
-						// #endif
-					}
-				});
+				this.getLoction()
+
 
 			},
 			swiper_change(e) {
@@ -629,56 +453,53 @@
 			getServiceSymptomsHandle() {
 				//获取故障现象
 				this.loading = true
-				console.log(this.isShowMoney, '.....328');
-				console.log(this.queryParams.pageNum, 'numnum 111111111');
-				return getServiceSymptoms(this.queryParams).then(res => {
-					console.log(res, '.............331', this.queryParams);
-					this.loading = false
-
+				const params = this.serviceSymptomsName.length < 1 ? {
+					pageSize: 10,
+					pageNum: 1,
+					symptoms: ''
+				} : this.serviceSymptomsName[this.currentIndex].params
+				getServiceSymptoms(params).then(res => {
 					this.serviceSymptomsName = res.data.map((d, i) => ({
+						...this.serviceSymptomsName[i],
 						name: d.symptomsName,
-						list: this.queryParams.pageNum === 1 ? d.productVoList.records.map(rec => ({
-								...rec,
-								servicePrice: !this.isShowMoney && rec
-									.servicePrice != null ? this.replaceMoney(rec
-										.servicePrice) : rec.servicePrice
-							})) : this
-							.serviceSymptomsName[i].list.concat(d.productVoList.records.map(rec => ({
-								...rec,
-								servicePrice: !this.isShowMoney && rec
-									.servicePrice != null ? this.replaceMoney(rec
-										.servicePrice) : rec.servicePrice
-							}))),
-						total: d.productVoList.total
+						params: this.serviceSymptomsName[i]?.params || {
+							pageSize: 10,
+							pageNum: 1,
+							symptoms: ''
+						},
+						list: this.serviceSymptomsName[i]?.list || []
 					}))
-
-					console.log(this.serviceSymptomsName);
-					this.$nextTick(() => {
-						uni.createSelectorQuery().in(this).selectAll('.scroll-view').boundingClientRect(
-							data => {
-								this.swiperHeight = data.reduce((p, c) => p >= c.height ? p : c.height,
-									0)
-							}).exec();
-						this.scrollTop || uni.createSelectorQuery().in(this).select('#bottom')
-							.boundingClientRect(data => {
-								uni.createSelectorQuery().in(this).select('.content')
-									.boundingClientRect(data1 => {
-										console.log(data1, data);
-										this.scrollTop = data.top - data1.top
-										this.tabHeight = data1.top
-										console.log(this.scrollTop, data.top, data1.top);
-									}).exec();
-
-							}).exec();
+					const cell = res.data.reduce((p, c) => c.productVoList ? {
+						...c,
+						productVoList: c.productVoList.map(rec => ({
+							...rec,
+							servicePrice: !this.isShowMoney && rec
+								.servicePrice != null ? this.replaceMoney(rec
+									.servicePrice) : rec.servicePrice
+						}))
+					} : p, {})
+					const index = this.serviceSymptomsName.findIndex(s => s.name === cell.symptomsName)
+					const arr = params.pageNum === 1 ? cell.productVoList : [...this.serviceSymptomsName[index]
+						.list, ...cell.productVoList
+					];
+					this.serviceSymptomsName.splice(index, 1, {
+						...this.serviceSymptomsName[index],
+						list: arr
 					})
+					this.serviceItemHeight || this.$nextTick(this.getServiceHeight)
 				}).finally(() => {
+					this.loading = false
 					uni.stopPullDownRefresh()
 				})
 			},
+			getServiceHeight() {
+				uni.createSelectorQuery().in(this).select('.service-item')
+					.boundingClientRect(data1 => {
+						this.serviceItemHeight = data1.height + 10
+					}).exec();
+			},
 			getServiceSymptoms() {
-				console.log(this.serviceSymptomsName);
 				this.loading = true
-
 				this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
 					name: d.name,
 					list: d.list.map(rec => ({
@@ -690,13 +511,11 @@
 					total: d.total
 				}))
 				this.loading = false
-				console.log(this.serviceSymptomsName);
 			},
 			getList() {
-				this.promiseList.splice(0, 1, false)
 				//获取一级分类
 				getServiceType().then(res => {
-					console.log(res);
+					this.iconList = homeList.iconList
 					this.typesList = res.data
 					this.typesList.forEach((item, index) => {
 						this.iconList.forEach((icon, ii) => {
@@ -707,49 +526,48 @@
 						})
 					})
 				}).finally(() => {
-					console.log('580------>>>>');
 					this.promiseList.splice(0, 1, true)
 				})
-				//this.promiseList.splice(1, 1, false)
-				//获取热门报修
-				// getHotService().then(res => {
-				// 	//	console.log(res, '1111111111111');
+				if (this.addressName) {
+					this.promiseList.splice(0, 1, false)
+					//this.promiseList.splice(1, 1, false)
+					//获取热门报修
+					// getHotService().then(res => {
+					// 	//	console.log(res, '1111111111111');
 
-				// 	if (res.data != []) {
-				// 		res.data.forEach(item => {
-				// 			item.imgs = item.serviceImg.split(',')
-				// 			item.servicePrice = !this.isShowMoney ? this.replaceMoney(item
-				// 					.servicePrice) :
-				// 				item.servicePrice
-				// 		})
-				// 	}
-				// 	this.hotServiceList = res.data
-				// 	this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
-				// }).finally(() => {
-				// 	this.promiseList.splice(1, 1, true)
-				// })
-				this.promiseList.splice(1, 1, false)
+					// 	if (res.data != []) {
+					// 		res.data.forEach(item => {
+					// 			item.imgs = item.serviceImg.split(',')
+					// 			item.servicePrice = !this.isShowMoney ? this.replaceMoney(item
+					// 					.servicePrice) :
+					// 				item.servicePrice
+					// 		})
+					// 	}
+					// 	this.hotServiceList = res.data
+					// 	this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
+					// }).finally(() => {
+					// 	this.promiseList.splice(1, 1, true)
+					// })
+					this.promiseList.splice(1, 1, false)
 
-				//获取故障区域
-				getRegionService().then(res => {
-					console.log(res);
-					this.regionService = res.data
-				}).finally(() => {
-					this.promiseList.splice(1, 1, true)
-				})
+					//获取故障区域
+					getRegion().then(res => {
+						this.regionService = res.data
+					}).finally(() => {
+						this.promiseList.splice(1, 1, true)
+					})
+				}
+
 
 
 			},
 			getLoction() {
 				var that = this
-				console.log('2-----------------222222222222222222222');
 				//获取地址
 				//	this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
 
 				uni.getLocation({
-					isHighAccuracy: true,
-					highAccuracyExpireTime: 1234,
-					type: 'gcj02',
+
 					success: (suc) => {
 						// this.location.latitude = suc.latitude
 						// this.location.longitude = suc.longitude
@@ -759,15 +577,19 @@
 						demo.reverseGeocoder({
 							location: suc.latitude + "," + suc.longitude,
 							success: function(res) {
-								console.log(res)
 								that.cityName = res.result
 									.address_component.city
+								let address = res.result
+									.address_component.province + '-' + res.result
+									.address_component.city + '-' + res.result
+									.address_component.district
 								uni.setStorage({
-									key: 'city',
-									data: that.cityName
+									key: 'address_refreash',
+									data: address
 								})
-								console.log(that.cityName,
-									'37837888888888888888');
+								that.addressName = uni.getStorageSync('address_refreash')
+								that.getList()
+								that.getServiceSymptomsHandle()
 								// that.position = res.result.address_component
 								// 	.city;
 								// let item = {
@@ -793,13 +615,10 @@
 
 			//设置定位权限
 			setting() {
-				console.log(this.locationStatus, 'this.locationStatus');
 				if (this.locationStatus != 'authorized' && this.locationStatus != 'errMsg') {
-					console.log('3333333333333');
 					uni.openAppAuthorizeSetting()
 
 				} else if (this.locationStatus == 'errMsg') {
-					console.log('1111111111');
 					uni.openSetting({
 						success(res) {
 							if (res.errMsg.includes('ok')) {
@@ -811,64 +630,37 @@
 			},
 			//将钱替换为星号
 			replaceMoney(i) {
-				//	console.log(i);
 				return i.replace(/[0-9]/g, "x")
 			},
 
 			//选择城市
 			choseCity() {
-				console.log(1111111);
 				uni.navigateTo({
 					url: '../../subpkg/home/choseCity/choseCity'
 				})
 			},
 			//更多报修
 			goMore(type, arr) {
-				this.timer = setInterval(() => {
-					this.getCityName()
 
-					if (this.cityName != '获取位置中...') {
-						clearInterval(this.timer);
-
-					}
-				}, 800)
-				arr.forEach(item => {
-					item.servicePrice = !this.isShowMoney && item.servicePrice != null ? this.replaceMoney(item
-							.servicePrice) :
-						item.servicePrice
-				})
+				// arr.forEach(item => {
+				// 	item.servicePrice = !this.isShowMoney && item.servicePrice != null ? this.replaceMoney(item
+				// 			.servicePrice) :
+				// 		item.servicePrice
+				// })
 				let infos = {
 					list: [],
-					name: type
+					name: type,
+					isShowMoney: this.isShowMoney
 				}
 				infos.list = type == 'more' ? this.hotServiceList : arr
-				//	console.log(infos);
 				uni.navigateTo({
 					url: '../../subpkg/home/hotRepair/hotRepair?infos=' + encodeURIComponent(JSON
 						.stringify(infos))
 				})
 			},
-			detailedName() {
-				this.timer = setInterval(() => {
-					this.getCityName()
 
-					if (this.cityName != '获取位置中...') {
-						clearInterval(this.timer);
-
-					}
-				}, 800)
-			},
 			//详情
 			goDetailed(item) {
-				// this.timer = setInterval(() => {
-				// 	this.getCityName()
-
-				// 	if (this.cityName != '获取位置中...') {
-				// 		clearInterval(this.timer);
-
-				// 	}
-				// },100)
-				console.log(item);
 				uni.navigateTo({
 					url: '../../subpkg/car/goodDetails/goodDetails?serviceId=' + item.serviceId
 				})
@@ -881,33 +673,25 @@
 			},
 			//tab栏点击
 			tabClick(item, num) {
+				console.log(this.serviceSymptomsName, item, '<<<<============================672', num);
 				if (item.index === this.currentIndex) return
+				this.currentIndex = item.index
+				this.serviceSymptomsName[item.index].params.symptoms = item.name
+				this.getServiceSymptomsHandle()
 				num != 1 &&
 					uni.pageScrollTo({
-						scrollTop: this.scrollTop
+						selector: '.flag',
+						success: () => {
+							setTimeout(() => {
+								this.tabsBg = '#fff'
+							}, 300)
+						}
 					});
-				this.currentIndex = item.index
-
-
 			},
 			//跳转服务页
 			goService(name) {
 
 				this.typeName = name
-				this.$refs['authpup'].open()
-
-
-			},
-			changeAuth() {
-				this.timer = setInterval(() => {
-					this.getCityName()
-
-					if (this.cityName != '获取位置中...') {
-						clearInterval(this.timer);
-
-					}
-				}, 800)
-
 				this.serviceTypesList.forEach((item, indexx) => {
 					if (item.typeName == this.typeName) {
 						getApp().index = indexx
@@ -916,6 +700,12 @@
 						})
 					}
 				})
+
+
+			},
+			changeAuth() {
+				this.getLoction()
+
 			},
 
 			goCar() {
@@ -934,12 +724,38 @@
 	.home {
 		position: relative;
 		// min-height: 100vh;
-		background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png) no-repeat;
-		background-size: 100% auto;
+		// background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png) no-repeat;
+		// background-size: 100% auto;
 
 		// overflow: unset;
 		.blod {
 			font-weight: bold;
+		}
+
+		.swiper_style {
+
+			// margin: 0 20rpx;
+			::v-deep.u-swiper__indicator {
+				bottom: 60rpx !important;
+			}
+
+			.indicator {
+				@include flex(row);
+				justify-content: center;
+
+				&__dot {
+					height: 6px;
+					width: 6px;
+					border-radius: 100px;
+					background-color: rgba(255, 255, 255, 0.35);
+					margin: 0 5px;
+					transition: background-color 0.3s;
+
+					&--active {
+						background-color: black;
+					}
+				}
+			}
 		}
 
 		//height: 100vh;
@@ -951,9 +767,10 @@
 
 
 		.citys {
-			color: #fff;
+			// color: #fff;
 			align-items: center;
 			display: flex;
+			margin-left: 10px;
 
 			image {
 				margin-left: 15rpx;
@@ -968,8 +785,8 @@
 			background: #FFFFFF;
 			border-radius: 36rpx;
 			padding-right: 10rpx;
-			margin-left: 20rpx;
-			width: 77%;
+			// margin-left: 20rpx;
+			width: 100%;
 
 			.left {
 				height: 100%;
@@ -1002,8 +819,11 @@
 			}
 		}
 
+
 		.content {
-			// position: absolute;
+
+			position: relative;
+			top: -42rpx;
 			// top: 87rpx;
 			//margin: 0 20rpx;
 
@@ -1028,6 +848,7 @@
 					text-align: center;
 					// margin-top: 10rpx;
 					margin: 20rpx 0;
+
 					image {
 						width: 91rpx;
 						height: 91rpx;
@@ -1152,6 +973,13 @@
 			.home-bottom {
 				margin-top: 30rpx;
 				width: 100%;
+				position: relative;
+
+				.flag {
+					position: absolute;
+					top: 0;
+					transform: translateY(-100%);
+				}
 
 				.scroll-view {
 					margin: 0 20rpx 0 20rpx;

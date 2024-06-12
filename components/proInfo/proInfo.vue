@@ -4,7 +4,7 @@
 			<view v-for="(item, index) in dataList" :key="index">
 
 				<view class="check">
-					<view v-if="isCar" class="box">
+					<view class="box">
 						<view class="top">
 							<view style="display: flex;">
 								<u-checkbox v-if="submit&&isCar" shape="circle" :name="item.id?item.id:item.projectId"
@@ -27,7 +27,7 @@
 
 							</view>
 
-							<view v-if="isCar" class="info-one">
+							<view  class="info-one">
 								<view
 									style="font-size: 29rpx;color: #3D3F3E;font-weight: bold;display: flex;justify-content: space-between;">
 									<view :style="{'width':isDelete?'70%':''}"> {{item.serviceProductName}}</view>
@@ -38,23 +38,30 @@
 										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/94862fc485714c92b1cff30a2bf71425.png">
 									</image> -->
 								</view>
-								<view class="center">
+								<!-- 	<view class="center">
 									<view class="left">
-										<!-- 	<view class="">
-											{{item.serviceProjectName}}
-										</view> -->
+									
 										<view class="">
 											{{item.serviceTypeName}}
 										</view>
 									</view>
 
-								</view>
+								</view>-->
 								<view class="bottom">
-									<view class="left">
+									<!-- 	<view class="left">
 										工时:{{item.serviceTime}}小时
 
+									</view> -->
+									<view style="color: #EC5722;margin-right: 10rpx;font-size: 22rpx;">
+										维修服务费:<text
+											style="font-size: 40rpx;font-weight: bold;margin: 0 10rpx;">{{item.projectPrice}}</text>元
 									</view>
-
+									<view class="right">
+										<u-number-box min='1' v-model="item.projectNumber" class='number'
+											button-size="26px" color="#ffffff" bgColor="#A4D091"
+											@change='val=>numChange(item,val,index)' iconStyle="color: #fff">
+										</u-number-box>
+									</view>
 								</view>
 
 							</view>
@@ -62,7 +69,7 @@
 
 
 						</view>
-						<view class="top-bottom" :style="{'padding-left':!submit?'165rpx':'209rpx'}">
+						<!-- 	<view class="top-bottom" :style="{'padding-left':!submit?'165rpx':'209rpx'}">
 							<view style="color: #EC5722;margin-right: 10rpx;font-size: 22rpx;">
 								维修费:<text style="font-size: 40rpx;font-weight: bold;margin: 0 10rpx;">{{item.discountPrice}}</text>元
 							</view>
@@ -72,6 +79,14 @@
 									iconStyle="color: #fff">
 								</u-number-box>
 							</view>
+						</view> -->
+						<view style="margin-top: 24rpx;
+    padding-left: 10rpx;color: #EC5722;background-color: #ffede7;height: 58rpx;line-height: 58rpx;">
+							<text>服务费用小计：</text>
+							<text>¥{{Number(item.projectNumber)*Number(item.projectPrice)}}</text>
+						</view>
+						<view @click="openHandle(item,index)" style="display: flex;justify-content: center;margin: 20rpx 0;cursor: pointer;">
+							展开报修详情<u-icon style="margin-left: 10rpx;" :name="!item.isOpen?'arrow-down':'arrow-up'" size="18"></u-icon>
 						</view>
 					</view>
 
@@ -83,13 +98,11 @@
 
 
 
-					<view v-if="!isCar" class="info-two">
+				<!-- 	<view v-if="!isCar" class="info-two">
 						<view
 							style="font-size: 29rpx;color: #3D3F3E;font-weight: bold;display: flex;align-items: center;justify-content: space-between;">
 							<view class="left">
-								<!-- 
-							<text v-if="!question"
-								style="font-size: 22rpx;color: #EC5722;margin-right: 10rpx;">预估费用:</text> -->
+						
 								<text style="font-size:27rpx;">¥</text>
 								<text
 									style="	font-weight: bold;font-size: 38rpx;margin: 0 10rpx;">{{item.discountPrice}}</text>
@@ -97,13 +110,9 @@
 								<view @click='questionHandle(item)' v-if="question" style="color:#A5A7A7 ;">
 									...
 								</view>
-								<!-- 	<image 
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0b076ac258454779a88431fc8f26cb56.png"
-								mode=""></image> -->
+							
 							</view>
-							<!-- 	<image @click="deleteById(item.id)" v-if="isDelete" style="width: 145rpx;height: 69rpx;"
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/94862fc485714c92b1cff30a2bf71425.png">
-							</image> -->
+						
 							<u-number-box min='0' disabledInput v-model="item.projectNumber" class='number'
 								button-size="27" color="#ffffff" bgColor="#A4D091" :asyncChange="true"
 								@change='val=>numChange(item,val,index)' iconStyle="color: #fff">
@@ -131,16 +140,18 @@
 
 							</view>
 						</view>
-					</view>
+					</view> -->
 				</view>
 				<!--  ||!submit-->
 				<!-- v-if="checkboxValue1.includes(item.id?item.id:item.projectId)||isCar" -->
-				<view class="remark">
+				<view  v-if="item.isOpen" class="remark">
 					<view>
 						<view class="">
-							<text style="color: red">*</text><text style="margin:0 30rpx 0 10rpx;">视频/图片</text>
+							<text style="color: red">*</text><text style="margin:0 30rpx 14rpx 10rpx;">上传视频/图片</text>
 						</view>
-
+						<view style="color: #A5A7A7;font-size: 22rpx;margin: 17rpx 0;">
+							请上传1-9张现场环境或设备故障视频/图片信息
+						</view>
 						<view style="width: 100%;margin: 10.87rpx 0 28.99rpx 0;">
 							<cl-upload :listStyle="{
 							columnGap: '10rpx',
@@ -152,21 +163,14 @@
 								size:10
 							}" :index='index' v-model="item.projectImg" :headers="headers" :action="action" @onSuccess="onSuccesss"
 								@input='onInput' :carId='item.id'></cl-upload>
-							<!-- <upLoadFile :fileListt='item.projectImg' :limit='9' types='image' @getUrl='getUrl'
-								:index='index' /> -->
 						</view>
 					</view>
-					<!-- 	<view>
-						<text style="margin-right: 30rpx;">上传视频</text>
-						<view style="width: 78%;">
-							<upLoadFile :fileListt='item.projectVideo' :limit='9' types='video' @getUrl='getUrl'
-								:index='index' />
-						</view>
-					</view> -->
+			
 					<view style="align-items: center;">
-						<view style="margin-right: 10rpx;">订单备注</view>
+						<view style="margin-bottom: 10rpx;">故障描述</view>
+						<view style="font-size: 22rpx;color: #A5A7A7;">请简单描述故障或特殊需求备注信息</view>
 						<view style='width: 100%'>
-							<u--textarea :height='!isCar?"72":"20"' border='none' maxlength='50' confirmType="done"
+							<u--textarea height='72' border='none' maxlength='50' confirmType="done"
 								v-model="item.remarks" placeholder="请输入内容" count @input='textareaInput'></u--textarea>
 						</view>
 					</view>
@@ -263,8 +267,8 @@
 			list: {
 				immediate: true,
 				deep: true,
-				handler: function(n) {
-					console.log(n);
+				handler: function(n,old) {
+					console.log(n,old);
 					this.dataList = uni.$u.deepClone(n)
 					this.checkboxValue1 = n.filter(l => l.checked).map(l1 => l1.id)
 					// console.log(this.checkboxValue1, 'this.checkboxValue1++++++++++++++140');
@@ -278,12 +282,12 @@
 							item.remarks = item.remark || ''
 						} else {
 							console.log(item, '.......147...');
-							item.shuoming = item.remark
 							item.remarks = item.remarks || ''
 							item.projectNumber = (item.projectNumber === undefined || item.projectNumber ===
 								0) ? 0 : item.projectNumber
 							//		console.log(1111);
 						}
+						item.isOpen=old?item.isOpen:false
 						//	console.log(item);
 						item.imgList = item.serviceProjectImg !== null && item.serviceProjectImg !== '' ? item
 							.serviceProjectImg.split(',') : [],
@@ -349,14 +353,14 @@
 			},
 			numChange(item, value, i) {
 				console.log('207...', item, value, this.dataList);
-				if (item.projectImg.length == 0 && !this.isCar && !this.isCoudan) {
-					this.$refs.uToast.show({
-						type: 'error',
-						message: '请先上传图片/视频'
-					});
+				// if (item.projectImg.length == 0 && !this.isCar && !this.isCoudan) {
+				// 	this.$refs.uToast.show({
+				// 		type: 'error',
+				// 		message: '请先上传图片/视频'
+				// 	});
 
-					return
-				}
+				// 	return
+				// }
 				console.log(value.value, item.projectNumber);
 				let flag = value.value < item.projectNumber ? -1 : 1
 				item.projectNumber = value.value
@@ -431,19 +435,24 @@
 
 			},
 
-			//问题
-			questionHandle(item) {
-				this.remark = {
-					content: item.shuoming,
-					name: item.projectName
-				}
-				this.showQestion = true
+			// //问题
+			// questionHandle(item) {
+			// 	this.remark = {
+			// 		content: item.shuoming,
+			// 		name: item.projectName
+			// 	}
+			// 	this.showQestion = true
 
-			},
+			// },
 			textareaInput() {
 				uni.$u.debounce(() => this.$emit('textareaInput', this.dataList), 200)
 			},
-
+			openHandle(item,i){
+				console.log(item,i);
+				// this.$set(this.dataList[i],'isOpen',true)
+				 item.isOpen=!item.isOpen
+				this.$forceUpdate()
+			}
 
 		}
 	}
@@ -461,6 +470,7 @@
 			.box {
 				width: 100%;
 				padding: 0 28rpx;
+
 				.top {
 					display: flex;
 					width: 100%;
@@ -491,10 +501,10 @@
 
 				.top-bottom {
 					display: flex;
-					    margin-top: 27rpx;
-					
-						justify-content: space-between;
-						align-items: baseline;
+					margin-top: 27rpx;
+
+					justify-content: space-between;
+					align-items: baseline;
 				}
 			}
 
@@ -567,8 +577,8 @@
 		}
 
 		.info-one {
-			padding-left:10rpx;
-			width: 68%;
+			padding-left: 10rpx;
+			width: 75%;
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;
