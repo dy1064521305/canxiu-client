@@ -59,7 +59,7 @@
 					style="display: flex;justify-content: space-between;align-items: center;background-color: #fff;padding: 20rpx 0;font-size: 33rpx;padding: 30rpx 23rpx;">
 					<text style="font-weight: bold;">{{item.list[0].workerType}}</text>
 					<view class="">
-						起步价:{{item.list[0].startingFreeDiscount}}元
+						起步价:{{item.list[0].startingFreeDiscount}}元/次
 
 						<text
 							v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0">
@@ -106,7 +106,7 @@
 
 
 				<view v-else>
-					<proInfo :list="item.list" :isCar='isCar' :submit='false' @getCheck='getCheck'
+					<proInfo :list="item.list" :isCar='true' :submit='false' @getCheck='getCheck'
 						@getDeleteUrlList='getDeleteUrlList' @textareaInput='textConfirm' />
 				</view>
 
@@ -180,7 +180,16 @@
 					</view>
 				</view> -->
 			</view>
-
+			<view class="total">
+				<view class="line">
+					<view class="">
+						<text style="color: #3D3F3E;">合计</text>(不含材料)
+					</view>
+					<view >
+						{{info.orderPrice}}元
+					</view>
+				</view>
+			</view>
 
 		</view>
 
@@ -327,7 +336,7 @@
 				this.addressInfo = item.info.addressVo
 				this.addressPlace = (this.addressInfo.addressRegion.substring((this.addressInfo
 					.addressRegion.indexOf('/')) + 1)).replace('/', '-')
-				this.addressRegion = this.addressInfo.addressRegion.replaceAll('/', '')
+				this.addressRegion = this.addressInfo.addressRegion.replace(/\//g, "")
 				this.submitList.forEach(item => {
 					item.serviceProjectImg = item.projectImg
 					item.projectImg = ''
@@ -429,7 +438,7 @@
 								}
 								this.addressPlace = (this.addressInfo.addressRegion.substring((this.addressInfo
 									.addressRegion.indexOf('/')) + 1)).replace('/', '-')
-								this.addressRegion = this.addressInfo.addressRegion.replaceAll('/', '')
+								this.addressRegion = this.addressInfo.addressRegion.replace(/\//g, "")
 							} catch (e) {
 								// error
 								console.log(e);
@@ -553,7 +562,8 @@
 					return
 				}
 				let place = uni.getStorageSync('address_refreash')
-				if (this.addressInfo.addressRegion.replaceAll('/', '-') != place) {
+				console.log(this.addressInfo.addressRegion.replace(/\//g, "-"));
+				if (this.addressInfo.addressRegion.replace(/\//g, "-") != place) {
 					uni.showToast({
 						title: `仅支持服务“${this.addressPlace}”地区`,
 						duration: 2000,
@@ -613,7 +623,7 @@
 						item.shoppingCartStatus = 1
 						item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
 						item.remark = item.remarks
-						item.productId = item.serviceId
+						item.productId = item.serviceId?item.serviceId:item.productId
 					})
 					let timeObj = {}
 					let startingFree = {}
@@ -852,7 +862,10 @@
 				}
 			}
 		}
-
+		.total{
+			border-top:2rpx solid #F8F8F8;
+			padding: 10rpx 0;
+		}
 		.bottom {
 			width: 100%;
 			height: 137rpx;

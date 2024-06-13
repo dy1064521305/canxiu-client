@@ -227,7 +227,8 @@
 				current: 0,
 				addressName: undefined,
 				statusHeight: 0,
-				statusBarHeight: 0
+				statusBarHeight: 0,
+				address:undefined
 			}
 		},
 		onReady() {
@@ -272,11 +273,13 @@
 			if (this.tabsBg !== '#F5F9FA') this.tabsBg = '#F5F9FA'
 		},
 		onShow() {
+			console.log( this.serviceSymptomsName);
 			if (storage.get('AccessToken')) {
 				getCarNum().then(res => {
 					this.carNum = res
 
 				});
+				
 				getOrderNum().then(res => {
 					res == 0 ? uni.removeTabBarBadge({
 						index: 3
@@ -437,6 +440,7 @@
 			},
 			// //上拉函数
 			onPullDownRefresh() {
+				console.log(this.serviceSymptomsName);
 				this.serviceSymptomsName.forEach(service => {
 					service.params.pageNum = 1
 				})
@@ -451,13 +455,16 @@
 			},
 
 			getServiceSymptomsHandle() {
+				console.log(this.address,this.serviceSymptomsName[this.currentIndex]);
 				//获取故障现象
 				this.loading = true
 				const params = this.serviceSymptomsName.length < 1 ? {
 					pageSize: 10,
 					pageNum: 1,
-					symptoms: ''
+					symptoms: '',
+					address:this.address
 				} : this.serviceSymptomsName[this.currentIndex].params
+				console.log(this.serviceSymptomsName[this.currentIndex]);
 				getServiceSymptoms(params).then(res => {
 					this.serviceSymptomsName = res.data.map((d, i) => ({
 						...this.serviceSymptomsName[i],
@@ -465,7 +472,8 @@
 						params: this.serviceSymptomsName[i]?.params || {
 							pageSize: 10,
 							pageNum: 1,
-							symptoms: ''
+							symptoms: '',
+							address:this.address
 						},
 						list: this.serviceSymptomsName[i]?.list || []
 					}))
@@ -508,7 +516,13 @@
 							.replaceMoney(rec
 								.servicePrice) : rec.servicePrice
 					})),
-					total: d.total
+					total: d.total,
+					params :{
+							pageSize: 10,
+							pageNum: 1,
+							symptoms: '',
+							address:this.address
+						},
 				}))
 				this.loading = false
 			},
@@ -579,13 +593,13 @@
 							success: function(res) {
 								that.cityName = res.result
 									.address_component.city
-								let address = res.result
+								that.address = res.result
 									.address_component.province + '-' + res.result
 									.address_component.city + '-' + res.result
-									.address_component.district
+									.address_component.district 
 								uni.setStorage({
 									key: 'address_refreash',
-									data: address
+									data: that.address
 								})
 								that.addressName = uni.getStorageSync('address_refreash')
 								that.getList()

@@ -36,6 +36,7 @@
 						</view>
 						<view  style="width: 20%;text-align: end;color: #EC5722;">
 							¥{{type!='myOrder'?info.price:info.discountPrice}}
+							
 						</view>
 							
 					</view>
@@ -81,14 +82,14 @@
 			};
 		},
 		created() {
-		 console.log(this.pro);
+		 console.log(this.pro,this.type);
 			this.info = this.pro
 			this.info.productName = this.pro.productName ? this.pro.productName : this.pro.serviceProductName
 			this.info.projectHours = this.pro.projectHours ? this.pro.projectHours : this.pro.serviceTime
 			this.info.typeName = this.pro.typeName ? this.pro.typeName : this.pro.serviceTypeName
 			this.info.price = this.info.discountPrice ? this.info.discountPrice : this.info.projectPrice
 			this.illustrate = this.info.illustrate ? this.info.illustrate : this.info.remark
-			//console.log(this.pro);
+			console.log(this.info);
 		}
 
 	}

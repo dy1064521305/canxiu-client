@@ -336,6 +336,15 @@
                 }
                 
                 }
+                ,{
+                    "path" : "goodDetails/standardContent/standardContent",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "服务规范详情",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
             ]
 		},
 		{

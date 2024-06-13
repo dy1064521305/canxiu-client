@@ -30,7 +30,7 @@
 					<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/0616977a744749ac86c5b97a1728f654.png"
 					mode=""></image> -->
 					<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
-					<view :class="['prices',goodInfo.preferentialPrice!=null?'price-img':'']">
+					<view :style="{'background':goodInfo.preferentialPrice!=null?`url(${goodInfo.imgUrl}) no-repeat`:''}" :class="['prices',goodInfo.preferentialPrice!=null?'price-img':'']">
 						<view class="top">
 							<text
 								style="font-size: 43rpx;">{{goodInfo.preferentialPrice!=null?goodInfo.discountPrice:goodInfo.projectAmount}}</text>
@@ -201,15 +201,22 @@
 				</view>
 			</view>
 
-			<view v-if="goodInfo.standard" class="bgf" style="margin-top: 20rpx;padding: 20rpx;">
+			<view v-if="goodInfo.standard" class="bgf" style="margin-top: 20rpx;padding: 20rpx;" >
 				<view style="font-size: 30rpx;">
 					维修小百科
 				</view>
-				<view style="margin: 10rpx 0 0 10rpx;">
-					{{goodInfo.standard.standardName}}
-					<view style="font-size: 22rpx;color: #A5A7A7;margin-top:20rpx ;">
-						服务分类：{{goodInfo.standard.serviceType}}
+				<view style="margin: 10rpx 0 0 10rpx;display: flex;
+    align-items: center;
+    justify-content: space-between;" @click="goStandard">
+					<view class="">
+						{{goodInfo.standard.standardName}}
+						<view style="font-size: 22rpx;color: #A5A7A7;margin-top:20rpx ;">
+							服务分类：{{goodInfo.standard.serviceType}}
+						</view>
 					</view>
+					<image style="width: 14rpx;height: 25rpx;    margin-right: 20rpx;"
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
+						mode=""></image>
 				</view>
 			</view>
 
@@ -287,7 +294,7 @@
 					</u-empty>
 				</view>
 			</u-popup>
-		
+
 
 		</scroll-view>
 		<view class="bottom" v-if="preferentialShow==false&&coudanShow==false">
@@ -316,7 +323,7 @@
 					<text style="margin-left: 8rpx;">维修车
 					</text>
 				</view>
-			
+
 				<view style="display: flex;">
 					<view class="btn-white" @click="getCheck">
 						+加购
@@ -426,7 +433,7 @@
 				navbarHeight: 0,
 				navbarColorOpacity: 0,
 				mainFlagTop: 0,
-				city:undefined
+				city: undefined
 			}
 		},
 		onLoad(options) {
@@ -434,7 +441,7 @@
 			// console.log(options);
 			let name = uni.getStorageSync('address_refreash')
 			this.query.address = name
-		  this.city=this.query.address.split('-')[2] 
+			this.city = this.query.address.split('-')[2]
 			this.query.clientId = !storage.get('ClientId') ? '' : storage.get('ClientId')
 			// console.log(this.query);
 			if (options.typeId) {
@@ -558,6 +565,9 @@
 					}
 					//收费标准
 					this.priceList = [{
+							name: '服务起步价',
+							price: this.goodInfo.startingFreeDiscount + '元/次'
+						}, {
 							name: '维修服务费',
 							price: this.goodInfo.projectAmount + '元/次'
 						},
@@ -918,7 +928,7 @@
 			//下单
 			getOrderHandle() {
 				console.log(this.getRules());
-				 if (!this.getRules()) return
+				if (!this.getRules()) return
 				// if (!this.isLogin) {
 				// 	this.isShowLogin = true
 				// 	return
@@ -951,6 +961,12 @@
 
 
 			},
+			//查看维修规范
+			goStandard(){
+				uni.navigateTo({
+					url:'./standardContent/standardContent?info='+encodeURIComponent(JSON.stringify(this.goodInfo.standard))
+				})
+			}
 
 
 		},
@@ -1018,7 +1034,7 @@
 					background-size: 100% auto !important;
 					height: 175rpx;
 					padding-left: 24rpx;
-					background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/0616977a744749ac86c5b97a1728f654.png) no-repeat;
+					
 				}
 
 				.prices {
@@ -1244,7 +1260,7 @@
 			width: 100%;
 			display: flex;
 			padding-left: 16rpx;
-			z-index: 9999999;
+			z-index: 10;
 
 			text {
 				display: inline-block;
