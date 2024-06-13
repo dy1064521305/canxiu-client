@@ -73,7 +73,7 @@
 							<!-- 	<view > -->
 
 							<view style="display: flex;align-items: center;">
-								<u-checkbox shape="circle" :name="item.workerType" activeColor='#A4D091'
+								<u-checkbox v-if="!item.isStatus" shape="circle" :name="item.workerType" activeColor='#A4D091'
 									@change='val=>typeCheckChange(val,item,index)'>
 								</u-checkbox>
 								<text
@@ -82,9 +82,9 @@
 
 							</view>
 							<view style="display: flex;">
-								起步价:{{item.startingFreeDiscount}}元
+								起步价:{{item.startingFreeDiscount}}元/次
 								<text
-									v-if="Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0"
+									v-if="Number(item.startingFreeDiscount)-((item.children.filter(f=>{return f.projectStatus==0})).reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))>0"
 									@click="coudanHandle(item.workerType)">
 									<text style="margin:0 10rpx;">|</text>去凑单 >
 									<!-- 	<text style="font-size: 25rpx;">
@@ -121,6 +121,7 @@
 					@click="allCheckHandle(true)">
 
 				</view>
+				<!-- {{checkedList.length}}{{allNum}} -->
 				<view v-if="checkedList.length === allNum&&checkedList.length!=0" @click="allCheckHandle(false)">
 					<image style="width: 43rpx;height: 43rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
@@ -289,6 +290,8 @@
 			getDeleteUrlList(data) {
 				console.log(this.dataList);
 				this.dataList.forEach((fu, index) => {
+				
+				
 					fu.children.forEach((son, ind) => {
 						data.forEach(d => {
 							if (d.id === son.id) {
@@ -350,14 +353,15 @@
 
 				})
 
-
 				//this.totalMoney = this.checkedList.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
 			},
 			getCheckList() {
 				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
 			},
 			getAllNum() {
-				this.allNum = this.dataList.reduce((p, c) => p + c.children.length, 0)
+			
+				this.allNum = this.dataList.reduce((p, c) => p +(c.children.filter(f=>{return f.projectStatus==0})).length, 0)
+				console.log(this.allNum,'364444444444');
 			},
 			//其他页面改变数据
 			changeData(data) {
@@ -482,7 +486,9 @@
 					this.checkboxValue1 = []
 					this.totalMoney = 0
 					this.dataList.forEach(item => {
-						this.allNum += item.children.length
+						this.allNum += (item.children.filter(f=>{return f.projectStatus==0})).length
+							item['isStatus']=item.children.every(ch=>{return ch.projectStatus==1})
+								console.log(item.children.every(ch=>{return ch.projectStatus==0}),'299444444');
 						item.children.forEach(chil => {
 							chil.startingFreeDiscount = item.startingFreeDiscount
 						})
@@ -514,6 +520,7 @@
 				if (bool) {
 					console.log(this.dataList);
 					this.checkedList = this.dataList.map(c => c.children).flatMap(c1 => c1)
+					this.checkedList=this.checkedList.filter(c=>{return c.projectStatus=='0'})
 					console.log('277,.', this.checkedList);
 					this.getTotalMoney()
 				} else {
@@ -524,7 +531,7 @@
 					car.children.forEach((car1, index1) => {
 						this.$set(this.dataList[index].children, index1, {
 							...car1,
-							checked: bool
+							checked: car1.projectStatus==1?false:bool
 						})
 					})
 				})
@@ -619,37 +626,20 @@
 			deleteList(arr) {
 				console.log(arr);
 				console.log(this.dataList, '409409409409');
-				// this.dataList.forEach(ele1 => {
-				// 	// let arrs = []
-				// 	// ele1.children.forEach((ele2, Index2) => {
-				// 	// 	console.log(ele2, Index2);
-				// 	// 	arrs.push(ele2)
-				// 	// })
-				// 	// console.log(arrs);
-				// 	// arrs.forEach((v, i) => {
-				// 	// 	if (arr.includes(v.id)) {
-				// 	// 		ele1.children.forEach((vv, ii) => {
-				// 	// 			if (v.id == vv.id) {
-				// 	// 				ele1.children.splice(ii, 1)
-				// 	// 			}
-				// 	// 		})
-				// 	// 	}
-				// 	// })
-
-				// })
+			
 				this.dataList = this.dataList.map(d => ({
 					...d,
 					children: d.children.filter(d1 => !arr.includes(d1.id))
 				}))
 				console.log(this.dataList, '417417417');
 				this.dataList = this.dataList.filter(d => d.children && d.children.length > 0)
+				this.dataList.forEach(item=>{
+						item['isStatus']=item.children.every(ch=>{return ch.projectStatus==1})
+				})
 				this.getCheckList()
 				this.getTotalMoney()
 				this.getAllNum()
 				this.fatherCheckout()
-				console.log(this.dataList);
-				console.log(this.checkedList, '4224224224220');
-				console.log(this.checkboxValue1, 'delelelelelelelelel');
 				// this.getCarNumHandle()
 			},
 			//取消登录
@@ -682,7 +672,7 @@
 				this.dataList[i].children.forEach((car1, index1) => {
 					this.$set(this.dataList[i].children, index1, {
 						...car1,
-						checked: val
+						checked: car1.projectStatus==1?false:val
 					})
 				})
 				this.getCheckList()
