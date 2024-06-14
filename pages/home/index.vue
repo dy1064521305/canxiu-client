@@ -1,15 +1,7 @@
 <template>
 	<view>
 		<view v-if="locationStatus=='authorized'||locationStatus==''" class="home">
-			<view class="swiper_style">
-				<u-swiper height='700rpx' :list="list5" @change="e => current = e.current" :autoplay="false">
-					<view slot="indicator" class="indicator">
-						<view class="indicator__dot" v-for="(item, index) in list5" :key="index"
-							:class="[index === current && 'indicator__dot--active']">
-						</view>
-					</view>
-				</u-swiper>
-			</view>
+
 			<u-navbar :height="navHeight" :bgColor="'RGBA(147, 189, 134, '+opacity+')'">
 				<view slot='left'>
 
@@ -39,7 +31,16 @@
 				</view>
 			</u-navbar>
 
-			<view class="content">
+			<view class="content" :style="{paddingTop:(navHeight+statusBarHeight)+'px'}">
+				<view v-if="list5.length!=0" class="swiper_style">
+					<u-swiper height='300rpx' :list="list5" @change="e => current = e.current" :autoplay="false">
+						<view slot="indicator" class="indicator">
+							<view class="indicator__dot" v-for="(item, index) in list5" :key="index"
+								:class="[index === current && 'indicator__dot--active']">
+							</view>
+						</view>
+					</u-swiper>
+				</view>
 				<view class="types">
 					<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="ACCESS_FINE_LOCATION">
 					</yk-authpup>
@@ -219,11 +220,7 @@
 				promiseList: [false, false],
 				carNum: 0,
 				typeName: undefined,
-				list5: [
-					'https://cdn.uviewui.com/uview/swiper/swiper3.png',
-					'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-					'https://cdn.uviewui.com/uview/swiper/swiper1.png',
-				],
+				list5: [],
 				current: 0,
 				addressName: undefined,
 				statusHeight: 0,
@@ -233,6 +230,12 @@
 		},
 		onReady() {
 			this.scrollHeight = uni.$u.sys().windowHeight - this.offsetTop
+			uni.getSystemInfo({
+				success: (info) => {
+					this.statusBarHeight = info.statusBarHeight
+					// 你可以根据这个高度来设置你的内容区域的padding-top等
+				}
+			});
 		},
 		watch: {
 			promiseList: {
@@ -273,8 +276,6 @@
 			if (this.tabsBg !== '#F5F9FA') this.tabsBg = '#F5F9FA'
 		},
 		onShow() {
-
-
 			console.log(this.serviceSymptomsName);
 			if (storage.get('AccessToken')) {
 				this.isShowMoney = true
@@ -459,7 +460,7 @@
 			},
 
 			getServiceSymptomsHandle() {
-				if (!this.address) return
+				// if (!this.address) return
 				console.log(this.address, this.serviceSymptomsName,
 					'getServiceSymptomsHandlegetServiceSymptomsHandlegetServiceSymptomsHandle');
 				//获取故障现象
@@ -467,11 +468,13 @@
 				const params = this.serviceSymptomsName.length < 1 ? {
 					pageSize: 10,
 					pageNum: 1,
-					symptoms: '',
+					symptoms: ''
+				} :this.serviceSymptomsName[this.currentIndex].params
+				console.log(params);
+				getServiceSymptoms({
+					...params,
 					address: this.address
-				} : this.serviceSymptomsName[this.currentIndex].params
-				console.log(this.serviceSymptomsName[this.currentIndex]);
-				getServiceSymptoms(params).then(res => {
+				}).then(res => {
 					this.serviceSymptomsName = res.data.map((d, i) => ({
 						...this.serviceSymptomsName[i],
 						name: d.symptomsName,
@@ -479,7 +482,6 @@
 							pageSize: 10,
 							pageNum: 1,
 							symptoms: '',
-							address: this.address
 						},
 						list: this.serviceSymptomsName[i]?.list || []
 					}))
@@ -513,6 +515,7 @@
 					}).exec();
 			},
 			getServiceSymptoms() {
+				console.log('5177777777777777', this.address);
 				this.loading = true
 				this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
 					name: d.name,
@@ -527,7 +530,6 @@
 						pageSize: 10,
 						pageNum: 1,
 						symptoms: '',
-						address: this.address
 					},
 				}))
 				this.loading = false
@@ -565,56 +567,61 @@
 
 			},
 			getLoction() {
-				console.log('getLoctiongetLoctiongetLoctiongetLoction');
 				var that = this
-				//获取地址
-				//	this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
-
-				uni.getLocation({
-
-					success: (suc) => {
-						// this.location.latitude = suc.latitude
-						// this.location.longitude = suc.longitude
-						var demo = new QQMapWX({
-							key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
-						})
-						demo.reverseGeocoder({
-							location: suc.latitude + "," + suc.longitude,
-							
-							success: function(res) {
-								console.log(res, '588111111111');
-								that.cityName = res.result
-									.address_component.city
-								that.address = res.result
-									.address_component.province + '-' + res.result
-									.address_component.city + '-' + res.result
-									.address_component.district
-								uni.setStorage({
-									key: 'address_refreash',
-									data: that.address
+				console.log('getLoctiongetLoctiongetLoctiongetLoction');
+				uni.getStorage({
+					key: 'city',
+					success: function(res) {
+						console.log(res);
+						that.cityName = res.data.addressDetailed
+						that.addressName =that.address= uni.getStorageSync(
+							'address_refreash')
+						that.getList()
+						that.getServiceSymptomsHandle()
+					},
+					fail: function(error) {
+						console.log(error);
+						uni.getLocation({
+							success: (suc) => {
+								var demo = new QQMapWX({
+									key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
 								})
-								that.addressName = uni.getStorageSync('address_refreash')
-								that.getList()
-								that.getServiceSymptomsHandle()
-								// that.position = res.result.address_component
-								// 	.city;
-								// let item = {
-								// 	cityName:
-								// }
-								// that.back_city(item);
+								demo.reverseGeocoder({
+									location: suc.latitude + "," + suc.longitude,
+
+									success: function(res) {
+										console.log(res, '588111111111');
+										let result = res.result.address_component
+										that.cityName = result.street_number !=
+											null ? result.street_number : result
+											.street
+											that.address = result.province + '-' +
+												result.city + '-' + result.district
+											uni.setStorage({
+												key: 'address_refreash',
+												data: that.address
+											})
+											that.addressName = that.address
+											that.getList()
+											that.getServiceSymptomsHandle()
+										uni.setStorageSync({
+											key: 'city',
+											data: JSON.stringify({
+												addressDetailed: that
+													.cityName
+											})
+										})
+										
+
+									}
+								})
+							},
+							fail(err) {
+								console.log(err);
 							}
 						})
-					},
-					fail(err) {
-						console.log(err);
-						// uni.showToast({
-						// 	title: err.errMsg,
-						// 	icon: "none"
-						// })
 					}
-				})
-				//	})
-
+				});
 
 
 			},
@@ -729,40 +736,15 @@
 <style lang="scss" scoped>
 	.home {
 		position: relative;
-		// min-height: 100vh;
-		// background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png) no-repeat;
-		// background-size: 100% auto;
+		min-height: 100vh;
+		background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png) no-repeat;
+		background-size: 100% auto;
 
 		// overflow: unset;
 		.blod {
 			font-weight: bold;
 		}
 
-		.swiper_style {
-
-			// margin: 0 20rpx;
-			::v-deep.u-swiper__indicator {
-				bottom: 60rpx !important;
-			}
-
-			.indicator {
-				@include flex(row);
-				justify-content: center;
-
-				&__dot {
-					height: 6px;
-					width: 6px;
-					border-radius: 100px;
-					background-color: rgba(255, 255, 255, 0.35);
-					margin: 0 5px;
-					transition: background-color 0.3s;
-
-					&--active {
-						background-color: black;
-					}
-				}
-			}
-		}
 
 		//height: 100vh;
 		.homeBg {
@@ -828,10 +810,35 @@
 
 		.content {
 
-			position: relative;
-			top: -42rpx;
+			.swiper_style {
+				padding: 0 20rpx;
+				margin-bottom: 20rpx;
+				// margin: 0 20rpx;
+				::v-deep.u-swiper__indicator {
+					bottom:30rpx !important;
+				}
+
+				.indicator {
+					@include flex(row);
+					justify-content: center;
+
+					&__dot {
+						height: 6px;
+						width: 6px;
+						border-radius: 100px;
+						background-color: rgba(255, 255, 255, 0.35);
+						margin: 0 5px;
+						transition: background-color 0.3s;
+
+						&--active {
+							background-color: black;
+						}
+					}
+				}
+			}
+
 			// top: 87rpx;
-			//margin: 0 20rpx;
+			// margin: 0 20rpx;
 
 
 			.types {

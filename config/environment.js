@@ -5,9 +5,9 @@ const environment = {
 		// baseURL: 'http://192.168.41.7:8080',
 			 // baseURL: 'http://192.168.111.238:8080',
 		// baseURL: 'http://121.41.107.68:8080',
-		baseURL: 'http://192.168.124.12:8080',
+		//baseURL: 'http://192.168.124.12:8080',
 		 // baseURL: 'http://192.168.124.3:8080',
-	    // baseURL: 'http://121.40.253.155:8080',
+	     baseURL: 'http://121.40.253.155:8080',
 		// baseURL: 'https://www.canxiukeji.com/prod-api',
 
 	},
