@@ -217,7 +217,6 @@
 							phonenumber: app.phone,
 							smsCode: app.code,
 						}).then(result => {
-							console.log(result.data);
 							if (result.data.type == 'Error') {
 								uni.$u.toast(result.data.msg)
 								return

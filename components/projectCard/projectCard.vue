@@ -41,7 +41,7 @@
 							
 					</view>
 					<view style="display: flex;justify-content: space-between;">
-							<text style="color: #A5A7A7;">工时：{{info.projectHours}}小时</text>
+							<text style="color: #A5A7A7;">工时：{{info.projectHours}}分钟</text>
 							<text v-if="type=='repair'"
 								style="font-size: 30rpx;color: #EC5722;">服务费：¥{{Number(info.price)*Number(info.projectNumber)}}</text>
 					</view>

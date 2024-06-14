@@ -213,7 +213,7 @@
 			line-height: 91rpx;
 			text-align: center;
 			border-radius: 70rpx;
-			margin: 516rpx auto 0;
+			margin: 438rpx auto 0;
 			background: #A4D091;
 		}
 	}

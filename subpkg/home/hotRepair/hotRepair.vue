@@ -51,7 +51,7 @@
 					pageNo,
 					pageSize,
 					region: this.info.name,
-					clientId: storage.get('ClientId'),
+					clientId: storage.get('ClientId')?storage.get('ClientId'):'',
 					address: this.address
 				}).then(res => {
 					console.info(res);

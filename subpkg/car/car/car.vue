@@ -111,7 +111,7 @@
 					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/125e056702434056b9b3bc5f7768eb0a.png"
 					text='维修车为空' marginTop='100' width="210px">
 				</u-empty>
-
+				
 
 			</view>
 
@@ -476,9 +476,12 @@
 			// 	})
 			// },
 			getCarList() {
+				// let place=uni.getS
+				console.log(uni.getStorageSync('address_refreash'));
 				//维修车列表
 				car.getCarList({
-					clientId: storage.get('ClientId')
+					clientId: storage.get('ClientId'),
+					address: uni.getStorageSync('address_refreash')
 				}).then(res => {
 					console.log(res, '3145455555>>>>>>>>>');
 
@@ -691,7 +694,8 @@
 				car.listByWorkerType({
 					clientId: storage.get('ClientId'),
 					type: this.workerType,
-					name: this.searchName
+					name: this.searchName,
+					address:uni.getStorageSync('address_refreash')
 				}).then(res => {
 					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
 					this.coudanList = res.data

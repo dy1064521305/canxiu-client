@@ -28,7 +28,7 @@
 							{{item.type}}
 						</view>
 						<view style="color: #A5A7A7;">
-							工时：{{item.time}}小时
+							工时：{{item.time}}分钟
 						</view>
 					</view>
 				</view>

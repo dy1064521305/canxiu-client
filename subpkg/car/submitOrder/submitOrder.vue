@@ -62,7 +62,7 @@
 						起步价:{{item.list[0].startingFreeDiscount}}元/次
 
 						<text
-							v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0">
+							v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))<=0">
 							<!-- <image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 							</image>已达到起步价 -->
@@ -129,7 +129,7 @@
 					</view>
 
 					<!-- 	<view
-						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0"
+						v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))<=0"
 						class="img">
 						<image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
@@ -139,7 +139,7 @@
 
 				</view>
 				<view class="line" style="color: #EC5722;justify-content: flex-end;"
-					v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0">
+					v-if="Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))>0">
 					<!-- <u-icon name="error-circle" color="#EC5722" size="22"></u-icon> -->
 					未达到服务起步价，按起步价结算
 				</view>
@@ -148,7 +148,7 @@
 						服务起步价
 					</view>
 					<view
-						:style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'line-through':''}">
+						:style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))>0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))<=0?'line-through':''}">
 						¥{{item.list[0].startingFreeDiscount}}
 					</view>
 				</view>
@@ -157,8 +157,8 @@
 						维修服务费
 					</view>
 					<view
-						:style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))<=0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0))>0?'line-through':''}">
-						¥{{item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.projectPrice)), 0)}}
+						:style="{'color':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))<=0?'#EC5722':'#A5A7A7','text-decoration':Number(item.list[0].startingFreeDiscount)-(item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))>0?'line-through':''}">
+						¥{{item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0)}}
 					</view>
 				</view>
 				<view v-if="!isCar&&urgentPriceTotal!=0" class="line">
@@ -533,7 +533,8 @@
 				listByWorkerType({
 					clientId: storage.get('ClientId'),
 					type: this.typename,
-					name: this.searchName
+					name: this.searchName,
+					address:uni.getStorageSync('address_refreash')
 				}).then(res => {
 					this.coudanList = res.data
 
@@ -562,10 +563,10 @@
 					return
 				}
 				let place = uni.getStorageSync('address_refreash')
-				console.log(this.addressInfo.addressRegion.replace(/\//g, "-"));
+			
 				if (this.addressInfo.addressRegion.replace(/\//g, "-") != place) {
 					uni.showToast({
-						title: `仅支持服务“${this.addressPlace}”地区`,
+						title: `仅支持服务“${place.substring((place.indexOf('-')) + 1)}”地区`,
 						duration: 2000,
 						icon: 'none'
 					})

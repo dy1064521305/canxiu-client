@@ -118,7 +118,7 @@
 				})
 				app.$store.dispatch('Logout').then(result => {
 						console.log(1111);
-
+					
 						// uni.switchTab({
 						// 	url: '/pages/index/index',
 						// 	fail(err) {

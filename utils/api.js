@@ -111,7 +111,8 @@ export async function cancellation(data, handleSuccess, handleFail) {
 }
 export const getCarNum = () => {
 	return getCarList({ 
-		clientId: storage.get('ClientId') == false ? 0 : storage.get('ClientId')
+		clientId: storage.get('ClientId') == false ? 0 : storage.get('ClientId'),
+		address:uni.getStorageSync('address_refreash')
 	}).then(res => {
 		console.log(res, '<<<<<<<<<<<<getCarList>>>>>>>>', storage.get('ClientId'));
 

@@ -228,7 +228,7 @@
 				addressName: undefined,
 				statusHeight: 0,
 				statusBarHeight: 0,
-				address:undefined
+				address: undefined
 			}
 		},
 		onReady() {
@@ -273,13 +273,16 @@
 			if (this.tabsBg !== '#F5F9FA') this.tabsBg = '#F5F9FA'
 		},
 		onShow() {
-			console.log( this.serviceSymptomsName);
+
+
+			console.log(this.serviceSymptomsName);
 			if (storage.get('AccessToken')) {
+				this.isShowMoney = true
 				getCarNum().then(res => {
 					this.carNum = res
 
 				});
-				
+
 				getOrderNum().then(res => {
 					res == 0 ? uni.removeTabBarBadge({
 						index: 3
@@ -289,59 +292,57 @@
 					})
 
 				})
-				// #ifdef MP-WEIXIN
-				this.getLoction()
-				// #endif
-				// #ifdef APP-PLUS
-				this.$refs['authpup'].open()
 
-				// #endif
+				this.queryState();
+				getC2cUnreadMsgNum().then(res => {
+					queryUnreadNum().then(ress => {
+
+						let num = (parseInt(res.data.AllC2CUnreadMsgNum) ? parseInt(res
+							.data.AllC2CUnreadMsgNum) : 0) + parseInt(ress
+							.data.num)
+						if (num > 0) {
+							uni.setTabBarBadge({
+								index: 2,
+								text: num > 99 ? '99+' : num + ''
+							})
+						} else {
+							uni.removeTabBarBadge({
+								index: 2
+							})
+						}
+					})
+				})
+			} else {
+				this.carNum = 0
+				this.isShowMoney = false
+				uni.removeTabBarBadge({
+					index: 2
+				})
+				uni.removeTabBarBadge({
+					index: 3
+				})
 			}
 			// #ifdef MP-WEIXIN
+			this.getLoction()
 			this.getHeight();
 			this.navHeight = 100
 			this.titleHeight = 120
 			this.offsetTop = 145
-
 			// #endif
-			//this.queryParams.pageNum = 1
 
-			uni.getStorage({
-				key: 'AccessToken',
-				complete: (res) => {
-					this.isShowMoney = Boolean(res.data)
+			// #ifdef APP-PLUS
+			this.$refs['authpup'].open()
+			// #endif
 
-					if (this.isShowMoney) {
-						this.queryState();
-						getC2cUnreadMsgNum().then(res => {
-							queryUnreadNum().then(ress => {
 
-								let num = (parseInt(res.data.AllC2CUnreadMsgNum) ? parseInt(res
-									.data.AllC2CUnreadMsgNum) : 0) + parseInt(ress
-									.data.num)
-								if (num > 0) {
-									uni.setTabBarBadge({
-										index: 2,
-										text: num > 99 ? '99+' : num + ''
-									})
-								} else {
-									uni.removeTabBarBadge({
-										index: 2
-									})
-								}
-							})
-						})
-					}
-					const apps = getApp()
-					if (apps.type == 'login') {
-						this.queryParams.pageNum = 1
-						console.log('335================================>>>>');
-						this.getServiceSymptomsHandle()
-					} else {
-						this.getServiceSymptoms()
-					}
-				}
-			})
+			const apps = getApp()
+			if (apps.type == 'login') {
+				this.queryParams.pageNum = 1
+				console.log('335================================>>>>');
+				this.getServiceSymptomsHandle()
+			} else {
+				this.getServiceSymptoms()
+			}
 
 
 
@@ -375,20 +376,21 @@
 		onLoad() {
 			this.getServiceTypesList()
 			this.locationStatus = ''
+			// #ifdef APP-PLUS
+			this.$nextTick(() => {
+				this.$refs['authpup'].open()
+			})
+			// #endif
+			// #ifdef MP-WEIXIN
+			this.getLoction()
+			// #endif
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
 
 					this.isShowMoney = Boolean(res.data)
 					if (this.isShowMoney) {
-						// #ifdef APP-PLUS
-						this.$nextTick(() => {
-							this.$refs['authpup'].open()
-						})
-						// #endif
-						// #ifdef MP-WEIXIN
-						this.getLoction()
-						// #endif
+
 						this.queryState();
 					}
 				}
@@ -444,8 +446,10 @@
 				this.serviceSymptomsName.forEach(service => {
 					service.params.pageNum = 1
 				})
-				this.getServiceSymptomsHandle()
 				this.getLoction()
+				this.getServiceSymptomsHandle()
+
+
 
 
 			},
@@ -455,14 +459,16 @@
 			},
 
 			getServiceSymptomsHandle() {
-				console.log(this.address,this.serviceSymptomsName[this.currentIndex]);
+				if (!this.address) return
+				console.log(this.address, this.serviceSymptomsName,
+					'getServiceSymptomsHandlegetServiceSymptomsHandlegetServiceSymptomsHandle');
 				//获取故障现象
 				this.loading = true
 				const params = this.serviceSymptomsName.length < 1 ? {
 					pageSize: 10,
 					pageNum: 1,
 					symptoms: '',
-					address:this.address
+					address: this.address
 				} : this.serviceSymptomsName[this.currentIndex].params
 				console.log(this.serviceSymptomsName[this.currentIndex]);
 				getServiceSymptoms(params).then(res => {
@@ -473,7 +479,7 @@
 							pageSize: 10,
 							pageNum: 1,
 							symptoms: '',
-							address:this.address
+							address: this.address
 						},
 						list: this.serviceSymptomsName[i]?.list || []
 					}))
@@ -517,12 +523,12 @@
 								.servicePrice) : rec.servicePrice
 					})),
 					total: d.total,
-					params :{
-							pageSize: 10,
-							pageNum: 1,
-							symptoms: '',
-							address:this.address
-						},
+					params: {
+						pageSize: 10,
+						pageNum: 1,
+						symptoms: '',
+						address: this.address
+					},
 				}))
 				this.loading = false
 			},
@@ -544,24 +550,7 @@
 				})
 				if (this.addressName) {
 					this.promiseList.splice(0, 1, false)
-					//this.promiseList.splice(1, 1, false)
-					//获取热门报修
-					// getHotService().then(res => {
-					// 	//	console.log(res, '1111111111111');
 
-					// 	if (res.data != []) {
-					// 		res.data.forEach(item => {
-					// 			item.imgs = item.serviceImg.split(',')
-					// 			item.servicePrice = !this.isShowMoney ? this.replaceMoney(item
-					// 					.servicePrice) :
-					// 				item.servicePrice
-					// 		})
-					// 	}
-					// 	this.hotServiceList = res.data
-					// 	this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
-					// }).finally(() => {
-					// 	this.promiseList.splice(1, 1, true)
-					// })
 					this.promiseList.splice(1, 1, false)
 
 					//获取故障区域
@@ -576,6 +565,7 @@
 
 			},
 			getLoction() {
+				console.log('getLoctiongetLoctiongetLoctiongetLoction');
 				var that = this
 				//获取地址
 				//	this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
@@ -590,13 +580,15 @@
 						})
 						demo.reverseGeocoder({
 							location: suc.latitude + "," + suc.longitude,
+							
 							success: function(res) {
+								console.log(res, '588111111111');
 								that.cityName = res.result
 									.address_component.city
 								that.address = res.result
 									.address_component.province + '-' + res.result
 									.address_component.city + '-' + res.result
-									.address_component.district 
+									.address_component.district
 								uni.setStorage({
 									key: 'address_refreash',
 									data: that.address
