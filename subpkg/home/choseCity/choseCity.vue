@@ -87,9 +87,9 @@ color: #3D3F3E;">
 	import {
 		getAddressList,
 	} from "@/api/address.js"
-	import {
-		jsonp
-	} from 'vue-jsonp'
+	// import {
+	// 	jsonp
+	// } from 'vue-jsonp'
 	var QQMapWX = require('@/utils/qqmap-wx-jssdk.js')
 	import * as home from '@/api/home.js'
 	export default {
