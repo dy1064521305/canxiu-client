@@ -112,10 +112,10 @@
 						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/gdzs.png',
 						num: 0
 					},
-					{
-						title: '通讯录',
-						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/30/6f32fb36a5c04cf096ce765d2c2d5603.png'
-					}
+					// {
+					// 	title: '通讯录',
+					// 	img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/30/6f32fb36a5c04cf096ce765d2c2d5603.png'
+					// }
 				]
 			};
 		},
