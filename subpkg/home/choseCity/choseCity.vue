@@ -66,15 +66,15 @@ color: #3D3F3E;">
 			<view style="	overflow: scroll;
 		height: 41vh;">
 				<view v-for="(item,index) in nearbyList" :key='index' class="box" @click="choseAddress(item,'near')">
-								<view style="display: flex;justify-content: space-between;">
-									<text>{{item.title}}</text>
-									<text style="font-size: 22rpx;color: #A5A7A7;">{{item._distance}}Km</text>
-								</view>
-								<view style="font-size: 25rpx;
+					<view style="display: flex;justify-content: space-between;">
+						<text>{{item.title}}</text>
+						<text style="font-size: 22rpx;color: #A5A7A7;">{{item._distance}}Km</text>
+					</view>
+					<view style="font-size: 25rpx;
 				color: #A5A7A7;margin-top: 10rpx;">
-									{{item.address}}
-								</view>
-							</view>
+						{{item.address}}
+					</view>
+				</view>
 			</view>
 		</view>
 
@@ -120,7 +120,7 @@ color: #3D3F3E;">
 				}).then(res => {
 					console.log(res, this.choseForm);
 					this.addressList = res.rows
-					if (this.addressList.length==0) {
+					if (this.addressList.length == 0) {
 						uni.removeStorageSync('city')
 					}
 					if (Object.keys(this.choseForm).length < 1) {
@@ -221,8 +221,17 @@ color: #3D3F3E;">
 					},
 					fail(err) {
 						console.log(err);
+						uni.getStorage({
+							key: 'city',
+							success: function(res) {
+								console.log(res);
+								that.choseForm = res.data
+								that.cityName = res.data.addressDetailed
+
+							}
+						});
 						uni.showToast({
-							title: err.errMsg,
+							title: '获取位置失败',
 							icon: "none"
 						})
 					}
@@ -234,18 +243,20 @@ color: #3D3F3E;">
 					let info = item.ad_info
 					this.choseForm = {
 						addressDetailed: item.title,
-						addressRegion: info.province + '/'+
-						info.city + '/'+
-						info.district
+						addressRegion: info.province + '/' +
+							info.city + '/' +
+							info.district
 					}
-					uni.setStorageSync('address_refreash', info.province + '-'+
-						info.city + '-'+
+					uni.setStorageSync('address_refreash', info.province + '-' +
+						info.city + '-' +
 						info.district)
 				} else {
 					this.choseForm = item
 					uni.setStorageSync('address_refreash', item.addressRegion.replace(/\//g, "-"))
 				}
 				uni.setStorageSync('city', this.choseForm)
+				const pages = uni.$u.pages()
+				pages[pages.length - 2].$vm.choseAddress()
 				uni.navigateBack()
 			},
 			goAddAdress() {

@@ -42,7 +42,8 @@
 					</u-swiper>
 				</view>
 				<view class="types">
-					<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="ACCESS_FINE_LOCATION">
+					<yk-authpup ref="authpup" type="top" @notPermissions='notPermissions' @changeAuth="changeAuth"
+						permissionID="ACCESS_FINE_LOCATION">
 					</yk-authpup>
 
 					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(item.typeName)'>
@@ -54,7 +55,7 @@
 					</view>
 				</view>
 
-				<view class="fault-area">
+				<view v-if="regionService.length!=0" class="fault-area">
 					<view class="title blod">
 						故障区域
 					</view>
@@ -237,6 +238,7 @@
 				}
 			});
 		},
+
 		watch: {
 			promiseList: {
 				handler(n) {
@@ -324,18 +326,11 @@
 				})
 			}
 			// #ifdef MP-WEIXIN
-			this.getLoction()
 			this.getHeight();
 			this.navHeight = 100
 			this.titleHeight = 120
 			this.offsetTop = 145
 			// #endif
-
-			// #ifdef APP-PLUS
-			this.$refs['authpup'].open()
-			// #endif
-
-
 			const apps = getApp()
 			if (apps.type == 'login') {
 				this.queryParams.pageNum = 1
@@ -344,8 +339,6 @@
 			} else {
 				this.getServiceSymptoms()
 			}
-
-
 
 			uni.$on('totalUnreadCount', function(data) {
 				getC2cUnreadMsgNum().then(res => {
@@ -373,6 +366,16 @@
 		onHide() {
 			const apps = getApp()
 			apps.type = undefined
+			// this.getLoction()
+		},
+
+		onTabItemTap() {
+			// #ifdef APP-PLUS
+			this.$refs['authpup'].open()
+			// #endif
+			// #ifdef MP-WEIXIN
+			this.getLoction()
+			// #endif
 		},
 		onLoad() {
 			this.getServiceTypesList()
@@ -447,7 +450,12 @@
 				this.serviceSymptomsName.forEach(service => {
 					service.params.pageNum = 1
 				})
+				// #ifdef APP-PLUS
+				this.$refs['authpup'].open()
+				// #endif
+				// #ifdef MP-WEIXIN
 				this.getLoction()
+				// #endif
 				this.getServiceSymptomsHandle()
 
 
@@ -469,7 +477,7 @@
 					pageSize: 10,
 					pageNum: 1,
 					symptoms: ''
-				} :this.serviceSymptomsName[this.currentIndex].params
+				} : this.serviceSymptomsName[this.currentIndex].params
 				console.log(params);
 				getServiceSymptoms({
 					...params,
@@ -567,65 +575,68 @@
 
 			},
 			getLoction() {
-				var that = this
 				console.log('getLoctiongetLoctiongetLoctiongetLoction');
-				uni.getStorage({
-					key: 'city',
-					success: function(res) {
-						console.log(res);
-						that.cityName = res.data.addressDetailed
-						that.addressName =that.address= uni.getStorageSync(
-							'address_refreash')
-						that.getList()
-						that.getServiceSymptomsHandle()
-					},
-					fail: function(error) {
-						console.log(error);
-						uni.getLocation({
-							success: (suc) => {
-								var demo = new QQMapWX({
-									key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
+				var that = this
+				uni.getLocation({
+					success: (suc) => {
+						var demo = new QQMapWX({
+							key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
+						})
+						demo.reverseGeocoder({
+							location: suc.latitude + "," + suc.longitude,
+				
+							success: function(res) {
+								console.log(res, '588111111111');
+								let result = res.result.address_component
+								that.cityName = result.street_number !=
+									null ? result.street_number : result
+									.street
+								that.address = result.province + '-' +
+									result.city + '-' + result.district
+								uni.setStorage({
+									key: 'address_refreash',
+									data: that.address
 								})
-								demo.reverseGeocoder({
-									location: suc.latitude + "," + suc.longitude,
-
-									success: function(res) {
-										console.log(res, '588111111111');
-										let result = res.result.address_component
-										that.cityName = result.street_number !=
-											null ? result.street_number : result
-											.street
-											that.address = result.province + '-' +
-												result.city + '-' + result.district
-											uni.setStorage({
-												key: 'address_refreash',
-												data: that.address
-											})
-											that.addressName = that.address
-											that.getList()
-											that.getServiceSymptomsHandle()
-										uni.setStorageSync({
-											key: 'city',
-											data: JSON.stringify({
-												addressDetailed: that
-													.cityName
-											})
-										})
-										
-
+								uni.setStorage({
+									key: 'city',
+									data: {
+										addressDetailed: that.cityName
 									}
 								})
-							},
-							fail(err) {
-								console.log(err);
+								that.addressName = that.address
+								that.getList()
+								that.getServiceSymptomsHandle()
+				
+				
 							}
 						})
+					},
+					fail(err) {
+						console.log(err, '63333333');
+				
+				
 					}
-				});
-
+				})
+				
+				
+				
+				
+			
 
 			},
-
+			choseAddress() {
+				uni.getStorage({
+					key: 'city',
+					success: (res)=> {
+						console.log(res);
+						this.cityName = res.data.addressDetailed
+						this.addressName = this.address = uni.getStorageSync(
+							'address_refreash')
+						this.getList()
+						this.getServiceSymptomsHandle()
+					},
+				})
+			},
 			//设置定位权限
 			setting() {
 				if (this.locationStatus != 'authorized' && this.locationStatus != 'errMsg') {
@@ -720,7 +731,37 @@
 				this.getLoction()
 
 			},
-
+			notPermissions() {
+				uni.getStorage({
+					key: 'city',
+					success: (res)=> {
+						console.log(res);
+						this.cityName = res.data.addressDetailed
+						this.addressName = this.address = uni.getStorageSync(
+							'address_refreash')
+					},
+					fail: () => {
+						this.cityName = '杭州市滨江区'
+						this.address = '浙江省-杭州市-滨江区'
+						uni.setStorage({
+							key: 'address_refreash',
+							data: this.address
+						})
+						uni.setStorage({
+							key: 'city',
+							data: {
+								addressDetailed: this
+									.cityName
+							}
+						})
+						console.log('744444444');
+					
+					}
+				})
+				this.getList()
+				this.getServiceSymptomsHandle()
+			
+			},
 			goCar() {
 				uni.navigateTo({
 					url: '../../subpkg/car/car/car'
@@ -813,9 +854,10 @@
 			.swiper_style {
 				padding: 0 20rpx;
 				margin-bottom: 20rpx;
+
 				// margin: 0 20rpx;
 				::v-deep.u-swiper__indicator {
-					bottom:30rpx !important;
+					bottom: 30rpx !important;
 				}
 
 				.indicator {

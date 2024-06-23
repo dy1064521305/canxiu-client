@@ -563,7 +563,7 @@
 					return
 				}
 				let place = uni.getStorageSync('address_refreash')
-			
+				console.log(this.addressInfo.addressRegion.replace(/\//g, "-"),place);
 				if (this.addressInfo.addressRegion.replace(/\//g, "-") != place) {
 					uni.showToast({
 						title: `仅支持服务“${place.substring((place.indexOf('-')) + 1)}”地区`,
