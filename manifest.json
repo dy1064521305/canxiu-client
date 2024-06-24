@@ -2,8 +2,8 @@
     "name" : "餐修",
     "appid" : "__UNI__16112CC",
     "description" : "",
-    "versionName" : "1.4.7",
-    "versionCode" : 147,
+    "versionName" : "1.4.6",
+    "versionCode" : 146,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -29,8 +29,7 @@
             "Payment" : {},
             "VideoPlayer" : {},
             "Maps" : {},
-            "Record" : {},
-            "Contacts" : {}
+            "Record" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -48,15 +47,12 @@
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
-                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
                     "<uses-permission android:name=\"android.permission.INTERNET\"/>",
                     "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
-                    "<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ],

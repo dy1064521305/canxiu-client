@@ -1,6 +1,7 @@
 <template>
 	<view>
-		<view v-if="locationStatus=='authorized'||locationStatus==''" class="home">
+		<!-- v-if="locationStatus=='authorized'||locationStatus==''" -->
+		<view class="home">
 
 			<u-navbar :height="navHeight" :bgColor="'RGBA(147, 189, 134, '+opacity+')'">
 				<view slot='left'>
@@ -42,7 +43,8 @@
 					</u-swiper>
 				</view>
 				<view class="types">
-					<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="ACCESS_FINE_LOCATION">
+					<yk-authpup ref="authpup" type="top" @notQequest='getLoction' @changeAuth="changeAuth"
+						permissionID="ACCESS_FINE_LOCATION">
 					</yk-authpup>
 
 					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(item.typeName)'>
@@ -54,7 +56,7 @@
 					</view>
 				</view>
 
-				<view class="fault-area">
+				<view v-if="regionService.length!=0" class="fault-area">
 					<view class="title blod">
 						故障区域
 					</view>
@@ -134,14 +136,14 @@
 					mode=""></image>
 			</view>
 		</view>
-		<view v-if="locationStatus!='authorized'&&locationStatus!=''">
+		<!-- 	<view v-if="locationStatus!='authorized'&&locationStatus!=''">
 			<u-empty mode="permission" marginTop='400rpx' icon="http://cdn.uviewui.com/uview/empty/permission.png"
 				text="地理位置权限已关闭,如需正常使用,请先打开位置权限">
 			</u-empty>
 			<view class="btn" @click="setting">
 				去设置
 			</view>
-		</view>
+		</view> -->
 
 
 		<!-- 	<view class="index" style="z-index: 999999999999;">
@@ -216,7 +218,7 @@
 				tabHeight: 0,
 				opacity: 0,
 				cityName: '获取位置中...',
-				locationStatus: '', //定位权限
+				// locationStatus: '', //定位权限
 				promiseList: [false, false],
 				carNum: 0,
 				typeName: undefined,
@@ -225,7 +227,8 @@
 				addressName: undefined,
 				statusHeight: 0,
 				statusBarHeight: 0,
-				address: undefined
+				address: undefined,
+				init: true
 			}
 		},
 		onReady() {
@@ -276,7 +279,6 @@
 			if (this.tabsBg !== '#F5F9FA') this.tabsBg = '#F5F9FA'
 		},
 		onShow() {
-			console.log(this.serviceSymptomsName);
 			if (storage.get('AccessToken')) {
 				this.isShowMoney = true
 				getCarNum().then(res => {
@@ -323,30 +325,24 @@
 					index: 3
 				})
 			}
+
+
 			// #ifdef MP-WEIXIN
-			this.getLoction()
 			this.getHeight();
 			this.navHeight = 100
 			this.titleHeight = 120
 			this.offsetTop = 145
 			// #endif
 
-			// #ifdef APP-PLUS
-			this.$refs['authpup'].open()
-			// #endif
 
 
 			const apps = getApp()
 			if (apps.type == 'login') {
 				this.queryParams.pageNum = 1
-				console.log('335================================>>>>');
 				this.getServiceSymptomsHandle()
 			} else {
 				this.getServiceSymptoms()
 			}
-
-
-
 			uni.$on('totalUnreadCount', function(data) {
 				getC2cUnreadMsgNum().then(res => {
 					queryUnreadNum().then(ress => {
@@ -371,20 +367,17 @@
 
 		},
 		onHide() {
+
 			const apps = getApp()
 			apps.type = undefined
+		},
+		onTabItemTap() {
+			this.getLocationPermissions()
 		},
 		onLoad() {
 			this.getServiceTypesList()
 			this.locationStatus = ''
-			// #ifdef APP-PLUS
-			this.$nextTick(() => {
-				this.$refs['authpup'].open()
-			})
-			// #endif
-			// #ifdef MP-WEIXIN
-			this.getLoction()
-			// #endif
+			this.getLocationPermissions()
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
@@ -400,6 +393,9 @@
 		},
 
 		methods: {
+			changeData() {
+				this.getLocationPermissions()
+			},
 			getServiceTypesList() {
 				getService().then(res => {
 					this.serviceTypesList = res.data
@@ -443,16 +439,23 @@
 			},
 			// //上拉函数
 			onPullDownRefresh() {
-				console.log(this.serviceSymptomsName);
 				this.serviceSymptomsName.forEach(service => {
 					service.params.pageNum = 1
 				})
-				this.getLoction()
+				this.getLocationPermissions()
 				this.getServiceSymptomsHandle()
 
-
-
-
+			},
+			getLocationPermissions() {
+				console.log('getLocationPermissionsgetLocationPermissionsgetLocationPermissions');
+				// #ifdef APP-PLUS
+				this.$nextTick(() => {
+					this.$refs['authpup'].open()
+				})
+				// #endif
+				// #ifdef MP-WEIXIN
+				this.getLoction()
+				// #endif
 			},
 			swiper_change(e) {
 				if (e.detail.current === this.currentIndex) return
@@ -461,16 +464,13 @@
 
 			getServiceSymptomsHandle() {
 				// if (!this.address) return
-				console.log(this.address, this.serviceSymptomsName,
-					'getServiceSymptomsHandlegetServiceSymptomsHandlegetServiceSymptomsHandle');
 				//获取故障现象
 				this.loading = true
 				const params = this.serviceSymptomsName.length < 1 ? {
 					pageSize: 10,
 					pageNum: 1,
 					symptoms: ''
-				} :this.serviceSymptomsName[this.currentIndex].params
-				console.log(params);
+				} : this.serviceSymptomsName[this.currentIndex].params
 				getServiceSymptoms({
 					...params,
 					address: this.address
@@ -515,7 +515,6 @@
 					}).exec();
 			},
 			getServiceSymptoms() {
-				console.log('5177777777777777', this.address);
 				this.loading = true
 				this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
 					name: d.name,
@@ -557,6 +556,7 @@
 
 					//获取故障区域
 					getRegion().then(res => {
+
 						this.regionService = res.data
 					}).finally(() => {
 						this.promiseList.splice(1, 1, true)
@@ -566,81 +566,113 @@
 
 
 			},
+			//没有开启定位
+			// notQequest() {
+			// 	let that = this
+			// 	that.addressName = that.address = '浙江省-杭州市-滨江区'
+			// 	that.cityName = '杭州市滨江区'
+			// 	console.log('notAddressnotAddressnotAddressnotAddress');
+			// 	uni.setStorage({
+			// 		key: 'city',
+			// 		data: {
+			// 			addressDetailed: that.cityName
+			// 		}
+			// 	})
+			// 	uni.setStorage({
+			// 		key: 'address_refreash',
+			// 		data: that.address
+			// 	})
+			// 	that.getList()
+			// 	that.getServiceSymptomsHandle()
+
+			// },
 			getLoction() {
 				var that = this
 				console.log('getLoctiongetLoctiongetLoctiongetLoction');
-				uni.getStorage({
-					key: 'city',
-					success: function(res) {
-						console.log(res);
-						that.cityName = res.data.addressDetailed
-						that.addressName =that.address= uni.getStorageSync(
-							'address_refreash')
-						that.getList()
-						that.getServiceSymptomsHandle()
-					},
-					fail: function(error) {
-						console.log(error);
-						uni.getLocation({
-							success: (suc) => {
-								var demo = new QQMapWX({
-									key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
-								})
-								demo.reverseGeocoder({
-									location: suc.latitude + "," + suc.longitude,
+				if (uni.getStorageSync('city')) {
+					let data = uni.getStorageSync('city')
+					console.log(data);
+					that.cityName = data.addressDetailed
+					that.addressName = that.address = uni.getStorageSync(
+						'address_refreash')
+					that.getList()
+					that.getServiceSymptomsHandle()
+				} else {
+					uni.getLocation({
+						success: (suc) => {
+							var demo = new QQMapWX({
+								key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
+							})
+							demo.reverseGeocoder({
+								location: suc.latitude + "," + suc.longitude,
 
-									success: function(res) {
-										console.log(res, '588111111111');
-										let result = res.result.address_component
-										that.cityName = result.street_number !=
-											null ? result.street_number : result
-											.street
-											that.address = result.province + '-' +
-												result.city + '-' + result.district
-											uni.setStorage({
-												key: 'address_refreash',
-												data: that.address
-											})
-											that.addressName = that.address
-											that.getList()
-											that.getServiceSymptomsHandle()
-										uni.setStorageSync({
-											key: 'city',
-											data: JSON.stringify({
-												addressDetailed: that
-													.cityName
-											})
-										})
-										
-
-									}
-								})
-							},
-							fail(err) {
-								console.log(err);
-							}
-						})
-					}
-				});
+								success: function(res) {
+									console.log(res, '588111111111');
+									let result = res.result.address_component
+									that.cityName = result.street_number !=
+										null ? result.street_number : result
+										.street
+									that.address = result.province + '-' +
+										result.city + '-' + result.district
+									uni.setStorage({
+										key: 'address_refreash',
+										data: that.address
+									})
+									that.addressName = that.address
+									that.getList()
+									that.getServiceSymptomsHandle()
+									uni.setStorageSync({
+										key: 'city',
+										data: {
+											addressDetailed: that
+												.cityName
+										}
+									})
 
 
-			},
-
-			//设置定位权限
-			setting() {
-				if (this.locationStatus != 'authorized' && this.locationStatus != 'errMsg') {
-					uni.openAppAuthorizeSetting()
-
-				} else if (this.locationStatus == 'errMsg') {
-					uni.openSetting({
-						success(res) {
-							if (res.errMsg.includes('ok')) {
-								resolve('ok')
-							}
+								}
+							})
 						},
-					});
+						fail(err) {
+							that.addressName = that.address = '浙江省-杭州市-滨江区'
+							that.cityName = '杭州市滨江区'
+							console.log('notAddressnotAddressnotAddressnotAddress');
+							uni.setStorage({
+								key: 'city',
+								data: {
+									addressDetailed: that.cityName
+								}
+							})
+							uni.setStorage({
+								key: 'address_refreash',
+								data: that.address
+							})
+							that.getList()
+							that.getServiceSymptomsHandle()
+							console.log(err);
+						}
+					})
 				}
+
+
+
 			},
+
+			// //设置定位权限
+			// setting() {
+			// 	if (this.locationStatus != 'authorized' && this.locationStatus != 'errMsg') {
+			// 		uni.openAppAuthorizeSetting()
+
+			// 	} else if (this.locationStatus == 'errMsg') {
+			// 		uni.openSetting({
+			// 			success(res) {
+			// 				if (res.errMsg.includes('ok')) {
+			// 					resolve('ok')
+			// 				}
+			// 			},
+			// 		});
+			// 	}
+			// },
 			//将钱替换为星号
 			replaceMoney(i) {
 				return i.replace(/[0-9]/g, "x")
@@ -686,7 +718,6 @@
 			},
 			//tab栏点击
 			tabClick(item, num) {
-				console.log(this.serviceSymptomsName, item, '<<<<============================672', num);
 				if (item.index === this.currentIndex) return
 				this.currentIndex = item.index
 				this.serviceSymptomsName[item.index].params.symptoms = item.name
@@ -813,9 +844,10 @@
 			.swiper_style {
 				padding: 0 20rpx;
 				margin-bottom: 20rpx;
+
 				// margin: 0 20rpx;
 				::v-deep.u-swiper__indicator {
-					bottom:30rpx !important;
+					bottom: 30rpx !important;
 				}
 
 				.indicator {

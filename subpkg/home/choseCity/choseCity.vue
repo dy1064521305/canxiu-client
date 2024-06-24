@@ -65,18 +65,30 @@ color: #3D3F3E;">
 			<text style="font-size: 25rpx;color: #A5A7A7;">附近地址</text>
 			<view style="	overflow: scroll;
 		height: 41vh;">
-				<view v-for="(item,index) in nearbyList" :key='index' class="box" @click="choseAddress(item,'near')">
-								<view style="display: flex;justify-content: space-between;">
-									<text>{{item.title}}</text>
-									<text style="font-size: 22rpx;color: #A5A7A7;">{{item._distance}}Km</text>
-								</view>
-								<view style="font-size: 25rpx;
+				<blockquote v-if="nearbyList.length!=0">
+					<view v-for="(item,index) in nearbyList" :key='index' class="box"
+						@click="choseAddress(item,'near')">
+						<view style="display: flex;justify-content: space-between;">
+							<text>{{item.title}}</text>
+							<text style="font-size: 22rpx;color: #A5A7A7;">{{item._distance}}Km</text>
+						</view>
+						<view style="font-size: 25rpx;
 				color: #A5A7A7;margin-top: 10rpx;">
-									{{item.address}}
-								</view>
-							</view>
+							{{item.address}}
+						</view>
+					</view>
+				</blockquote>
+
+				<view v-else style="text-align: center;
+    margin-top: 38%;">
+					获取定位失败
+				</view>
 			</view>
+
 		</view>
+		<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" @notQequest='notQequest'
+			permissionID="ACCESS_FINE_LOCATION">
+		</yk-authpup>
 
 	</view>
 </template>
@@ -92,8 +104,11 @@ color: #3D3F3E;">
 	// } from 'vue-jsonp'
 	var QQMapWX = require('@/utils/qqmap-wx-jssdk.js')
 	import * as home from '@/api/home.js'
+	import ykAuthpup from "@/components/yk-authpup/yk-authpup";
 	export default {
-		components: {},
+		components: {
+			ykAuthpup
+		},
 		props: {},
 		data() {
 			return {
@@ -109,7 +124,15 @@ color: #3D3F3E;">
 
 		},
 		onLoad() {
+			// #ifdef APP-PLUS
+			this.$nextTick(() => {
+				this.$refs['authpup'].open()
+			})
+
+			// #endif
+			// #ifdef MP-WEIXIN
 			this.getLocation()
+			// #endif
 
 
 		},
@@ -120,7 +143,7 @@ color: #3D3F3E;">
 				}).then(res => {
 					console.log(res, this.choseForm);
 					this.addressList = res.rows
-					if (this.addressList.length==0) {
+					if (this.addressList.length == 0) {
 						uni.removeStorageSync('city')
 					}
 					if (Object.keys(this.choseForm).length < 1) {
@@ -137,7 +160,12 @@ color: #3D3F3E;">
 					this.addressList.unshift(item)
 				})
 			},
-
+			changeAuth() {
+				this.getLocation()
+			},
+			notQequest() {
+				this.getAddress()
+			},
 			getLocation(type) {
 				let that = this
 				if (type == 'again') {
@@ -146,6 +174,7 @@ color: #3D3F3E;">
 					that.cityName = '重新定位中'
 				} else {
 					that.cityName = ''
+
 				}
 				uni.getLocation({
 					// isHighAccuracy: true,
@@ -180,15 +209,7 @@ color: #3D3F3E;">
 						})
 
 						if (uni.getStorageSync('city')) {
-							uni.getStorage({
-								key: 'city',
-								success: function(res) {
-									console.log(res);
-									that.choseForm = res.data
-									that.cityName = res.data.addressDetailed
-
-								}
-							});
+							that.getAddress()
 						} else {
 							var demo = new QQMapWX({
 								key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
@@ -200,7 +221,7 @@ color: #3D3F3E;">
 									let result = res.result.address_component
 									that.cityName = result.street_number != null ? result
 										.street_number : result.street
-									uni.setStorage({
+									uni.setStorageSync({
 										key: 'city',
 										data: {
 											addressDetailed: that.cityName
@@ -208,7 +229,7 @@ color: #3D3F3E;">
 									})
 									that.address = result.province + '-' +
 										result.city + '-' + result.district
-									uni.setStorage({
+									uni.setStorageSync({
 										key: 'address_refreash',
 										data: that.address
 									})
@@ -221,31 +242,61 @@ color: #3D3F3E;">
 					},
 					fail(err) {
 						console.log(err);
+						if (uni.getStorageSync('city')) {
+							that.getAddress()
+						}
 						uni.showToast({
-							title: err.errMsg,
+							title: '获取位置失败',
 							icon: "none"
 						})
+						that.cityName = '杭州市滨江区'
+						uni.setStorageSync({
+							key: 'address_refreash',
+							data: '浙江省-杭州市-滨江区'
+						})
+						uni.setStorageSync({
+							key: 'city',
+							data: {
+								addressDetailed: that.cityName
+							}
+						})
+
+
+
 					}
 				})
 			},
+			getAddress() {
+				uni.getStorage({
+					key: 'city',
+					success: (res) => {
+						console.log(res);
+						this.choseForm = res.data
+						this.cityName = res.data.addressDetailed
 
+					}
+				});
+			},
 			choseAddress(item, type) {
 				if (type == 'near') {
 					let info = item.ad_info
 					this.choseForm = {
 						addressDetailed: item.title,
-						addressRegion: info.province + '/'+
-						info.city + '/'+
-						info.district
+						addressRegion: info.province + '/' +
+							info.city + '/' +
+							info.district
 					}
-					uni.setStorageSync('address_refreash', info.province + '-'+
-						info.city + '-'+
+					uni.setStorageSync('address_refreash', info.province + '-' +
+						info.city + '-' +
 						info.district)
 				} else {
 					this.choseForm = item
 					uni.setStorageSync('address_refreash', item.addressRegion.replace(/\//g, "-"))
 				}
 				uni.setStorageSync('city', this.choseForm)
+				const pages = uni.$u.pages()
+				pages[pages.length - 2].$vm.changeData()
+
 				uni.navigateBack()
 			},
 			goAddAdress() {
