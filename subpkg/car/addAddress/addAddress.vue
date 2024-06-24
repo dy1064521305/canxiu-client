@@ -1,6 +1,15 @@
 <template>
 	<view class="address">
-		<u--form labelPosition="left" :labelStyle='labelStyle' :model="model1" :rules="rules" ref="form1"
+		<map style="width: 100%; height: 50vh;"  :latitude="latitude" :longitude="longitude"
+			show-location>
+		</map>
+
+		<cover-view class="dingwei">
+			<cover-image @click="backDingwei"
+				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/28/754f65a63aa649f6827158c8b345a241.png"
+				style="width: 44rpx;height: 44rpx;"></cover-image>
+		</cover-view>
+		<!-- 	<u--form labelPosition="left" :labelStyle='labelStyle' :model="model1" :rules="rules" ref="form1"
 			labelWidth='180rpx'>
 			<u-form-item label="联系人" prop="address.contact" borderBottom ref="item1">
 				<u--input v-model="model1.address.contact" border="none" placeholder="请输入联系人"></u--input>
@@ -20,7 +29,7 @@
 				<u--input :disabled='isSubmit&&id!=""' v-model="model1.address.addressDetailed" border="none"
 					placeholder="请输入详细地址"></u--input>
 			</u-form-item>
-		</u--form>
+		</u--form> -->
 
 
 
@@ -45,6 +54,13 @@
 		},
 		data() {
 			return {
+				// covers: [{
+				// 	id: Math.round(Math.random() * (999999999 - 99999999) + 99999999),
+				// 	latitude: '',
+				// 	longitude: '',
+				// 	iconPath: '../../../static/img/home/dingwei.png',
+
+				// }],
 				labelStyle: {
 					'font-size': '30rpx'
 				},
@@ -117,21 +133,60 @@
 				})
 			}
 			console.log(this.id);
+			this.getLocation()
 		},
 		onReady() {
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
 			this.$refs.form1.setRules(this.rules)
 		},
 		methods: {
+			getLocation() {
+				uni.getLocation({
+					// isHighAccuracy: true,
+					// highAccuracyExpireTime: 1234,
+					// type: 'gcj02',
+					success: (suc) => {
+						console.log(suc);
+						//	uni.hideLoading()
+						that.latitude = that.covers[0].latitude = suc.latitude
+						that.longitude = that.covers[0].longitude = suc.longitude
+						//获取门店所在位置
+						uni.request({
+							url: 'https://apis.map.qq.com/ws/geocoder/v1/?address=' + address +
+								'&key=X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO',
+							success: (res) => {
+								console.log(res);
+								let data = res.data.result.location
+								that.covers[1].longitude = data.lng
+								that.covers[1].latitude = data.lat
+								var demo = new QQMapWX({
+									key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
+								})
+
+							}
+						})
+					},
+					fail: (res) => {
+						console.log(res);
+					}
+				})
+
+			},
 			addressHandle(e) {
 				console.log(e) //携带的参数
 				this.model1.address.addressRegion = e.value1.toString().replace(/,/g, "/")
 				this.model1.address.regionCode = e.value[2]
 				console.log(this.model1.address.regionCode);
 			},
-
+			//回到当前位置
+			backDingwei() {
+				uni.createMapContext("map", this).moveToLocation({ //moveToLocation将地图中心移动到当前定位点，需要配合map组件的show-location使用
+					latitude: this.latitude,
+					longitude: this.longitude
+				});
+			},
 			addAndEditAddress() {
-				let that=this
+				let that = this
 				that.$refs.form1.validate().then(res => {
 					var demo = new QQMapWX({
 						key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
@@ -214,6 +269,17 @@
 			// bottom: 300rpx;
 			// left: 43rpx;
 
+		}
+
+		.dingwei {
+			position: absolute;
+			right: 10%;
+			top: 43%;
+			width: 80rpx;
+			height: 80rpx;
+			background: #FFFFFF;
+			box-shadow: 0px 0px 4px 0px rgba(42, 64, 55, 0.1);
+			border-radius: 8rpx;
 		}
 
 		/deep/.u-input__content__field-wrapper__field {

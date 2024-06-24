@@ -1,17 +1,17 @@
 <template>
 	<view>
-		<view  class="top">
+		<view class="top">
 			<view>
 				当前定位
 			</view>
 			<view class="bottom">
 				<view style="display: flex;align-items: center;">
 					<image style="width: 38rpx;height: 45rpx;"
-						 src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/19/991f64631ffc414f9f624ac43a66ab71.png"
-						 mode=""></image>
+						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/19/991f64631ffc414f9f624ac43a66ab71.png"
+						mode=""></image>
 					<text class="city">{{cityName}}</text>
 				</view>
-				<text class="again" @click="getLocation('again')">重新定位</text>
+				<text class="again" @click="againGetAddress">重新定位</text>
 			</view>
 
 		</view>
@@ -73,23 +73,22 @@ color: #3D3F3E;">
 							<text style="font-size: 22rpx;color: #A5A7A7;">{{item._distance}}Km</text>
 						</view>
 						<view style="font-size: 25rpx;
-				color: #A5A7A7;margin-top: 10rpx;">
+							color: #A5A7A7;margin-top: 10rpx;">
 							{{item.address}}
 						</view>
 					</view>
 				</blockquote>
 
 				<view v-else style="text-align: center;
-    margin-top: 38%;">
+			    margin-top: 38%;">
 					获取定位失败
 				</view>
 			</view>
-
 		</view>
-		<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" @notQequest='notQequest'
+
+		<yk-authpup ref="authpup" type="top" @notPermissions='getAddress' @changeAuth="changeAuth"
 			permissionID="ACCESS_FINE_LOCATION">
 		</yk-authpup>
-
 	</view>
 </template>
 
@@ -124,16 +123,15 @@ color: #3D3F3E;">
 
 		},
 		onLoad() {
+			console.log(uni.getStorageSync('city'),'1266666666666');
 			// #ifdef APP-PLUS
 			this.$nextTick(() => {
 				this.$refs['authpup'].open()
 			})
-
 			// #endif
 			// #ifdef MP-WEIXIN
-			this.getLocation()
+			this.getLoction()
 			// #endif
-
 
 		},
 		methods: {
@@ -160,30 +158,44 @@ color: #3D3F3E;">
 					this.addressList.unshift(item)
 				})
 			},
-			changeAuth() {
+			changeAuth(){
+				// uni.removeStorageSync('city')
 				this.getLocation()
 			},
-			notQequest() {
-				this.getAddress()
+			getAddress(){
+				uni.getStorage({
+					key: 'city',
+					success: (res)=> {
+						console.log(res);
+						this.choseForm = res.data
+						this.cityName = res.data.addressDetailed
+				
+					}
+				});
+				console.log(this.cityName);
 			},
-			getLocation(type) {
+			againGetAddress(){
+				uni.removeStorageSync('city')
+				this.choseForm = {}
+				this.cityName = '重新定位中'
+				// #ifdef APP-PLUS
+				this.$refs['authpup'].open()
+				// #endif
+				// #ifdef MP-WEIXIN
+				this.getLoction()
+				// #endif
+			},
+			getLocation() {
 				let that = this
-				if (type == 'again') {
-					uni.removeStorageSync('city')
-					this.choseForm = {}
-					that.cityName = '重新定位中'
-				} else {
-					that.cityName = ''
-
-				}
+				that.cityName = ''
 				uni.getLocation({
 					// isHighAccuracy: true,
 					// highAccuracyExpireTime: 1234,
 					// type: 'gcj02',
 					success: (suc) => {
 						console.log(suc, '1812222222222222222');
-						// this.location.latitude = suc.latitude
-						// this.location.longitude = suc.longitude
+						// this.location.latitude = suc.latitude
+						// this.location.longitude = suc.longitude
 						// jsonp(
 						// 	'https://apis.map.qq.com/ws/place/v1/here', {
 						// 		boundary: 'nearby(40.040394,116.273523,1000)',
@@ -207,7 +219,7 @@ color: #3D3F3E;">
 								console.log(c);
 							}
 						})
-
+						console.log(uni.getStorageSync('city'));
 						if (uni.getStorageSync('city')) {
 							that.getAddress()
 						} else {
@@ -219,9 +231,10 @@ color: #3D3F3E;">
 								success: function(res) {
 									console.log(res)
 									let result = res.result.address_component
-									that.cityName = result.street_number != null ? result
+									that.cityName = result.street_number != '' ? result
 										.street_number : result.street
-									uni.setStorageSync({
+										console.log(that.cityName);
+									uni.setStorage({
 										key: 'city',
 										data: {
 											addressDetailed: that.cityName
@@ -229,7 +242,7 @@ color: #3D3F3E;">
 									})
 									that.address = result.province + '-' +
 										result.city + '-' + result.district
-									uni.setStorageSync({
+									uni.setStorage({
 										key: 'address_refreash',
 										data: that.address
 									})
@@ -241,42 +254,17 @@ color: #3D3F3E;">
 
 					},
 					fail(err) {
-						console.log(err);
-						if (uni.getStorageSync('city')) {
-							that.getAddress()
-						}
+
+ 						console.log(uni.getStorageSync('city'),'255555555');
+						that.getAddress()
 						uni.showToast({
 							title: '获取位置失败',
 							icon: "none"
 						})
-						that.cityName = '杭州市滨江区'
-						uni.setStorageSync({
-							key: 'address_refreash',
-							data: '浙江省-杭州市-滨江区'
-						})
-						uni.setStorageSync({
-							key: 'city',
-							data: {
-								addressDetailed: that.cityName
-							}
-						})
-
-
-
 					}
 				})
 			},
-			getAddress() {
-				uni.getStorage({
-					key: 'city',
-					success: (res) => {
-						console.log(res);
-						this.choseForm = res.data
-						this.cityName = res.data.addressDetailed
 
-					}
-				});
-			},
 			choseAddress(item, type) {
 				if (type == 'near') {
 					let info = item.ad_info
@@ -295,8 +283,7 @@ color: #3D3F3E;">
 				}
 				uni.setStorageSync('city', this.choseForm)
 				const pages = uni.$u.pages()
-				pages[pages.length - 2].$vm.changeData()
-
+				pages[pages.length - 2].$vm.choseAddress()
 				uni.navigateBack()
 			},
 			goAddAdress() {
