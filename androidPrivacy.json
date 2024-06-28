@@ -1,10 +1,10 @@
 {
-	"version": "1",
-	"prompt": "template",
-	"title": "服务协议和隐私政策",
-	"message": "同意<a  href=\"https://h5-test.canxiukeji.com/#/pages/article/detail3\">《用户协议》</a>和<a  href=\"https://h5-test.canxiukeji.com/#/pages/article/detail4\">《隐私协议》</a>后，餐修才可为你服务",
-	"buttonAccept": "同意并继续",
-	"buttonRefuse": "不同意并退出",
-	"hrefLoader": "system",
-	"backToExit": "false"
+    "version" : "1",
+    "prompt" : "template",
+    "title" : "服务协议和隐私政策",
+    "message" : "同意<a  href=\"https://h5-test.canxiukeji.com/#/pages/article/detail3\">《用户协议》</a>和<a  href=\"https://h5-test.canxiukeji.com/#/pages/article/detail4\">《隐私协议》</a>后，餐修才可为你服务",
+    "buttonAccept" : "同意并继续",
+    "buttonRefuse" : "不同意并退出",
+    "hrefLoader" : "system",
+    "backToExit" : "false"
 }

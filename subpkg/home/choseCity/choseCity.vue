@@ -130,7 +130,7 @@ color: #3D3F3E;">
 			})
 			// #endif
 			// #ifdef MP-WEIXIN
-			this.getLoction()
+			this.getLocation()
 			// #endif
 
 		},
@@ -159,8 +159,10 @@ color: #3D3F3E;">
 				})
 			},
 			changeAuth(){
-				// uni.removeStorageSync('city')
+				if(this.cityName == '重新定位中')uni.removeStorageSync('city')
+				// 
 				this.getLocation()
+				
 			},
 			getAddress(){
 				uni.getStorage({
@@ -175,14 +177,14 @@ color: #3D3F3E;">
 				console.log(this.cityName);
 			},
 			againGetAddress(){
-				uni.removeStorageSync('city')
+				
 				this.choseForm = {}
 				this.cityName = '重新定位中'
 				// #ifdef APP-PLUS
 				this.$refs['authpup'].open()
 				// #endif
 				// #ifdef MP-WEIXIN
-				this.getLoction()
+				this.getLocation()
 				// #endif
 			},
 			getLocation() {

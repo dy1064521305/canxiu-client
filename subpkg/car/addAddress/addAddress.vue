@@ -1,40 +1,65 @@
 <template>
 	<view class="address">
-		<map style="width: 100%; height: 50vh;"  :latitude="latitude" :longitude="longitude"
-			show-location>
-		</map>
 
-		<cover-view class="dingwei">
-			<cover-image @click="backDingwei"
-				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/28/754f65a63aa649f6827158c8b345a241.png"
-				style="width: 44rpx;height: 44rpx;"></cover-image>
-		</cover-view>
-		<!-- 	<u--form labelPosition="left" :labelStyle='labelStyle' :model="model1" :rules="rules" ref="form1"
+		<u--form labelPosition="left" :labelStyle='labelStyle' :model="model1" :rules="rules" ref="form1"
 			labelWidth='180rpx'>
-			<u-form-item label="联系人" prop="address.contact" borderBottom ref="item1">
-				<u--input v-model="model1.address.contact" border="none" placeholder="请输入联系人"></u--input>
-			</u-form-item>
-			<u-form-item label="手机号" prop="address.phone" borderBottom ref="item1">
-				<u--input v-model="model1.address.phone" border="none" placeholder="请输入手机号"></u--input>
-			</u-form-item>
-			<u-form-item label="地区" borderBottom label-align="center">
-				<pickers v-if="!isSubmit||id==''" @address="addressHandle">
-					<view v-if="model1.address.addressRegion!=''">{{model1.address.addressRegion}}</view>
-					<view v-else style="color: rgb(192, 196, 204);">请选择地区</view>
-				</pickers>
-				<u--input v-if="isSubmit&&id!=''" disabled v-model="model1.address.addressRegion" border="none">
-				</u--input>
-			</u-form-item>
-			<u-form-item label="详细地址" prop="address.addressDetailed" borderBottom ref="item1">
-				<u--input :disabled='isSubmit&&id!=""' v-model="model1.address.addressDetailed" border="none"
-					placeholder="请输入详细地址"></u--input>
-			</u-form-item>
-		</u--form> -->
+
+			<view class="box">
+				<u-form-item label="所在城市" borderBottom label-align="center">
+					<!-- 	<pickers v-if="!isSubmit||id==''" @address="addressHandle">
+						<view v-if="model1.address.addressRegion!=''">{{model1.address.addressRegion}}</view>
+						<view v-else style="color: rgb(192, 196, 204);">请选择地区</view>
+					</pickers> -->
+					<view style="display: flex;">
+						<u--input v-if="!isSubmit||id==''" placeholder="请选择所在城市" v-model="model1.address.addressRegion"
+							border="none">
+						</u--input>
+						<view @click="getAddress">
+							<image style="width: 28rpx;height: 32rpx;margin-right:10rpx;"
+								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/25/90ecfbde05f64a089bf4a946f8c0f554.png"
+								mode=""></image>定位
+						</view>
+					</view>
+
+				</u-form-item>
+				<u-form-item label="详细地址"  borderBottom ref="item1">
+				
+					<u--textarea :disabled='isSubmit&&id!=""' v-model="model1.address.addressDetailed" border='none'
+						placeholder="请输入详细地址"></u--textarea>
+				</u-form-item>
+				<u-form-item label="门牌号" prop="address.houseNum" borderBottom ref="item1">
+					<u--input v-model="model1.address.houseNum" border="none" placeholder="例：4号楼2603">
+					</u--input>
+
+				</u-form-item>
+			</view>
+
+
+
+			<view class="box">
+				<u-form-item label="联系人" prop="address.contact" borderBottom ref="item1">
+					<u--input v-model="model1.address.contact" border="none" placeholder="请输入联系人"></u--input>
+				</u-form-item>
+				<u-form-item label="联系电话" prop="address.phone" borderBottom ref="item1">
+					<u--input v-model="model1.address.phone" border="none" placeholder="请输入联系电话"></u--input>
+				</u-form-item>
+			</view>
+
+			<view class="box" style="padding:20rpx;">
+				<view style="display: flex;">
+					<u-radio activeColor='#A4D091' :name="model1.address.isDefault">
+					</u-radio>设为默认地址
+				</view>
+				<view style="font-size: 25rpx;color: #A5A7A7;padding: 10rpx 0 0 39rpx;">
+					每次下单时会默认推荐使用该地址
+				</view>
+			</view>
+		</u--form>
 
 
 
 		<view class="button" @click="addAndEditAddress">
-			保存
+			保存编辑
 		</view>
 	</view>
 </template>
@@ -54,13 +79,7 @@
 		},
 		data() {
 			return {
-				// covers: [{
-				// 	id: Math.round(Math.random() * (999999999 - 99999999) + 99999999),
-				// 	latitude: '',
-				// 	longitude: '',
-				// 	iconPath: '../../../static/img/home/dingwei.png',
 
-				// }],
 				labelStyle: {
 					'font-size': '30rpx'
 				},
@@ -70,9 +89,12 @@
 						phone: '',
 						addressDetailed: '',
 						addressRegion: '',
+						houseNum:'',
 						clientId: storage.get('ClientId'),
 						longitude: '',
-						latitude: ''
+						latitude: '',
+						isDefault: false,
+						name:''
 					}
 				},
 
@@ -133,44 +155,70 @@
 				})
 			}
 			console.log(this.id);
-			this.getLocation()
+
 		},
 		onReady() {
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
 			this.$refs.form1.setRules(this.rules)
 		},
 		methods: {
-			getLocation() {
-				uni.getLocation({
-					// isHighAccuracy: true,
-					// highAccuracyExpireTime: 1234,
-					// type: 'gcj02',
-					success: (suc) => {
-						console.log(suc);
-						//	uni.hideLoading()
-						that.latitude = that.covers[0].latitude = suc.latitude
-						that.longitude = that.covers[0].longitude = suc.longitude
-						//获取门店所在位置
-						uni.request({
-							url: 'https://apis.map.qq.com/ws/geocoder/v1/?address=' + address +
-								'&key=X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO',
-							success: (res) => {
-								console.log(res);
-								let data = res.data.result.location
-								that.covers[1].longitude = data.lng
-								that.covers[1].latitude = data.lat
-								var demo = new QQMapWX({
-									key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
-								})
+			/**
+			   * 格式化位置
+			   * @param {*} res chooseLocation成功后返回参数
+			   * 格式: {
+			  	 address: "山东省济南市槐荫区经十西路29851号"
+			     errMsg: "chooseLocation:ok"
+			     latitude: 36.65142
+			     longitude: 116.90084
+			     name: "济南市槐荫区人民政府"
+			     }
+			   */
+			captureLocation(res) {
+				// console.log('res', res);
+				var regex = /^(北京市|天津市|重庆市|上海市|香港特别行政区|澳门特别行政区)/;
+				var province = [];
+				var addressBean = {
+					province: null,
+					country: null,
+					city: null,
+					address: null,
+				};
 
-							}
-						})
-					},
-					fail: (res) => {
-						console.log(res);
+				function regexAddressBean(address, addressBean) {
+					 console.log('address', address);
+					 console.log('addressBean', addressBean);
+					regex = /^(.*?[市]|.*?[州]|.*?地区|.*?特别行政区)(.*?[区]|.*?[市]|.*?[县])(.*?)$/g;
+					var addxress = regex.exec(address);
+					console.log('addxress', addxress);
+					addressBean.city = addxress[1];
+					addressBean.country = addxress[2];
+					addressBean.address = addxress[3] + '(' + res.name + ')';
+					// console.log(addxress);
+				}
+				if (!(province = regex.exec(res.address))) {
+					regex = /^(.*?(省|自治区))(.*?)$/;
+					let letregion_province = regex.exec(res.address);
+					console.log(letregion_province);
+					addressBean.province = letregion_province[1];
+					regexAddressBean(letregion_province[3], addressBean);
+				} else {
+					addressBean.province = province[1];
+					regexAddressBean(res.address, addressBean);
+				}
+				return addressBean;
+			},
+			getAddress() {
+				console.log(12121);
+				uni.chooseLocation({
+					success: (res) => {
+						let locationObj = this.captureLocation(res);
+						this.model1.address.latitude = res.latitude
+						this.model1.address.longitude = res.longitude
+						this.model1.address.addressRegion = locationObj.province+'-'+locationObj.city+'-'+locationObj.country
+						this.model1.address.addressDetailed = locationObj.address
+						console.log(res, '1733333',locationObj)
 					}
-				})
-
+				});
 			},
 			addressHandle(e) {
 				console.log(e) //携带的参数
@@ -243,17 +291,18 @@
 </script>
 
 
-<style>
-	page {
-		background: #fff;
-	}
-</style>
-
 <style lang="scss" scoped>
 	.address {
 		position: relative;
 		padding: 30rpx 20rpx;
 		height: 100vh;
+
+		.box {
+			background: #fff;
+			margin: 0 20rpx 20rpx 0;
+			border-radius: 11rpx;
+			padding: 10rpx 20rpx;
+		}
 
 		.button {
 			//width: 663rpx;
@@ -284,6 +333,11 @@
 
 		/deep/.u-input__content__field-wrapper__field {
 			background-color: #fff;
+		}
+
+		/deep/.u-textarea {
+			background-color: #fff;
+			padding: 0;
 		}
 	}
 </style>

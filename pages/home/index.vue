@@ -744,8 +744,8 @@
 						this.getServiceSymptomsHandle()
 					},
 					fail: () => {
-						this.cityName = '杭州市滨江区'
-						this.address = '浙江省-杭州市-滨江区'
+						this.cityName = '杭州市拱墅区'
+						this.address = '浙江省-杭州市-拱墅区'
 						uni.setStorage({
 							key: 'address_refreash',
 							data: this.address

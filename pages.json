@@ -346,24 +346,8 @@
                 }
                 
                 }
-                ,{
-                    "path" : "addAddress/choseCity/choseCity",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "选择城市",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "addAddress/getLoactionInMap/getLoactionInMap",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "选择服务地址",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
+             
+            
             ]
 		},
 		{

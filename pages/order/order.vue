@@ -27,7 +27,7 @@
 						<view class="top">
 							<view
 								style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
-								{{item.warrantyStore}}
+								{{item.warrantyStore||''}}
 								<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
 							</view>
