@@ -11,8 +11,8 @@
 						<view v-else style="color: rgb(192, 196, 204);">请选择地区</view>
 					</pickers> -->
 					<view style="display: flex;">
-						<u--input v-if="!isSubmit||id==''" placeholder="请选择所在城市" v-model="model1.address.addressRegion"
-							border="none">
+						<u--input v-if="!isSubmit||id==''" placeholder="请选择所在城市" disabled
+							v-model="model1.address.addressRegion" border="none">
 						</u--input>
 						<view @click="getAddress">
 							<image style="width: 28rpx;height: 32rpx;margin-right:10rpx;"
@@ -22,8 +22,8 @@
 					</view>
 
 				</u-form-item>
-				<u-form-item label="详细地址"  borderBottom ref="item1">
-				
+				<u-form-item label="详细地址" borderBottom ref="item1">
+
 					<u--textarea :disabled='isSubmit&&id!=""' v-model="model1.address.addressDetailed" border='none'
 						placeholder="请输入详细地址"></u--textarea>
 				</u-form-item>
@@ -46,9 +46,17 @@
 			</view>
 
 			<view class="box" style="padding:20rpx;">
-				<view style="display: flex;">
-					<u-radio activeColor='#A4D091' :name="model1.address.isDefault">
-					</u-radio>设为默认地址
+				<view style="display: flex;align-items: center;">
+
+					<view v-if="model1.address.isDefault==0" class="moren" @click.stop="morenHandle(1)">
+						<image style="width: 32rpx;margin-right: 11rpx;height: 32rpx;"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
+						</image>
+					</view>
+					<view v-else class="un" @click.stop="morenHandle(0)">
+						<view class="circle"></view>
+					</view>
+					设为默认地址
 				</view>
 				<view style="font-size: 25rpx;color: #A5A7A7;padding: 10rpx 0 0 39rpx;">
 					每次下单时会默认推荐使用该地址
@@ -66,8 +74,8 @@
 
 <script>
 	import storage from '@/utils/storage'
-	var QQMapWX = require('@/utils/qqmap-wx-jssdk.js')
 	import {
+		getAddressList,
 		getAddressInfo,
 		editAddress,
 		addAddress
@@ -89,12 +97,12 @@
 						phone: '',
 						addressDetailed: '',
 						addressRegion: '',
-						houseNum:'',
+						houseNum: '',
 						clientId: storage.get('ClientId'),
 						longitude: '',
 						latitude: '',
-						isDefault: false,
-						name:''
+						name: '',
+						isDefault: 1
 					}
 				},
 
@@ -132,12 +140,14 @@
 				},
 				showAddress: false,
 				id: '',
-				isSubmit: false
+				isSubmit: false,
+				addressData: [],
+				addressList:[]
 			}
 		},
 		onLoad(option) {
 			console.log(option);
-
+			this.getAddressCode()
 			const pages = uni.$u.pages();
 			this.isSubmit = pages.some(p => {
 				return p.route.includes('submitOrder') || p.route.includes('goosDetails')
@@ -152,6 +162,7 @@
 				getAddressInfo(this.id).then(res => {
 					console.log(res);
 					this.model1.address = res.data
+					this.model1.address.addressRegion=this.model1.address.addressRegion.replace(/\//g, '-')
 				})
 			}
 			console.log(this.id);
@@ -162,6 +173,22 @@
 			this.$refs.form1.setRules(this.rules)
 		},
 		methods: {
+			getAddressCode() {
+				uni.request({
+						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/30/78ed8008c9ef4aa6a6c29f101bb0c9ec.json',
+						method: 'GET',
+						complete: (res) => {
+							this.addressData = res.data
+						}
+					}),
+					getAddressList({
+						clientId:storage.get('ClientId'),
+					}).then(res => {
+						console.log(res);
+						this.addressList = res.rows
+
+					})
+			},
 			/**
 			   * 格式化位置
 			   * @param {*} res chooseLocation成功后返回参数
@@ -185,11 +212,8 @@
 				};
 
 				function regexAddressBean(address, addressBean) {
-					 console.log('address', address);
-					 console.log('addressBean', addressBean);
 					regex = /^(.*?[市]|.*?[州]|.*?地区|.*?特别行政区)(.*?[区]|.*?[市]|.*?[县])(.*?)$/g;
 					var addxress = regex.exec(address);
-					console.log('addxress', addxress);
 					addressBean.city = addxress[1];
 					addressBean.country = addxress[2];
 					addressBean.address = addxress[3] + '(' + res.name + ')';
@@ -198,7 +222,6 @@
 				if (!(province = regex.exec(res.address))) {
 					regex = /^(.*?(省|自治区))(.*?)$/;
 					let letregion_province = regex.exec(res.address);
-					console.log(letregion_province);
 					addressBean.province = letregion_province[1];
 					regexAddressBean(letregion_province[3], addressBean);
 				} else {
@@ -207,81 +230,94 @@
 				}
 				return addressBean;
 			},
+
 			getAddress() {
 				console.log(12121);
+				let params = {}
+				if(this.model1.address.latitude)params = {
+					latitude:this.model1.address.latitude,
+					longitude:this.model1.address.longitude,
+				}
 				uni.chooseLocation({
+					...params,
 					success: (res) => {
 						let locationObj = this.captureLocation(res);
 						this.model1.address.latitude = res.latitude
 						this.model1.address.longitude = res.longitude
-						this.model1.address.addressRegion = locationObj.province+'-'+locationObj.city+'-'+locationObj.country
+						this.model1.address.addressRegion = locationObj.province + '-' + locationObj.city +
+							'-' + locationObj.country
 						this.model1.address.addressDetailed = locationObj.address
-						console.log(res, '1733333',locationObj)
-					}
-				});
-			},
-			addressHandle(e) {
-				console.log(e) //携带的参数
-				this.model1.address.addressRegion = e.value1.toString().replace(/,/g, "/")
-				this.model1.address.regionCode = e.value[2]
-				console.log(this.model1.address.regionCode);
-			},
-			//回到当前位置
-			backDingwei() {
-				uni.createMapContext("map", this).moveToLocation({ //moveToLocation将地图中心移动到当前定位点，需要配合map组件的show-location使用
-					latitude: this.latitude,
-					longitude: this.longitude
-				});
-			},
-			addAndEditAddress() {
-				let that = this
-				that.$refs.form1.validate().then(res => {
-					var demo = new QQMapWX({
-						key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
-					})
-					let address = that.model1.address.addressRegion.replace(/\//g, "") + that.model1.address
-						.addressDetailed;
-					console.log(address);
-					demo.geocoder({
-						address: address,
-						success: function(res) { //成功后的回调
-							console.log(res);
-							that.model1.address.longitude = res.result.location.lng
-							that.model1.address.latitude = res.result.location.lat
-							if (that.id != '') {
-								editAddress(that.model1.address).then(res => {
-									console.log(res);
-									if (res.code === 200) {
-										uni.showToast({
-											title: '编辑成功',
-											duration: 2000,
-										});
-										setTimeout(function() {
-											uni.navigateBack()
-										}, 1000)
-									}
-								})
-							} else {
-								console.log(that.model1.address);
-								addAddress(that.model1.address).then(res => {
-									console.log(res);
-									if (res.code === 200) {
-										uni.showToast({
-											title: '添加成功',
-											duration: 2000
-										});
-										setTimeout(function() {
-											uni.navigateBack()
-										}, 1000)
+						this.addressData.forEach(yi => {
+							if (yi.name == locationObj.province) {
+								yi.children.forEach(er => {
+									if (er.name == locationObj.city) {
+										er.children.forEach(san => {
+											if (san.name == locationObj.country) {
+												this.model1.address.regionCode = san
+													.code
+												console.log(res, '1733333', this.model1
+													.address.regionCode)
+											}
+										})
 									}
 								})
 							}
+						})
 
-						}
-					})
+					}
+				});
+			},
+			//设为默认
+			morenHandle(type) {
+				this.model1.address.isDefault = type
+			},
+			setMoren() {
+				this.addressList.forEach(address => {
+					if (address.isDefault == 0) {
+						address.isDefault = 1
+					}
+
+				})
+			},
+			
+			addAndEditAddress() {
+				this.$refs.form1.validate().then(res => {
+					this.model1.address.addressRegion=this.model1.address.addressRegion.replace(/-/g, '/')
+					if (this.model1.address.isDefault == 0) {
+						this.setMoren()
+					}
+					if (this.id != '') {
+						editAddress(this.model1.address).then(res => {
+							console.log(res);
+							if (res.code === 200) {
+								uni.showToast({
+									title: '编辑成功',
+									duration: 2000,
+								});
+								setTimeout(function() {
+									uni.navigateBack()
+								}, 1000)
+							}
+						})
+					} else {
+						console.log(this.model1.address);
+						addAddress(this.model1.address).then(res => {
+							console.log(res);
+							if (res.code === 200) {
+								uni.showToast({
+									title: '添加成功',
+									duration: 2000
+								});
+								setTimeout(function() {
+									uni.navigateBack()
+								}, 1000)
+							}
+						})
+					}
 
 
 				}).catch(errors => {
+					console.log(errors);
 					uni.$u.toast('校验失败')
 				})
 
@@ -302,6 +338,30 @@
 			margin: 0 20rpx 20rpx 0;
 			border-radius: 11rpx;
 			padding: 10rpx 20rpx;
+			
+			.moren {
+				color: #A4D091;
+			}
+
+			.un {
+
+				color: #A5A7A7;
+
+				.circle {
+					width: 29rpx;
+					height: 29rpx;
+					border: 1px solid #D8DCDB;
+					border-radius: 50%;
+					margin-right: 11rpx;
+				}
+			}
+
+			.un,
+			.moren {
+				display: flex;
+				font-size: 25rpx;
+			}
+
 		}
 
 		.button {

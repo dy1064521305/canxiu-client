@@ -83,9 +83,6 @@ export const actions = {
 			uni.removeStorage({
 				key:'address_info'
 			})
-			uni.removeStorage({
-				key:'city'
-			})
 			commit('SET_TOKEN', '')
 			commit('SET_CLIENTID', '')
 			// resolve(response)

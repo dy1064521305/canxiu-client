@@ -380,14 +380,9 @@
 		onLoad() {
 			this.getServiceTypesList()
 			this.locationStatus = ''
-			// #ifdef APP-PLUS
-			this.$nextTick(() => {
-				this.$refs['authpup'].open()
-			})
-			// #endif
-			// #ifdef MP-WEIXIN
-			this.getLoction()
-			// #endif
+			this.getList()
+			this.getServiceSymptomsHandle()
+			this.notPermissions()
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
@@ -558,18 +553,15 @@
 				}).finally(() => {
 					this.promiseList.splice(0, 1, true)
 				})
-				if (this.addressName) {
-					this.promiseList.splice(0, 1, false)
-
-					this.promiseList.splice(1, 1, false)
-
-					//获取故障区域
-					getRegion().then(res => {
-						this.regionService = res.data
-					}).finally(() => {
-						this.promiseList.splice(1, 1, true)
-					})
-				}
+				this.promiseList.splice(0, 1, false)
+				this.promiseList.splice(1, 1, false)
+				
+				//获取故障区域
+				getRegion().then(res => {
+					this.regionService = res.data
+				}).finally(() => {
+					this.promiseList.splice(1, 1, true)
+				})
 
 
 
@@ -635,6 +627,7 @@
 						this.getList()
 						this.getServiceSymptomsHandle()
 					},
+				
 				})
 			},
 			//设置定位权限
@@ -754,7 +747,8 @@
 							key: 'city',
 							data: {
 								addressDetailed: this
-									.cityName
+									.cityName,
+								type:'defalut'
 							}
 						})
 						console.log('744444444');

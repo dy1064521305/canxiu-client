@@ -86,7 +86,7 @@ color: #3D3F3E;">
 			</view>
 		</view>
 
-		<yk-authpup ref="authpup" type="top" @notPermissions='getAddress' @changeAuth="changeAuth"
+		<yk-authpup ref="authpup" type="top" @notPermissions='getAddress' @changeAuth="getLocation"
 			permissionID="ACCESS_FINE_LOCATION">
 		</yk-authpup>
 	</view>
@@ -115,15 +115,15 @@ color: #3D3F3E;">
 				cityName: '',
 				addressList: [],
 				choseForm: {},
-				nearbyList: []
+				nearbyList: [],
 			}
 		},
-		onShow() {
-			this.getList()
 
-		},
 		onLoad() {
-			console.log(uni.getStorageSync('city'),'1266666666666');
+			console.log('onLoadonLoadonLoadonLoad');
+			this.failLocation = uni.getStorageSync('isFirst')!=='1'
+			this.getList()
+			console.log(uni.getStorageSync('city'), '1266666666666');
 			// #ifdef APP-PLUS
 			this.$nextTick(() => {
 				this.$refs['authpup'].open()
@@ -132,6 +132,9 @@ color: #3D3F3E;">
 			// #ifdef MP-WEIXIN
 			this.getLocation()
 			// #endif
+
+
+
 
 		},
 		methods: {
@@ -158,28 +161,32 @@ color: #3D3F3E;">
 					this.addressList.unshift(item)
 				})
 			},
-			changeAuth(){
-				if(this.cityName == '重新定位中')uni.removeStorageSync('city')
-				// 
+			changeAuth() {
+				console.log('changeAuthchangeAuthchangeAuth');
+				if (this.cityName == '重新定位中') uni.removeStorageSync('city')
+
 				this.getLocation()
-				
+
 			},
-			getAddress(){
+			getAddress() {
+				this.failLocation = true
 				uni.getStorage({
 					key: 'city',
-					success: (res)=> {
+					success: (res) => {
 						console.log(res);
 						this.choseForm = res.data
 						this.cityName = res.data.addressDetailed
-				
+
 					}
 				});
 				console.log(this.cityName);
 			},
-			againGetAddress(){
-				
+			againGetAddress() {
+				this.failLocation = true
 				this.choseForm = {}
 				this.cityName = '重新定位中'
+
+
 				// #ifdef APP-PLUS
 				this.$refs['authpup'].open()
 				// #endif
@@ -189,53 +196,30 @@ color: #3D3F3E;">
 			},
 			getLocation() {
 				let that = this
-				that.cityName = ''
+
 				uni.getLocation({
-					// isHighAccuracy: true,
-					// highAccuracyExpireTime: 1234,
-					// type: 'gcj02',
 					success: (suc) => {
-						console.log(suc, '1812222222222222222');
-						// this.location.latitude = suc.latitude
-						// this.location.longitude = suc.longitude
-						// jsonp(
-						// 	'https://apis.map.qq.com/ws/place/v1/here', {
-						// 		boundary: 'nearby(40.040394,116.273523,1000)',
-						// 		policy: '1',
-						// 		page_size: '10',
-						// 		page_index: '1',
-						// 		key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO',
-						// 		output: 'jsonp'
-						// 	}
-						// ).then(res => {
-						// 	console.log(res, '.........res...........');
-						// })
 						uni.request({
 							url: `https://apis.map.qq.com/ws/place/v1/here?boundary=nearby(${suc.latitude},${suc.longitude},1000)&policy=1&page_size=10&page_index=1&key=X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO`,
-
 							success(res) {
-								console.log(res);
 								that.nearbyList = res.data.data
 							},
-							complete(c) {
-								console.log(c);
-							}
+							complete(c) {}
 						})
-						console.log(uni.getStorageSync('city'));
-						if (uni.getStorageSync('city')) {
-							that.getAddress()
-						} else {
-							var demo = new QQMapWX({
-								key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
-							})
-							demo.reverseGeocoder({
-								location: suc.latitude + "," + suc.longitude,
-								success: function(res) {
-									console.log(res)
+						var demo = new QQMapWX({
+							key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
+						})
+						demo.reverseGeocoder({
+							location: suc.latitude + "," + suc.longitude,
+							success: function(res) {
+
+								console.log('againnnnnnnnnn', that.again);
+								if (that.failLocation) { 
+									that.failLocation = false
+									that.choseForm = {}
 									let result = res.result.address_component
 									that.cityName = result.street_number != '' ? result
 										.street_number : result.street
-										console.log(that.cityName);
 									uni.setStorage({
 										key: 'city',
 										data: {
@@ -248,16 +232,18 @@ color: #3D3F3E;">
 										key: 'address_refreash',
 										data: that.address
 									})
-
+								} else {
+									that.getAddress()
 								}
-							})
-						}
 
+
+							}
+						})
 
 					},
 					fail(err) {
 
- 						console.log(uni.getStorageSync('city'),'255555555');
+						console.log(uni.getStorageSync('city'), '255555555');
 						that.getAddress()
 						uni.showToast({
 							title: '获取位置失败',
@@ -287,6 +273,7 @@ color: #3D3F3E;">
 				const pages = uni.$u.pages()
 				pages[pages.length - 2].$vm.choseAddress()
 				uni.navigateBack()
+				this.failLocation||uni.setStorageSync('isFirst','1')
 			},
 			goAddAdress() {
 				uni.navigateTo({

@@ -4,18 +4,29 @@
 			<view v-for="(item,index) in addressList" :key='index' class="box">
 				<view style="padding: 20rpx;" @click='choseAddress(item)'>
 					<view class="top">
-						<text class="font" style="font-weight: bold;">{{item.contact}}</text>
-						<text class="font" style="margin-left: 14rpx;">{{item.phone}}</text>
+						<view class="">
+							<text class="font" style="font-weight: bold;">{{item.contact}}</text>
+							<text class="font" style="margin:0 14rpx;">{{item.phone}}</text>
+							<text v-if="item.isDefault==0" class="moren_sign" >默认</text>
+						</view>
 						<image @click.stop="editAndAddAddress(item.addressId)"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/ad57c5f8079e459da0f85cfc0c9b818f.png"
 							style="width: 29rpx;height:31rpx;"></image>
 					</view>
 					<view style="font-size: 25rpx;color: #A5A7A7;margin: 22rpx 0;">
-						{{item.addressRegion}}{{item.addressDetailed}}
+						{{item.addressRegion.replace(/\//g, '')}}
 					</view>
-					<view class="line"></view>
-					<view style="display: flex;margin-top: 22rpx;">
-						<view style="width: 92%;">
+					<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
+						<view style="width: 88%;">
+							{{item.addressDetailed}}
+						</view>
+						<view style="font-size: 25rpx;color: #EC5722;"
+							@click.stop="deleteAddressHandle(item.addressId)">
+							删除
+						</view>
+					</view>
+					<!-- <view class="box_bottom"></view> -->
+					<!-- 	<view style="width: 92%;">
 							<view v-if="item.isDefault==0" class="moren">
 								<image style="width: 32rpx;margin-right: 11rpx;height: 32rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
@@ -24,12 +35,9 @@
 							<view v-else class="un" @click.stop="morenHandle(item)">
 								<view class="circle"></view>设为默认
 							</view>
-						</view>
-						<view style="font-size: 25rpx;color: #EC5722;"
-							@click.stop="deleteAddressHandle(item.addressId)">
-							删除
-						</view>
-					</view>
+						</view> -->
+
+
 
 
 				</view>
@@ -215,12 +223,15 @@
 		.box {
 			margin: 20rpx auto;
 			width: 707rpx;
-			height: 219rpx;
+			// height: 219rpx;
 			background: #FFFFFF;
 			box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.05);
 			border-radius: 14rpx;
 
 			.top {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
 				.font {
 					font-size: 29rpx;
 					color: #3D3F3E;
@@ -237,12 +248,20 @@
 				display: flex;
 				font-size: 25rpx;
 			}
+			.moren_sign{
+				width: 87rpx;
+				// height: 36rpx;
+				border-radius: 7rpx;
+				border: 1rpx solid #A4D091;
+				font-size: 25rpx;
+				color: #A4D091;
+				text-align: center;
+				display: inline-block;
+			}
 
-			.line {
-				width: 663rpx;
-				height: 2rpx;
-				background: #F8F8F8;
-				border-radius: 1rpx;
+			.box_bottom {
+				margin-top: 22rpx;
+				border-top: 2rpx #F8F8F8 solid;
 			}
 
 			.moren {
