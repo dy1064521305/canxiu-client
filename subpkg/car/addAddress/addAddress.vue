@@ -331,7 +331,7 @@
 	.address {
 		position: relative;
 		padding: 30rpx 20rpx;
-		height: 100vh;
+		// height: 100vh;
 
 		.box {
 			background: #fff;
@@ -373,7 +373,7 @@
 			color: #FFFFFF;
 			line-height: 91rpx;
 			text-align: center;
-			margin: 500rpx 30rpx 0 30rpx;
+			margin: 400rpx 30rpx 0 30rpx;
 			// position: absolute;
 			// bottom: 300rpx;
 			// left: 43rpx;
