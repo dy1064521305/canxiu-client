@@ -15,10 +15,13 @@ Vue.config.productionTip = false
 App.mpType = 'app'
 
 import store from '@/store';
+// 全局的暂无数据
+import EmptyPage from '@/components/empty/emptyPage.vue'
+Vue.component('empty-page', EmptyPage);
 
 const app = new Vue({
-  store,
-  ...App
+	store,
+	...App
 })
 
 // 引入请求封装，将app参数传递到配置中

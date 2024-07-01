@@ -64,7 +64,7 @@
 				"disableScroll": true
 			}
 		},
-	
+
 
 		// {
 		// 		"path": "pages/message/TUI-Login/login",
@@ -87,17 +87,16 @@
 		}
 
 
-	    ,{
-            "path" : "pages/order/order",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "我的订单",
-                "enablePullDownRefresh": false,
+		, {
+			"path": "pages/order/order",
+			"style": {
+				"navigationBarTitleText": "我的订单",
+				"enablePullDownRefresh": false,
 				"navigationBarBackgroundColor": "#fff"
-            }
-            
-        }
-    ],
+			}
+
+		}
+	],
 	"subPackages": [{
 			"root": "subpkgChat",
 			"pages": [
@@ -113,20 +112,30 @@
 					"style": {
 						"navigationStyle": "custom"
 					}
-				}
-				,
+				},
 				{
-				                "path" : "order-push-list/index",
-				                "style" :                                                                                    
-				            {
-				                "navigationBarTitleText": "工单助手",
-				                "enablePullDownRefresh": false,
-									"navigationBarBackgroundColor": "#FFFFFF"
-				            }
+					"path": "order-push-list/index",
+					"style": {
+						"navigationBarTitleText": "工单助手",
+						"enablePullDownRefresh": false,
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
 
-				            }
+				}
 			]
 
+		},
+		{
+			"root": "pages/users",
+			"pages": [{
+					"path": "reward/coupon",
+					"style": {
+						"navigationBarTitleText": "优惠卷",
+						"enablePullDownRefresh": false
+					}
+				}
+
+			]
 		},
 		{
 			"root": "subpkg/login",
@@ -147,9 +156,6 @@
 					}
 
 				}
-
-
-
 			]
 		},
 		{
@@ -197,14 +203,14 @@
 		{
 			"root": "subpkg/car",
 			"pages": [
-			
+
 				{
 					"path": "goodDetails/goodDetails",
 					"style": {
 						"navigationBarTitleText": "",
 						"enablePullDownRefresh": false,
-							"navigationStyle": "custom",
-							"disableScroll": true
+						"navigationStyle": "custom",
+						"disableScroll": true
 					}
 
 				},
@@ -213,9 +219,9 @@
 					"style": {
 						"navigationBarTitleText": "维修车",
 						"enablePullDownRefresh": false,
-							"navigationStyle": "custom"
+						"navigationStyle": "custom"
 					}
-				
+
 				},
 				{
 					"path": "allComments/allComments",
@@ -308,44 +314,36 @@
 						"navigationStyle": "custom"
 					}
 
+				}, {
+					"path": "repairOrder/repairOrder",
+					"style": {
+						"navigationBarTitleText": "发起返修",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "repairOrderInfo/repairOrderInfo",
+					"style": {
+						"navigationBarTitleText": "发起返修",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "repairingOrder/repairingOrder",
+					"style": {
+						"navigationBarTitleText": "订单详情",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "goodDetails/standardContent/standardContent",
+					"style": {
+						"navigationBarTitleText": "服务规范详情",
+						"enablePullDownRefresh": false
+					}
+
 				}
-			    ,{
-                    "path" : "repairOrder/repairOrder",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "发起返修",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "repairOrderInfo/repairOrderInfo",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "发起返修",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "repairingOrder/repairingOrder",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "订单详情",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "goodDetails/standardContent/standardContent",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "服务规范详情",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+			]
 		},
 		{
 			"root": "subpkg/center",
@@ -425,7 +423,7 @@
 					}
 
 				},
-			
+
 				{
 					"path": "personalInfo/personalInfo",
 					"style": {
@@ -490,8 +488,8 @@
 						"enablePullDownRefresh": false
 					}
 
-				}, 
-			
+				},
+
 				{
 					"path": "myMoney/paymentsDetailed/paymentsDetailed",
 					"style": {
@@ -546,13 +544,14 @@
 
 			]
 		}
+
 	],
 	"tabBar": {
 		"color": "#909399",
 		"selectedColor": "#A4D091",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
-		"redDotColor":"#EC5722",
+		"redDotColor": "#EC5722",
 		"list": [{
 				"pagePath": "pages/home/index",
 				"iconPath": "./static/img/tabbar/index-unactive.png",
@@ -563,8 +562,8 @@
 				"iconPath": "./static/img/tabbar/service-unactive.png",
 				"selectedIconPath": "./static/img/tabbar/service-active.png",
 				"text": "服务"
-			}, 
-		
+			},
+
 			{
 				"pagePath": "pages/TUI-Conversation/conversation/conversation",
 				"iconPath": "./static/img/tabbar/message-unactive.png",
