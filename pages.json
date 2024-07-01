@@ -259,8 +259,8 @@
 					"path": "succeeded/succeeded",
 					"style": {
 						"navigationBarTitleText": "预约成功",
-						"enablePullDownRefresh": false,
-						"navigationStyle": "custom"
+						"enablePullDownRefresh": false
+						// "navigationStyle": "custom"
 					}
 
 				}, {

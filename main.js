@@ -4,6 +4,12 @@ import uView from 'uni_modules/uview-ui'
 
 // 全局mixins，用于实现setData等功能';
 import Mixin from './polyfill/mixins';
+import {
+	jumpUrl,
+	copy,
+	Toast,
+	Alert
+} from '@/utils'
 Vue.mixin(Mixin);
 
 Vue.use(uView)
@@ -12,6 +18,11 @@ Vue.use(uView)
 // canxiu
 Vue.config.productionTip = false
 
+// 全局方法
+Vue.prototype.$toast = Toast
+Vue.prototype.$alert = Alert
+Vue.prototype.$jump = jumpUrl
+Vue.prototype.$copy = copy
 App.mpType = 'app'
 
 import store from '@/store';

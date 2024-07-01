@@ -400,6 +400,12 @@
 		}
 	}
 }
+.flex-colum-center{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
 
 /* 蓝湖common.scss */
 .flex-col {
