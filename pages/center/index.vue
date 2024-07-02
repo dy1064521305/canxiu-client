@@ -340,7 +340,8 @@
 					{
 						id: 2,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/ecd9fc9012614c4b81cf4c0c4987fddb.png",
-						label: "优惠卷"
+						label: "优惠卷",
+						url: "/pages/users/reward/coupon"
 					},
 					{
 						id: 3,

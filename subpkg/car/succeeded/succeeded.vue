@@ -62,8 +62,6 @@
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/caeec36c1eb3413982e1aa95704cbe56.png",
 						label: "订单发布",
 						url: "",
-						label: "订单发布",
-						url: "",
 					},
 					{
 						id: 1,

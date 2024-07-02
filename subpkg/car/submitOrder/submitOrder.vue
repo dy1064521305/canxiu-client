@@ -45,7 +45,8 @@
 		</view>
 		<view class="designWorker acea-row row-between-wrapper">
 			<view class="designWorker-left acea-row">
-				<image src="" mode=""></image>
+				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/ac000216203a45638ea0841739325d41.png"
+					mode=""></image>
 				<view class="designWorker-left-name">
 					指定师傅上门服务
 				</view>
@@ -920,7 +921,7 @@
 
 		&-left {
 			image {
-				width: 36rpx;
+				width: 42rpx;
 				height: 42rpx;
 			}
 
@@ -935,10 +936,8 @@
 			&-people {
 				width: 58rpx;
 				height: 58rpx;
-				background: #ECF7ED;
-				box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.02);
-				border-radius: 58rpx;
-				border: 2rpx solid #A4D091;
+				background: url("https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/1da7451a8b4b43b29950e652acdbf61a.png") no-repeat;
+				background-size: 100% 100%;
 				margin-right: 15rpx;
 			}
 

@@ -467,9 +467,9 @@
 			<view v-if="info.orderStatus=='上级驳回,待处理'" @click="reissueOrderHandle" class="btn-green">
 				重新发起
 			</view>
-			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="handleRoute()" class="btn-green">
+			<!-- <view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="handleRoute()" class="btn-green">
 				联系维修师
-			</view>
+			</view> -->
 			<view v-if="info.orderStatus=='待上门'||info.orderStatus=='待服务'" @click="phoneAuth" class="btn-green">
 				<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="CALL_PHONE"> </yk-authpup>
 				联系客服

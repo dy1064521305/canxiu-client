@@ -255,12 +255,20 @@
 						"navigationStyle": "custom"
 					}
 
+				},
+				{
+					"path": "submitOrder/worker",
+					"style": {
+						"navigationBarTitleText": "指派师傅",
+						"enablePullDownRefresh": false
+						// "navigationStyle": "custom"
+					}
+
 				}, {
 					"path": "succeeded/succeeded",
 					"style": {
 						"navigationBarTitleText": "预约成功",
 						"enablePullDownRefresh": false
-						// "navigationStyle": "custom"
 					}
 
 				}, {
