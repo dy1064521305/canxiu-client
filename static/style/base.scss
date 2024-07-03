@@ -192,9 +192,10 @@
 }
 
 .form-row {
-	min-height: 60rpx;
+	min-height: 88rpx;
+	box-sizing: border-box;
 	padding: 24rpx 20rpx 24rpx 20rpx;
-	font-size: 30rpx;
+	font-size: 28rpx;
 	color: #333;
 	background-color: #fff;
 	border-bottom: 2rpx solid #ebebeb;
@@ -205,7 +206,7 @@
 	font-size: 28rpx;
 	color: #666;
 	position: relative;
-	margin-left: 1em;
+	// margin-left: 1em;
 }
 
 .form-key.must::before {

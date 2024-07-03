@@ -108,8 +108,8 @@
 					</view>
 				</view>
 				<view class="setUp">
-					<view class="setUp-list acea-row row-between-wrapper" v-for="(item) in typeList.slice(4,6)"
-						:key="item.id">
+					<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
+						v-for="(item) in typeList.slice(4,7)" :key="item.id">
 						<view class="setUp-list-left">
 							<image :src="item.img" :class="'img2-'+item.id" mode=""></image>
 							<text>{{item.label}}</text>
@@ -474,7 +474,13 @@
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/68c1018663124c87a10a016b25eabae0.png",
 						label: "我是商家/品牌连锁",
 						url: ""
-					}
+					},
+					{
+						id: 6,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "申请成为合伙人",
+						url: "/subpkg/car/partner/index"
+					},
 				]
 			}
 		},
@@ -929,6 +935,10 @@
 
 						&.img2-5 {
 							width: 39rpx;
+						}
+
+						&.img2-6 {
+							width: 43rpx;
 						}
 					}
 
