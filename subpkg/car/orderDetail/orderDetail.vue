@@ -250,7 +250,7 @@
 			<view class="line">
 				<text class="ziduan">起步价</text>
 				<text
-					:style="{'text-decoration':!isGet?'line-through':'','color':!isGet?'#A5A7A7':'#EC5722'}">¥{{info.beforeStartingFree}}</text>
+					:style="{'text-decoration':!isGet?'line-through':'','color':!isGet?'#A5A7A7':'#EC5722'}">¥{{info.startingFree}}</text>
 			</view>
 			<!-- 	<view class="line">
 				<text class="ziduan">检测费</text>

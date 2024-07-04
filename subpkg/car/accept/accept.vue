@@ -254,7 +254,7 @@
 					<text class="ziduan">起步价</text>
 					<text
 						:style="{'text-decoration':!info.isGet?'line-through':'','color':!info.isGet?'#A5A7A7':'#EC5722'}"
-						v-if="orderInfo.beforeStartingFree!=null">¥{{orderInfo.beforeStartingFree}}</text>
+						v-if="orderInfo.startingFree!=null">¥{{orderInfo.startingFree}}</text>
 				</view>
 				<view class="line">
 					<text class="ziduan">服务费</text>
