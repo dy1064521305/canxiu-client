@@ -39,15 +39,15 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">客户经理</text>
-				<text>{{info.clientManager}} {{info.clientManagerPhone}}</text>
+				<text>{{info.clientManager||""}} {{info.clientManagerPhone||''}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">下单人</text>
-				<text>{{info.orderPerson}} {{info.orderPersonPhone}}</text>
+				<text>{{info.orderPerson||''}} {{info.orderPersonPhone}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">服务门店</text>
-				<text>{{info.warrantyStore}}</text>
+				<text>{{info.warrantyStore||''}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">服务联系人</text>
@@ -274,11 +274,11 @@
 				<text class="ziduan">小计：</text>
 
 				<text
-					style="color: #EC5722;">¥{{Number(info.orderPrice)+Number(info.favorablePrice)+Number(info.subsidyPrice)}}</text>
+					style="color: #EC5722;">¥{{Number(info.orderPrice)+Number(info.subsidyPrice)+(Number(info.favorablePrice)<0?0:Number(info.favorablePrice))}}</text>
 			</view>
 			<view v-if="info.favorablePrice!=0" style="margin-left: 20rpx;color: #A5A7A7;" class="line">
 				<text class="ziduan">品牌折扣：</text>
-				<text style="color: #EC5722;">-¥{{info.favorablePrice}}</text>
+				<text style="color: #EC5722;">¥{{info.favorablePrice}}</text>
 			</view>
 			<view v-if="info.subsidyPrice!=0&&info.subsidyPrice!=null" style="margin-left: 20rpx;color: #A5A7A7;"
 				class="line">
