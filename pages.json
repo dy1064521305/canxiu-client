@@ -558,7 +558,25 @@
 
 				}
 
-			]
+			    ,{
+                    "path" : "myStore/myStore",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "我的门店",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+                ,{
+                    "path" : "myStore/addStore/addStore",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "创建门店",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
 		}
 
 	],
