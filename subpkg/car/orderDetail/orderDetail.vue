@@ -260,7 +260,7 @@
 			<view class="line">
 				<text class="ziduan">服务费</text>
 				<text
-					:style="{'text-decoration':isGet?'line-through':'','color':isGet?'#A5A7A7':'#EC5722'}">¥{{info.servicePrice}}</text>
+					:style="{'text-decoration':isGet?'line-through':'','color':isGet?'#A5A7A7':'#EC5722'}">¥{{info.preferentialPrice}}</text>
 			</view>
 			<view v-if="info.additionalPrice!=null&&info.additionalPrice!=0" class="line">
 				<text class="ziduan">加急费</text>

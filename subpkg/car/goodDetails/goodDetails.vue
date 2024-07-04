@@ -44,7 +44,7 @@
 					</view>
 					<view style="margin:15rpx 0 ;">{{goodInfo.serviceName}}</view>
 					<view>
-						{{goodInfo.serviceDescription}}
+						{{goodInfo.serviceDescription||""}}
 					</view>
 				</view>
 			</view>
@@ -303,7 +303,7 @@
 				<view class="">
 					共{{projectForm.projectNumber}}项,合计¥{{Number(projectForm.projectNumber)*Number(goodInfo.discountPrice)}}
 					<text
-						v-if="Number(projectForm.projectNumber)*Number(goodInfo.discountPrice)<Number(goodInfo.startingFreeDiscount)">
+						v-if="Number(projectForm.projectNumber)*Number(goodInfo.discountPrice)<Number(goodInfo.serviceStartingFree)">
 						（*不足服务起步价）
 					</text>
 				</view>
@@ -570,7 +570,7 @@
 							price: this.goodInfo.startingFreeDiscount + '元/次'
 						}, {
 							name: '维修服务费',
-							price: this.goodInfo.projectAmount + '元/次'
+							price: this.goodInfo.discountPrice + '元/次'
 						},
 						{
 							name: '检测费',
@@ -591,7 +591,7 @@
 						// this.getCarList()
 						this.getListByWorkerType()
 					} else {
-						this.goodInfo.startingFreeDiscount = this.replaceMoney(this.goodInfo.startingFreeDiscount)
+						this.goodInfo.serviceStartingFree = this.replaceMoney(this.goodInfo.serviceStartingFree)
 						this.goodInfo.discountPrice = this.replaceMoney(this.goodInfo.discountPrice)
 						this.goodInfo.projectAmount = this.replaceMoney(this.goodInfo.projectAmount)
 						this.goodInfo.preferentialPrice = this.replaceMoney(this.goodInfo.preferentialPrice)

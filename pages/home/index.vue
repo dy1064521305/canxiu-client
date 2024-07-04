@@ -378,11 +378,11 @@
 			// #endif
 		},
 		onLoad() {
+			this.notPermissions()
 			this.getServiceTypesList()
 			this.locationStatus = ''
 			this.getList()
-			this.getServiceSymptomsHandle()
-			this.notPermissions()
+
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
