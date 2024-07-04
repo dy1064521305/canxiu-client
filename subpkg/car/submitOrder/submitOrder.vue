@@ -16,24 +16,24 @@
 					mode=""></image>
 			</view>
 		</view>
-		<view  class="address" @click="myAddress">
+		<view class="address" @click="myAddress">
 			<view v-if='addressList.length!=0' class="left">
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/11/a7fe2594ad27432c8676c0b03bf22bb7.png"
 					style="width: 36rpx;height:43rpx;margin-right: 20rpx;" />
-					<view>
-						<view style="font-size: 25rpx;">
-							{{addressPlace}}
-						</view>
-						<view style="font-size: 29rpx;margin-top: 18rpx;">
-							{{addressRegion}}{{addressInfo.addressDetailed}}
-						</view>
-						<view style="font-size: 25rpx;margin-top: 23rpx;align-items: center;
-				display: flex;">
-							<text class="font"
-								:style="{'width':addressInfo.contact.length>8?'150rpx':''}">{{addressInfo.contact}}</text><text
-								style="margin: 0 10rpx;">|</text>{{addressInfo.phone}}
-						</view>
+				<view>
+					<view style="font-size: 25rpx;">
+						{{addressPlace}}
 					</view>
+					<view style="font-size: 29rpx;margin-top: 18rpx;">
+						{{addressRegion}}{{addressInfo.addressDetailed}}
+					</view>
+					<view style="font-size: 25rpx;margin-top: 23rpx;align-items: center;
+				display: flex;">
+						<text class="font"
+							:style="{'width':addressInfo.contact.length>8?'150rpx':''}">{{addressInfo.contact}}</text><text
+							style="margin: 0 10rpx;">|</text>{{addressInfo.phone}}
+					</view>
+				</view>
 			</view>
 			<view v-else class="left" style="font-size: 36rpx;color: #A5A7A7;">
 				请添加服务地址
@@ -43,7 +43,26 @@
 					mode=""></image>
 			</view>
 		</view>
-
+		<view class="designWorker acea-row row-between-wrapper">
+			<view class="designWorker-left acea-row">
+				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/ac000216203a45638ea0841739325d41.png"
+					mode=""></image>
+				<view class="designWorker-left-name">
+					指定师傅上门服务
+				</view>
+				<u-icon name="question-circle" color="#A4D091"></u-icon>
+			</view>
+			<view class="designWorker-right acea-row">
+				<view class="designWorker-right-people"></view>
+				<view class="designWorker-right-img"></view>
+				<view class="designWorker-right-img">
+					<view class="designWorker-right-img-pop acea-row row-middle row-center">
+						8位
+					</view>
+				</view>
+				<u-icon name="arrow-right"></u-icon>
+			</view>
+		</view>
 		<!-- <view class="time" @click="isShow=true">
 			<text style="font-size: 33rpx;color: #3D3F3E;font-weight: bold;">选择上门时间</text>
 			<text
@@ -185,7 +204,7 @@
 					<view class="">
 						<text style="color: #3D3F3E;">合计</text>(不含材料)
 					</view>
-					<view >
+					<view>
 						{{info.orderPrice}}元
 					</view>
 				</view>
@@ -624,7 +643,7 @@
 						item.shoppingCartStatus = 1
 						item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
 						item.remark = item.remarks
-						item.productId = item.serviceId?item.serviceId:item.productId
+						item.productId = item.serviceId ? item.serviceId : item.productId
 					})
 					let timeObj = {}
 					let startingFree = {}
@@ -863,10 +882,12 @@
 				}
 			}
 		}
-		.total{
-			border-top:2rpx solid #F8F8F8;
+
+		.total {
+			border-top: 2rpx solid #F8F8F8;
 			padding: 10rpx 0;
 		}
+
 		.bottom {
 			width: 100%;
 			height: 137rpx;
@@ -889,6 +910,59 @@
 				text-align: center;
 				margin-right: 20rpx;
 			}
+		}
+	}
+
+	// 指定师傅样式
+	.designWorker {
+		height: 108rpx;
+		background: #fff;
+		padding: 0 40rpx;
+		margin-top: 22rpx;
+
+		&-left {
+			image {
+				width: 42rpx;
+				height: 42rpx;
+			}
+
+			&-name {
+				font-size: 29rpx;
+				color: #000000;
+				margin: 0 10rpx 0 10rpx;
+			}
+		}
+
+		&-right {
+			&-people {
+				width: 58rpx;
+				height: 58rpx;
+				background: url("https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/1da7451a8b4b43b29950e652acdbf61a.png") no-repeat;
+				background-size: 100% 100%;
+				margin-right: 15rpx;
+			}
+
+			&-img {
+				width: 58rpx;
+				height: 58rpx;
+				background: #99BF87;
+				margin-right: 15rpx;
+				border-radius: 6rpx;
+
+				&-pop {
+					color: #fff;
+					width: 58rpx;
+					height: 58rpx;
+					background-color: rgba(0, 0, 0, 0.2);
+					font-size: 29rpx;
+				}
+
+				image {
+					width: 100%;
+					height: 100%;
+				}
+			}
+
 		}
 	}
 </style>

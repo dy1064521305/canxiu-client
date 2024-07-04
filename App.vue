@@ -32,7 +32,7 @@
 
 			// 加载系统信息
 			this.$store.dispatch('SystemInfo');
-			
+
 			// #ifdef APP-PLUS
 			plus.push.setAutoNotification(true); // 在程序运行时接收到的消息在系统消息中心显示
 			//监听接收透传消息事件
@@ -57,8 +57,8 @@
 				console.log('准备跳转111');
 			}, false);
 			// #endif
-			
-			
+
+
 			// 监听推送
 			// uni.onPushMessage((res) => {
 			// 			console.log("收到推送消息：",res) //监听推送消息
@@ -132,8 +132,10 @@
 			},
 			onTIMError() {},
 			onSDKReady(event) {
-				  console.info(123132321321321)
-				  uni.$emit('totalUnreadCount',{msg:'tim准备就绪'})
+				console.info(123132321321321)
+				uni.$emit('totalUnreadCount', {
+					msg: 'tim准备就绪'
+				})
 			},
 			onNetStateChange() {},
 			onSDKReload() {},
@@ -160,4 +162,7 @@
 </style>
 <style lang="scss">
 	@import "@/uni_modules/uview-ui/index.scss";
+	// @import 'static/style/bahnschrift.css';
+	@import '@/static/style/base.scss';
+	@import '@/static/style/style.scss';
 </style>

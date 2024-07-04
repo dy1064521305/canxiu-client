@@ -20,7 +20,7 @@
     "dependencies": {
         "cos-wx-sdk-v5": "^1.4.10",
         "html2canvas": "^1.4.1",
-        "pinyin-pro": "^3.16.4",
+        "pinyin-pro": "^3.23.0",
         "tim-js-sdk": "^2.27.2",
         "tim-upload-plugin": "^1.2.0",
         "tim-wx-sdk": "^2.27.2",
