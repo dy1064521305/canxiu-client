@@ -148,6 +148,9 @@
 				this.fileList = []
 			},
 			goHome() {
+			
+				
+				
 				console.log(this.userInfo);
 				if (!this.userInfo.region || this.userInfo.region == '') {
 					uni.$u.toast('请选择门店地址')
@@ -168,8 +171,8 @@
 					// })
 
 					this.reset()
-					const apps = getApp()
-					apps.type = 'login'
+					// const apps = getApp()
+					// apps.type = 'login'
 					uni.switchTab({
 						url: '/pages/home/index'
 					})
