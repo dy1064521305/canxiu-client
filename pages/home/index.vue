@@ -145,9 +145,9 @@
 		</view>
 
 
-			<view class="index" style="z-index: 999999999999;">
-		<wu-app-update></wu-app-update>
-	</view>
+		<view class="index" style="z-index: 999999999999;">
+			<wu-app-update></wu-app-update>
+		</view>
 
 	</view>
 </template>
@@ -560,7 +560,7 @@
 				})
 				this.promiseList.splice(0, 1, false)
 				this.promiseList.splice(1, 1, false)
-				
+
 				//获取故障区域
 				getRegion().then(res => {
 					this.regionService = res.data
@@ -632,7 +632,7 @@
 						this.getList()
 						this.getServiceSymptomsHandle()
 					},
-				
+
 				})
 			},
 			//设置定位权限
@@ -753,7 +753,7 @@
 							data: {
 								addressDetailed: this
 									.cityName,
-								type:'defalut'
+								type: 'defalut'
 							}
 						})
 						console.log('744444444');
