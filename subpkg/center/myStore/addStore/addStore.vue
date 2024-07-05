@@ -3,11 +3,19 @@
 		<u--form :labelStyle='labelStyle' labelPosition="left" :model="userInfo" ref="form1" labelWidth='200rpx'>
 			<div class="box">
 				<u-form-item label="门店类型" prop="storeType" borderBottom ref="item1">
+
 					<picker @change="bindPickerChange" range-key='typeName' :value="index" :range="storeTypeList">
-						<view v-if='index!=undefined'>{{storeTypeList[index].typeName}}</view>
-						<view v-else style="color: rgb(192, 196, 204);">请选择门店类型</view>
+						<view style="display: flex;justify-content: space-between;align-items: center;height: 70rpx;">
+							<view class="">
+								<view v-if='index!=undefined'>{{storeTypeList[index].typeName}}</view>
+								<view v-else style="color: rgb(192, 196, 204);">请选择门店类型</view>
+							</view>
+							<u-icon slot="right" name="arrow-right" style="margin-right: 20rpx;"></u-icon>
+						</view>
 					</picker>
-					<u-icon slot="right" name="arrow-right" style="margin-right: 20rpx;"></u-icon>
+
+
+
 				</u-form-item>
 				<u-form-item label="门店名称" prop="storeName" borderBottom ref="item1">
 					<u--input v-model="userInfo.storeName" border="none" placeholder="请输入门店名称"></u--input>
@@ -18,8 +26,11 @@
 				<view style="margin-bottom:28rpx ;">
 					门头图
 				</view>
-				<view class="imags">
-					<uploadFile :fileListt="fileList" @getUrl='getUrl' :limit='1' types='image' />
+				<view style="display: flex;">
+					<uploadFile width="147rpx" height="147rpx" :fileListt='fileListt' @getUrl='getUrl' :limit='1'
+						types='image' />
+					<image v-if="fileListt.length==0" src="../../../../static/logo.png"
+						style="width: 137rpx;height: 137rpx;margin-left:17rpx;"></image>
 				</view>
 			</div>
 
@@ -28,25 +39,28 @@
 			</view>
 			<view class="box">
 				<u-form-item label="店长姓名" prop="contacts" borderBottom ref="item1">
-					<u--input v-model="userInfo.contacts" border="none" placeholder="请输入店长姓名"></u--input>
+					<u--input v-model="userInfo.contacts" border="none" placeholder="请输入门店负责人姓名"></u--input>
 				</u-form-item>
 				<u-form-item label="联系电话" prop="contactPhone" borderBottom ref="item1">
-					<u--input v-model="userInfo.contactPhone" border="none" placeholder="请输入联系电话"></u--input>
+					<u--input v-model="userInfo.contactPhone" border="none" placeholder="请输入负责人联系电话"></u--input>
 				</u-form-item>
 			</view>
 
 			<view class="box">
-				<u-form-item label="门店地址" prop="contacts" borderBottom ref="item1">
-					<view  style="color: rgb(192, 196, 204);">设置门店服务地址</view>
+				<u-form-item @click='$jump("/subpkg/car/myAddress/myAddress?params="+encodeURIComponent(JSON.stringify(info)))' label="门店地址" prop="contacts" borderBottom ref="item1">
+					<view style="color: rgb(192, 196, 204);">设置门店服务地址</view>
 					<u-icon slot="right" name="arrow-right" style="margin-right: 20rpx;"></u-icon>
 				</u-form-item>
+				<view class="">
+					
+				</view>
 			</view>
 
 		</u--form>
 
 
 		<view class="button" @click="goHome">
-			进入餐修
+			保存编辑
 		</view>
 	</view>
 </template>
@@ -63,6 +77,9 @@
 		},
 		data() {
 			return {
+				info:{
+					type:'address'
+				},
 				index: undefined,
 				labelStyle: {
 					'font-size': '31rpx',
@@ -71,10 +88,10 @@
 				},
 				userInfo: {
 					clientId: storage.get('ClientId'),
-					region: undefined
+					region: undefined,
 				},
 				storeTypeList: [], //店铺类型
-				fileList: [],
+				fileListt: [],
 				isSingle: undefined, //是否是单门店
 			};
 		},
@@ -115,33 +132,21 @@
 					return
 				}
 
-				refine(this.userInfo).then(res => {
+				addCustomer(this.userInfo).then(res => {
 					console.log(res);
-
-					// uni.$TUIKit.updateMyProfile({
-					// 	nick: this.userInfo.clientName,
-					// 	avatar: this.userInfo.avatarUrl,
-					// 	selfSignature: ''
-					// }).then(res => {
-					// 	console.info(res);
-					// 	console.info(res);
-					// 	console.info(res);
-					// })
-
 					this.reset()
-					const apps = getApp()
-					apps.type = 'login'
-					uni.switchTab({
-						url: '/pages/home/index'
-					})
+					if (res.code === 200) {
+						uni.showToast({
+							title: '添加成功',
+							duration: 800
+						});
+						setTimeout(function() {
+							uni.navigateBack()
+						}, 800)
+					}
 
 				})
 
-			},
-			address(e) {
-				console.log(e) //携带的参数
-				this.userInfo.region = e.value1.toString().replace(/,/g, "/")
-				console.log(this.userInfo.region);
 			},
 		}
 	}
@@ -167,6 +172,10 @@
 			border-radius: 14rpx;
 
 			.img_title {}
+
+			/deep/.u-form-item__body__right__content {
+				width: 94%;
+			}
 		}
 
 		.button {
@@ -178,7 +187,10 @@
 			color: #FFFFFF;
 			line-height: 91rpx;
 			text-align: center;
-			margin: 19rpx auto 0 auto;
+			margin: 0 auto;
+			position: fixed;
+			left: 6%;
+			bottom: 100rpx;
 		}
 	}
 </style>

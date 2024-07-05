@@ -4,7 +4,7 @@
 			<view v-if="types=='video'" v-for="(itemm, index) in billImgList" :key="index">
 				<view style="margin:5rpx;">
 
-					<view style="position: relative;width: 125rpx;height: 125rpx;">
+					<view :style="{'position': 'relative','width': width,'height': height}">
 
 						<img   style="width: 100%;height:100%;"
 							:src="itemm+'?x-oss-process=video/snapshot,t_3210,f_jpg'" mode="">
@@ -35,7 +35,7 @@
 			<view v-if="types=='image'" v-for="(item, index) in billImgList" :key="index" @tap="billViewImage"
 				:data-url="billImgList[index]">
 				<view style="position: relative;margin-right:10rpx;">
-					<img   style="width: 125rpx;border-radius:14rpx;height: 125rpx;" :src="item">
+					<img   :style="{'width':width,'border-radius':'14rpx','height':height}" :src="item">
 					</img>
 
 					<view v-if="isDel" style="position: absolute;top: 0; right: 0;">
@@ -68,7 +68,7 @@
 					permissionID="WRITE_EXTERNAL_STORAGE"> </yk-authpup>
 				<yk-authpup ref="authpupCamera" type="top" @changeAuth="changeAuthCamera" permissionID="CAMERA">
 				</yk-authpup>
-				<img    style="width: 125rpx;height: 125rpx;"
+				<img    :style="{'width': width,'height':height}"
 					:src="isOrder&&types=='image'?imageUrl:isOrder&&types=='video'?videoUrl:otherUrl">
 				</img>
 			</view>
@@ -122,6 +122,14 @@
 	} = require('../../config/environment')
 	export default {
 		props: {
+			width:{
+				type: String,
+				default: '125rpx'
+			},
+			height:{
+				type: String,
+				default: '125rpx'
+			},
 			fileListt: {
 				type: Array,
 			},

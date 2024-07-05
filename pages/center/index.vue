@@ -335,7 +335,8 @@
 					{
 						id: 1,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/8bdc159406b841fd946f943af4f31aee.png",
-						label: "门店管理"
+						label: "门店管理",
+						url: "/subpkg/center/myStore/myStore"
 					},
 					{
 						id: 2,
