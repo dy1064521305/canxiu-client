@@ -188,7 +188,7 @@
 								name="Docs guide">
 								<view v-for="(ch,chindex) in item.list" :key='chindex'
 									style="display: flex;justify-content: space-between;margin-bottom: 20rpx;">
-									<text v-for="(s,si) in Object.values(JSON.parse(ch.materialSpecs))" :key="si">
+									<text v-for="(s,si) in ( ch.materialSpecs!=null?Object.values(JSON.parse(ch.materialSpecs)):'')" :key="si">
 										{{s}}
 									</text>
 									<text>{{ch.salePrice}}元/{{ch.materialUnit}}</text>
@@ -563,6 +563,7 @@
 							list: this.goodInfo.materialVoMap[key]
 						})
 					}
+					console.log(this.melList,'5566666666');
 					//收费标准
 					this.priceList = [{
 							name: '服务起步价',
