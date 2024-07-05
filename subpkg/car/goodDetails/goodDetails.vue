@@ -30,14 +30,13 @@
 					<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/0616977a744749ac86c5b97a1728f654.png"
 					mode=""></image> -->
 					<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
-					<view :style="{'background':goodInfo.preferentialPrice!=null&&goodInfo.preferentialPrice!=0?`url(${goodInfo.imgUrl}) no-repeat`:''}" :class="['prices',goodInfo.preferentialPrice!=null&&goodInfo.preferentialPrice!=0?'price-img':'']">
+					<view :style="{'background':Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)?`url(${goodInfo.imgUrl}) no-repeat`:''}" :class="['prices',Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)?'price-img':'']">
 						<view class="top">
-							<text
-								style="font-size: 43rpx;">{{goodInfo.preferentialPrice!=null&&goodInfo.preferentialPrice!=0?goodInfo.discountPrice:goodInfo.projectAmount}}</text>
+							<text style="font-size: 43rpx;">{{goodInfo.discountPrice}}</text>
 							<text style="font-size: 27rpx;">元</text>
-							<text v-if="goodInfo.preferentialPrice!=null&&goodInfo.preferentialPrice!=0">已补贴￥{{goodInfo.preferentialPrice}}</text>
+							<text v-if="Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)">已补贴￥{{goodInfo.preferentialPrice}}</text>
 						</view>
-						<view v-if="goodInfo.preferentialPrice!=null&&goodInfo.preferentialPrice!=0" style="font-size: 22rpx;">
+						<view v-if="Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)" style="font-size: 22rpx;">
 							日常价：{{goodInfo.projectAmount}}元
 						</view>
 
@@ -189,7 +188,7 @@
 								name="Docs guide">
 								<view v-for="(ch,chindex) in item.list" :key='chindex'
 									style="display: flex;justify-content: space-between;margin-bottom: 20rpx;">
-									<text v-for="(s,si) in Object.values(JSON.parse(ch.materialSpecs))" :key="si">
+									<text v-for="(s,si) in ( ch.materialSpecs!=null?Object.values(JSON.parse(ch.materialSpecs)):'')" :key="si">
 										{{s}}
 									</text>
 									<text>{{ch.salePrice}}元/{{ch.materialUnit}}</text>
@@ -564,6 +563,7 @@
 							list: this.goodInfo.materialVoMap[key]
 						})
 					}
+					console.log(this.melList,'5566666666');
 					//收费标准
 					this.priceList = [{
 							name: '服务起步价',

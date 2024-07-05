@@ -7,41 +7,66 @@
 						<view class="">
 							<text class="font" style="font-weight: bold;">{{item.contact}}</text>
 							<text class="font" style="margin:0 14rpx;">{{item.phone}}</text>
-							<text v-if="item.isDefault==0" class="moren_sign" >默认</text>
+							<text v-if="item.isDefault==0" class="moren_sign">默认</text>
 						</view>
-						<image @click.stop="editAndAddAddress(item.addressId)"
+
+						<image v-if="type!='store'" @click.stop="editAndAddAddress(item.id)"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/ad57c5f8079e459da0f85cfc0c9b818f.png"
 							style="width: 29rpx;height:31rpx;"></image>
 					</view>
-					<view style="font-size: 25rpx;color: #A5A7A7;margin: 22rpx 0;">
+					<view style="font-size: 25rpx;color: #A5A7A7;margin: 22rpx 0;display: flex;
+    justify-content: space-between;">
 						{{item.addressRegion.replace(/\//g, '')}}
+						<view>
+							<view v-if="item.id!=checked" class="check"></view>
+							<view v-else>
+
+								<u-icon name="checkmark-circle-fill" color="#A4D091" size="19"></u-icon>
+							</view>
+
+						</view>
 					</view>
 					<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
 						<view style="width: 88%;">
 							{{item.addressDetailed}}
 						</view>
-						<view style="font-size: 25rpx;color: #EC5722;"
-							@click.stop="deleteAddressHandle(item.addressId)">
+						<view v-if="type!='store'&&type!='order'" style="font-size: 25rpx;color: #EC5722;"
+							@click.stop="deleteAddressHandle(item.id)">
 							删除
 						</view>
 					</view>
-					<!-- <view class="box_bottom"></view> -->
-					<!-- 	<view style="width: 92%;">
-							<view v-if="item.isDefault==0" class="moren">
-								<image style="width: 32rpx;margin-right: 11rpx;height: 32rpx;"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
-								</image>已设为默认
-							</view>
-							<view v-else class="un" @click.stop="morenHandle(item)">
-								<view class="circle"></view>设为默认
-							</view>
-						</view> -->
-
-
-
-
 				</view>
 			</view>
+
+			<view v-if="storeAddressInfo.phone!=''">
+				<view class="title">
+					已被关联的服务地址
+				</view>
+				<view class="box">
+					<view style="padding: 20rpx">
+						<view class="top">
+							<view class="">
+								<text class="font" style="font-weight: bold;">{{storeAddressInfo.contact}}</text>
+								<text class="font" style="margin:0 14rpx;">{{storeAddressInfo.phone}}</text>
+								<text v-if="storeAddressInfo.isDefault&&storeAddressInfo.isDefault==0"
+									class="moren_sign">默认</text>
+							</view>
+							<view class="circle"></view>
+						</view>
+						<view style="font-size: 25rpx;color: #A5A7A7;margin: 22rpx 0;">
+							{{storeAddressInfo.addressRegion.replace(/\//g, '')}}
+						</view>
+						<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
+							<view style="width: 88%;">
+								{{storeAddressInfo.addressDetailed}}
+							</view>
+
+						</view>
+					</view>
+				</view>
+			</view>
+
+
 			<view slot="bottom">
 				<view class="btn" @click="editAndAddAddress('')">
 					添加地址
@@ -68,6 +93,8 @@
 	export default {
 		data() {
 			return {
+				checked: '',
+				radiovalue1: '',
 				list: 1,
 				addressList: [],
 				type: '',
@@ -77,7 +104,14 @@
 					orderByColumn: 'isDefault',
 					isAsc: 'asc',
 				},
-				submitList: []
+				submitList: [],
+				storeAddressInfo: {
+					addressDetailed: '',
+					addressRegion: '',
+					isDefault: '',
+					phone: '',
+					contact: '',
+				}
 			};
 		},
 		onShow() {
@@ -90,7 +124,11 @@
 				let info = JSON.parse(decodeURIComponent(option.params))
 				this.type = info.type
 				this.submitList = info.list
+				uni.setNavigationBarTitle({
+					title: this.type == 'store' ? '选择服务地址' : '地址管理'
+				})
 			}
+
 
 		},
 		methods: {
@@ -102,46 +140,13 @@
 					console.log(this.queryParams);
 				getAddressList(this.queryParams).then(res => {
 					console.log(res);
-					if (res.rows.length != 0) {
-						let bool = res.rows.some(item => {
-							return item.isDefault == 0
-						})
-						console.log(bool);
-						if (!bool) {
-							res.rows[0].isDefault = 0
-							editDefault(res.rows[0]).then(res => {
-								this.getList(1, 10)
-							})
-						}
-					}
+
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 					//this.$refs.paging.complete(res.rows,res.total);
 					//	this.addressList = res.rows
 				})
 			},
-			//设为默认
-			morenHandle(item) {
-				console.log(item)
-				this.addressList.forEach(address => {
-					if (address.isDefault == 0) {
-						address.isDefault = 1
-						editDefault(address).then(res => {
-							item.isDefault = 0
-							editDefault(item).then(res => {
-								if (res.code === 200) {
-									uni.showToast({
-										title: '设置成功',
-										duration: 2000
-									});
-									this.getList(1, 10)
-								}
-							})
-						})
-					}
-
-				})
-
-			},
+		
 			//修改地址
 			editAndAddAddress(id) {
 				console.log(111);
@@ -187,13 +192,12 @@
 			//选择地址
 			choseAddress(item) {
 				console.log(this.type);
+					const pages = uni.$u.pages()
 				if (this.type == 'car' || this.type == 'order') {
 					uni.setStorage({
 						key: 'address_info',
 						data: item,
 					})
-					const pages = uni.$u.pages()
-
 					console.log(this.submitList);
 					// this.type == 'car' ?  : uni.navigateTo({
 					// 	url: '../submitOrder/submitOrder?item='+encodeURIComponent(JSON.stringify(this.submitList))
@@ -207,6 +211,10 @@
 						pages[pages.length - 2].$vm.getInfo(this.submitList)
 						uni.navigateBack()
 					}
+				}else if(this.type == 'store'){
+					this.checked = item.id
+					pages[pages.length - 2].$vm.getInfo(item)
+					uni.navigateBack()
 				}
 			}
 		}
@@ -220,6 +228,12 @@
 </style>
 <style lang="scss" scoped>
 	.myAddress {
+		.title {
+			font-size: 25rpx;
+			color: #A5A7A7;
+			margin-left: 20rpx;
+		}
+
 		.box {
 			margin: 20rpx auto;
 			width: 707rpx;
@@ -228,10 +242,26 @@
 			box-shadow: 0rpx 0rpx 4rpx 0rpx rgba(42, 64, 55, 0.05);
 			border-radius: 14rpx;
 
+			.check {
+				width: 28rpx;
+				height: 28rpx;
+				border: 2rpx solid #A5A7A7;
+				border-radius: 50%;
+			}
+
+			.circle {
+				width: 29rpx;
+				height: 29rpx;
+				background: #ECF7ED;
+				border: 1rpx solid #A4D091;
+				border-radius: 50%;
+			}
+
 			.top {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
+
 				.font {
 					font-size: 29rpx;
 					color: #3D3F3E;
@@ -248,7 +278,8 @@
 				display: flex;
 				font-size: 25rpx;
 			}
-			.moren_sign{
+
+			.moren_sign {
 				width: 87rpx;
 				// height: 36rpx;
 				border-radius: 7rpx;

@@ -145,9 +145,9 @@
 		</view>
 
 
-		<!-- 	<view class="index" style="z-index: 999999999999;">
-		<wu-app-update></wu-app-update>
-	</view> -->
+		<view class="index" style="z-index: 999999999999;">
+			<wu-app-update></wu-app-update>
+		</view>
 
 	</view>
 </template>
@@ -295,7 +295,6 @@
 					})
 
 				})
-
 				this.queryState();
 				getC2cUnreadMsgNum().then(res => {
 					queryUnreadNum().then(ress => {
@@ -331,15 +330,16 @@
 			this.titleHeight = 120
 			this.offsetTop = 145
 			// #endif
-			const apps = getApp()
-			if (apps.type == 'login') {
-				this.queryParams.pageNum = 1
-				console.log('335================================>>>>');
-				this.getServiceSymptomsHandle()
-			} else {
-				this.getServiceSymptoms()
-			}
+			// const apps = getApp()
+			// if (apps.type == 'login') {
+			// 	this.queryParams.pageNum = 1
+			
+			// 	this.getServiceSymptomsHandle()
+			// } else {
+			// 	this.getServiceSymptoms()
+			// }
 			this.choseAddress()
+				console.log('335================================>>>>');
 			uni.$on('totalUnreadCount', function(data) {
 				getC2cUnreadMsgNum().then(res => {
 					queryUnreadNum().then(ress => {
@@ -370,12 +370,16 @@
 		},
 
 		onTabItemTap() {
-			// #ifdef APP-PLUS
-			this.$refs['authpup'].open()
-			// #endif
-			// #ifdef MP-WEIXIN
-			this.getLoction()
-			// #endif
+			
+			if (uni.getStorageSync('city').addressDetailed=='杭州市拱墅区') {
+				// #ifdef APP-PLUS
+				this.$refs['authpup'].open()
+				// #endif
+				// #ifdef MP-WEIXIN
+				this.getLoction()
+				// #endif
+			} 
+		
 		},
 		onLoad() {
 			this.notPermissions()
@@ -406,7 +410,8 @@
 
 			queryState() {
 				accountQueryState().then(res => {
-					if (res.data.QueryResult[0].State == 'Offline') {
+					console.log(res.data);
+					if (res.data.QueryResult&&res.data.QueryResult[0].State == 'Offline') {
 						getUserSig().then(ress => {
 							uni.$TUIKit.login({
 								userID: res.data.QueryResult[0].To_Account,
@@ -555,7 +560,7 @@
 				})
 				this.promiseList.splice(0, 1, false)
 				this.promiseList.splice(1, 1, false)
-				
+
 				//获取故障区域
 				getRegion().then(res => {
 					this.regionService = res.data
@@ -620,14 +625,14 @@
 				uni.getStorage({
 					key: 'city',
 					success: (res) => {
-						console.log(res);
+						console.log(res,'623333333');
 						this.cityName = res.data.addressDetailed
 						this.addressName = this.address = uni.getStorageSync(
 							'address_refreash')
 						this.getList()
 						this.getServiceSymptomsHandle()
 					},
-				
+
 				})
 			},
 			//设置定位权限
@@ -748,7 +753,7 @@
 							data: {
 								addressDetailed: this
 									.cityName,
-								type:'defalut'
+								type: 'defalut'
 							}
 						})
 						console.log('744444444');

@@ -161,7 +161,7 @@
 							订单备注
 						</view>
 						<view class="right" style="color: #707271;">
-							{{item.remark}}
+							{{item.remark||''}}
 						</view>
 					</view>
 				</view>
@@ -254,13 +254,13 @@
 					<text class="ziduan">起步价</text>
 					<text
 						:style="{'text-decoration':!info.isGet?'line-through':'','color':!info.isGet?'#A5A7A7':'#EC5722'}"
-						v-if="orderInfo.beforeStartingFree!=null">¥{{orderInfo.beforeStartingFree}}</text>
+						v-if="orderInfo.startingFree!=null">¥{{orderInfo.startingFree}}</text>
 				</view>
 				<view class="line">
-					<text class="ziduan">工时费</text>
+					<text class="ziduan">服务费</text>
 					<text
 						:style="{'text-decoration':info.isGet?'line-through':'','color':info.isGet?'#A5A7A7':'#EC5722'}"
-						v-if="orderInfo.servicePrice!=null">¥{{orderInfo.servicePrice}}</text>
+						v-if="orderInfo.preferentialPrice!=null">¥{{orderInfo.preferentialPrice}}</text>
 				</view>
 				<view v-if="orderInfo.additionalPrice!=0" class="line">
 					<text class="ziduan">加急费</text>

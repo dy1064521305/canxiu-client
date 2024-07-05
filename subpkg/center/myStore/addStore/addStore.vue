@@ -47,12 +47,33 @@
 			</view>
 
 			<view class="box">
-				<u-form-item @click='$jump("/subpkg/car/myAddress/myAddress?params="+encodeURIComponent(JSON.stringify(info)))' label="门店地址" prop="contacts" borderBottom ref="item1">
+				<u-form-item
+					@click='$jump("/subpkg/car/myAddress/myAddress?params="+encodeURIComponent(JSON.stringify(info)))'
+					label="门店地址" prop="contacts" borderBottom ref="item1">
 					<view style="color: rgb(192, 196, 204);">设置门店服务地址</view>
 					<u-icon slot="right" name="arrow-right" style="margin-right: 20rpx;"></u-icon>
 				</u-form-item>
-				<view class="">
-					
+				<view class="box">
+					<view style="padding: 20rpx">
+						<view class="top">
+							<view class="">
+								<text class="font" style="font-weight: bold;">{{addressInfo.contact}}</text>
+								<text class="font" style="margin:0 14rpx;">{{addressInfo.phone}}</text>
+								<text v-if="addressInfo.isDefault&&addressInfo.isDefault==0"
+									class="moren_sign">默认</text>
+							</view>
+							<view class="circle"></view>
+						</view>
+						<view style="font-size: 25rpx;color: #A5A7A7;margin: 22rpx 0;">
+							{{addressInfo.addressRegion.replace(/\//g, '')}}
+						</view>
+						<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
+							<view style="width: 88%;">
+								{{storeAddressInfo.addressDetailed}}
+							</view>
+				
+						</view>
+					</view>
 				</view>
 			</view>
 
@@ -77,8 +98,8 @@
 		},
 		data() {
 			return {
-				info:{
-					type:'address'
+				info: {
+					type: 'store'
 				},
 				index: undefined,
 				labelStyle: {
@@ -93,6 +114,7 @@
 				storeTypeList: [], //店铺类型
 				fileListt: [],
 				isSingle: undefined, //是否是单门店
+				addressInfo:{}
 			};
 		},
 		onLoad() {
@@ -101,7 +123,10 @@
 		},
 
 		methods: {
-
+			//获取选择的地址
+			getInfo(info) {
+				this.addressInfo=info
+			},
 			getList() {
 				getStoreType().then(res => {
 					this.storeTypeList = res.data
