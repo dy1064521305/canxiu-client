@@ -330,14 +330,14 @@
 			this.titleHeight = 120
 			this.offsetTop = 145
 			// #endif
-			const apps = getApp()
-			if (apps.type == 'login') {
-				this.queryParams.pageNum = 1
+			// const apps = getApp()
+			// if (apps.type == 'login') {
+			// 	this.queryParams.pageNum = 1
 			
-				this.getServiceSymptomsHandle()
-			} else {
-				this.getServiceSymptoms()
-			}
+			// 	this.getServiceSymptomsHandle()
+			// } else {
+			// 	this.getServiceSymptoms()
+			// }
 			this.choseAddress()
 				console.log('335================================>>>>');
 			uni.$on('totalUnreadCount', function(data) {
