@@ -7,18 +7,18 @@
 			<view class="content-mess">
 				<view class="form-row acea-row row-middle">
 					<text class="form-key">您的姓名</text>
-					<input class="acea-con" style="text-align: right;margin-right: 10rpx;"
+					<input class="acea-con" v-model="where.realName" style="text-align: right;margin-right: 10rpx;"
 						placeholder="请输入您的真实姓名"></input>
 				</view>
 				<view class="form-row acea-row row-middle">
 					<text class="form-key">联系电话</text>
-					<input class="acea-con" style="text-align: right;margin-right: 10rpx;"
+					<input class="acea-con" v-model="where.cellPhone" style="text-align: right;margin-right: 10rpx;"
 						placeholder="请输入您的手机号"></input>
 				</view>
 				<view class="form-row acea-row row-middle">
 					<text class="form-key">所在城市</text>
 					<pickers v-if="!isSubmit" @address="addressHandle" style="flex: 1;text-align: right">
-						<view v-if="city!=''">{{city}}</view>
+						<view v-if="where.region!=''">{{where.region}}</view>
 						<view v-else class="acea-row row-middle"
 							style="color: rgb(192, 196, 204); justify-content: flex-end;">
 							请选择您当前的城市 <u-icon color=" rgb(192, 196, 204)" name="arrow-right" style="margin-left: 4rpx;"
@@ -27,7 +27,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="content-btn acea-row row-center row-middle">
+		<view class="content-btn acea-row row-center row-middle" @click="submit">
 			确认提交
 		</view>
 	</view>
@@ -35,6 +35,9 @@
 
 <script>
 	import pickers from "@/components/ming-picker/ming-picker.vue"
+	import {
+		postPartnerApply
+	} from "@/api/appUpdate.js"
 	export default {
 		components: {
 			pickers
@@ -42,7 +45,12 @@
 		data() {
 			return {
 				city: "",
-				isSubmit: false
+				isSubmit: false,
+				where: {
+					realName: "",
+					cellPhone: "",
+					region: ""
+				}
 			}
 		},
 		onLoad() {
@@ -52,9 +60,21 @@
 			})
 		},
 		methods: {
+
 			addressHandle(e) {
-				this.city = e.value1.toString().replace(/,/g, "/")
+				this.where.region = e.value1.toString().replace(/,/g, "/")
 			},
+			submit() {
+				if (!this.where.realName) return this.$toast('您的姓名不能为空')
+				if (!this.where.cellPhone) return this.$toast('联系电话不能为空')
+				if (!this.where.region) return this.$toast('所在城市不能为空')
+				postPartnerApply(this.where).then(res => {
+					this.$toast('操作成功')
+					setTimeout(() => {
+						this.$jump(-1)
+					}, 2000)
+				})
+			}
 		}
 	}
 </script>
@@ -66,7 +86,7 @@
 
 		.banner {
 			height: 390rpx;
-			background-color: #Ccc;
+			background-color: bisque;
 
 			image {
 				width: 100%;
