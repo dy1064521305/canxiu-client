@@ -571,7 +571,7 @@
                     "path" : "myStore/addStore/addStore",
                     "style" :                                                                                    
                 {
-                    "navigationBarTitleText": "创建门店",
+                    "navigationBarTitleText": "",
                     "enablePullDownRefresh": false
                 }
                 

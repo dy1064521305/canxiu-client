@@ -180,7 +180,7 @@
 			fileListt: {
 				immediate: true,
 				handler: function() {
-					//	console.log(this.fileListt);
+						console.log(this.isInfo);
 					this.billImgList = this.fileListt != undefined ? Array.from(new Set(this.fileListt)) : []
 				}
 

@@ -55,7 +55,7 @@ const request = {
   delete (url, params, config = {}) {
     config = mixinCustom(config)
 	 let path = urlFormater(url, params)
-    return http.delete(path);
+    return http.delete(path, config);
   },
 
 };

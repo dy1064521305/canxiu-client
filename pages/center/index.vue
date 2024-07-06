@@ -28,10 +28,10 @@
 						<u--image v-else width='60rpx' height='60rpx' :src="userInfo.storeImg" shape="circle">
 						</u--image>
 					</view>
-					<view class="name  acea-row" v-if="userInfo.storeName!=null">
+					<view class="name  acea-row" v-if="userInfo.clientName!=null">
 						<view class="name-left">
-							{{userInfo.storeName}}
-						</view> <text v-if="userInfo.phone" style="margin-left: 10rpx;">({{userInfo.phone}})</text>
+							{{userInfo.clientName}}
+						</view>
 						<!-- <view style="font-size: 29rpx;">
 							{{userInfo.phone}}
 						</view> -->

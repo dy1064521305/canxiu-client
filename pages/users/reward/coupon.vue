@@ -7,14 +7,14 @@
 			</view>
 		</view>
 		<view class="coupons ">
-			<view class="coupons-every" v-for="(item) in list" :key="item.id">
+			<view class="coupons-every" v-for="(item) in couponList" :key="item.id">
 				<view class="coupons-every-one acea-row">
 					<view class="coupons-every-one-left acea-row row-column justify-center ">
 						<view class="coupons-every-one-left-name">
 							{{item.name}}
 						</view>
 						<view class="coupons-every-one-left-time">
-							{{item.times}}
+							{{item.couponTimeType=='0'?'长期有效':''}}
 						</view>
 						<view class="coupons-every-one-left-rule acea-row align-center"
 							@click="item.activity=!item.activity">
@@ -26,43 +26,46 @@
 					<view class="coupons-every-one-right acea-row row-column align-center ">
 						<view class="coupons-every-one-right-money">
 							¥
-							<text>{{item.coupon}}</text>
+							<text>{{item.couponAmount}}</text>
 						</view>
 						<view>
-							{{item.need}}
+							{{item.minAmount=='0'?'无门槛':''}}
 						</view>
 					</view>
 				</view>
 				<view class="coupons-every-type" v-show="item.activity">
 					<view>
-						适用商品：{{item.types.goods}}
+						适用商品：{{item.suitableProduct=='0'?'全部产品':''}}
 					</view>
 					<view>
-						使用范围：{{item.types.range}}
+						使用范围：{{item.suitableScope=='0'?'不限区域':''}}
 					</view>
 					<view>
-						订单类型：{{item.types.type}}
+						订单类型：仅{{item.orderType=='0'?'个人':item.orderType=='1'?'门店':'品牌'}}可用
 					</view>
 					<view>
-						叠加规则：{{item.types.rule}}
+						叠加规则：可与{{item.superpositionRule=='0'?'销售价':'活动价'}}叠加使用
 					</view>
 					<view>
-						发放时间：{{item.types.time}}
+						发放时间：{{item.startTime}}
 					</view>
-					<view>
+					<!-- <view>
 						券码：{{item.types.coup}}
-					</view>
+					</view> -->
 				</view>
 			</view>
-			<empty-page v-if="!list.length" msg="暂无数据"></empty-page>
+			<empty-page v-if="!couponList.length" msg="暂无数据"></empty-page>
 		</view>
 	</view>
 </template>
 
 <script>
+	import storage from '@/utils/storage'
+	import {getCouponList} from '@/api/user.js'
 	export default {
 		data() {
 			return {
+				couponList:[],
 				onType: 0,
 				type: [{
 						label: "未使用",
@@ -129,9 +132,24 @@
 				]
 			}
 		},
+		onLoad() {
+			this.getList()
+		},
 		methods: {
+			getList(){
+				getCouponList({
+					clientId:storage.get('ClientId'),
+					useStatus:this.onType
+				}).then(res=>{
+					res.rows.forEach(item=>{
+						item.activity=false
+					})
+					this.couponList=res.rows
+				})
+			},
 			changeType(status) {
 				this.onType = status
+				this.getList()
 			}
 		}
 	}

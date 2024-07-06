@@ -17,18 +17,18 @@
 					<view style="font-size: 25rpx;color: #A5A7A7;margin: 22rpx 0;display: flex;
     justify-content: space-between;">
 						{{item.addressRegion.replace(/\//g, '')}}
-						<view>
-							<view v-if="item.id!=checked" class="check"></view>
+						<view v-if="type=='store'">
+							<view v-if="item.id!=storeAddressInfo.id" class="check"></view>
 							<view v-else>
 
-								<u-icon name="checkmark-circle-fill" color="#A4D091" size="19"></u-icon>
+								<u-icon name="checkmark-circle-fill" color="#A4D091" size="20"></u-icon>
 							</view>
 
 						</view>
 					</view>
 					<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
 						<view style="width: 88%;">
-							{{item.addressDetailed}}
+							{{item.addressDetailed}}{{item.doorplate}}
 						</view>
 						<view v-if="type!='store'&&type!='order'" style="font-size: 25rpx;color: #EC5722;"
 							@click.stop="deleteAddressHandle(item.id)">
@@ -38,7 +38,7 @@
 				</view>
 			</view>
 
-			<view v-if="storeAddressInfo.phone!=''">
+			<view v-if="type=='store'&&storeAddressInfo.contact!=''">
 				<view class="title">
 					已被关联的服务地址
 				</view>
@@ -58,7 +58,7 @@
 						</view>
 						<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
 							<view style="width: 88%;">
-								{{storeAddressInfo.addressDetailed}}
+								{{storeAddressInfo.addressDetailed}}{{storeAddressInfo.doorplate}}
 							</view>
 
 						</view>
@@ -93,7 +93,6 @@
 	export default {
 		data() {
 			return {
-				checked: '',
 				radiovalue1: '',
 				list: 1,
 				addressList: [],
@@ -120,13 +119,19 @@
 		onLoad(option) {
 			if (option.params != undefined) {
 				console.log(option);
+				uni.setNavigationBarTitle({
+					title: this.type == 'store' ? '选择服务地址' : '地址管理'
+				})
 				console.log(JSON.parse(decodeURIComponent(option.params)));
 				let info = JSON.parse(decodeURIComponent(option.params))
 				this.type = info.type
 				this.submitList = info.list
-				uni.setNavigationBarTitle({
-					title: this.type == 'store' ? '选择服务地址' : '地址管理'
-				})
+				if (this.type == 'store') {
+					JSON.stringify(info.addressInfo) != '{}' ? this.storeAddressInfo = info.addressInfo : ''
+				}
+
+
+
 			}
 
 
@@ -146,7 +151,7 @@
 					//	this.addressList = res.rows
 				})
 			},
-		
+
 			//修改地址
 			editAndAddAddress(id) {
 				console.log(111);
@@ -166,7 +171,6 @@
 					confirmColor: '#A4D091',
 					success: function(res) {
 						if (res.confirm) {
-
 							deleteAddress(id).then(res => {
 								if (res.code === 200) {
 									uni.showToast({
@@ -192,7 +196,7 @@
 			//选择地址
 			choseAddress(item) {
 				console.log(this.type);
-					const pages = uni.$u.pages()
+				const pages = uni.$u.pages()
 				if (this.type == 'car' || this.type == 'order') {
 					uni.setStorage({
 						key: 'address_info',
@@ -211,8 +215,8 @@
 						pages[pages.length - 2].$vm.getInfo(this.submitList)
 						uni.navigateBack()
 					}
-				}else if(this.type == 'store'){
-					this.checked = item.id
+				} else if (this.type == 'store') {
+					this.storeAddressInfo = item
 					pages[pages.length - 2].$vm.getInfo(item)
 					uni.navigateBack()
 				}

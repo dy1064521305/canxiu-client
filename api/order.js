@@ -66,3 +66,5 @@ export const getRepairOrderInfo = (repairId) => request.get('client/order/queryR
 //提交订单后推送
 export const orderSend = (data) => request.post('/client/order/send',data)
 
+
+

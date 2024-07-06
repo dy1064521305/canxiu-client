@@ -11,3 +11,6 @@ export const queryMyInfo = (clientId) => request.get('/client/user/queryMyInfo/'
 
 // 用户注销账号
 export const deleteUser = (clientId) => request.delete('/client/user/logout/'+clientId)
+
+//查询客户优惠券列表
+export const getCouponList = (params) => request.get('/client/coupon/list',params)

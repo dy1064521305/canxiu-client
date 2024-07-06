@@ -20,12 +20,12 @@
 			<view v-if='addressList.length!=0' class="left">
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/11/a7fe2594ad27432c8676c0b03bf22bb7.png"
 					style="width: 36rpx;height:43rpx;margin-right: 20rpx;" />
-				<view>
+				<view style="width: 87%;">
 					<view style="font-size: 25rpx;">
 						{{addressPlace}}
 					</view>
 					<view style="font-size: 29rpx;margin-top: 18rpx;">
-						{{addressRegion}}{{addressInfo.addressDetailed}}
+						{{addressRegion}}{{addressInfo.addressDetailed}}{{addressInfo.doorplate}}
 					</view>
 					<view style="font-size: 25rpx;margin-top: 23rpx;align-items: center;
 				display: flex;">
@@ -43,7 +43,7 @@
 					mode=""></image>
 			</view>
 		</view>
-		<view class="designWorker acea-row row-between-wrapper">
+		<view @click="$jump('/subpkg/')" class="designWorker acea-row row-between-wrapper">
 			<view class="designWorker-left acea-row">
 				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/ac000216203a45638ea0841739325d41.png"
 					mode=""></image>
@@ -806,7 +806,6 @@
 				// height: 100%;
 				display: flex;
 				align-items: center;
-				width: 17%;
 
 				image {
 					width: 14rpx;
