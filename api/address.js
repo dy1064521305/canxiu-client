@@ -8,7 +8,7 @@ export const getAddressList = (params) => request.get('/client/serviceAddress/li
 export const addAddress = (data) => request.post('/client/serviceAddress',data)
 
 // 删除地址
-export const deleteAddress = (addressIds) => request.delete('/client/address/'+addressIds)
+export const deleteAddress = (addressIds) => request.delete('/client/serviceAddress/'+addressIds)
 
 // 修改地址s
 export const editAddress = (data) => request.put('/client/serviceAddress',data)

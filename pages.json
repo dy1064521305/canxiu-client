@@ -130,7 +130,7 @@
 			"pages": [{
 					"path": "reward/coupon",
 					"style": {
-						"navigationBarTitleText": "优惠卷",
+						"navigationBarTitleText": "优惠券",
 						"enablePullDownRefresh": false
 					}
 				}
@@ -261,8 +261,8 @@
 					"path": "submitOrder/worker",
 					"style": {
 						"navigationBarTitleText": "指派师傅",
-						"enablePullDownRefresh": false
-						// "navigationStyle": "custom"
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
 					}
 
 				}, {

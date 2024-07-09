@@ -9,8 +9,10 @@
 				</view>
 				<view style="display: flex;margin-top:28rpx ;">
 					<view style="display: flex;align-items:center">
-						<image src="../../../static/logo.png"
-							style="width: 86rpx;height: 86rpx;margin-right: 20rpx;border-radius: 10rpx;"></image>
+						<image v-if="!item.storeImg" src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png"
+							style="width: 86rpx;height: 86rpx;margin-right: 20rpx;border-radius: 50%;"></image>
+						<image v-else :src="item.storeImg"
+							style="width: 86rpx;height: 86rpx;margin-right: 20rpx;border-radius: 50%;"></image>
 					</view>
 					<view>
 						<view class="">
@@ -55,7 +57,7 @@
 			</view>
 		</view>
 
-		
+
 	</view>
 </template>
 
@@ -81,14 +83,14 @@
 					this.customerList = res.data
 				})
 			},
-		
+
 			//删除地址
 			removeHandle(id) {
 				uni.showModal({
 					title: '提示',
 					content: '是否删除此门店？',
 					confirmColor: '#A4D091',
-					success:(res)=> {
+					success: (res) => {
 						if (res.confirm) {
 							removeStore({
 								customerId: id,
@@ -98,26 +100,26 @@
 									title: '移除成功',
 									duration: 800
 								});
-								this.show=false,
-								this.getList()
+								this.show = false,
+									this.getList()
 							})
 						} else if (res.cancel) {
 							console.log('用户点击取消');
 						}
 					}
 				});
-			
+
 			},
-			deleteAddress(item){
-				let info={
-					type:'edit',
-					storeInfo:item
+			deleteAddress(item) {
+				let info = {
+					type: 'edit',
+					storeInfo: item
 				}
 				uni.navigateTo({
-					url:'addStore/addStore?info='+encodeURIComponent(JSON.stringify(info))
+					url: 'addStore/addStore?info=' + encodeURIComponent(JSON.stringify(info))
 				})
 			}
-		
+
 		}
 	}
 </script>

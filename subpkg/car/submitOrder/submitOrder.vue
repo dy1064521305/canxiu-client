@@ -43,7 +43,10 @@
 					mode=""></image>
 			</view>
 		</view>
-		<view @click="$jump('/subpkg/')" class="designWorker acea-row row-between-wrapper">
+		<view v-if="addressInfo.customerId" style="color: #A4D091;background-color:#ECF7ED ;padding: 30rpx;">
+			*提示：地址关联{{addressInfo.storeName?addressInfo.storeName:'暂无名称'}}门店
+		</view>
+		<view @click="goWorkerList" class="designWorker acea-row row-between-wrapper">
 			<view class="designWorker-left acea-row">
 				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/ac000216203a45638ea0841739325d41.png"
 					mode=""></image>
@@ -53,13 +56,22 @@
 				<u-icon name="question-circle" color="#A4D091"></u-icon>
 			</view>
 			<view class="designWorker-right acea-row">
-				<view class="designWorker-right-people"></view>
-				<view class="designWorker-right-img"></view>
-				<view class="designWorker-right-img">
-					<view class="designWorker-right-img-pop acea-row row-middle row-center">
-						8位
+				<view v-for="(item,index) in workerList.slice(0, 3)" :key="index">
+					<view v-if="!item.workerName" class="designWorker-right-people"></view>
+					<view v-if="item.workerName" class="designWorker-right-img">
+						<image v-if="!item.avatarUrl"
+							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
+							mode=""></image>
+						<image v-else
+							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/4f491865b70d4651a9d1aea7bc8524b8.png"
+							mode=""></image>
+						<view v-if=" workerList.length>=6&&index==2"
+							class="designWorker-right-img-pop acea-row row-middle row-center">
+							{{workerList.length-6}}位
+						</view>
 					</view>
 				</view>
+
 				<u-icon name="arrow-right"></u-icon>
 			</view>
 		</view>
@@ -199,14 +211,20 @@
 					</view>
 				</view> -->
 			</view>
+			<view style="display: flex;justify-content: space-between;padding: 20rpx;"
+				@click="$jump('/pages/users/reward/coupon?info='+JSON.stringify(choseCoupon))">
+				优惠券
+				<view style="display: flex;">
+					{{choseCoupon.couponId?choseCoupon.name:'请选择优惠券'}}<u-icon name="arrow-right"></u-icon>
+				</view>
+			</view>
+
 			<view class="total">
-				<view class="line">
-					<view class="">
-						<text style="color: #3D3F3E;">合计</text>(不含材料)
-					</view>
-					<view>
-						{{info.orderPrice}}元
-					</view>
+				<text style="color: #A5A7A7;margin-right: 20rpx;"
+					v-if="choseCoupon.couponId">已优惠¥{{choseCoupon.couponAmount}}</text>
+				<text style="color: #A5A7A7;">合计</text>
+				<view style="font-size: 43rpx;color: #EC5722;">
+					{{info.orderPrice+Number(urgentPriceTotal)}}元
 				</view>
 			</view>
 
@@ -221,7 +239,7 @@
 			<view class="">
 				<view style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;text-align: end;">
 					<!-- 	<text style="font-size: 22rpx;color: #A5A7A7;">合计费用:</text> -->
-					费用:¥{{info.orderPrice}}
+					费用:¥{{info.orderPrice+Number(urgentPriceTotal)}}
 				</view>
 				<view style="font-size: 22rpx;
 				color: #A5A7A7;">
@@ -320,7 +338,8 @@
 				addressList: [], //地址列表
 				addressInfo: {}, //地址信息
 				info: {
-					orderPrice: ''
+					orderPrice: '',
+					oldOrderPrice: ''
 				},
 				dateRange: '',
 				urgentPriceTotal: 0,
@@ -334,8 +353,12 @@
 				expectTime: undefined,
 				coudanShow: false,
 				addressRegion: undefined,
-				typename: undefined
-
+				typename: undefined,
+				serviceIds: [],
+				workerList: [{}, {}, {}],
+				choseCoupon: {
+					type: 'order'
+				}
 			};
 		},
 		onShow() {
@@ -347,6 +370,10 @@
 			let item = JSON.parse(decodeURIComponent(option.item))
 
 			this.submitList = item.checkedList
+			console.log(this.submitList);
+			this.serviceIds = this.submitList.map(item => {
+				return item.productId ? item.productId : item.serviceId
+			})
 			this.isCar = item.isCar
 			this.isAgain = item.isAgain
 			this.projectDataVoList = this.isAgain ? item.checkedList : []
@@ -364,29 +391,26 @@
 				})
 			}
 			this.getMoney('init')
-			// try {
-			// 	const value = uni.getStorageSync('submit_order');
-			// 	console.log(value);
-			// 	//如果有本地数据就用本地的
-			// 	if (value) {
-			// 		this.submitList = value
-			// 		console.log(value);
-			// 	} else {
-			// 		//如果没有本地的就获取option的值
-			// 		console.log( JSON.parse(option.item));
-			// 		this.submitList = JSON.parse(option.item)
-			// 		console.log(this.submitList);
-			// 		uni.setStorage({
-			// 			key: 'submit_order',
-			// 			data: this.submitList,
-			// 		})
-			// 	}
-			// } catch (e) {
-			// 	// error
-			// }
-			//this.info.orderPrice = this.submitList.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
+
 		},
 		methods: {
+			//获取优惠券
+			getCoupon(item) {
+
+				console.log(item, '415555', this.info.oldOrderPrice);
+				this.choseCoupon = {
+					...item,
+					type: 'order'
+				}
+				this.info.orderPrice = Number(item.couponAmount) ? Number(this.info.oldOrderPrice) - Number(item
+					.couponAmount) : this.info.oldOrderPrice
+			},
+			//获取指派师傅
+			getWorkerlist(arr) {
+				this.workerList = [{}, {}, {}]
+				this.workerList = [...arr, ...this.workerList]
+				console.log(this.workerList);
+			},
 			groupBy(array, f) {
 
 				let groups = {};
@@ -445,19 +469,17 @@
 								if (value) {
 									this.addressInfo = value
 								} else {
-									this.addressList.forEach(item => {
-										if (item.isDefault == 0) {
-											this.addressInfo = item
-											uni.setStorage({
-												key: 'address_info',
-												data: item,
-											})
-										}
+									this.addressInfo = this.addressList[0]
+									uni.setStorage({
+										key: 'address_info',
+										data: this.addressInfo,
 									})
+
 								}
 								this.addressPlace = (this.addressInfo.addressRegion.substring((this.addressInfo
 									.addressRegion.indexOf('/')) + 1)).replace('/', '-')
 								this.addressRegion = this.addressInfo.addressRegion.replace(/\//g, "")
+								console.log(this.addressInfo, '4811111111111');
 							} catch (e) {
 								// error
 								console.log(e);
@@ -481,7 +503,9 @@
 					item.allMoney = all < Number(item.list[0].startingFreeDiscount) ? Number(item.list[0]
 						.startingFreeDiscount) : all
 				})
-				this.info.orderPrice = this.showListByType.reduce((p, c) => p + c.allMoney, 0) + this.urgentPriceTotal
+				this.info.orderPrice = this.info.oldOrderPrice = this.showListByType.reduce((p, c) => p + c.allMoney, 0)
+				// +
+				// 	this.urgentPriceTotal
 			},
 			getCheck(data) {
 
@@ -535,9 +559,9 @@
 					// 	return pre + Number(item.urgentPrice)
 					// }, 0)
 					this.urgentPriceTotal = Number(this.submitList[0].urgentPrice)
-					this.info.orderPrice = this.info.orderPrice + this.urgentPriceTotal
+					// this.info.orderPrice = this.info.orderPrice + this.urgentPriceTotal
 				} else {
-					this.info.orderPrice = this.info.orderPrice - this.urgentPriceTotal
+					// this.info.orderPrice = this.info.orderPrice - this.urgentPriceTotal
 					this.urgentPriceTotal = 0
 				}
 			},
@@ -553,150 +577,179 @@
 					clientId: storage.get('ClientId'),
 					type: this.typename,
 					name: this.searchName,
-					address:uni.getStorageSync('address_refreash')
+					address: uni.getStorageSync('address_refreash')
 				}).then(res => {
 					this.coudanList = res.data
 
 				})
 			},
-			//下单
-			submitOrder() {
-				// let bool = this.showListByType.some(item => {
-				// 	return item.expectTime == undefined
-				// })
 
-				if (!this.expectTime) {
-					uni.showToast({
-						title: '请选择上门时间',
-						duration: 2000,
-						icon: 'none'
-					});
-					return
+			trimSpace(array) {
+				console.log(array);
+				for (var i = 0; i < array.length; i++) {
+					//这里为过滤的值
+					if (array[i] == " " || array[i] == null || typeof(array[i]) == "undefined" || array[i] ==
+						'  '||JSON.stringify(array[i])=='{}') {
+						array.splice(i, 1);
+						i = i - 1;
+					}
 				}
-				if (!this.addressInfo.addressId || this.addressList.length == 0) {
-					uni.showToast({
-						title: '请选择地址',
-						duration: 2000,
-						icon: 'none'
-					});
-					return
-				}
-				let place = uni.getStorageSync('address_refreash')
-				console.log(this.addressInfo.addressRegion.replace(/\//g, "-"),place);
-				if (this.addressInfo.addressRegion.replace(/\//g, "-") != place) {
-					uni.showToast({
-						title: `仅支持服务“${place.substring((place.indexOf('-')) + 1)}”地区`,
-						duration: 2000,
-						icon: 'none'
-					})
-					return
-				}
-
-
-				if (this.isAgain) {
-					// console.log({
-					// 	orderId: this.showListByType[0].list[0].orderId,
-					// 	expectTime: this.showListByType[0].expectTime + ':00'
+				return array;
+			},
+				//下单
+				submitOrder() {
+					// let bool = this.showListByType.some(item => {
+					// 	return item.expectTime == undefined
 					// })
-					reissueOrder({
-						orderId: this.showListByType[0].list[0].orderId,
-						expectTime: this.expectTime + ':00'
-					}).then(res => {
-						let timeObj = {}
-						this.showListByType.forEach(item => {
-							timeObj[item.list[0].workerType] = this.expectTime + ':00'
 
-						})
-						let info = {
-							money: this.info.orderPrice,
-							time: timeObj,
-							orderId: this.showListByType[0].list[0].orderId
-						}
-						uni.redirectTo({
-							url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(info)
-						})
-					})
-				} else {
-					//else {
-					this.info.addressId = this.addressInfo.addressId
-					//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
-					this.info.clientId = storage.get('ClientId')
-					let arr = JSON.parse(JSON.stringify(this.submitList))
-					console.log(arr);
-
-					let bool1 = arr.some(item => {
-						return item.projectImg.length == 0
-					})
-					console.log(bool1);
-					if (bool1) {
-						this.$refs.uToast.show({
-							type: 'error',
-							message: '每个项目都要上传图片或视频'
+					if (!this.expectTime) {
+						uni.showToast({
+							title: '请选择上门时间',
+							duration: 2000,
+							icon: 'none'
 						});
-
+						return
+					}
+					console.log(this.addressInfo.id, this.addressList.length, '5966666');
+					if (!this.addressInfo.id || this.addressList.length == 0) {
+						uni.showToast({
+							title: '请选择地址',
+							duration: 2000,
+							icon: 'none'
+						});
+						return
+					}
+					if (!this.addressInfo.customerId) {
+						uni.showToast({
+							title: '请选择门店关联的地址',
+							duration: 2000,
+							icon: 'none'
+						});
+						return
+					}
+					let place = uni.getStorageSync('address_refreash')
+					console.log(this.addressInfo.addressRegion.replace(/\//g, "-"), place);
+					if (this.addressInfo.addressRegion.replace(/\//g, "-") != place) {
+						uni.showToast({
+							title: `仅支持服务“${place.substring((place.indexOf('-')) + 1)}”地区`,
+							duration: 2000,
+							icon: 'none'
+						})
 						return
 					}
 
-					arr.forEach(item => {
-						//item.projectVideo = this.toStrings(item.projectVideo)
-						item.projectImg = this.toStrings(item.projectImg)
-						item.shoppingCartStatus = 1
-						item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
-						item.remark = item.remarks
-						item.productId = item.serviceId ? item.serviceId : item.productId
-					})
-					let timeObj = {}
-					let startingFree = {}
-					let beforeStartingFree = {}
-					let costStartingFreeMap = {}
-					this.showListByType.forEach(item => {
-						console.log(item.list[0]);
-						timeObj[item.list[0].workerType] = this.expectTime + ':00'
-						startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount,
-							beforeStartingFree[item.list[0].workerType] = item.list[0].serviceStartingFree,
-							costStartingFreeMap[item.list[0].workerType] = item.list[0].workerStartingFree
-					})
-					this.info.orderProjectBoList = arr
-					this.info.startingFreeMap = startingFree
-					this.info.timeMap = timeObj
-					this.info.beforeStartingFreeMap = beforeStartingFree
-					this.info.costStartingFreeMap = costStartingFreeMap
-					//this.info.expectTime = this.info.expectTime + ':00'
-					console.log(this.info);
-					postOrder(this.info).then(res => {
-						console.log(res);
-						if (res.code == 200) {
-							orderSend(res.data).then(res => {})
-							uni.removeStorage({
-								key: 'address_info'
-							})
-							uni.removeStorage({
-								key: 'submit_order'
+
+					if (this.isAgain) {
+						// console.log({
+						// 	orderId: this.showListByType[0].list[0].orderId,
+						// 	expectTime: this.showListByType[0].expectTime + ':00'
+						// })
+						reissueOrder({
+							orderId: this.showListByType[0].list[0].orderId,
+							expectTime: this.expectTime + ':00'
+						}).then(res => {
+							let timeObj = {}
+							this.showListByType.forEach(item => {
+								timeObj[item.list[0].workerType] = this.expectTime + ':00'
+
 							})
 							let info = {
 								money: this.info.orderPrice,
 								time: timeObj,
-								orderId: res.data
+								orderId: this.showListByType[0].list[0].orderId
 							}
-							console.log(info);
 							uni.redirectTo({
-								url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(
-									info)
+								url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(info)
 							})
-						} else {
+						})
+					} else {
+						//else {
+						this.info.addressId = this.addressInfo.id
+						//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
+						this.info.clientId = storage.get('ClientId')
+						let arr = JSON.parse(JSON.stringify(this.submitList))
+						console.log(arr);
+
+						let bool1 = arr.some(item => {
+							return item.projectImg.length == 0
+						})
+						console.log(bool1);
+						if (bool1) {
 							this.$refs.uToast.show({
 								type: 'error',
-								message: res.msg
+								message: '每个项目都要上传图片或视频'
 							});
+
 							return
 						}
-					})
-				}
+
+						arr.forEach(item => {
+							//item.projectVideo = this.toStrings(item.projectVideo)
+							item.projectImg = this.toStrings(item.projectImg)
+							item.shoppingCartStatus = 1
+							item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
+							item.remark = item.remarks
+							item.productId = item.serviceId ? item.serviceId : item.productId
+						})
+						let timeObj = {}
+						let startingFree = {}
+						let beforeStartingFree = {}
+						let costStartingFreeMap = {}
+						this.showListByType.forEach(item => {
+							console.log(item.list[0]);
+							timeObj[item.list[0].workerType] = this.expectTime + ':00'
+							startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount,
+								beforeStartingFree[item.list[0].workerType] = item.list[0].serviceStartingFree,
+								costStartingFreeMap[item.list[0].workerType] = item.list[0].workerStartingFree
+						})
+						this.info.orderProjectBoList = arr
+						this.info.startingFreeMap = startingFree
+						this.info.timeMap = timeObj
+						this.info.beforeStartingFreeMap = beforeStartingFree
+						this.info.costStartingFreeMap = costStartingFreeMap
+						//this.info.expectTime = this.info.expectTime + ':00'
+						console.log(this.info);
+						this.info.customerId = this.addressInfo.customerId
+						this.workerList= this.trimSpace(this.workerList)
+						this.info.workerIds = this.workerList.map(item => item.workerId)
+						this.info.clientCouponId = this.choseCoupon.id
+					
+						postOrder(this.info).then(res => {
+							console.log(res);
+							if (res.code == 200) {
+								orderSend(res.data).then(res => {})
+								uni.removeStorage({
+									key: 'address_info'
+								})
+								uni.removeStorage({
+									key: 'submit_order'
+								})
+								let info = {
+									money: this.info.orderPrice+this.urgentPriceTotal,
+									time: timeObj,
+									orderId: res.data.orderIds,
+									workerList:this.workerList,
+									expectTime:this.expectTime
+								}
+								console.log(info);
+								uni.redirectTo({
+									url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(
+										info)
+								})
+							} else {
+								this.$refs.uToast.show({
+									type: 'error',
+									message: res.msg
+								});
+								return
+							}
+						})
+					}
 
 
 
 
-			},
+				},
 			toStrings(item) {
 				return item != [] ? item.toString() : ''
 			},
@@ -728,6 +781,7 @@
 				// uni.removeStorage({
 				// 	key:'submit_order'
 				// })
+
 				uni.navigateBack()
 				// const pages = uni.$u.pages();
 				// console.log(pages);
@@ -751,6 +805,16 @@
 				this.submitList.push(obj)
 				this.getMoney('init')
 				this.coudanShow = false
+			},
+			goWorkerList() {
+				console.log(this.serviceIds);
+				let info = {
+					serviceIds: this.serviceIds,
+					workerList: this.workerList
+				}
+				uni.navigateTo({
+					url: 'worker?info=' + JSON.stringify(info)
+				})
 			}
 
 		}
@@ -884,7 +948,10 @@
 
 		.total {
 			border-top: 2rpx solid #F8F8F8;
-			padding: 10rpx 0;
+			display: flex;
+			align-items: baseline;
+			justify-content: flex-end;
+			padding: 29rpx;
 		}
 
 		.bottom {
@@ -947,6 +1014,7 @@
 				background: #99BF87;
 				margin-right: 15rpx;
 				border-radius: 6rpx;
+				position: relative;
 
 				&-pop {
 					color: #fff;
@@ -954,6 +1022,8 @@
 					height: 58rpx;
 					background-color: rgba(0, 0, 0, 0.2);
 					font-size: 29rpx;
+					position: absolute;
+					top: 0;
 				}
 
 				image {

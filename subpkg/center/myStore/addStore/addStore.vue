@@ -67,7 +67,7 @@
 							<view class="circle"></view>
 						</view>
 						<view style="font-size: 25rpx;color: #A5A7A7;margin: 22rpx 0;">
-							{{addressInfo.addressRegion.replace(/\//g, '')}}
+							{{addressInfo&&addressInfo.addressRegion.replace(/\//g, '')}}
 						</view>
 						<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
 							<view style="width: 88%;">
@@ -154,11 +154,11 @@
 			uni.setNavigationBarTitle({
 				title: this.type!= 'edit'?'创建门店':'修改门店地址'
 			})
-			console.log(this.type);
+			console.log(info.storeInfo);
 			if (this.type == 'edit') {
 				this.disabled=true
 				this.userInfo = info.storeInfo
-				this.addressInfo = info.storeInfo.serviceAddress
+				this.addressInfo = info.storeInfo.serviceAddress? info.storeInfo.serviceAddress:{}
 				this.fileListt = this.userInfo.storeImg ? this.userInfo.storeImg.split(',') : []
 
 
@@ -222,6 +222,11 @@
 								title: '添加成功',
 								duration: 800
 							});
+							if (uni.getStorageSync('address_info')) {
+								if (uni.getStorageSync('address_info').id==this.addressInfo.id) {
+									uni.setStorageSync('address_info',this.addressInfo)
+								}
+							}
 							setTimeout(function() {
 								uni.navigateBack()
 							}, 800)

@@ -582,7 +582,7 @@
 						},
 						{
 							name: '服务加急费',
-							price: this.goodInfo.urgentPrice + '元/次(订单金额' + this.goodInfo.urgentDivided + '%)',
+							price: this.goodInfo.urgentPrice + '元/次',
 						},
 					]
 

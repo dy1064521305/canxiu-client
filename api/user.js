@@ -14,3 +14,6 @@ export const deleteUser = (clientId) => request.delete('/client/user/logout/'+cl
 
 //查询客户优惠券列表
 export const getCouponList = (params) => request.get('/client/coupon/list',params)
+
+//查询门店订单数据
+export const getOrderStatics = (clientId) => request.get('/client/order/statics/'+clientId)

@@ -1,9 +1,17 @@
 <template>
 	<view class="page">
 		<view class="page-peo">
-			<view class="page-peo-rightTop acea-row row-middle row-center">查看订单</view>
+			<view class="page-peo-rightTop acea-row row-middle row-center" @click="goDetailed">查看订单</view>
 			<view class="page-peo-wenan">预约成功，匹配师傅中！</view>
-			<view class="page-peo-time">14分32秒后将自动关闭！</view>
+			<view class="page-peo-time">
+				<u-count-down :time="900000" format="mm:ss" autoStart millisecond @change="onChange">
+					<view class="time">
+						<text class="time__item">{{ timeData.minutes }}&nbsp;分</text>
+						<text class="time__item">{{ timeData.seconds }}&nbsp;秒</text>
+					</view>
+				</u-count-down>
+				后将自动关闭！
+			</view>
 			<view class="page-peo-list acea-row row-between-wrapper">
 				<view class="page-peo-list-item flex-colum-center" v-for="(item) in sfList" :key="item.id">
 					<image :src="item.img" mode=""></image>
@@ -11,7 +19,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="page-peo">
+		<view v-if="workerList.length!=0" class="page-peo">
 			<view class="page-peo-name acea-row">
 				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/3dcf64d5acb7412d869844de109a5ec0.png"
 					mode=""></image>
@@ -21,9 +29,14 @@
 				如指派师傅超30分钟未响应，订单将由其他师傅接单服务
 			</view>
 			<view class="page-peo-listOther acea-row row-between-wrapper">
-				<view class="page-peo-list-item flex-colum-center" v-for="(item) in sfList" :key="item.id">
-					<image :src="item.img" mode=""></image>
-					<text>{{item.label}}</text>
+				<view class="page-peo-list-item flex-colum-center" v-for="(item) in workerList" :key="item.id">
+					<image v-if="!item.avatarUrl"
+						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
+						mode=""></image>
+					<image v-else
+						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/4f491865b70d4651a9d1aea7bc8524b8.png"
+						mode=""></image>
+					<text>{{item.workerName}}</text>
 				</view>
 			</view>
 		</view>
@@ -31,32 +44,59 @@
 			<view class="page-peo-three">
 				<view class="page-peo-three-list">
 					订单编号：
-					<text>WX20222251250251</text>
+					<text v-for="(item,index) in info.orderId" :key="index">{{item}}</text>
 				</view>
 				<view class="page-peo-three-list">
 					上门时间：
-					<text>08-06（周五）22:02</text>
+					<text>{{info.expectTime}}</text>
 				</view>
 				<view class="page-peo-three-list acea-row">
-					创建时间：<view style="margin-left: 4rxp;">¥ 345（*不含材料费）</view>
+					合计费用 ：<view style="margin-left: 4rxp;">¥{{info.money}}（*不含材料费）</view>
 				</view>
 			</view>
 		</view>
 		<view class="page-bottom acea-row row-middle">
-			<view class="page-bottom-btn acea-row row-center row-middle">在线客服</view>
-			<view class="page-bottom-btn acea-row row-center row-middle">修改订单</view>
-			<view class="page-bottom-btn page-bottom-btn2 acea-row row-center row-middle">消息通知</view>
+			<view @click="callPhone" class="page-bottom-btn acea-row row-center row-middle">在线客服</view>
+			<!-- 	<view class="page-bottom-btn acea-row row-center row-middle">修改订单</view> -->
+			<!-- 			<view class="page-bottom-btn page-bottom-btn2 acea-row row-center row-middle">消息通知</view> -->
 		</view>
+		<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="CALL_PHONE"> </yk-authpup>
+
+		<!-- 拨打电话 -->
+		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
+			:actions="actionList" :show="showPhone"></u-action-sheet>
 	</view>
 
 
 </template>
 
 <script>
+	import ykAuthpup from "@/components/yk-authpup/yk-authpup";
+	import {
+		callPhone
+	} from '@/utils/phone.js'
 	export default {
+		components: {
+			ykAuthpup
+		},
 		data() {
+			
 			return {
+				actionList: [{
+						name: '0571-88387761'
+					},
+					{
+						name: '呼叫'
+					},
+					{
+						name: '取消'
+					},
+				], //拨打电话
+				showPhone: false,
+				timeData: {},
 				info: {},
+				dateDiff: 0,
+				workerList:[],
 				sfList: [{
 						id: 0,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/caeec36c1eb3413982e1aa95704cbe56.png",
@@ -87,13 +127,84 @@
 						label: "支付订单",
 						url: "",
 					},
+					
 				]
 			};
 		},
-		onLoad(option) {},
-		onBackPress(e) {},
-		onHide() {},
-		methods: {}
+		onLoad(option) {
+			console.log(this.info);
+			console.log(JSON.parse(option.info));
+			this.info = JSON.parse(option.info)
+			this.workerList=this.info.workerList
+			console.log(this.info);
+		},
+		onBackPress(e) {
+			return true
+		},
+		onHide() {
+			console.log('hidehide');
+		},
+		methods: {
+			backHome() {
+				uni.switchTab({
+					url: '/pages/home/index'
+				})
+			},
+			//倒计时
+			onChange(e) {
+				this.timeData = e
+				if (e.days == 0 && e.hours == 0 && e.milliseconds == 0 && e.minutes == 0 && e.seconds == 0) {
+					this.dateDiff = 0
+				}
+			},
+			//查看订单
+			goDetailed() {
+				uni.switchTab({
+					url: '/pages/order/order'
+				})
+				console.log(this.info);
+			},
+			//倒数计时15分钟时间
+			timeFn(d1) { //di作为一个变量传进来
+				//如果时间格式是正确的，那下面这一步转化时间格式就可以不用了
+				var dateBegin = new Date(d1.replace(/-/g, "/")); //将-转化为/，使用new Date
+				var dateEnd = new Date(); //获取当前时间
+				var dateDiff = dateEnd.getTime() - dateBegin.getTime(); //时间差的毫秒数
+				//var dateDiff=1000000
+				//	console.log(dateDiff);
+				if (dateDiff > 900000) {
+					this.dateDiff = 0
+				} else {
+					this.dateDiff = Number((dateDiff - 900000).toString().substring(1))
+				}
+				//console.log(Number((dateDiff - 900000).toString().substring(1)));
+			},
+			changeAuth() {
+				this.showPhone = true
+			},
+			callPhone() {
+				// #ifdef APP-PLUS
+				this.$refs['authpup'].open()
+				// #endif
+				// #ifdef MP-WEIXIN
+				this.showPhone = true
+				// #endif
+			},
+			actionSelect(e) {
+				console.log(e);
+				if (e.name == '取消') {
+					this.showPhone = false
+				} else {
+					// #ifdef APP-PLUS
+					callPhone(e.name, 'app')
+					// #endif
+					// #ifdef MP-WEIXIN
+					callPhone(e.name, 'wx')
+					// #endif
+					this.showPhone = false
+				}
+			},
+		}
 	}
 </script>
 
@@ -143,7 +254,7 @@
 				font-size: 25rpx;
 				color: #A5A7A7;
 				margin: 0 0 20rpx 6rpx;
-
+				display: flex;
 			}
 
 			&-list {

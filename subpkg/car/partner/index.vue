@@ -1,7 +1,7 @@
 <template>
 	<view class="pages">
 		<view class="banner">
-			<image src="" mode=""></image>
+			<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/09/63428c7066d641feba3d0d36e1069896.jpg" mode=""></image>
 		</view>
 		<view class="content">
 			<view class="content-mess">

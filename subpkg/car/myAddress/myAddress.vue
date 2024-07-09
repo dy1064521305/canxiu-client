@@ -140,7 +140,7 @@
 			getList(pageNo, pageSize) {
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
-				this.queryParams.clientUserId = storage.get('ClientId'),
+				this.queryParams.clientId = storage.get('ClientId'),
 					//查询是否有地址
 					console.log(this.queryParams);
 				getAddressList(this.queryParams).then(res => {

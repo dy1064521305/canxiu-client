@@ -28,9 +28,9 @@
 						<u--image v-else width='60rpx' height='60rpx' :src="userInfo.storeImg" shape="circle">
 						</u--image>
 					</view>
-					<view class="name  acea-row" v-if="userInfo.clientName!=null">
+					<view class="name  acea-row">
 						<view class="name-left">
-							{{userInfo.clientName}}
+							{{userInfo.storeName?userInfo.storeName:userInfo.clientName?userInfo.clientName:'暂无名称'}}
 						</view>
 						<!-- <view style="font-size: 29rpx;">
 							{{userInfo.phone}}
@@ -45,13 +45,13 @@
 				<view class="balance acea-row  row-between-wrapper">
 					<view class="balance-two ">
 						<view class="balance-two-num ">
-							12
+							{{couponNum}}
 						</view>
-						<text>优惠卷</text>
+						<text>优惠券</text>
 					</view>
 					<view class="balance-two ">
 						<view class="balance-two-num ">
-							12
+							{{balance}}
 						</view>
 						<text>钱包余额</text>
 					</view>
@@ -67,23 +67,27 @@
 					</view>
 				</view>
 				<view class="counts">
-					<text class="counts-title">门店订单数据</text>
+					<view class="counts-title">
+						<view>门店订单数据</view>
+						<view style="margin-right: 30rpx;" @click="$jump('/subpkg/center/myOrder/myOrder?name=全部订单')">
+							全部></view>
+					</view>
 					<view class="counts-status">
 						<view class="counts-status-items acea-row " v-for="(item,index) in orderList2" :key="index">
-							<view class="counts-status-items-value">{{item.value||0}}</view>
+							<view class="counts-status-items-value">{{item.num||0}}</view>
 							<text>{{item.label}}</text>
 						</view>
 					</view>
-					<view class="counts-other acea-row">
+					<!-- 	<view class="counts-other acea-row">
 						<view class="counts-other-items acea-row">
 							今日待上门<text>12</text>
 						</view>
 						<view class="counts-other-items acea-row">
 							今日异常订单<text>12</text>
 						</view>
-					</view>
+					</view> -->
 				</view>
-				<view class="swiperBanner"></view>
+				<!-- <view class="swiperBanner"></view> -->
 				<view class="counts">
 					<text class="counts-title">常用功能</text>
 					<view class="counts-type acea-row">
@@ -304,7 +308,9 @@
 	} from '@/api/order.js'
 	import {
 		getInfoById,
-		queryMyInfo
+		queryMyInfo,
+		getOrderStatics,
+		getCouponList
 	} from '@/api/user.js'
 	import {
 		callPhone
@@ -326,6 +332,7 @@
 				showPhone: false, //底部电话显示
 				isLogin: false,
 				userInfo: {}, //用户信息
+				couponNum: 0,
 				useList: [{
 						id: 0,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/07a80dbb32384b938c78184567842312.png",
@@ -384,32 +391,32 @@
 				],
 				orderList2: [{
 						label: "待接单",
-						value: "9",
+						value: "grabOrder",
 						num: 0,
 					},
 					{
 						label: "待上门",
-						value: "9",
+						value: "waitDoor",
 						num: 0,
 					},
 					{
 						label: "待验收",
-						value: "9",
+						value: "waitAcc",
 						num: 0,
 					},
 					{
 						label: "待付款",
-						value: "9",
+						value: "waitPay",
 						num: 0,
 					},
 					{
 						label: "返修中",
-						value: "9",
+						value: "repairing",
 						num: 0,
 					},
 					{
 						label: "完工/关闭",
-						value: "9",
+						value: "finishClose",
 						num: 0,
 					},
 				],
@@ -444,7 +451,7 @@
 						id: 0,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/266f8fc9d00b4e67b40dd52f66a66ec5.png",
 						label: "帮助中心",
-						url: ""
+						url: "/subpkg/center/setting/setting"
 					},
 					{
 						id: 1,
@@ -523,6 +530,18 @@
 						userType: 'c'
 					}).then(res => {
 						this.balance = res.data.balance
+					})
+					getOrderStatics(storage.get('ClientId')).then(res => {
+						console.log(res, '5300000000');
+						this.orderList2.forEach(item => {
+							item.num = res.data[item['value']]
+						})
+					})
+					getCouponList({
+						clientId: storage.get('ClientId')
+					}).then(res => {
+
+						this.couponNum = res.total
 					})
 
 				}
@@ -696,7 +715,7 @@
 	}
 
 	.center {
-		padding: 0 30rpx 140rpx;
+		padding: 0 30rpx 0;
 		width: 100%;
 		box-sizing: border-box;
 		position: absolute;
@@ -821,6 +840,8 @@
 				font-weight: 600;
 				font-size: 28rpx;
 				margin-left: 30rpx;
+				display: flex;
+				justify-content: space-between;
 			}
 
 			&-status {

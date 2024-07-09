@@ -269,6 +269,7 @@
 			this.coudanShow = false
 			this.workerType = undefined,
 				this.searchName = ''
+			
 		},
 		methods: {
 

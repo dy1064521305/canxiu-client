@@ -145,9 +145,9 @@
 		</view>
 
 
-		<view class="index" style="z-index: 999999999999;">
+		<!-- <view class="index" style="z-index: 999999999999;">
 			<wu-app-update></wu-app-update>
-		</view>
+		</view> -->
 
 	</view>
 </template>

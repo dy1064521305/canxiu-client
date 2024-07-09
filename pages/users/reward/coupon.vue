@@ -6,9 +6,17 @@
 				{{item.label}}
 			</view>
 		</view>
-		<view class="coupons ">
-			<view class="coupons-every" v-for="(item) in couponList" :key="item.id">
+		<view class="coupons">
+			<view @click="getCoupon(item)" class="coupons-every" v-for="(item,i) in couponList" :key="item.id">
+
 				<view class="coupons-every-one acea-row">
+					<view v-if="choseInfo.type=='order'&&item.useStatus!=1&&item.useStatus!=2" style="display: flex;align-items: center;margin-left: 16rpx;">
+						<view v-if="choseInfo.couponId!=item.couponId" class="check"></view>
+						<view v-else>
+							<u-icon name="checkmark-circle-fill" color="#A4D091" size="23"></u-icon>
+						</view>
+
+					</view>
 					<view class="coupons-every-one-left acea-row row-column justify-center ">
 						<view class="coupons-every-one-left-name">
 							{{item.name}}
@@ -17,7 +25,7 @@
 							{{item.couponTimeType=='0'?'长期有效':''}}
 						</view>
 						<view class="coupons-every-one-left-rule acea-row align-center"
-							@click="item.activity=!item.activity">
+							@click.stop="activeHandle(item,i)">
 							使用规则
 							<u-icon :name="!item.activity?'arrow-down':'arrow-up'" color="#A5A7A7"
 								style="margin: 2rpx 0 0 5rpx;"></u-icon>
@@ -29,7 +37,7 @@
 							<text>{{item.couponAmount}}</text>
 						</view>
 						<view>
-							{{item.minAmount=='0'?'无门槛':''}}
+							{{item.minAmount=='0.00'?'无门槛':''}}
 						</view>
 					</view>
 				</view>
@@ -41,10 +49,10 @@
 						使用范围：{{item.suitableScope=='0'?'不限区域':''}}
 					</view>
 					<view>
-						订单类型：仅{{item.orderType=='0'?'个人':item.orderType=='1'?'门店':'品牌'}}可用
+						订单类型：{{item.orderTypeName}}
 					</view>
 					<view>
-						叠加规则：可与{{item.superpositionRule=='0'?'销售价':'活动价'}}叠加使用
+						叠加规则：{{item.superpositionRuleName}}
 					</view>
 					<view>
 						发放时间：{{item.startTime}}
@@ -55,17 +63,24 @@
 				</view>
 			</view>
 			<empty-page v-if="!couponList.length" msg="暂无数据"></empty-page>
+		
+		</view>
+		<view v-if="choseInfo.type=='order'&&onType!=1&&onType!=2" class="button" @click="choseOk">
+			确定
 		</view>
 	</view>
 </template>
 
 <script>
 	import storage from '@/utils/storage'
-	import {getCouponList} from '@/api/user.js'
+	import {
+		getCouponList
+	} from '@/api/user.js'
 	export default {
 		data() {
 			return {
-				couponList:[],
+				choseInfo: {},
+				couponList: [],
 				onType: 0,
 				type: [{
 						label: "未使用",
@@ -80,76 +95,57 @@
 						status: 2
 					},
 				],
-				list: [{
-						id: 1,
-						name: "优惠卷名字",
-						coupon: 100,
-						need: "无门槛",
-						times: "2024-12-12 12:12到期",
-						activity: false,
-						types: {
-							goods: "全场可以",
-							range: "全国/仅浙江省-杭州市、江苏省地区可用",
-							type: "仅商家订单可用",
-							rule: "不能与活动价叠加使用",
-							time: '2024-12-12 12:12:12',
-							coup: "123456789"
-						}
-					},
-					{
-						id: 2,
-						name: "优惠卷名字",
-						coupon: 100,
-						need: "无门槛",
-						times: "2024-12-12 12:12到期",
-						activity: false,
-						types: {
-							goods: "全场可以",
-							range: "全国/仅浙江省-杭州市、江苏省地区可用",
-							type: "仅商家订单可用",
-							rule: "不能与活动价叠加使用",
-							time: '2024-12-12 12:12:12',
-							coup: "123456789"
-						}
-					},
-					{
 
-						id: 3,
-						name: "优惠卷名字",
-						coupon: 100,
-						need: "无门槛",
-						times: "2024-12-12 12:12到期",
-						activity: false,
-						types: {
-							goods: "全场可以",
-							range: "全国/仅浙江省-杭州市、江苏省地区可用",
-							type: "仅商家订单可用",
-							rule: "不能与活动价叠加使用",
-							time: '2024-12-12 12:12:12',
-							coup: "123456789"
-						}
-					}
-				]
 			}
 		},
-		onLoad() {
+		onLoad(option) {
+			console.log(option);
+			if (JSON.stringify(option) != '{}') {
+				this.choseInfo = JSON.parse(option.info)
+			}
+
 			this.getList()
 		},
 		methods: {
-			getList(){
+			getList() {
 				getCouponList({
-					clientId:storage.get('ClientId'),
-					useStatus:this.onType
-				}).then(res=>{
-					res.rows.forEach(item=>{
-						item.activity=false
+					clientId: storage.get('ClientId'),
+					useStatus: this.onType
+				}).then(res => {
+					res.rows.forEach(item => {
+						item.activity = false
+						let arr = item.orderType.split(',')
+						let arr1 = item.superpositionRule.split(',')
+						item.orderTypeName =
+							`${arr.includes('0')?'个人':''}${arr.includes('1')?'门店':''}${arr.includes('2')?'品牌':''}可用`
+						item.superpositionRuleName =
+							`可与${arr1.includes('0')?'销售价':''}${arr.includes('1')?'活动价':''}叠加使用`
 					})
-					this.couponList=res.rows
+					this.couponList =res.rows
 				})
 			},
 			changeType(status) {
 				this.onType = status
 				this.getList()
+			},
+			activeHandle(item, i) {
+				this.$set(this.couponList[i], 'activity', !item.activity)
+			},
+			getCoupon(item) {
+				if (item.couponId==this.choseInfo.couponId) {
+					this.choseInfo ={
+						type:'order'
+					}
+				} else{
+					this.choseInfo = {...item,type:'order'}
+				}
+				
+
+			},
+			choseOk() {
+				const pages = uni.$u.pages()
+				pages[pages.length - 2].$vm.getCoupon(this.choseInfo)
+				uni.navigateBack()
 			}
 		}
 	}
@@ -158,6 +154,19 @@
 <style lang="scss" scoped>
 	.page {
 		min-height: 100vh;
+
+		.button {
+			//width: 663rpx;
+			height: 91rpx;
+			background: #A4D091;
+			border-radius: 45rpx;
+			font-size: 36rpx;
+			color: #FFFFFF;
+			line-height: 91rpx;
+			text-align: center;
+			margin: 0 40rpx;
+
+		}
 
 		.coupon {
 			height: 94rpx;
@@ -191,6 +200,14 @@
 
 		.coupons {
 			padding: 22rpx;
+    height: 81vh;
+    overflow: scroll;
+			.check {
+				width: 33rpx;
+				height: 33rpx;
+				border: 2rpx solid #A5A7A7;
+				border-radius: 50%;
+			}
 
 			&-every {
 				width: 100%;
