@@ -12,7 +12,7 @@
 					<view class="search" @click="goSearch">
 						<view class="left">
 							<view class="citys">
-								<view @click.stop="choseCity">{{cityName}}
+								<view @click.stop="choseCity">{{cityName.length>=7?cityName.slice(0,7)+'...':cityName}}
 								</view>
 								<image @click.stop="choseCity" style="width: 25rpx;height: 16rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/9f18ad7cede3427ab1d2bb6c4f1d0a8e.png"
