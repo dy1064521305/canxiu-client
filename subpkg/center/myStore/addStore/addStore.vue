@@ -50,19 +50,19 @@
 				</u-form-item>
 			</view>
 
-			<view class="box">
+			<view class="box" style="padding-bottom: 10rpx;">
 				<u-form-item @click='goChoseAddress' label="门店地址" prop="contacts" borderBottom ref="item1">
 					<view style="color: rgb(192, 196, 204);">设置门店服务地址</view>
 					<u-icon slot="right" name="arrow-right" style="margin-right: 20rpx;"></u-icon>
 				</u-form-item>
 				<view v-if="JSON.stringify(addressInfo)!='{}'" class="box">
-					<view style="padding: 20rpx">
+					<view style="padding: 20rpx;background-color: #ECF7F1;border-radius: 14rpx;">
 						<view class="top">
 							<view class="">
 								<text class="font" style="font-weight: bold;">{{addressInfo.contact}}</text>
 								<text class="font" style="margin:0 14rpx;">{{addressInfo.phone}}</text>
-								<text v-if="addressInfo.isDefault&&addressInfo.isDefault==0"
-									class="moren_sign">默认</text>
+							<!-- 	<text v-if="addressInfo.isDefault&&addressInfo.isDefault==0"
+									class="moren_sign">默认</text> -->
 							</view>
 							<view class="circle"></view>
 						</view>
@@ -212,7 +212,7 @@
 
 				if (this.type == 'edit') {
 					editServiceAddress({
-						serviceAddressId: this.addressInfo.id,
+						addressId: this.addressInfo.addressId,
 						customerStoreId: this.userInfo.customerId
 					}).then(res => {
 						console.log(res);
@@ -240,7 +240,7 @@
 					// }).catch(errors => {
 					// 	uni.$u.toast('校验失败')
 					// })
-					this.userInfo.serviceAddressId = this.addressInfo.id
+					this.userInfo.addressId = this.addressInfo.id
 					addCustomer(this.userInfo).then(res => {
 						console.log(res);
 						this.reset()
@@ -294,7 +294,7 @@
 			margin: 20rpx;
 			background: #FFFFFF;
 			border-radius: 14rpx;
-
+			
 
 			/deep/.u-form-item__body__right__content {
 				width: 94%;

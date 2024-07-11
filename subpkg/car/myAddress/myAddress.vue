@@ -10,7 +10,7 @@
 							<text v-if="item.isDefault==0" class="moren_sign">默认</text>
 						</view>
 
-						<image v-if="type!='store'" @click.stop="editAndAddAddress(item.id)"
+						<image v-if="type!='store'" @click.stop="editAndAddAddress(item.addressId)"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/ad57c5f8079e459da0f85cfc0c9b818f.png"
 							style="width: 29rpx;height:31rpx;"></image>
 					</view>
@@ -18,7 +18,7 @@
     justify-content: space-between;">
 						{{item.addressRegion.replace(/\//g, '')}}
 						<view v-if="type=='store'">
-							<view v-if="item.id!=storeAddressInfo.id" class="check"></view>
+							<view v-if="item.addressId!=storeAddressInfo.addressId" class="check"></view>
 							<view v-else>
 
 								<u-icon name="checkmark-circle-fill" color="#A4D091" size="20"></u-icon>
@@ -28,10 +28,10 @@
 					</view>
 					<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
 						<view style="width: 88%;">
-							{{item.addressDetailed}}{{item.doorplate}}
+							{{item.addressDetailed}}{{item.houseNum}}
 						</view>
 						<view v-if="type!='store'&&type!='order'" style="font-size: 25rpx;color: #EC5722;"
-							@click.stop="deleteAddressHandle(item.id)">
+							@click.stop="deleteAddressHandle(item.addressId)">
 							删除
 						</view>
 					</view>

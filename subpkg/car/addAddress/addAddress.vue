@@ -27,8 +27,8 @@
 					<u--textarea :disabled='isSubmit&&id!=""' v-model="model1.address.addressDetailed" border='none'
 						placeholder="请输入详细地址"></u--textarea>
 				</u-form-item>
-				<u-form-item label="门牌号" prop="address.doorplate" borderBottom ref="item1">
-					<u--input v-model="model1.address.doorplate" border="none" placeholder="例：4号楼2603">
+				<u-form-item label="门牌号" prop="address.houseNum" borderBottom ref="item1">
+					<u--input v-model="model1.address.houseNum" border="none" placeholder="例：4号楼2603">
 					</u--input>
 
 				</u-form-item>
@@ -97,7 +97,7 @@
 						phone: '',
 						addressDetailed: '',
 						addressRegion: '',
-						doorplate: '',
+						houseNum: '',
 						clientId: storage.get('ClientId'),
 						longitude: '',
 						latitude: '',
