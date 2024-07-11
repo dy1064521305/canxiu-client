@@ -31,7 +31,7 @@
 			// https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/6cfc99b225184b0eafbed58cd5c6ede5.json
 			var that=this
 			uni.request({
-				url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/30/78ed8008c9ef4aa6a6c29f101bb0c9ec.json',
+				url: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/30/78ed8008c9ef4aa6a6c29f101bb0c9ec.json',
 				method: 'GET',
 				complete(res) {
 					 // console.log('...res...', res);
