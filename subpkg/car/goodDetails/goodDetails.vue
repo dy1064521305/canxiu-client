@@ -415,7 +415,7 @@
 		onLoad(options) {
 			// console.log(this.isLogin);
 			// console.log(options);
-			let name = uni.getStorageSync('address_refreash')
+			let name = uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 			this.query.address = name
 			this.city = this.query.address.split('-')[2]
 			this.query.clientId = !storage.get('ClientId') ? '' : storage.get('ClientId')
@@ -517,7 +517,7 @@
 					clientId: storage.get('ClientId'),
 					type: this.goodInfo.workerType,
 					name: this.searchName,
-					address:uni.getStorageSync('address_refreash')
+					address:uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 				}).then(res => {
 					this.coudanList = res.data
 				})

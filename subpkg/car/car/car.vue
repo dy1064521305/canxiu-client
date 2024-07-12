@@ -424,17 +424,18 @@
 						this.addressList = res.rows
 						if (this.addressList.length == 0) {
 							uni.removeStorage({
-								key: 'address_info'
+								key: `address_info${storage.get('ClientId')}`,
+								
 							})
 						} else {
 							try {
-								const value = uni.getStorageSync('address_info');
+								const value = uni.getStorageSync(`address_info${storage.get('ClientId')}`);
 								if (value) {
 									let arr = this.addressList.filter(item => {
 										return item.addressId == value.addressId
 									})
 									arr.length == 0 ? uni.removeStorage({
-										key: 'address_info'
+										key: `address_info${storage.get('ClientId')}`
 									}) : this.addressInfo = value
 
 									console.log(value);
@@ -444,7 +445,7 @@
 											this.addressInfo = item
 											console.log(111, '118111111111111111111');
 											uni.setStorage({
-												key: 'address_info',
+												key:`address_info${storage.get('ClientId')}`,
 												data: item,
 											})
 										}
@@ -481,7 +482,7 @@
 				//维修车列表
 				car.getCarList({
 					clientId: storage.get('ClientId'),
-					address: uni.getStorageSync('address_refreash')
+					address: uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 				}).then(res => {
 					console.log(res, '3145455555>>>>>>>>>');
 

@@ -163,10 +163,12 @@
 						title: '注销成功',
 						duration: 800
 					});
-					uni.removeStorageSync("address_info")
+					uni.removeStorageSync(`address_refreash${storage.get('ClientId')}`)
+					uni.removeStorageSync(`city${storage.get('ClientId')}`)
+					uni.removeStorageSync(`address_info${storage.get('ClientId')}`)
 					uni.removeStorageSync("AccessToken")
 					uni.removeStorageSync("ClientId")
-
+				
 					setTimeout(function() {
 						uni.switchTab({
 							url: '/pages/center/index'

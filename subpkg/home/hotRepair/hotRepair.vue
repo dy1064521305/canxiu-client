@@ -33,7 +33,7 @@
 			uni.setNavigationBarTitle({
 				title: title
 			})
-			this.address = uni.getStorageSync('address_refreash')
+			this.address = uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 			// this.list = info.list
 			// this.list.forEach(item=>{
 			// 	item.serviceImg = item.serviceImg!=null ?Array.isArray(item.serviceImg)?item.serviceImg : item.serviceImg.split(

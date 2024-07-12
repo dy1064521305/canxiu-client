@@ -12,7 +12,7 @@
 					<view class="search" @click="goSearch">
 						<view class="left">
 							<view class="citys">
-								<view @click.stop="choseCity">{{cityName.length>=7?cityName.slice(0,7)+'...':cityName}}
+								<view @click.stop="choseCity">{{cityName.length>=5?cityName.slice(0,5)+'...':cityName}}
 								</view>
 								<image @click.stop="choseCity" style="width: 25rpx;height: 16rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/9f18ad7cede3427ab1d2bb6c4f1d0a8e.png"
@@ -333,13 +333,13 @@
 			// const apps = getApp()
 			// if (apps.type == 'login') {
 			// 	this.queryParams.pageNum = 1
-			
+
 			// 	this.getServiceSymptomsHandle()
 			// } else {
 			// 	this.getServiceSymptoms()
 			// }
 			this.choseAddress()
-				console.log('335================================>>>>');
+			console.log('335================================>>>>');
 			uni.$on('totalUnreadCount', function(data) {
 				getC2cUnreadMsgNum().then(res => {
 					queryUnreadNum().then(ress => {
@@ -370,16 +370,16 @@
 		},
 
 		onTabItemTap() {
-			
-			if (uni.getStorageSync('city').addressDetailed=='杭州市拱墅区') {
+
+			if (uni.getStorageSync(`city${storage.get('ClientId')}`).addressDetailed == '杭州市拱墅区') {
 				// #ifdef APP-PLUS
 				this.$refs['authpup'].open()
 				// #endif
 				// #ifdef MP-WEIXIN
 				this.getLoction()
 				// #endif
-			} 
-		
+			}
+
 		},
 		onLoad() {
 			this.notPermissions()
@@ -411,7 +411,7 @@
 			queryState() {
 				accountQueryState().then(res => {
 					console.log(res.data);
-					if (res.data.QueryResult&&res.data.QueryResult[0].State == 'Offline') {
+					if (res.data.QueryResult && res.data.QueryResult[0].State == 'Offline') {
 						getUserSig().then(ress => {
 							uni.$TUIKit.login({
 								userID: res.data.QueryResult[0].To_Account,
@@ -444,18 +444,18 @@
 					.currentIndex].params.symptoms = this.serviceSymptomsName[this.currentIndex].name
 				this.getServiceSymptomsHandle()
 			},
-			// //上拉函数
+			//下拉刷新函数
 			onPullDownRefresh() {
 				console.log(this.serviceSymptomsName);
 				this.serviceSymptomsName.forEach(service => {
 					service.params.pageNum = 1
 				})
-				// #ifdef APP-PLUS
-				this.$refs['authpup'].open()
-				// #endif
-				// #ifdef MP-WEIXIN
-				this.getLoction()
-				// #endif
+				// // #ifdef APP-PLUS
+				// this.$refs['authpup'].open()
+				// // #endif
+				// // #ifdef MP-WEIXIN
+				// this.getLoction()
+				// // #endif
 				this.getServiceSymptomsHandle()
 
 
@@ -591,11 +591,11 @@
 								that.address = result.province + '-' +
 									result.city + '-' + result.district
 								uni.setStorage({
-									key: 'address_refreash',
+									key: `address_refreash${storage.get('ClientId')}`,
 									data: that.address
 								})
 								uni.setStorage({
-									key: 'city',
+									key: `city${storage.get('ClientId')}`,
 									data: {
 										addressDetailed: that.cityName
 									}
@@ -623,12 +623,12 @@
 			},
 			choseAddress() {
 				uni.getStorage({
-					key: 'city',
+					key: `city${storage.get('ClientId')}`,
 					success: (res) => {
-						console.log(res,'623333333');
+						console.log(res, '623333333');
 						this.cityName = res.data.addressDetailed
 						this.addressName = this.address = uni.getStorageSync(
-							'address_refreash')
+							`address_refreash${storage.get('ClientId')}`)
 						this.getList()
 						this.getServiceSymptomsHandle()
 					},
@@ -732,12 +732,12 @@
 			notPermissions() {
 				console.log('notPermissionsnotPermissionsnotPermissionsnotPermissions');
 				uni.getStorage({
-					key: 'city',
+					key: `city${storage.get('ClientId')}`,
 					success: (res) => {
 						console.log(res);
 						this.cityName = res.data.addressDetailed
 						this.addressName = this.address = uni.getStorageSync(
-							'address_refreash')
+							`address_refreash${storage.get('ClientId')}`)
 						this.getList()
 						this.getServiceSymptomsHandle()
 					},
@@ -745,11 +745,11 @@
 						this.cityName = '杭州市拱墅区'
 						this.address = '浙江省-杭州市-拱墅区'
 						uni.setStorage({
-							key: 'address_refreash',
+							key: `address_refreash${storage.get('ClientId')}`,
 							data: this.address
 						})
 						uni.setStorage({
-							key: 'city',
+							key: `city${storage.get('ClientId')}`,
 							data: {
 								addressDetailed: this
 									.cityName,

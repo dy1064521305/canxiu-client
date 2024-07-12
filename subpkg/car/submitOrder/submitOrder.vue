@@ -20,7 +20,7 @@
 			<view v-if='addressList.length!=0' class="left">
 				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/11/a7fe2594ad27432c8676c0b03bf22bb7.png"
 					style="width: 36rpx;height:43rpx;margin-right: 20rpx;" />
-					<view>
+					<view style="width: 86%;">
 						<view style="font-size: 25rpx;">
 							{{addressPlace}}
 						</view>
@@ -422,7 +422,7 @@
 							this.addressList = res.rows
 							this.showModal = this.addressList.length == 0
 							try {
-								const value = uni.getStorageSync('address_info');
+								const value = uni.getStorageSync(`address_info${storage.get('ClientId')}`);
 								if (value) {
 									this.addressInfo = value
 								} else {
@@ -430,7 +430,7 @@
 										if (item.isDefault == 0) {
 											this.addressInfo = item
 											uni.setStorage({
-												key: 'address_info',
+												key: `address_info${storage.get('ClientId')}`,
 												data: item,
 											})
 										}
@@ -534,7 +534,7 @@
 					clientId: storage.get('ClientId'),
 					type: this.typename,
 					name: this.searchName,
-					address:uni.getStorageSync('address_refreash')
+					address:uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 				}).then(res => {
 					this.coudanList = res.data
 
@@ -649,7 +649,7 @@
 						if (res.code == 200) {
 							orderSend(res.data).then(res => {})
 							uni.removeStorage({
-								key: 'address_info'
+								key: `address_info${storage.get('ClientId')}`
 							})
 							uni.removeStorage({
 								key: 'submit_order'

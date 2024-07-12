@@ -171,7 +171,7 @@
 									that.$refs.paging.reload();
 
 									uni.removeStorage({
-										key: 'address_info',
+										key: `address_info${storage.get('ClientId')}`,
 										success: function(res) {}
 									})
 								}
@@ -189,7 +189,7 @@
 				console.log(this.type);
 				if (this.type == 'car' || this.type == 'order') {
 					uni.setStorage({
-						key: 'address_info',
+						key: `address_info${storage.get('ClientId')}`,
 						data: item,
 					})
 					const pages = uni.$u.pages()

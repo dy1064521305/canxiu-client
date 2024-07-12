@@ -300,7 +300,7 @@
 			}
 		},
 		onLoad(options) {
-			let name = uni.getStorageSync('address_refreash')
+			let name = uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 			this.query.address = name
 			  this.city=this.query.address.split('-')[2] 
 			// this.goodOptionInfo = item.goodInfo
