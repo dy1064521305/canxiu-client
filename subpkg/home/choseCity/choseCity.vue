@@ -5,7 +5,7 @@
 				当前定位
 			</view>
 			<view class="bottom">
-				<view style="display: flex;align-items: center;">
+				<view style="display: flex;align-items: center;width: 84%;">
 					<image style="width: 38rpx;height: 45rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/19/991f64631ffc414f9f624ac43a66ab71.png"
 						mode=""></image>
@@ -121,8 +121,8 @@ color: #3D3F3E;">
 
 		onLoad() {
 			console.log('onLoadonLoadonLoadonLoad');
-			this.failLocation = uni.getStorageSync('isFirst')!=='1'
-			this.getList()
+			this.failLocation = uni.getStorageSync(`isFirst${storage.get('ClientId')}`)!=='1'
+		
 			console.log(uni.getStorageSync('city'), '1266666666666');
 			// #ifdef APP-PLUS
 			this.$nextTick(() => {
@@ -137,6 +137,9 @@ color: #3D3F3E;">
 
 
 		},
+		onShow() {
+				this.getList()
+		},
 		methods: {
 			getList() {
 				getAddressList({
@@ -145,10 +148,10 @@ color: #3D3F3E;">
 					console.log(res, this.choseForm);
 					this.addressList = res.rows
 					if (this.addressList.length == 0) {
-						uni.removeStorageSync('city')
+						uni.removeStorageSync(`city${storage.get('ClientId')}`)
 					}
 					if (Object.keys(this.choseForm).length < 1) {
-						const cityRes = uni.getStorageSync('city')
+						const cityRes = uni.getStorageSync(`city${storage.get('ClientId')}`)
 						console.log(cityRes, '<<<=====cityres');
 						this.choseForm = cityRes || {}
 						console.log(this.choseForm, '<<<=====that.choseForm ');
@@ -163,7 +166,7 @@ color: #3D3F3E;">
 			},
 			changeAuth() {
 				console.log('changeAuthchangeAuthchangeAuth');
-				if (this.cityName == '重新定位中') uni.removeStorageSync('city')
+				if (this.cityName == '重新定位中') uni.removeStorageSync(`city${storage.get('ClientId')}`)
 
 				this.getLocation()
 
@@ -171,7 +174,7 @@ color: #3D3F3E;">
 			getAddress() {
 				this.failLocation = true
 				uni.getStorage({
-					key: 'city',
+					key: `city${storage.get('ClientId')}`,
 					success: (res) => {
 						console.log(res);
 						this.choseForm = res.data
@@ -221,7 +224,7 @@ color: #3D3F3E;">
 									that.cityName = result.street_number != '' ? result
 										.street_number : result.street
 									uni.setStorage({
-										key: 'city',
+										key: `city${storage.get('ClientId')}`,
 										data: {
 											addressDetailed: that.cityName
 										}
@@ -229,7 +232,7 @@ color: #3D3F3E;">
 									that.address = result.province + '-' +
 										result.city + '-' + result.district
 									uni.setStorage({
-										key: 'address_refreash',
+										key:  `address_refreash${storage.get('ClientId')}`,
 										data: that.address
 									})
 								} else {
@@ -262,18 +265,18 @@ color: #3D3F3E;">
 							info.city + '/' +
 							info.district
 					}
-					uni.setStorageSync('address_refreash', info.province + '-' +
+					uni.setStorageSync(`address_refreash${storage.get('ClientId')}`, info.province + '-' +
 						info.city + '-' +
 						info.district)
 				} else {
 					this.choseForm = item
-					uni.setStorageSync('address_refreash', item.addressRegion.replace(/\//g, "-"))
+					uni.setStorageSync(`address_refreash${storage.get('ClientId')}`, item.addressRegion.replace(/\//g, "-"))
 				}
-				uni.setStorageSync('city', this.choseForm)
+				uni.setStorageSync(`city${storage.get('ClientId')}`, this.choseForm)
 				const pages = uni.$u.pages()
 				pages[pages.length - 2].$vm.choseAddress()
 				uni.navigateBack()
-				this.failLocation||uni.setStorageSync('isFirst','1')
+				this.failLocation||uni.setStorageSync(`isFirst${storage.get('ClientId')}`,'1')
 			},
 			goAddAdress() {
 				uni.navigateTo({
@@ -311,11 +314,13 @@ color: #3D3F3E;">
 				font-size: 33rpx;
 				margin: 0 14.49rpx;
 				color: black;
+				width: 80%;
 			}
 
 			.again {
 				font-size: 25rpx;
 				color: #A4D091;
+				width: 15%;
 			}
 		}
 

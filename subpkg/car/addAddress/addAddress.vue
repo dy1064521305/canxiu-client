@@ -10,7 +10,7 @@
 						<view v-if="model1.address.addressRegion!=''">{{model1.address.addressRegion}}</view>
 						<view v-else style="color: rgb(192, 196, 204);">请选择地区</view>
 					</pickers> -->
-					<view style="display: flex;">
+					<view style="display: flex;align-items: center;">
 						<u--input v-if="!isSubmit||id==''" placeholder="请选择所在城市" disabled
 							v-model="model1.address.addressRegion" border="none">
 						</u--input>
@@ -175,7 +175,7 @@
 		methods: {
 			getAddressCode() {
 				uni.request({
-						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/30/78ed8008c9ef4aa6a6c29f101bb0c9ec.json',
+						url: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/30/78ed8008c9ef4aa6a6c29f101bb0c9ec.json',
 						method: 'GET',
 						complete: (res) => {
 							this.addressData = res.data

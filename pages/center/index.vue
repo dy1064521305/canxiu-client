@@ -20,7 +20,7 @@
 				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png">
 			</image> -->
 			<view class="center">
-				<view class="info" @click="editInfo">
+				<view class="info">
 					<view class="info-image">
 						<image v-if="userInfo.storeImg==null||userInfo.storeImg==''"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
@@ -30,7 +30,7 @@
 					</view>
 					<view class="name  acea-row">
 						<view class="name-left">
-							{{userInfo.storeName?userInfo.storeName:userInfo.clientName?userInfo.clientName:'暂无名称'}}
+							{{userInfo.phone}}
 						</view>
 						<!-- <view style="font-size: 29rpx;">
 							{{userInfo.phone}}
@@ -66,7 +66,7 @@
 						<text>{{item.name}}</text>
 					</view>
 				</view>
-				<view class="counts">
+				<!-- <view class="counts">
 					<view class="counts-title">
 						<view>门店订单数据</view>
 						<view style="margin-right: 30rpx;" @click="$jump('/subpkg/center/myOrder/myOrder?name=全部订单')">
@@ -78,15 +78,15 @@
 							<text>{{item.label}}</text>
 						</view>
 					</view>
-					<!-- 	<view class="counts-other acea-row">
+						<view class="counts-other acea-row">
 						<view class="counts-other-items acea-row">
 							今日待上门<text>12</text>
 						</view>
 						<view class="counts-other-items acea-row">
 							今日异常订单<text>12</text>
 						</view>
-					</view> -->
-				</view>
+					</view>
+				</view> -->
 				<!-- <view class="swiperBanner"></view> -->
 				<view class="counts">
 					<text class="counts-title">常用功能</text>
@@ -101,7 +101,7 @@
 				</view>
 				<view class="setUp">
 					<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
-						v-for="(item) in typeList.slice(0,4)" :key="item.id">
+						v-for="(item) in typeList.slice(0,3)" :key="item.id">
 						<view class="setUp-list-left">
 							<image :src="item.img" :class="'img-'+item.id" mode=""></image>
 							<text>{{item.label}}</text>
@@ -113,7 +113,7 @@
 				</view>
 				<view class="setUp">
 					<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
-						v-for="(item) in typeList.slice(4,7)" :key="item.id">
+						v-for="(item) in typeList.slice(3,4)" :key="item.id">
 						<view class="setUp-list-left">
 							<image :src="item.img" :class="'img2-'+item.id" mode=""></image>
 							<text>{{item.label}}</text>
@@ -453,12 +453,12 @@
 						label: "帮助中心",
 						url: "/subpkg/center/setting/setting"
 					},
-					{
-						id: 1,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/3c00a6d37f0b4a3d94ba09cd8f6abb41.png",
-						label: "建议反馈",
-						url: ""
-					},
+					// {
+					// 	id: 1,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/3c00a6d37f0b4a3d94ba09cd8f6abb41.png",
+					// 	label: "建议反馈",
+					// 	url: ""
+					// },
 					{
 						id: 2,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/cc78fbf88e5e476eafdeef2fe0c9a6d6.png",
@@ -471,18 +471,18 @@
 						label: "关于我们",
 						url: "/subpkg/center/aboutUs/aboutUs"
 					},
-					{
-						id: 4,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/7320eca633d8472692bceca08d92aae4.png",
-						label: "我是师傅",
-						url: ""
-					},
-					{
-						id: 5,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/68c1018663124c87a10a016b25eabae0.png",
-						label: "我是商家/品牌连锁",
-						url: ""
-					},
+					// {
+					// 	id: 4,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/7320eca633d8472692bceca08d92aae4.png",
+					// 	label: "我是师傅",
+					// 	url: ""
+					// },
+					// {
+					// 	id: 5,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/68c1018663124c87a10a016b25eabae0.png",
+					// 	label: "我是商家/品牌连锁",
+					// 	url: ""
+					// },
 					{
 						id: 6,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",

@@ -58,7 +58,7 @@
 						</view>
 						<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
 							<view style="width: 88%;">
-								{{storeAddressInfo.addressDetailed}}{{storeAddressInfo.doorplate}}
+								{{storeAddressInfo.addressDetailed}}{{storeAddressInfo.houseNum}}
 							</view>
 
 						</view>
@@ -180,7 +180,7 @@
 									that.$refs.paging.reload();
 
 									uni.removeStorage({
-										key: 'address_info',
+										key: `address_info${storage.get('ClientId')}`,
 										success: function(res) {}
 									})
 								}
@@ -199,7 +199,7 @@
 				const pages = uni.$u.pages()
 				if (this.type == 'car' || this.type == 'order') {
 					uni.setStorage({
-						key: 'address_info',
+						key: `address_info${storage.get('ClientId')}`,
 						data: item,
 					})
 					console.log(this.submitList);

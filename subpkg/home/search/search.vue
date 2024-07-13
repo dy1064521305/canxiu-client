@@ -67,6 +67,7 @@
 </template>
 
 <script>
+		import storage from '@/utils/storage'
 	import goodCard from '../../../components/goodCard/goodCard.vue'
 	import {
 		search
@@ -185,7 +186,7 @@
 				this.searchList = []
 				search({
 					serviceName: name,
-					address:uni.getStorageSync('address_refreash')
+					address:uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 				}).then(res => {
 					console.log(this.serviceName);
 					this.searchList = res.data

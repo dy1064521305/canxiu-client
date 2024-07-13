@@ -1,7 +1,8 @@
 <template>
 	<view class="pages">
 		<view class="banner">
-			<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/09/63428c7066d641feba3d0d36e1069896.jpg" mode=""></image>
+			<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/09/63428c7066d641feba3d0d36e1069896.jpg"
+				mode=""></image>
 		</view>
 		<view class="content">
 			<view class="content-mess">
@@ -38,6 +39,10 @@
 	import {
 		postPartnerApply
 	} from "@/api/appUpdate.js"
+	import {
+		isEmpty,
+		isPhone
+	} from '@/utils/verify.js'
 	export default {
 		components: {
 			pickers
@@ -66,7 +71,14 @@
 			},
 			submit() {
 				if (!this.where.realName) return this.$toast('您的姓名不能为空')
-				if (!this.where.cellPhone) return this.$toast('联系电话不能为空')
+				if (isEmpty(this.where.cellPhone)) {
+					uni.$u.toast('请输入手机号')
+					return false
+				}
+				if (!isPhone(this.where.cellPhone)) {
+					uni.$u.toast('请输入正确的手机号')
+					return false
+				}
 				if (!this.where.region) return this.$toast('所在城市不能为空')
 				postPartnerApply(this.where).then(res => {
 					this.$toast('操作成功')
@@ -83,6 +95,7 @@
 	.pages {
 		min-height: 100vh;
 		background-color: #fff;
+		position: relative;
 
 		.banner {
 			height: 390rpx;
@@ -108,9 +121,9 @@
 		}
 
 		.content-btn {
-			position: fixed;
+			position: absolute;
 			left: 64rpx;
-			bottom: 30rpx;
+			bottom: 100rpx;
 			width: 622rpx;
 			height: 88rpx;
 			background: #A4D091;

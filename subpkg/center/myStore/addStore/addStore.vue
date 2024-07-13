@@ -4,24 +4,21 @@
 			<div class="box">
 				<u-form-item label="门店类型" prop="userInfo.storeTypeId" borderBottom ref="item1">
 
-					<u--input v-if="type=='edit'" v-model="storeTypeList[index].typeName" border="none"
-						disabled></u--input>
-					<picker v-else @change="bindPickerChange" range-key='typeName' :value="index"
+					<u--input v-if="type=='edit'" v-model="typeName" border="none" disabled></u--input>
+					<picker style="width: 100%;" v-else @change="bindPickerChange" range-key='typeName' :value="index"
 						:range="storeTypeList">
-						<view style="display: flex;justify-content: space-between;align-items: center;height: 70rpx;">
-							<view class="">
-								<view v-if='index!=undefined'>{{storeTypeList[index].typeName}}</view>
-								<view v-else style="color: rgb(192, 196, 204);">请选择门店类型</view>
+						<view class="">
+							<view v-if='index!=undefined'>{{storeTypeList[index].typeName}}</view>
+							<view v-else class="acea-row row-between-wrapper" style="color: rgb(192, 196, 204);">
+								<view>请选择门店类型</view> <u-icon style="justify-content: flex-end;" slot="right"
+									name="arrow-right"></u-icon>
 							</view>
-							<u-icon slot="right" name="arrow-right" style="margin-right: 20rpx;"></u-icon>
 						</view>
 					</picker>
-
-
-
 				</u-form-item>
-				<u-form-item label="门店名称" prop="userInfo.storeName" borderBottom ref="item1">
-					<u--input  :disabled="disabled" v-model="userInfo.storeName" border="none" :placeholder="!disabled?'请输入门店名称':''"></u--input>
+				<u-form-item label="门店名称" prop="userInfo.storeName" ref="item1">
+					<u--input :disabled="disabled" v-model="userInfo.storeName" border="none"
+						:placeholder="!disabled?'请输入门店名称':''"></u--input>
 				</u-form-item>
 			</div>
 
@@ -30,8 +27,8 @@
 					门头图
 				</view>
 				<view style="display: flex;">
-					<uploadFile :isInfo="disabled" :isDel="!disabled" width="147rpx" height="147rpx" :fileListt='fileListt'
-						@getUrl='getUrl' :limit='1' types='image' />
+					<uploadFile :isInfo="disabled" :isDel="!disabled" width="147rpx" height="147rpx"
+						:fileListt='fileListt' @getUrl='getUrl' :limit='1' types='image' />
 					<image v-if="fileListt.length==0"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/06/b53d7b90ea1841afa78c9a959791766a.png"
 						style="width: 147rpx;height: 147rpx;margin-left:17rpx;"></image>
@@ -43,15 +40,18 @@
 			</view>
 			<view class="box">
 				<u-form-item label="店长姓名" prop="userInfo.contacts" borderBottom ref="item1">
-					<u--input :disabled="disabled" v-model="userInfo.contacts" border="none" :placeholder="!disabled?'请输入门店负责人姓名':''" ></u--input>
+					<u--input :disabled="disabled" v-model="userInfo.contacts" border="none"
+						:placeholder="!disabled?'请输入门店负责人姓名':''"></u--input>
 				</u-form-item>
-				<u-form-item label="联系电话" prop="userInfo.contactPhone" borderBottom ref="item1">
-					<u--input :disabled="disabled" v-model="userInfo.contactPhone" border="none" :placeholder="!disabled?'请输入负责人联系电话':''" ></u--input>
+				<u-form-item label="联系电话" prop="userInfo.contactPhone" ref="item1">
+					<u--input :disabled="disabled" v-model="userInfo.contactPhone" border="none"
+						:placeholder="!disabled?'请输入负责人联系电话':''"></u--input>
 				</u-form-item>
 			</view>
 
 			<view class="box" style="padding-bottom: 10rpx;">
-				<u-form-item @click='goChoseAddress' label="门店地址" prop="contacts" borderBottom ref="item1">
+				<u-form-item @click='goChoseAddress' label="门店地址" prop="contacts"
+					:borderBottom="JSON.stringify(addressInfo)!='{}'?true:''" ref="item1">
 					<view style="color: rgb(192, 196, 204);">设置门店服务地址</view>
 					<u-icon slot="right" name="arrow-right" style="margin-right: 20rpx;"></u-icon>
 				</u-form-item>
@@ -61,7 +61,7 @@
 							<view class="">
 								<text class="font" style="font-weight: bold;">{{addressInfo.contact}}</text>
 								<text class="font" style="margin:0 14rpx;">{{addressInfo.phone}}</text>
-							<!-- 	<text v-if="addressInfo.isDefault&&addressInfo.isDefault==0"
+								<!-- 	<text v-if="addressInfo.isDefault&&addressInfo.isDefault==0"
 									class="moren_sign">默认</text> -->
 							</view>
 							<view class="circle"></view>
@@ -144,7 +144,8 @@
 				isSingle: undefined, //是否是单门店
 				addressInfo: {},
 				type: '',
-				disabled:false
+				disabled: false,
+				typeName: ''
 			};
 		},
 		onLoad(option) {
@@ -152,18 +153,18 @@
 			let info = JSON.parse(decodeURIComponent(option.info))
 			this.type = info.type
 			uni.setNavigationBarTitle({
-				title: this.type!= 'edit'?'创建门店':'修改门店地址'
+				title: this.type != 'edit' ? '创建门店' : '修改门店地址'
 			})
 			console.log(info.storeInfo);
 			if (this.type == 'edit') {
-				this.disabled=true
+				this.disabled = true
 				this.userInfo = info.storeInfo
-				this.addressInfo = info.storeInfo.serviceAddress? info.storeInfo.serviceAddress:{}
+				this.userInfo.contacts = this.userInfo.adminName
+				this.userInfo.contactPhone = this.userInfo.adminPhone
+				this.addressInfo = info.storeInfo.address ? info.storeInfo.address : {}
 				this.fileListt = this.userInfo.storeImg ? this.userInfo.storeImg.split(',') : []
 
-
 			}
-
 			this.getList()
 		},
 		onReady() {
@@ -180,14 +181,12 @@
 					this.storeTypeList = res.data
 					if (this.type == 'edit' && this.userInfo.storeTypeId) {
 						this.storeTypeList.forEach((item, index1) => {
-							console.log(item.typeId, '16222222', this.userInfo.storeTypeId);
 							if (item.typeId == this.userInfo.storeTypeId) {
 								this.index = index1
-								console.log(this.index, '16444444');
+								this.typeName = this.storeTypeList[this.index].typeName
 							}
 						})
 					}
-					console.log(this.storeTypeList, '11111111');
 				})
 			},
 			bindPickerChange(e) {
@@ -212,7 +211,7 @@
 
 				if (this.type == 'edit') {
 					editServiceAddress({
-						addressId: this.addressInfo.addressId,
+						serviceAddressId: this.addressInfo.addressId,
 						customerStoreId: this.userInfo.customerId
 					}).then(res => {
 						console.log(res);
@@ -223,8 +222,8 @@
 								duration: 800
 							});
 							if (uni.getStorageSync('address_info')) {
-								if (uni.getStorageSync('address_info').id==this.addressInfo.id) {
-									uni.setStorageSync('address_info',this.addressInfo)
+								if (uni.getStorageSync('address_info').addressId == this.addressInfo.addressId) {
+									uni.setStorageSync('address_info', this.addressInfo)
 								}
 							}
 							setTimeout(function() {
@@ -240,7 +239,7 @@
 					// }).catch(errors => {
 					// 	uni.$u.toast('校验失败')
 					// })
-					this.userInfo.addressId = this.addressInfo.id
+					this.userInfo.addressId = this.addressInfo.addressId
 					addCustomer(this.userInfo).then(res => {
 						console.log(res);
 						this.reset()
@@ -281,6 +280,8 @@
 <style lang="scss" scoped>
 	.addStore {
 
+		height: 88vh;
+		overflow: scroll;
 
 		::v-deep.u-form-item__body {
 			height: 70rpx;
@@ -294,7 +295,7 @@
 			margin: 20rpx;
 			background: #FFFFFF;
 			border-radius: 14rpx;
-			
+
 
 			/deep/.u-form-item__body__right__content {
 				width: 94%;
@@ -313,7 +314,7 @@
 			margin: 0 auto;
 			position: fixed;
 			left: 6%;
-			bottom: 100rpx;
+			bottom: 48rpx;
 		}
 	}
 </style>

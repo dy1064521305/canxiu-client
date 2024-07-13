@@ -30,11 +30,9 @@
 			</view>
 			<view class="page-peo-listOther acea-row row-between-wrapper">
 				<view class="page-peo-list-item flex-colum-center" v-for="(item) in workerList" :key="item.id">
-					<image v-if="!item.avatarUrl"
-						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
-						mode=""></image>
+					<image v-if="!item.avatarUrl" :src="item.avatarUrl" mode=""></image>
 					<image v-else
-						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/4f491865b70d4651a9d1aea7bc8524b8.png"
+						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
 						mode=""></image>
 					<text>{{item.workerName}}</text>
 				</view>
@@ -43,8 +41,13 @@
 		<view class="page-peo">
 			<view class="page-peo-three">
 				<view class="page-peo-three-list">
-					订单编号：
-					<text v-for="(item,index) in info.orderId" :key="index">{{item}}</text>
+					<text>订单编号：</text>
+					<view class="">
+						<view v-for="(item,index) in info.orderId" :key="index">
+							<text class="page-peo-three-list-text">{{item}}</text></br>
+						</view>
+					</view>
+
 				</view>
 				<view class="page-peo-three-list">
 					上门时间：
@@ -80,7 +83,7 @@
 			ykAuthpup
 		},
 		data() {
-			
+
 			return {
 				actionList: [{
 						name: '0571-88387761'
@@ -96,7 +99,7 @@
 				timeData: {},
 				info: {},
 				dateDiff: 0,
-				workerList:[],
+				workerList: [],
 				sfList: [{
 						id: 0,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/caeec36c1eb3413982e1aa95704cbe56.png",
@@ -127,15 +130,17 @@
 						label: "支付订单",
 						url: "",
 					},
-					
+
 				]
 			};
 		},
 		onLoad(option) {
+			this.info.orderId = [1811703281525374977, 1811703281525374977, 1811703281525374977]
 			console.log(this.info);
 			console.log(JSON.parse(option.info));
 			this.info = JSON.parse(option.info)
-			this.workerList=this.info.workerList
+
+			this.workerList = this.info.workerList
 			console.log(this.info);
 		},
 		onBackPress(e) {
@@ -318,8 +323,8 @@
 					font-size: 29rpx;
 					color: #3D3F3E;
 					margin-bottom: 16rpx;
-
-					text {
+					display: flex;
+					&-text {
 						color: #A5A7A7;
 						margin-left: 4rpx;
 					}

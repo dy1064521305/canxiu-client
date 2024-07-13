@@ -11,10 +11,10 @@
  				<view class="bg-c-content acea-row">
  					<view class="bg-c-content-img">
  						<image v-if="!item.avatarUrl"
- 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
+ 							:src="item.avatarUrl"
  							mode=""></image>
  						<image v-else
- 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/4f491865b70d4651a9d1aea7bc8524b8.png"
+ 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
  							mode=""></image>
  					</view>
  					<view class="bg-c-content-peo">

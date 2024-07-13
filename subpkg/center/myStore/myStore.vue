@@ -26,17 +26,17 @@
 				</view>
 
 			</view>
-			<view v-if="item.serviceAddress" class="box_main">
+			<view v-if="item.address" class="box_main">
 				<view class="">
-					<text class="font" style="font-weight: bold;">{{item.serviceAddress.contact}}</text>
-					<text class="font" style="margin:0 14rpx;">{{item.serviceAddress.phone}}</text>
+					<text class="font" style="font-weight: bold;">{{item.address.contact}}</text>
+					<text class="font" style="margin:0 14rpx;">{{item.address.phone}}</text>
 				</view>
 				<view style="font-size: 25rpx;color: #A5A7A7;margin: 22rpx 0;">
-					{{item.serviceAddress.addressRegion.replace(/\//g, '')}}
+					{{item.address.addressRegion.replace(/\//g, '')}}
 				</view>
 				<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
 					<view style="width: 88%;">
-						{{item.serviceAddress.addressDetailed}}{{item.serviceAddress.doorplate}}
+						{{item.address.addressDetailed}}{{item.address.houseNum}}
 					</view>
 
 				</view>
@@ -52,7 +52,7 @@
 
 		</view>
 		<view v-if="customerList.length==0" class="bottom">
-			<view class="btn" @click="$jump('/subpkg/center/myStore/addStore/addStore')">
+			<view class="btn" @click="$jump('/subpkg/center/myStore/addStore/addStore?info='+encodeURIComponent(JSON.stringify({type:'store'})))">
 				+添加门店
 			</view>
 		</view>

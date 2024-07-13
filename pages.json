@@ -434,7 +434,7 @@
 				}, {
 					"path": "setting/setting",
 					"style": {
-						"navigationBarTitleText": "设置",
+						"navigationBarTitleText": "帮助中心",
 						"enablePullDownRefresh": false
 					}
 
