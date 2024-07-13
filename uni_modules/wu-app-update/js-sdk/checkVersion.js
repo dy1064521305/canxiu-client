@@ -59,7 +59,7 @@ export default function checkVersion() {
 				plus.runtime.getProperty(plus.runtime.appid, (wgtinfo) => {
 					// 请补充这个请求即可正常使用
 					uni.request({
-						url: 'http://121.41.107.68:8080/client/appUpdate',
+						url: 'http://121.40.253.155:8080/client/appUpdate',
 						success: (res=>{
 							res = res.data;
 							if(compare(res.version, wgtinfo.version) === 1 && res.platform.indexOf(appPlatform) !== -1) {

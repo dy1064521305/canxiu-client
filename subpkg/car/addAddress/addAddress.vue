@@ -48,12 +48,12 @@
 			<view class="box" style="padding:20rpx;">
 				<view style="display: flex;align-items: center;">
 
-					<view v-if="model1.address.isDefault==0" class="moren" @click.stop="morenHandle(1)">
+					<view v-if="model1.address.isDefault=='0'" class="moren" @click.stop="morenHandle('1')">
 						<image style="width: 32rpx;margin-right: 11rpx;height: 32rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 						</image>
 					</view>
-					<view v-else class="un" @click.stop="morenHandle(0)">
+					<view v-else class="un" @click.stop="morenHandle('0')">
 						<view class="circle"></view>
 					</view>
 					设为默认地址
@@ -102,7 +102,7 @@
 						longitude: '',
 						latitude: '',
 						name: '',
-						isDefault: 1
+						isDefault: "1"
 					}
 				},
 
@@ -273,8 +273,8 @@
 			},
 			setMoren() {
 				this.addressList.forEach(address => {
-					if (address.isDefault == 0) {
-						address.isDefault = 1
+					if (address.isDefault == "0") {
+						address.isDefault = "1"
 					}
 
 				})
@@ -283,7 +283,7 @@
 			addAndEditAddress() {
 				this.$refs.form1.validate().then(res => {
 					this.model1.address.addressRegion=this.model1.address.addressRegion.replace(/-/g, '/')
-					if (this.model1.address.isDefault == 0) {
+					if (this.model1.address.isDefault == "0") {
 						this.setMoren()
 					}
 					if (this.id != '') {

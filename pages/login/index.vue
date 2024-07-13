@@ -60,8 +60,8 @@
 
 			</view> -->
 		</view>
-		
-	<!-- 	<view class="index" style="z-index: 999999999999;">
+
+		<!-- 	<view class="index" style="z-index: 999999999999;">
 			<wu-app-update></wu-app-update>
 		</view> -->
 	</view>
@@ -217,6 +217,7 @@
 							phonenumber: app.phone,
 							smsCode: app.code,
 						}).then(result => {
+						
 							if (result.data.type == 'Error') {
 								uni.$u.toast(result.data.msg)
 								return
@@ -241,12 +242,9 @@
 								getInfoById(result.data.clientId).then(res => {
 									console.log(res);
 									this.userInfo = res.data
+								
 									let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
-									if (result.data.type == 'Success' && !isEmpty(this.userInfo.storeImg) && !
-										isEmpty(this.userInfo.storeName) && !isEmpty(this.userInfo
-											.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
-											.userInfo
-											.storeTypeId)) {
+									if (result.data.type == 'Success' && res.data.customerStoreId) {
 										const pages = uni.$u.pages();
 										console.log(pages);
 										apps.type = 'login'
@@ -259,7 +257,6 @@
 											prevPage.$vm.otherFun(object);
 											uni.navigateBack()
 										} else {
-											console.log('666666666666666666666');
 											uni.switchTab({
 												url: '/pages/home/index',
 												fail(err) {
@@ -269,14 +266,24 @@
 										}
 
 									} else {
-										console.log(!isEmpty(this.userInfo.avatarUrl), !isEmpty(this.userInfo
-											.clientName), !isEmpty(this.userInfo.detailAddress), !isEmpty(
-											this.userInfo.region), !isEmpty(this.userInfo.storeTypeId));
+
+										// uni.navigateTo({
+										// 	url: '../../subpkg/login/info/info?id=' + result.data.clientId,
+										// 	fail(err) {
+										// 		console.log(err)
+										// 	}
+										// })
+										let info = {
+											type: 'login',
+										storeInfo: {
+											storeImg: res.data.storeImg,
+											storeName: res.data.storeName,
+											storeTypeId: res.data.storeTypeId,
+										}
+										}
 										uni.navigateTo({
-											url: '../../subpkg/login/info/info?id=' + result.data.clientId,
-											fail(err) {
-												console.log(err)
-											}
+											url: '../../subpkg/center/myStore/addStore/addStore?info=' +
+												encodeURIComponent(JSON.stringify(info))
 										})
 									}
 									//	this.fileList.push({url:arr[0]})

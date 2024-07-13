@@ -4,11 +4,16 @@
 			<div class="box">
 				<u-form-item label="门店类型" prop="userInfo.storeTypeId" borderBottom ref="item1">
 
-					<u--input v-if="type=='edit'" v-model="typeName" border="none" disabled></u--input>
-					<picker style="width: 100%;" v-else @change="bindPickerChange" range-key='typeName' :value="index"
+					<!-- 	<u--input v-model="typeName" border="none" disabled></u--input> -->
+					<picker style="width: 100%;" @change="bindPickerChange" range-key='typeName' :value="index"
 						:range="storeTypeList">
 						<view class="">
-							<view v-if='index!=undefined'>{{storeTypeList[index].typeName}}</view>
+							<view v-if='index!=undefined'>
+								<view class="acea-row row-between-wrapper">
+									{{storeTypeList[index].typeName}}<u-icon style="justify-content: flex-end;"
+										slot="right" name="arrow-right"></u-icon>
+								</view>
+							</view>
 							<view v-else class="acea-row row-between-wrapper" style="color: rgb(192, 196, 204);">
 								<view>请选择门店类型</view> <u-icon style="justify-content: flex-end;" slot="right"
 									name="arrow-right"></u-icon>
@@ -17,8 +22,7 @@
 					</picker>
 				</u-form-item>
 				<u-form-item label="门店名称" prop="userInfo.storeName" ref="item1">
-					<u--input :disabled="disabled" v-model="userInfo.storeName" border="none"
-						:placeholder="!disabled?'请输入门店名称':''"></u--input>
+					<u--input v-model="userInfo.storeName" border="none" placeholder="请输入门店名称"></u--input>
 				</u-form-item>
 			</div>
 
@@ -27,8 +31,8 @@
 					门头图
 				</view>
 				<view style="display: flex;">
-					<uploadFile :isInfo="disabled" :isDel="!disabled" width="147rpx" height="147rpx"
-						:fileListt='fileListt' @getUrl='getUrl' :limit='1' types='image' />
+					<uploadFile width="147rpx" height="147rpx" :fileListt='fileListt' @getUrl='getUrl' :limit='1'
+						types='image' />
 					<image v-if="fileListt.length==0"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/06/b53d7b90ea1841afa78c9a959791766a.png"
 						style="width: 147rpx;height: 147rpx;margin-left:17rpx;"></image>
@@ -40,12 +44,10 @@
 			</view>
 			<view class="box">
 				<u-form-item label="店长姓名" prop="userInfo.contacts" borderBottom ref="item1">
-					<u--input :disabled="disabled" v-model="userInfo.contacts" border="none"
-						:placeholder="!disabled?'请输入门店负责人姓名':''"></u--input>
+					<u--input v-model="userInfo.contacts" border="none" placeholder="请输入门店负责人姓名"></u--input>
 				</u-form-item>
 				<u-form-item label="联系电话" prop="userInfo.contactPhone" ref="item1">
-					<u--input :disabled="disabled" v-model="userInfo.contactPhone" border="none"
-						:placeholder="!disabled?'请输入负责人联系电话':''"></u--input>
+					<u--input v-model="userInfo.contactPhone" border="none" placeholder="请输入负责人联系电话"></u--input>
 				</u-form-item>
 			</view>
 
@@ -93,7 +95,9 @@
 	import uploadFile from '@/components/uploadFile/uploadFile.vue'
 	import {
 		getStoreType,
+		refine
 	} from '@/api/login.js'
+
 	import {
 		addCustomer,
 		editServiceAddress
@@ -144,7 +148,6 @@
 				isSingle: undefined, //是否是单门店
 				addressInfo: {},
 				type: '',
-				disabled: false,
 				typeName: ''
 			};
 		},
@@ -153,12 +156,14 @@
 			let info = JSON.parse(decodeURIComponent(option.info))
 			this.type = info.type
 			uni.setNavigationBarTitle({
-				title: this.type != 'edit' ? '创建门店' : '修改门店地址'
+				title: this.type == 'edit' ? '修改门店信息' : '创建门店'
 			})
 			console.log(info.storeInfo);
-			if (this.type == 'edit') {
-				this.disabled = true
-				this.userInfo = info.storeInfo
+			if (this.type != 'store') {
+				this.userInfo = {
+					...info.storeInfo,
+					clientId: storage.get('ClientId'),
+				}
 				this.userInfo.contacts = this.userInfo.adminName
 				this.userInfo.contactPhone = this.userInfo.adminPhone
 				this.addressInfo = info.storeInfo.address ? info.storeInfo.address : {}
@@ -179,7 +184,7 @@
 			getList() {
 				getStoreType().then(res => {
 					this.storeTypeList = res.data
-					if (this.type == 'edit' && this.userInfo.storeTypeId) {
+					if (this.type != 'store' && this.userInfo.storeTypeId) {
 						this.storeTypeList.forEach((item, index1) => {
 							if (item.typeId == this.userInfo.storeTypeId) {
 								this.index = index1
@@ -210,26 +215,34 @@
 			addHandle() {
 
 				if (this.type == 'edit') {
+
 					editServiceAddress({
 						serviceAddressId: this.addressInfo.addressId,
 						customerStoreId: this.userInfo.customerId
 					}).then(res => {
-						console.log(res);
-						this.reset()
-						if (res.code === 200) {
-							uni.showToast({
-								title: '添加成功',
-								duration: 800
-							});
-							if (uni.getStorageSync('address_info')) {
-								if (uni.getStorageSync('address_info').addressId == this.addressInfo.addressId) {
-									uni.setStorageSync('address_info', this.addressInfo)
+						refine({
+							...this.userInfo,
+							serviceAddressId: this.addressInfo.addressId,
+							customerStoreId: this.userInfo.customerId
+						}).then(res => {
+							if (res.code === 200) {
+								this.reset()
+								uni.showToast({
+									title: '修改成功',
+									duration: 800
+								});
+								if (uni.getStorageSync('address_info')) {
+									if (uni.getStorageSync('address_info').addressId == this.addressInfo
+										.addressId) {
+										uni.setStorageSync('address_info', this.addressInfo)
+									}
 								}
+								setTimeout(function() {
+									uni.navigateBack()
+								}, 800)
 							}
-							setTimeout(function() {
-								uni.navigateBack()
-							}, 800)
-						}
+						})
+
 
 					})
 				} else {
@@ -239,7 +252,7 @@
 					// }).catch(errors => {
 					// 	uni.$u.toast('校验失败')
 					// })
-					this.userInfo.addressId = this.addressInfo.addressId
+					this.userInfo.serviceAddressId = this.addressInfo.addressId
 					addCustomer(this.userInfo).then(res => {
 						console.log(res);
 						this.reset()
@@ -248,9 +261,16 @@
 								title: '添加成功',
 								duration: 800
 							});
-							setTimeout(function() {
-								uni.navigateBack()
-							}, 800)
+							if (this.type=='login') {
+								uni.switchTab({
+									url:'/pages/home/index'
+								})
+							} else{
+								setTimeout(function() {
+									uni.navigateBack()
+								}, 800)
+							}
+							
 						}
 
 					})

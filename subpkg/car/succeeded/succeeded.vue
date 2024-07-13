@@ -1,7 +1,7 @@
 <template>
 	<view class="page">
 		<view class="page-peo">
-			<view class="page-peo-rightTop acea-row row-middle row-center" @click="goDetailed">查看订单</view>
+			<view class="page-peo-rightTop acea-row row-middle row-center" @click="$jump('/pages/order/order')">查看订单</view>
 			<view class="page-peo-wenan">预约成功，匹配师傅中！</view>
 			<view class="page-peo-time">
 				<u-count-down :time="900000" format="mm:ss" autoStart millisecond @change="onChange">
@@ -144,7 +144,10 @@
 			console.log(this.info);
 		},
 		onBackPress(e) {
-			return true
+			console.log(e);
+			uni.switchTab({
+				url:'/pages/home/index'
+			})
 		},
 		onHide() {
 			console.log('hidehide');

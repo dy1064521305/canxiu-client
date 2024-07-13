@@ -469,7 +469,7 @@
 							this.showModal = this.addressList.length == 0
 							try {
 								const value = uni.getStorageSync(`address_info${storage.get('ClientId')}`);
-
+								let bool=this.addressList.some(item=>{return item.addressId == value.addressId})
 								this.addressList.forEach(item => {
 									if (value) {
 										if (item.addressId == value.addressId) {

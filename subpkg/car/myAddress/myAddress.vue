@@ -7,7 +7,7 @@
 						<view class="">
 							<text class="font" style="font-weight: bold;">{{item.contact}}</text>
 							<text class="font" style="margin:0 14rpx;">{{item.phone}}</text>
-							<text v-if="item.isDefault==0" class="moren_sign">默认</text>
+							<text v-if="item.isDefault=='0'" class="moren_sign">默认</text>
 						</view>
 
 						<image v-if="type!='store'" @click.stop="editAndAddAddress(item.addressId)"
@@ -48,7 +48,7 @@
 							<view class="">
 								<text class="font" style="font-weight: bold;">{{storeAddressInfo.contact}}</text>
 								<text class="font" style="margin:0 14rpx;">{{storeAddressInfo.phone}}</text>
-								<text v-if="storeAddressInfo.isDefault&&storeAddressInfo.isDefault==0"
+								<text v-if="storeAddressInfo.isDefault&&storeAddressInfo.isDefault=='0'"
 									class="moren_sign">默认</text>
 							</view>
 							<view class="circle"></view>
