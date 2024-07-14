@@ -1,4 +1,8 @@
 import config from '../config.js';
+const {
+	environment
+} = require('../../../config/environment')
+/**
 /**
  * 对比版本号，如需要，请自行修改判断规则
  * 支持比对	("3.0.0.0.0.1.0.1", "3.0.0.0.0.1")	("3.0.0.1", "3.0")	("3.1.1", "3.1.1.1") 之类的
@@ -59,10 +63,12 @@ export default function checkVersion() {
 				plus.runtime.getProperty(plus.runtime.appid, (wgtinfo) => {
 					// 请补充这个请求即可正常使用
 					uni.request({
-						url: 'http://121.40.253.155:8080/client/appUpdate',
+						url:environment.baseURL + '/client/appUpdate',
+						// url: 'http://121.40.253.155:8080/client/appUpdate',
 						success: (res=>{
 							res = res.data;
-							if(compare(res.version, wgtinfo.version) === 1 && res.platform.indexOf(appPlatform) !== -1) {
+							console.log(wgtinfo.version,'dadadadad');
+							if(!res.isMandatory&&compare(res.version, wgtinfo.version) === 1 && res.platform.indexOf(appPlatform) !== -1) {
 								res.appPlatform = appPlatform;
 								resolve(res);
 							} else {

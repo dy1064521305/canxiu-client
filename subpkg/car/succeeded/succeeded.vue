@@ -19,7 +19,7 @@
 				</view>
 			</view>
 		</view>
-		<view v-if="workerList.length!=0" class="page-peo">
+		<!-- <view v-if="workerList.length!=0" class="page-peo">
 			<view class="page-peo-name acea-row">
 				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/3dcf64d5acb7412d869844de109a5ec0.png"
 					mode=""></image>
@@ -37,7 +37,7 @@
 					<text>{{item.workerName}}</text>
 				</view>
 			</view>
-		</view>
+		</view> -->
 		<view class="page-peo">
 			<view class="page-peo-three">
 				<view class="page-peo-three-list">
@@ -143,12 +143,19 @@
 			this.workerList = this.info.workerList
 			console.log(this.info);
 		},
-		onBackPress(e) {
-			console.log(e);
+		onUnload() {
+			// const pages = uni.$u.pages();
+			// console.log(pages);
+			// //#ifdef MP-WEIXIN
+			// // wx.reLaunch({
+			// // 	url: '/pages/index/index'
+			// // })
+			// //#endif
 			uni.switchTab({
 				url:'/pages/home/index'
 			})
 		},
+	
 		onHide() {
 			console.log('hidehide');
 		},

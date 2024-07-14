@@ -145,9 +145,9 @@
 		</view>
 
 
-		<!-- <view class="index" style="z-index: 999999999999;">
-			<wu-app-update></wu-app-update>
-		</view> -->
+		<view v-if="status" class="index" style="z-index: 999999999999;">
+			<wu-app-update ></wu-app-update>
+		</view>
 
 	</view>
 </template>
@@ -189,6 +189,7 @@
 		},
 		data() {
 			return {
+				status:true,
 				serviceTypesList: [],
 				isShowMoney: false, //未登录不显示金额
 				loading: false, //是否展示 “正在加载” 字样
@@ -278,7 +279,7 @@
 			if (this.tabsBg !== '#F5F9FA') this.tabsBg = '#F5F9FA'
 		},
 		onShow() {
-			console.log(this.serviceSymptomsName);
+			this.status=true
 			if (storage.get('AccessToken')) {
 				this.isShowMoney = true
 				getCarNum().then(res => {
@@ -364,6 +365,7 @@
 
 		},
 		onHide() {
+			this.status=false
 			const apps = getApp()
 			apps.type = undefined
 			// this.getLoction()

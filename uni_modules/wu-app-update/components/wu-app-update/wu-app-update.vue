@@ -1,16 +1,16 @@
 <template>
 	<view class="wu-app-update-box">
-		<uni-popup ref="popup" type="center" :isMaskClick="false" @touchmove.stop.prevent>
+		<uni-popup ref="popup" type="center" @maskClick="closeUpdate" :isMaskClick="true" @touchmove.stop.prevent>
 			<view class="content_popup" :style="{backgroundColor: bgColor}">
 				<!-- 关闭app -->
-				<wu-icon 
+				<uni-icons
 					v-if="!isForceUpdata" 
 					class="close" 
-					name="close" 
+					name="closeempty" 
 					:color="closeIconColor"
 					:size="closeIconSize"
 					@click="closeUpdate"
-				></wu-icon>
+				></uni-icons>
 				<!-- 版本提示 -->
 				<view class="version" :style="{color: versionColor}">v{{version}}</view>
 				<!-- 背景 -->
@@ -159,8 +159,11 @@
 			}
 		},
 		mounted() {
+		
 			this.init();
 		},
+	
+		
 		methods: {
 
 			// 版本对比
@@ -257,8 +260,10 @@
 
 				// 检查版本 需要更新时才会触发回调
 				checkVersion().then((res) => {
+					console.log(res,'260000000');
 					// 非静默更新时触发
 					if (!res.is_silently) {
+						console.log(res,'260000000');
 						// 读取下载好的包的缓存
 						const appDownLoadTempFilePath = uni.getStorageSync('appDownLoadTempFilePath');
 
@@ -275,7 +280,8 @@
 						// 更新标题
 						this.title = res.title || '发现新版本';
 						// 是否强制更新
-						this.isForceUpdata = res.is_mandatory;
+						this.isForceUpdata = res.isMandatory;
+						console.log( res.isMandatory);
 						// 是否wgt资源包
 						this.isWGT = res.type == 'wgt';
 
@@ -286,13 +292,12 @@
 							this.downloadSuccess = true;
 							this.installForBeforeFilePath = appDownLoadTempFilePath;
 						} else {
-							uni.clearStorageSync('appDownLoadTempFilePath');
-							uni.clearStorageSync('appDownLoadTempFilePathVersion');
+							uni.removeStorageSync('appDownLoadTempFilePath');
+							uni.removeStorageSync('appDownLoadTempFilePathVersion');
 						}
 
 						// 打开更新提示
 						this.$refs.popup.open();
-						uni.hideTabBar()
 					}
 				})
 			},
@@ -413,13 +418,11 @@
 							if (res.confirm) {
 								this.downloadTask && this.downloadTask.abort();
 								this.$refs.popup.close();
-								uni.showTabBar()
 							}
 						}
 					});
 				} else {
 					this.$refs.popup.close();
-					uni.showTabBar()
 					// 如果用户短期内不更新
 					if (this.userNotRemind) {
 						this.updataUserRefuseTime();
@@ -475,7 +478,7 @@
 				position: absolute;
 				right: 15rpx;
 				top: 15rpx;
-				z-index: 3;
+				z-index: 100000;
 			}
 
 			.version {

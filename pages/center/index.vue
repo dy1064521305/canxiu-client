@@ -291,7 +291,7 @@
 		<!-- 拨打电话 -->
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="actionList" :show="showPhone"></u-action-sheet>
-
+	
 
 	</view>
 
@@ -498,9 +498,14 @@
 			})
 		},
 		onShow() {
-			this.getList()
-			this.isLogin = storage.get('AccessToken')
-			this.getOrderlistHandle(1, 10)
+
+			this.isLogin = storage.get('ClientId')
+			console.log(this.isLogin);
+			if (this.isLogin) {
+				this.getList()
+				this.getOrderlistHandle(1, 10)
+			}
+
 		},
 		methods: {
 			getList() {

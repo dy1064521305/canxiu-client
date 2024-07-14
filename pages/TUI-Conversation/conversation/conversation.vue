@@ -64,10 +64,7 @@
 				</view>
 			</view> -->
 		</view>
-		
-		<view class="index" style="z-index: 100000;">
-			<wu-app-update></wu-app-update>
-		</view>
+	
 	</view>
 </template>
 <!-- 这里有个加载的补丁逻辑待优化，页面向SDK请求conversationList的时候会有时延，

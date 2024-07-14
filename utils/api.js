@@ -112,7 +112,7 @@ export async function cancellation(data, handleSuccess, handleFail) {
 export const getCarNum = () => {
 	return getCarList({ 
 		clientId: storage.get('ClientId') == false ? 0 : storage.get('ClientId'),
-		address:uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
+		address:'浙江省-杭州市-拱墅区'
 	}).then(res => {
 		console.log(res, '<<<<<<<<<<<<getCarList>>>>>>>>', storage.get('ClientId'));
 
