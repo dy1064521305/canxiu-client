@@ -297,7 +297,7 @@
 
 						// 打开更新提示
 						this.$refs.popup.open();
-						uni.hideTabBar()
+						// uni.hideTabBar()
 					}
 				})
 			},
@@ -419,13 +419,13 @@
 							if (res.confirm) {
 								this.downloadTask && this.downloadTask.abort();
 								this.$refs.popup.close();
-								uni.showTabBar()
+								// uni.showTabBar()
 							}
 						}
 					});
 				} else {
 					this.$refs.popup.close();
-					uni.showTabBar()
+					// uni.showTabBar()
 					// 如果用户短期内不更新
 					if (this.userNotRemind) {
 						this.updataUserRefuseTime();
