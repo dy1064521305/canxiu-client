@@ -35,6 +35,9 @@
 							删除
 						</view>
 					</view>
+					<view v-if="item.storeName" style="font-size: 25rpx;color: #A5A7A7;border-top: 2rpx solid #f2f2f2;padding-top: 20rpx;margin-top:20rpx;">
+						关联门店：{{item.storeName}}
+					</view>
 				</view>
 			</view>
 
@@ -62,7 +65,7 @@
 							</view>
 
 						</view>
-						<view style="font-size: 25rpx;color: #A5A7A7;border-top: 2rpx solid #A5A7A7;padding-top: 20rpx;margin-top:20rpx;">
+						<view style="font-size: 25rpx;color: #A5A7A7;border-top: 2rpx solid #f2f2f2;padding-top: 20rpx;margin-top:20rpx;">
 							关联门店：{{storeAddressInfo.storeName}}
 						</view>
 					</view>
