@@ -67,8 +67,7 @@ export default function checkVersion() {
 						// url: 'http://121.40.253.155:8080/client/appUpdate',
 						success: (res=>{
 							res = res.data;
-							console.log(wgtinfo.version,'dadadadad');
-							if(!res.isMandatory&&compare(res.version, wgtinfo.version) === 1 && res.platform.indexOf(appPlatform) !== -1) {
+							if(compare(res.version, wgtinfo.version) === 1 && res.platform.indexOf(appPlatform) !== -1) {
 								res.appPlatform = appPlatform;
 								resolve(res);
 							} else {

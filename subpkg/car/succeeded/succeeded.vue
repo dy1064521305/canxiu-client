@@ -135,11 +135,7 @@
 			};
 		},
 		onLoad(option) {
-			this.info.orderId = [1811703281525374977, 1811703281525374977, 1811703281525374977]
-			console.log(this.info);
-			console.log(JSON.parse(option.info));
 			this.info = JSON.parse(option.info)
-
 			this.workerList = this.info.workerList
 			console.log(this.info);
 		},

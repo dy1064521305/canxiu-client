@@ -22,7 +22,7 @@
 							{{item.name}}
 						</view>
 						<view class="coupons-every-one-left-time">
-							{{item.couponTimeType=='0'?'长期有效':''}}
+							{{item.couponTimeType=='0'?'长期有效':`${item.endTime}到期`}}
 						</view>
 						<view class="coupons-every-one-left-rule acea-row align-center"
 							@click.stop="activeHandle(item,i)">

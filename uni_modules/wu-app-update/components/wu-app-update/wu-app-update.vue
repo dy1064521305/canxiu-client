@@ -1,6 +1,6 @@
 <template>
 	<view class="wu-app-update-box">
-		<uni-popup ref="popup" type="center" @maskClick="closeUpdate" :isMaskClick="true" @touchmove.stop.prevent>
+		<uni-popup ref="popup" type="center" @maskClick="closeUpdate" :isMaskClick="!isForceUpdata" @touchmove.stop.prevent>
 			<view class="content_popup" :style="{backgroundColor: bgColor}">
 				<!-- 关闭app -->
 				<uni-icons
@@ -260,7 +260,6 @@
 
 				// 检查版本 需要更新时才会触发回调
 				checkVersion().then((res) => {
-					console.log(res,'260000000');
 					// 非静默更新时触发
 					if (!res.is_silently) {
 						console.log(res,'260000000');
@@ -280,8 +279,8 @@
 						// 更新标题
 						this.title = res.title || '发现新版本';
 						// 是否强制更新
+						// res.isMandatory
 						this.isForceUpdata = res.isMandatory;
-						console.log( res.isMandatory);
 						// 是否wgt资源包
 						this.isWGT = res.type == 'wgt';
 
@@ -298,6 +297,7 @@
 
 						// 打开更新提示
 						this.$refs.popup.open();
+						uni.hideTabBar()
 					}
 				})
 			},
@@ -409,6 +409,7 @@
 			},
 			// 关闭更新框
 			closeUpdate() {
+				if (this.isForceUpdata){return}
 				if (this.downloading) {
 					uni.showModal({
 						title: '是否取消下载？',
@@ -418,11 +419,13 @@
 							if (res.confirm) {
 								this.downloadTask && this.downloadTask.abort();
 								this.$refs.popup.close();
+								uni.showTabBar()
 							}
 						}
 					});
 				} else {
 					this.$refs.popup.close();
+					uni.showTabBar()
 					// 如果用户短期内不更新
 					if (this.userNotRemind) {
 						this.updataUserRefuseTime();

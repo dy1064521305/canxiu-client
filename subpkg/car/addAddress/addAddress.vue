@@ -11,9 +11,11 @@
 						<view v-else style="color: rgb(192, 196, 204);">请选择地区</view>
 					</pickers> -->
 					<view style="display: flex;align-items: center;">
-						<u--input v-if="!isSubmit||id==''" placeholder="请选择所在城市" disabled
-							v-model="model1.address.addressRegion" border="none">
-						</u--input>
+						<view style="width:360rpx;">
+							<u--input v-if="!isSubmit||id==''" placeholder="请选择所在城市" disabled
+								v-model="model1.address.addressRegion" border="none">
+							</u--input>
+						</view>
 						<view @click="getAddress">
 							<image style="width: 28rpx;height: 32rpx;margin-right:10rpx;"
 								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/25/90ecfbde05f64a089bf4a946f8c0f554.png"
@@ -27,7 +29,7 @@
 					<u--textarea :disabled='isSubmit&&id!=""' v-model="model1.address.addressDetailed" border='none'
 						placeholder="请输入详细地址"></u--textarea>
 				</u-form-item>
-				<u-form-item label="门牌号" prop="address.houseNum" borderBottom ref="item1">
+				<u-form-item label="门牌号" prop="address.houseNum"  ref="item1">
 					<u--input v-model="model1.address.houseNum" border="none" placeholder="例：4号楼2603">
 					</u--input>
 
@@ -40,7 +42,7 @@
 				<u-form-item label="联系人" prop="address.contact" borderBottom ref="item1">
 					<u--input v-model="model1.address.contact" border="none" placeholder="请输入联系人"></u--input>
 				</u-form-item>
-				<u-form-item label="联系电话" prop="address.phone" borderBottom ref="item1">
+				<u-form-item label="联系电话" prop="address.phone"  ref="item1">
 					<u--input v-model="model1.address.phone" border="none" placeholder="请输入联系电话"></u--input>
 				</u-form-item>
 			</view>

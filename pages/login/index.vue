@@ -19,10 +19,10 @@
 				<text v-if="countDownNum==0" @click="getCode">获取验证码</text>
 				<text style="width: 24%;text-align:end;" v-if="countDownNum!=0">{{countDownNum}}s</text>
 			</view>
-			<view class="fonts">
+			<view class="fonts" @click="checked = !checked">
 				<view style="margin-top:3rpx;">
-					<view v-if="!checked" class="check" @click="check"></view>
-					<view v-else @click="check">
+					<view v-if="!checked" class="check" ></view>
+					<view v-else >
 						<!-- 	<image style="width: 100%;height: 100%;"
 											src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
 										</image> -->
@@ -33,7 +33,7 @@
 				<view style="margin-left: 8rpx;width:610rpx;">
 					未注册手机号登录后将自动生成账号，且代表已阅读并同意
 					<text v-for="(item,index) in agreementList" :key="index"
-						@click="goAgreement(item)">《{{item.agreementName}}》<text
+						@click.stop="goAgreement(item)">《{{item.agreementName}}》<text
 							v-if="index!=agreementList.length-1">、</text></text>
 				</view>
 			</view>
@@ -148,9 +148,7 @@
 					this.agreementList = res.data
 				})
 			},
-			check() {
-				this.checked = !this.checked
-			},
+		
 			radioChange() {
 				console.log(this.check);
 			},

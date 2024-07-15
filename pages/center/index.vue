@@ -107,7 +107,7 @@
 							<text>{{item.label}}</text>
 						</view>
 						<view class="setUp-list-right">
-							<u-icon name="arrow-right" color="#959595" size="20"></u-icon>
+							<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
 						</view>
 					</view>
 				</view>
@@ -119,7 +119,7 @@
 							<text>{{item.label}}</text>
 						</view>
 						<view class="setUp-list-right">
-							<u-icon name="arrow-right" color="#959595" size="20"></u-icon>
+							<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
 						</view>
 					</view>
 				</view>

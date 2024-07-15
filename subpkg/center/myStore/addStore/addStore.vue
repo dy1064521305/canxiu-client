@@ -152,7 +152,7 @@
 			};
 		},
 		onLoad(option) {
-
+			this.getList()
 			let info = JSON.parse(decodeURIComponent(option.info))
 			this.type = info.type
 			uni.setNavigationBarTitle({
@@ -170,7 +170,7 @@
 				this.fileListt = this.userInfo.storeImg ? this.userInfo.storeImg.split(',') : []
 
 			}
-			this.getList()
+		
 		},
 		onReady() {
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
@@ -184,6 +184,7 @@
 			getList() {
 				getStoreType().then(res => {
 					this.storeTypeList = res.data
+					console.log(this.storeTypeList,'18777777');
 					if (this.type != 'store' && this.userInfo.storeTypeId) {
 						this.storeTypeList.forEach((item, index1) => {
 							if (item.typeId == this.userInfo.storeTypeId) {

@@ -469,30 +469,26 @@
 							this.showModal = this.addressList.length == 0
 							try {
 								const value = uni.getStorageSync(`address_info${storage.get('ClientId')}`);
-								let bool=this.addressList.some(item=>{return item.addressId == value.addressId})
-								this.addressList.forEach(item => {
-									if (value) {
-										if (item.addressId == value.addressId) {
-											this.addressInfo = item
-											uni.setStorage({
-												key: `address_info${storage.get('ClientId')}`,
-												data: item,
-											})
-
-										}
-
-									} else {
-										if (item.isDefault == 0) {
-											this.addressInfo = item
-											uni.setStorage({
-												key: `address_info${storage.get('ClientId')}`,
-												data: item,
-											})
-										}
-									}
-
+								const bool = this.addressList.some(item => {
+									return item.addressId == value.addressId
 								})
-
+								console.log(bool, '47333333');
+								if (value) {
+									if (bool) {
+										const index = this.addressList.findIndex(item => {
+											return item.addressId == value.addressId
+										})
+										this.addressInfo = this.addressList[index]
+										uni.setStorage({
+											key: `address_info${storage.get('ClientId')}`,
+											data: this.addressInfo,
+										})
+									} else {
+										this.getAddressInfo()
+									}
+								} else {
+									this.getAddressInfo()
+								}
 								this.addressPlace = (this.addressInfo.addressRegion.substring((this.addressInfo
 									.addressRegion.indexOf('/')) + 1)).replace('/', '-')
 								this.addressRegion = this.addressInfo.addressRegion.replace(/\//g, "")
@@ -507,7 +503,24 @@
 				}
 
 			},
-
+			getAddressInfo() {
+				const isDefault = this.addressList.some(item => {
+					return item.isDefault == '0'
+				})
+				if (isDefault) {
+					this.addressList.forEach(item => {
+						if (item.isDefault == '0') {
+							this.addressInfo = item
+						}
+					})
+				} else {
+					this.addressInfo = this.addressList[0]
+				}
+				uni.setStorage({
+					key: `address_info${storage.get('ClientId')}`,
+					data: this.addressInfo,
+				})
+			},
 			//计算总钱数
 			getMoney(type) {
 				if (type == 'init') {

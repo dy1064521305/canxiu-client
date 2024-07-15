@@ -362,7 +362,6 @@
 
 			},
 			getOrderlistHandle(pageNo, pageSize) {
-				console.log(this.queryParams);
 				this.showScreen = false
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
@@ -370,7 +369,6 @@
 					mask: true
 				});
 				getOrderList(this.queryParams).then(res => {
-					console.log(res);
 					res.rows.forEach(i => {
 						i.projectDataVoList && i.projectDataVoList.forEach(item => {
 							item.img=i.repairId !=null? (item.projectUrl != null ? item
@@ -379,7 +377,6 @@
 					
 						})
 					})
-					console.log(res, '.......2');
 					uni.hideLoading();
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})
@@ -389,7 +386,6 @@
 					beginTime:this.queryParams.beginTime,
 					endTime:this.queryParams.endTime
 				}).then(res => {
-					console.log(res);
 
 					this.list1.forEach(item => {
 
@@ -409,12 +405,10 @@
 			refresh() {
 				this.reset()
 				// this.getNum()
-				console.log(1111);
 				this.$refs.paging.reload();
 			},
 			//日期清空
 			dateClear(type) {
-				console.log(11111);
 				if (type == 'begin') {
 					this.queryParams.beginTime = ''
 					this.beginTime = ''
@@ -424,7 +418,6 @@
 				}
 			},
 			reset() {
-				console.log(1111);
 				this.queryParams.endTime = ''
 				this.queryParams.beginTime = ''
 				this.queryParams.projectName = ''

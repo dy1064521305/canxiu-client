@@ -19,3 +19,6 @@ export const payOnBehalf = (data) => request.put('/client/pay/payOnBehalf',data)
 //微信商户订单号查询订单
 export const payByOrderNumber = (orderNumber) => request.get('/client/pay/'+orderNumber)
 
+//获取是否开启集团代付
+export const isGroupPay = (orderId) => request.get('/client/pay/isGroupPay/'+orderId)
+

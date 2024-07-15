@@ -788,7 +788,7 @@
 
 		.bottom {
 			width: 100%;
-			height: 114rpx;
+			height: 138rpx;
 			background: #fff;
 			position: fixed;
 			display: flex;
