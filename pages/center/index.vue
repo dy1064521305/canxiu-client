@@ -318,7 +318,7 @@
 	export default {
 		data() {
 			return {
-				balance: '', //账户余额
+				balance: 0, //账户余额
 				actionList: [{
 						name: '0571-88387761'
 					},
@@ -485,7 +485,7 @@
 					// },
 					{
 						id: 6,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/16/bc36c90670804e7fae1c865ccf174c43.png",
 						label: "申请成为合伙人",
 						url: "/subpkg/car/partner/index"
 					},
