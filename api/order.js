@@ -68,4 +68,5 @@ export const orderSend = (data) => request.post('/client/order/send',data)
 //获取指派人员
 export const findWorker = (data) => request.post('/client/order/assign/findWorker ',data)
 
-
+//下单页根据地址重新获取产品服务价格
+export const refreshPrice = (params) => request.get('/client/service/refreshPrice',params)

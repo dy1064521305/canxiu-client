@@ -311,7 +311,8 @@
 	} from '@/api/car.js'
 	import {
 		reissueOrder,
-		orderSend
+		orderSend,
+		refreshPrice
 	} from '@/api/order.js'
 	import {
 		getInfoById,
@@ -399,8 +400,6 @@
 		methods: {
 			//获取优惠券
 			getCoupon(item) {
-
-				console.log(item, '415555', this.info.oldOrderPrice);
 				this.choseCoupon = {
 					...item,
 					type: 'order'
@@ -415,33 +414,19 @@
 				console.log(this.workerList);
 			},
 			groupBy(array, f) {
-
 				let groups = {};
-
 				array.forEach(function(o) {
-
 					var group = JSON.stringify(f(o));
-
 					groups[group] = groups[group] || [];
-
 					groups[group].push(o);
-
 				});
-
 				return Object.keys(groups).map(function(group) {
-
 					return groups[group];
-
 				});
-
 			},
-
 			arrayGroupBy(list, groupId) {
-
 				let sorted = this.groupBy(list, function(item) {
-
 					return [item[groupId]];
-
 				});
 				sorted.forEach((item, index) => {
 					sorted[index] = {
@@ -451,9 +436,7 @@
 					}
 				})
 				return sorted;
-
 			},
-
 			getList() {
 				if (storage.get('ClientId')) {
 					//查询门店名称
@@ -483,6 +466,7 @@
 											key: `address_info${storage.get('ClientId')}`,
 											data: this.addressInfo,
 										})
+										this.refreshPriceHandle()
 									} else {
 										this.getAddressInfo()
 									}
@@ -492,10 +476,10 @@
 								this.addressPlace = (this.addressInfo.addressRegion.substring((this.addressInfo
 									.addressRegion.indexOf('/')) + 1)).replace('/', '-')
 								this.addressRegion = this.addressInfo.addressRegion.replace(/\//g, "")
+
 								console.log(this.addressInfo, '4811111111111');
 							} catch (e) {
 								// error
-								console.log(e);
 							}
 
 						})
@@ -520,13 +504,48 @@
 					key: `address_info${storage.get('ClientId')}`,
 					data: this.addressInfo,
 				})
+				this.refreshPriceHandle()
+			},
+			//分站价格
+			refreshPriceHandle() {
+				console.log('refreshPriceHandlerefreshPriceHandlerefreshPriceHandlerefreshPriceHandle', {
+					clientId: storage.get('ClientId'),
+					address: this.addressInfo.addressRegion.replace(/\//g, "-"),
+					serviceIds: this.serviceIds
+				});
+				refreshPrice({
+					clientId: storage.get('ClientId'),
+					address: this.addressInfo.addressRegion.replace(/\//g, "-"),
+					serviceIds: this.serviceIds
+				}).then(res => {
+					res.data.forEach(newPro=>{
+						this.submitList.forEach((oldPro,oldIndex)=>{
+							console.log(oldPro,'523333333');
+							if ((newPro.productId ? newPro.productId : newPro.serviceId)==(oldPro.productId ? oldPro.productId : oldPro.serviceId)) {
+								this.submitList[oldIndex]={
+									...newPro,
+									serviceProductName:newPro.serviceName,
+									workerType:newPro.typeName,
+									serviceProjectImg:newPro.serviceImg,
+									projectNumber:oldPro.projectNumber,
+									projectImg:oldPro.projectImg,
+									remark:oldPro.remark
+								}
+								console.log(oldPro,'5300000000');
+							}
+						})
+					})
+					this.getMoney('init')
+					
+				})
 			},
 			//计算总钱数
 			getMoney(type) {
+				console.log(this.submitList,'53888888');
 				if (type == 'init') {
 					this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
 				}
-
+				
 				this.showListByType.forEach((item, index) => {
 					let all = item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)),
 						0)
@@ -573,7 +592,6 @@
 			},
 			showMask() {
 				this.isShow = true;
-				console.log(this.isShow);
 			},
 			timeShowHandle(i) {
 				this.isShow = true
@@ -615,7 +633,6 @@
 			},
 
 			trimSpace(array) {
-				console.log(array);
 				for (var i = 0; i < array.length; i++) {
 					//这里为过滤的值
 					if (array[i] == " " || array[i] == null || typeof(array[i]) == "undefined" || array[i] ==
@@ -649,17 +666,6 @@
 					return
 				}
 
-				let place = uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
-				if (this.addressInfo.addressRegion.replace(/\//g, "-") != place) {
-					uni.showToast({
-						title: `仅支持服务“${place.substring((place.indexOf('-')) + 1)}”地区`,
-						duration: 2000,
-						icon: 'none'
-					})
-					return
-				}
-
-
 				if (this.isAgain) {
 					// console.log({
 					// 	orderId: this.showListByType[0].list[0].orderId,
@@ -689,7 +695,6 @@
 					//	this.info.orderTime =formatter.formatDateTime(new Date().toLocaleString())				
 					this.info.clientId = storage.get('ClientId')
 					let arr = JSON.parse(JSON.stringify(this.submitList))
-					console.log(arr);
 
 					let bool1 = arr.some(item => {
 						return item.projectImg.length == 0
@@ -716,11 +721,10 @@
 					let beforeStartingFree = {}
 					let costStartingFreeMap = {}
 					this.showListByType.forEach(item => {
-						console.log(item.list[0]);
 						timeObj[item.list[0].workerType] = this.expectTime + ':00'
-						startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount,
-							beforeStartingFree[item.list[0].workerType] = item.list[0].serviceStartingFree,
-							costStartingFreeMap[item.list[0].workerType] = item.list[0].workerStartingFree
+						startingFree[item.list[0].workerType] = item.list[0].startingFreeDiscount
+						beforeStartingFree[item.list[0].workerType] = item.list[0].serviceStartingFree
+						costStartingFreeMap[item.list[0].workerType] = item.list[0].workerStartingFree
 					})
 					this.info.orderProjectBoList = arr
 					this.info.startingFreeMap = startingFree
@@ -735,7 +739,6 @@
 					this.info.clientCouponId = this.choseCoupon.id
 
 					postOrder(this.info).then(res => {
-						console.log(res);
 						if (res.code == 200) {
 							orderSend(res.data).then(res => {})
 							// uni.removeStorage({
@@ -751,7 +754,6 @@
 								workerList: this.workerList,
 								expectTime: this.expectTime
 							}
-							console.log(info);
 							uni.redirectTo({
 								url: '../../../subpkg/car/succeeded/succeeded?info=' + JSON.stringify(
 									info)
