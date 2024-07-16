@@ -49,7 +49,7 @@
 		<view v-if="addressInfo.customerId" style="color: #A4D091;background-color:#ECF7ED ;padding: 30rpx;">
 			*提示：地址关联{{ addressInfo.storeName ? addressInfo.storeName : '暂无名称' }}门店
 		</view>
-		<!-- <view @click="goWorkerList" class="designWorker acea-row row-between-wrapper">
+		<view @click="goWorkerList" class="designWorker acea-row row-between-wrapper">
 			<view class="designWorker-left acea-row">
 				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/ac000216203a45638ea0841739325d41.png"
 					mode=""></image>
@@ -77,7 +77,7 @@
 
 				<u-icon name="arrow-right"></u-icon>
 			</view>
-		</view> -->
+		</view>
 		<!-- <view class="time" @click="isShow=true">
 			<text style="font-size: 33rpx;color: #3D3F3E;font-weight: bold;">选择上门时间</text>
 			<text
