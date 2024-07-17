@@ -508,44 +508,48 @@
 			},
 			//分站价格
 			refreshPriceHandle() {
-				console.log('refreshPriceHandlerefreshPriceHandlerefreshPriceHandlerefreshPriceHandle', {
-					clientId: storage.get('ClientId'),
-					address: this.addressInfo.addressRegion.replace(/\//g, "-"),
-					serviceIds: this.serviceIds
-				});
+				let address = ''
+				let arr = this.addressInfo.addressRegion.split('/')
+
+				if (arr[1] == arr[0]) {
+					arr[1] = '市辖区'
+					address = arr.join('/')
+				}
+				address = arr.join('-')
 				refreshPrice({
 					clientId: storage.get('ClientId'),
-					address: this.addressInfo.addressRegion.replace(/\//g, "-"),
+					address: address,
 					serviceIds: this.serviceIds
 				}).then(res => {
-					res.data.forEach(newPro=>{
-						this.submitList.forEach((oldPro,oldIndex)=>{
-							console.log(oldPro,'523333333');
-							if ((newPro.productId ? newPro.productId : newPro.serviceId)==(oldPro.productId ? oldPro.productId : oldPro.serviceId)) {
-								this.submitList[oldIndex]={
+					res.data.forEach(newPro => {
+						this.submitList.forEach((oldPro, oldIndex) => {
+							console.log(oldPro, '523333333');
+							if ((newPro.productId ? newPro.productId : newPro.serviceId) == (oldPro
+									.productId ? oldPro.productId : oldPro.serviceId)) {
+								this.submitList[oldIndex] = {
 									...newPro,
-									serviceProductName:newPro.serviceName,
-									workerType:newPro.typeName,
-									serviceProjectImg:newPro.serviceImg,
-									projectNumber:oldPro.projectNumber,
-									projectImg:oldPro.projectImg,
-									remark:oldPro.remark
+									serviceProductName: newPro.serviceName,
+									workerType: newPro.typeName,
+									serviceProjectImg: newPro.serviceImg,
+									projectNumber: oldPro.projectNumber,
+									projectImg: oldPro.projectImg,
+									remark: oldPro.remark
 								}
-								console.log(oldPro,'5300000000');
+								console.log(oldPro, '5300000000');
 							}
 						})
 					})
 					this.getMoney('init')
-					
+
 				})
 			},
 			//计算总钱数
 			getMoney(type) {
-				console.log(this.submitList,'53888888');
+				console.log(this.submitList, '53888888');
 				if (type == 'init') {
 					this.showListByType = this.arrayGroupBy(this.submitList, 'workerType');
 				}
-				
+
 				this.showListByType.forEach((item, index) => {
 					let all = item.list.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)),
 						0)
