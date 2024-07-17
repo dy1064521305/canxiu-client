@@ -10,7 +10,8 @@
 			<view @click="getCoupon(item)" class="coupons-every" v-for="(item,i) in couponList" :key="item.id">
 
 				<view class="coupons-every-one acea-row">
-					<view v-if="choseInfo.type=='order'&&item.useStatus!=1&&item.useStatus!=2" style="display: flex;align-items: center;margin-left: 16rpx;">
+					<view v-if="choseInfo.type=='order'&&item.useStatus!=1&&item.useStatus!=2&&item.isGet"
+						style="display: flex;align-items: center;margin-left: 16rpx;">
 						<view v-if="choseInfo.couponId!=item.couponId" class="check"></view>
 						<view v-else>
 							<u-icon name="checkmark-circle-fill" color="#A4D091" size="23"></u-icon>
@@ -37,7 +38,7 @@
 							<text>{{item.couponAmount}}</text>
 						</view>
 						<view>
-							{{item.minAmount=='0.00'?'无门槛':''}}
+							{{item.minAmount=='0.00'?'无门槛':`满${item.minAmount}减${item.couponAmount}`}}
 						</view>
 					</view>
 				</view>
@@ -63,7 +64,7 @@
 				</view>
 			</view>
 			<empty-page v-if="!couponList.length" msg="暂无数据"></empty-page>
-		
+
 		</view>
 		<view v-if="choseInfo.type=='order'&&onType!=1&&onType!=2" class="button" @click="choseOk">
 			确定
@@ -99,11 +100,11 @@
 			}
 		},
 		onLoad(option) {
-			console.log(option);
+
 			if (JSON.stringify(option) != '{}') {
 				this.choseInfo = JSON.parse(option.info)
 			}
-
+			console.log(this.choseInfo);
 			this.getList()
 		},
 		methods: {
@@ -116,12 +117,14 @@
 						item.activity = false
 						let arr = item.orderType.split(',')
 						let arr1 = item.superpositionRule.split(',')
+						 // item.couponAmount=100
+						item.isGet=Number(this.choseInfo.orderPrice)>Number(item.minAmount)
 						item.orderTypeName =
 							`${arr.includes('0')?'个人':''}${arr.includes('1')?'门店':''}${arr.includes('2')?'品牌':''}可用`
 						item.superpositionRuleName =
 							`可与${arr1.includes('0')?'销售价':''}${arr.includes('1')?'活动价':''}叠加使用`
 					})
-					this.couponList =res.rows
+					this.couponList = res.rows
 				})
 			},
 			changeType(status) {
@@ -132,14 +135,17 @@
 				this.$set(this.couponList[i], 'activity', !item.activity)
 			},
 			getCoupon(item) {
-				if (item.couponId==this.choseInfo.couponId) {
-					this.choseInfo ={
-						type:'order'
+				if (item.couponId == this.choseInfo.couponId) {
+					this.choseInfo = {
+						type: 'order'
 					}
-				} else{
-					this.choseInfo = {...item,type:'order'}
+				} else {
+					this.choseInfo = {
+						...item,
+						type: 'order'
+					}
 				}
-				
+
 
 			},
 			choseOk() {
@@ -200,8 +206,9 @@
 
 		.coupons {
 			padding: 22rpx;
-    height: 81vh;
-    overflow: scroll;
+			height: 81vh;
+			overflow: scroll;
+
 			.check {
 				width: 33rpx;
 				height: 33rpx;

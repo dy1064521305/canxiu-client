@@ -215,7 +215,7 @@
 				</view> -->
 			</view>
 			<view style="display: flex;justify-content: space-between;padding: 20rpx;"
-				@click="$jump('/pages/users/reward/coupon?info=' + JSON.stringify(choseCoupon))">
+				@click="$jump('/pages/users/reward/coupon?info=' + JSON.stringify({...choseCoupon,'orderPrice':info.oldOrderPrice + Number(urgentPriceTotal)}))">
 				优惠券
 				<view style="display: flex;">
 					{{ choseCoupon.couponId ? choseCoupon.name : '请选择优惠券' }}<u-icon name="arrow-right"></u-icon>
@@ -227,7 +227,7 @@
 			choseCoupon.couponAmount }}</text>
 				<text style="color: #A5A7A7;">合计</text>
 				<view style="font-size: 43rpx;color: #EC5722;">
-					{{ info.orderPrice + Number(urgentPriceTotal) }}元
+					{{  (info.orderPrice + Number(urgentPriceTotal)) <0?0:(info.orderPrice + Number(urgentPriceTotal)) }}元
 				</view>
 			</view>
 
@@ -242,7 +242,7 @@
 			<view class="">
 				<view style="font-size: 33rpx;color: #EC5722;margin:0 20rpx 0 10rpx;text-align: end;">
 					<!-- 	<text style="font-size: 22rpx;color: #A5A7A7;">合计费用:</text> -->
-					费用:¥{{ info.orderPrice + Number(urgentPriceTotal) }}
+					费用:¥{{ (info.orderPrice + Number(urgentPriceTotal)) <0?0:(info.orderPrice + Number(urgentPriceTotal))}}
 				</view>
 				<view style="font-size: 22rpx;
 				color: #A5A7A7;">
@@ -361,7 +361,8 @@
 				serviceIds: [],
 				workerList: [{}, {}, {}],
 				choseCoupon: {
-					type: 'order'
+					type: 'order',
+				
 				}
 			};
 		},
@@ -402,7 +403,8 @@
 			getCoupon(item) {
 				this.choseCoupon = {
 					...item,
-					type: 'order'
+					type: 'order',
+					orderPrice:this.info.oldOrderPrice + Number(this.urgentPriceTotal)
 				}
 				console.log(this.choseCoupon,'4077777777');
 			},
@@ -561,7 +563,8 @@
 						.startingFreeDiscount) : all
 				})
 				this.info.orderPrice = this.info.oldOrderPrice = this.showListByType.reduce((p, c) => p + c.allMoney, 0)
-				if (this.choseCoupon&&(Number(this.choseCoupon.couponAmount)>this.info.orderPrice)) {
+				console.log(this.choseCoupon.couponId,'5666666666');
+				if (this.choseCoupon) {
 					this.info.orderPrice = Number(this.choseCoupon.couponAmount) ? Number(this.info.oldOrderPrice) - Number(this.choseCoupon
 						.couponAmount) : this.info.oldOrderPrice
 				}
