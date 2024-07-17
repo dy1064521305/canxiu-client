@@ -63,10 +63,11 @@ export default function checkVersion() {
 				plus.runtime.getProperty(plus.runtime.appid, (wgtinfo) => {
 					// 请补充这个请求即可正常使用
 					uni.request({
-						url:environment.baseURL + '/client/appUpdate',
+						url:environment.baseURL + '/system/appVersion/clientAppUpdate',
 						// url: 'http://121.40.253.155:8080/client/appUpdate',
 						success: (res=>{
-							res = res.data;
+							res = res.data.data;
+							console.log(res,'7000000000');
 							if(compare(res.version, wgtinfo.version) === 1 && res.platform.indexOf(appPlatform) !== -1) {
 								res.appPlatform = appPlatform;
 								resolve(res);

@@ -6,72 +6,75 @@
  		<view class="bg">
  			<view class="bg-t">请选择您指派的师傅</view>
  			<view class="bg-m">优先派单给你指定师傅，但是师傅超30分钟未响应，订单将自动回到接单大厅由其他师傅进行接单</view>
- 			<view class="bg-c" v-for="(item,i)  in workerList" :key="i">
- 				<view class="bg-c-top" v-if="item.isExclusive=='1'">专属师傅</view>
- 				<view class="bg-c-content acea-row">
- 					<view class="bg-c-content-img">
- 						<image v-if="!item.avatarUrl"
- 							:src="item.avatarUrl"
- 							mode=""></image>
- 						<image v-else
- 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
- 							mode=""></image>
- 					</view>
- 					<view class="bg-c-content-peo">
- 						<view class="bg-c-content-peo-t acea-row row-middle">
- 							<text>{{item.workerName}}</text>
- 							<image :src="item.levelIcon" mode=""></image>
- 						</view>
- 						<view class="bg-c-content-peo-z">已合作 <text>{{item.cooperationCount}}</text> 次 </view>
- 						<view class="bg-c-content-peo-z">服务区域：{{item.region}}</view>
- 						<view class="bg-c-content-peo-z">工种信息：{{item.workerTypes}}</view>
- 					</view>
- 				</view>
- 				<view class="bg-c-type acea-row row-between-wrapper">
- 					<view class="bg-c-type-item">完成服务 <text>{{item.completedCount}}</text>单 </view>
- 					<!-- 	<view class="bg-c-type-item">返修率 <text>0.0%</text></view>
-					<view class="bg-c-type-item">履约率 <text>100%</text> </view> -->
- 				</view>
-
- 				<view class="bg-c-btn" @click="isZhiPaiHandle(item.workerId)">
- 					<view :class="{on:iszhiList.includes(item.workerId)}">
- 						{{iszhiList.includes(item.workerId)?'已指派':'指派ta'}}
- 					</view>
- 				</view>
- 			</view>
- 		</view>
- 		<view v-if="cooperationWorker&&cooperationWorker.length!=0">
- 			<view class="acea-row row-middle row-center" style="color:#A5A7A7; font-size:25.36rpx; margin-top: -6px;">
- 				-合作过的师傅-</view>
- 			<view class="lists" v-for="(item,i)  in cooperationWorker" :key="i">
- 				<view class="lists-item">
- 					<view class="lists-item-top acea-row">
- 						<view class="lists-item-top-img">
- 							<image v-if="!item.avatarUrl"
- 								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
- 								mode=""></image>
- 							<image v-else
- 								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/4f491865b70d4651a9d1aea7bc8524b8.png"
- 								mode=""></image>
- 						</view>
- 						<view class="lists-item-top-peo">
- 							<view class="lists-item-top-peo-t acea-row row-middle">
- 								<text>{{item.workerName}}</text>
- 							</view>
- 							<view class="lists-item-top-peo-z">已合作 <text>{{item.cooperationCount}}</text> 次 </view>
- 							<view class="lists-item-top-peo-z">服务区域：{{item.region}}</view>
- 							<view class="lists-item-top-peo-z">工种信息：{{item.workerTypes}}</view>
- 						</view>
- 					</view>
- 					<view class="lists-item-bottom acea-row row-middle">
- 						<view class="lists-item-bottom-btn" :class="{on:iszhiList.includes(item.workerId)}"
- 							@click="isZhiPaiHandle(item.workerId)">
- 							{{iszhiList.includes(item.workerId)?'已指派':'指派ta'}}
- 						</view>
- 					</view>
- 				</view>
- 			</view>
- 		</view>
+		<!-- 	<view style="height: 72vh;overflow: scroll;"> -->
+				<view class="bg-c" v-for="(item,i)  in workerList" :key="i">
+					<view class="bg-c-top" v-if="item.isExclusive=='1'">专属师傅</view>
+					<view class="bg-c-content acea-row">
+						<view class="bg-c-content-img">
+							<image v-if="item.avatarUrl"
+								:src="item.avatarUrl"
+								mode=""></image>
+							<image v-else
+								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
+								mode=""></image>
+						</view>
+						<view class="bg-c-content-peo">
+							<view class="bg-c-content-peo-t acea-row row-middle">
+								<text>{{item.workerName}}</text>
+								<image :src="item.levelIcon" mode=""></image>
+							</view>
+							<view class="bg-c-content-peo-z">已合作 <text>{{item.cooperationCount}}</text> 次 </view>
+							<view class="bg-c-content-peo-z">服务区域：{{item.region}}</view>
+							<view class="bg-c-content-peo-z">工种信息：{{item.workerTypes}}</view>
+						</view>
+					</view>
+					<view class="bg-c-type acea-row row-between-wrapper">
+						<view class="bg-c-type-item">完成服务 <text>{{item.completedCount}}</text>单 </view>
+						<!-- 	<view class="bg-c-type-item">返修率 <text>0.0%</text></view>
+						<view class="bg-c-type-item">履约率 <text>100%</text> </view> -->
+					</view>
+				
+					<view class="bg-c-btn" @click="isZhiPaiHandle(item.workerId)">
+						<view :class="{on:iszhiList.includes(item.workerId)}">
+							{{iszhiList.includes(item.workerId)?'已指派':'指派ta'}}
+						</view>
+					</view>
+				</view>
+				<view v-if="cooperationWorker&&cooperationWorker.length!=0">
+					<view class="acea-row row-middle row-center" style="color:#A5A7A7; font-size:25.36rpx; margin-top: -6px;">
+						-合作过的师傅-</view>
+					<view class="lists" v-for="(item,i)  in cooperationWorker" :key="i">
+						<view class="lists-item">
+							<view class="lists-item-top acea-row">
+								<view class="lists-item-top-img">
+									<image v-if="!item.avatarUrl"
+										src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
+										mode=""></image>
+									<image v-else
+										src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/4f491865b70d4651a9d1aea7bc8524b8.png"
+										mode=""></image>
+								</view>
+								<view class="lists-item-top-peo">
+									<view class="lists-item-top-peo-t acea-row row-middle">
+										<text>{{item.workerName}}</text>
+									</view>
+									<view class="lists-item-top-peo-z">已合作 <text>{{item.cooperationCount}}</text> 次 </view>
+									<view class="lists-item-top-peo-z">服务区域：{{item.region}}</view>
+									<view class="lists-item-top-peo-z">工种信息：{{item.workerTypes}}</view>
+								</view>
+							</view>
+							<view class="lists-item-bottom acea-row row-middle">
+								<view class="lists-item-bottom-btn" :class="{on:iszhiList.includes(item.workerId)}"
+									@click="isZhiPaiHandle(item.workerId)">
+									{{iszhiList.includes(item.workerId)?'已指派':'指派ta'}}
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+		<!-- 	</view> -->
+		</view>
+ 	
 
  	</view>
  </template>
@@ -87,7 +90,8 @@
  				iszhiList: [],
  				serviceIds: [],
  				workerList: [],
- 				cooperationWorker: []
+ 				cooperationWorker: [],
+				allWorkerList:[]
  			}
  		},
  		onLoad(option) {
@@ -111,12 +115,14 @@
  						item.iszhi = false
  						let arr = item.serviceAddress.split('/')
  						item.region = arr[1] + '-' + arr[2]
- 						if (item.cooperationCount > 0) {
+ 						if (item.isExclusive =='0') {
  							this.cooperationWorker.push(item)
- 						}
+ 						}else{
+							this.workerList.push(item)
+							
+						}
  					})
- 					this.workerList = res.data
-					console.log(this.workerList);
+					this.allWorkerList=res.data
  				})
  			},
  			isZhiPaiHandle(id) {
@@ -132,11 +138,12 @@
  				} else {
  					this.iszhiList.push(id)
  				}
+				console.log(this.iszhiList);
  			},
  			leftClick() {
 				console.log('hidehiade');
 				let arr = []
-				this.workerList.forEach(item => {
+				this.allWorkerList.forEach(item => {
 					if (this.iszhiList.includes(item.workerId)) {
 						arr.push(item)
 					}
@@ -182,7 +189,7 @@
  				position: relative;
  				padding: 28rpx 20rpx;
  				box-sizing: border-box;
-
+				margin-bottom: 20rpx;
  				&-top {
  					position: absolute;
  					top: 0;
@@ -194,7 +201,7 @@
  					text-align: center;
  					line-height: 45rpx;
  					font-size: 25rpx;
-					z-index: 100;
+					z-index: 10;
  				}
 
  				&-content {
@@ -297,7 +304,7 @@
  		.lists {
 
  			margin-top: 16rpx;
- 			padding: 0 30rpx;
+ 			// padding: 0 30rpx;
 
  			&-item {
  				margin-bottom: 22rpx;

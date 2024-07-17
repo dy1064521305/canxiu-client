@@ -49,7 +49,7 @@
 		<view v-if="addressInfo.customerId" style="color: #A4D091;background-color:#ECF7ED ;padding: 30rpx;">
 			*提示：地址关联{{ addressInfo.storeName ? addressInfo.storeName : '暂无名称' }}门店
 		</view>
-		<!-- <view @click="goWorkerList" class="designWorker acea-row row-between-wrapper">
+		<view @click="goWorkerList" class="designWorker acea-row row-between-wrapper">
 			<view class="designWorker-left acea-row">
 				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/ac000216203a45638ea0841739325d41.png"
 					mode=""></image>
@@ -62,7 +62,7 @@
 				<view v-for="(item, index) in workerList.slice(0, 3)" :key="index">
 					<view v-if="!item.workerName" class="designWorker-right-people"></view>
 					<view v-if="item.workerName" class="designWorker-right-img">
-						<image v-if="!item.avatarUrl"
+						<image v-if="item.avatarUrl"
 							:src="item.avatarUrl"
 							mode=""></image>
 						<image v-else
@@ -77,7 +77,7 @@
 
 				<u-icon name="arrow-right"></u-icon>
 			</view>
-		</view> -->
+		</view>
 		<!-- <view class="time" @click="isShow=true">
 			<text style="font-size: 33rpx;color: #3D3F3E;font-weight: bold;">选择上门时间</text>
 			<text
@@ -523,7 +523,6 @@
 				}).then(res => {
 					res.data.forEach(newPro => {
 						this.submitList.forEach((oldPro, oldIndex) => {
-							console.log(oldPro, '523333333');
 							if ((newPro.productId ? newPro.productId : newPro.serviceId) == (oldPro
 									.productId ? oldPro.productId : oldPro.serviceId)) {
 								this.submitList[oldIndex] = {
@@ -537,7 +536,6 @@
 									clientId :storage.get('ClientId'),
 									projectPrice:newPro.discountPrice
 								}
-								console.log(oldPro, '5300000000');
 							}
 						})
 					})
