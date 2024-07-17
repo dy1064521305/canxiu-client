@@ -19,7 +19,7 @@
 				</view>
 			</view>
 		</view>
-		<!-- <view v-if="workerList.length!=0" class="page-peo">
+		<view v-if="workerList.length!=0"  class="page-peo">
 			<view class="page-peo-name acea-row">
 				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/3dcf64d5acb7412d869844de109a5ec0.png"
 					mode=""></image>
@@ -28,16 +28,16 @@
 			<view class="page-peo-title">
 				如指派师傅超30分钟未响应，订单将由其他师傅接单服务
 			</view>
-			<view class="page-peo-listOther acea-row row-between-wrapper">
-				<view class="page-peo-list-item flex-colum-center" v-for="(item) in workerList" :key="item.id">
-					<image v-if="!item.avatarUrl" :src="item.avatarUrl" mode=""></image>
+			<view  class="page-peo-listOther acea-row " >
+				<view class="page-peo-list-item flex-colum-center" v-for="(item) in workerList" :key="item.id" style="width: 20%;margin: 20rpx 0;">
+					<image v-if="item.avatarUrl" :src="item.avatarUrl" mode=""></image>
 					<image v-else
 						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
 						mode=""></image>
 					<text>{{item.workerName}}</text>
 				</view>
 			</view>
-		</view> -->
+		</view>
 		<view class="page-peo">
 			<view class="page-peo-three">
 				<view class="page-peo-three-list">
@@ -285,7 +285,7 @@
 			}
 
 			&-listOther {
-				height: 203rpx;
+				// height: 203rpx;
 
 				image {
 					width: 87rpx;

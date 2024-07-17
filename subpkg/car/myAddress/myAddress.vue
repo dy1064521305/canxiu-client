@@ -28,7 +28,7 @@
 					</view>
 					<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
 						<view style="width: 88%;">
-							{{item.addressDetailed}}{{item.houseNum}}
+							{{item.addressDetailed}}{{item.houseNum||''}}
 						</view>
 						<view v-if="type!='store'&&type!='order'" style="font-size: 25rpx;color: #EC5722;"
 							@click.stop="deleteAddressHandle(item.addressId)">
@@ -61,7 +61,7 @@
 						</view>
 						<view style="font-size: 25rpx;color: #A5A7A7;display: flex;justify-content: space-between;">
 							<view style="width: 88%;">
-								{{storeAddressInfo.addressDetailed}}{{storeAddressInfo.houseNum}}
+								{{storeAddressInfo.addressDetailed}}{{storeAddressInfo.houseNum||''}}
 							</view>
 
 						</view>

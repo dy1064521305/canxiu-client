@@ -30,7 +30,27 @@
 				</image>
 			</view>
 		</view>
-
+		
+		<!-- -->
+		<view  v-if="info.appointWorkers" class="worker_list bg info">
+			<view class="name acea-row">
+				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/3dcf64d5acb7412d869844de109a5ec0.png"
+					mode=""></image>
+				<text>订单指派师傅</text>
+			</view>
+			<view class="title">
+				如指派师傅超30分钟未响应，订单将由其他师傅接单服务
+			</view>
+			<view class="listOther acea-row " >
+				<view class="flex-colum-center" v-for="(item) in info.appointWorkers" :key="item.id" style="width: 20%;margin: 20rpx 0;">
+					<image v-if="item.avatarUrl" :src="item.avatarUrl" mode=""></image>
+					<image v-else
+						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
+						mode=""></image>
+					<text>{{item.userName}}</text>
+				</view>
+			</view>
+		</view>
 
 
 		<view class="bg info">
@@ -1181,12 +1201,63 @@
 			padding: 20rpx 30rpx;
 			margin-top: 20rpx;
 		}
+		
+		.worker_list{
+			.listOther {
+				// height: 203rpx;
+				image {
+					width: 87rpx;
+					height: 87rpx;
+					margin-bottom: 13rpx;
+				}
+			
+				text {
+					font-family: PingFangSC, PingFang SC;
+					font-weight: 500;
+					font-size: 25rpx;
+					color: #3D3F3E;
+				}
+			}
+			.name {
+				padding: 30rpx 0 0 0;
+			
+				image {
+					width: 42rpx;
+					height: 42rpx;
+					margin: 0 10rpx 0 10rpx;
+				}
+			
+				font-size: 33rpx;
+				color: #3D3F3E;
+			}
+			.wenan {
+				font-size: 40rpx;
+				color: #3D3F3E;
+				margin: 34rpx 0 19rpx 6rpx;
+			}
+			.list {
+				height: 208rpx;
+				border-top: 1rpx solid #F8F8F8;
+
+				image {
+					width: 69rpx;
+					height: 72rpx;
+					margin-bottom: 18rpx;
+				}
+
+				text {
+					font-size: 29rpx;
+					color: #3D3F3E;
+				}
+			}
+
+		}
 
 		.title {
 			font-size: 31rpx;
 			color: #3D3F3E;
 			font-weight: bold;
-
+			margin-top: 20rpx;
 			.img {
 				align-items: center;
 				display: flex;

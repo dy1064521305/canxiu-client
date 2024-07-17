@@ -27,7 +27,7 @@
 							{{ addressPlace }}
 						</view>
 						<view style="font-size: 29rpx;margin-top: 18rpx;">
-							{{ addressRegion }}{{ addressInfo.addressDetailed }}{{ addressInfo.houseNum }}
+							{{ addressRegion }}{{ addressInfo.addressDetailed }}{{ addressInfo.houseNum||'' }}
 						</view>
 						<view style="font-size: 25rpx;margin-top: 23rpx;align-items: center;
 				display: flex;">
