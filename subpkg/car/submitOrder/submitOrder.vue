@@ -533,12 +533,19 @@
 									serviceProjectImg: newPro.serviceImg,
 									projectNumber: oldPro.projectNumber,
 									projectImg: oldPro.projectImg,
-									remark: oldPro.remark
+									remark: oldPro.remark,
+									clientId :storage.get('ClientId'),
+									projectPrice:newPro.discountPrice
 								}
 								console.log(oldPro, '5300000000');
 							}
 						})
 					})
+					if (this.info.isUrgent&& this.submitList[0].isUrgent != 'N') {
+						this.urgentPriceTotal = Number(this.submitList[0].urgentPrice)
+					} else {
+						this.urgentPriceTotal = 0
+					}
 					this.getMoney('init')
 
 				})
@@ -610,6 +617,7 @@
 					// this.urgentPriceTotal = this.submitList.reduce((pre, item) => {
 					// 	return pre + Number(item.urgentPrice)
 					// }, 0)
+				
 					this.urgentPriceTotal = Number(this.submitList[0].urgentPrice)
 					// this.info.orderPrice = this.info.orderPrice + this.urgentPriceTotal
 				} else {
