@@ -404,8 +404,7 @@
 					...item,
 					type: 'order'
 				}
-				this.info.orderPrice = Number(item.couponAmount) ? Number(this.info.oldOrderPrice) - Number(item
-					.couponAmount) : this.info.oldOrderPrice
+				console.log(this.choseCoupon,'4077777777');
 			},
 			//获取指派师傅
 			getWorkerlist(arr) {
@@ -562,6 +561,10 @@
 						.startingFreeDiscount) : all
 				})
 				this.info.orderPrice = this.info.oldOrderPrice = this.showListByType.reduce((p, c) => p + c.allMoney, 0)
+				if (this.choseCoupon&&(Number(this.choseCoupon.couponAmount)>this.info.orderPrice)) {
+					this.info.orderPrice = Number(this.choseCoupon.couponAmount) ? Number(this.info.oldOrderPrice) - Number(this.choseCoupon
+						.couponAmount) : this.info.oldOrderPrice
+				}
 				// +
 				// 	this.urgentPriceTotal
 			},
