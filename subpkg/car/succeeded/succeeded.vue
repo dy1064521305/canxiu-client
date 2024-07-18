@@ -1,7 +1,7 @@
 <template>
 	<view class="page">
 		<view class="page-peo">
-			<view class="page-peo-rightTop acea-row row-middle row-center" @click="$jump('/pages/order/order')">查看订单</view>
+			<view class="page-peo-rightTop acea-row row-middle row-center" @click="goDetailed">查看订单</view>
 			<view class="page-peo-wenan">预约成功，匹配师傅中！</view>
 			<view class="page-peo-time">
 				<u-count-down :time="900000" format="mm:ss" autoStart millisecond @change="onChange">
@@ -19,7 +19,7 @@
 				</view>
 			</view>
 		</view>
-		<view v-if="workerList.length!=0"  class="page-peo">
+		<view v-if="workerList.length!=0" class="page-peo">
 			<view class="page-peo-name acea-row">
 				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/3dcf64d5acb7412d869844de109a5ec0.png"
 					mode=""></image>
@@ -28,8 +28,9 @@
 			<view class="page-peo-title">
 				如指派师傅超30分钟未响应，订单将由其他师傅接单服务
 			</view>
-			<view  class="page-peo-listOther acea-row " >
-				<view class="page-peo-list-item flex-colum-center" v-for="(item) in workerList" :key="item.id" style="width: 20%;margin: 20rpx 0;">
+			<view class="page-peo-listOther acea-row ">
+				<view class="page-peo-list-item flex-colum-center" v-for="(item) in workerList" :key="item.id"
+					style="width: 20%;margin: 20rpx 0;">
 					<image v-if="item.avatarUrl" :src="item.avatarUrl" mode=""></image>
 					<image v-else
 						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
@@ -96,6 +97,7 @@
 					},
 				], //拨打电话
 				showPhone: false,
+				type: '',
 				timeData: {},
 				info: {},
 				dateDiff: 0,
@@ -147,20 +149,18 @@
 			// // 	url: '/pages/index/index'
 			// // })
 			// //#endif
+			console.log(this.type);
+			if (this.type == '查看订单') return
 			uni.switchTab({
-				url:'/pages/home/index'
+				url: '/pages/home/index'
 			})
 		},
-	
-		onHide() {
-			console.log('hidehide');
-		},
 		methods: {
-			backHome() {
-				uni.switchTab({
-					url: '/pages/home/index'
-				})
-			},
+			// backHome() {
+			// 	uni.switchTab({
+			// 		url: '/pages/home/index'
+			// 	})
+			// },
 			//倒计时
 			onChange(e) {
 				this.timeData = e
@@ -170,6 +170,7 @@
 			},
 			//查看订单
 			goDetailed() {
+				this.type = '查看订单'
 				uni.switchTab({
 					url: '/pages/order/order'
 				})
@@ -330,6 +331,7 @@
 					color: #3D3F3E;
 					margin-bottom: 16rpx;
 					display: flex;
+
 					&-text {
 						color: #A5A7A7;
 						margin-left: 4rpx;

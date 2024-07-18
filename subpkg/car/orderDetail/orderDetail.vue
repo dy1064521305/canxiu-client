@@ -104,9 +104,9 @@
 					</image>
 					<image v-else style="width:98rpx;height: 98rpx;border-radius: 50%;" :src="workerInfo.avatarUrl">
 					</image>
-					<view class="logo">
+				<!-- 	<view class="logo">
 						{{workerType}}
-					</view>
+					</view> -->
 				</view>
 
 				<view style="margin-left:14rpx ;width: 85%;">

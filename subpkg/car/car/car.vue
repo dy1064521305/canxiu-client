@@ -583,7 +583,7 @@
 				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
 				if (this.checkedList.length == 0) {
 					uni.showToast({
-						title: '请选择商品',
+						title: '请选择项目',
 						duration: 2000,
 						icon: 'none'
 					})
