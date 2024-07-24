@@ -14,3 +14,15 @@ export const addUserWithdrawal = (data) => request.post('/finance/userWithdrawal
 
 // 查询用户质保金收支列表
 export const getListRetention = (params) => request.get('/finance/walletDetails/listRetention',params)
+
+// 用户查询签约状态
+export const getSignStatus = (params) => request.get('/finance/sign/getSignStatus',params)
+
+// 师傅校验是否有签约银行卡
+export const checklsSign = (params) => request.get('/worker/bankCard/checklsSign',params)
+
+// 查询师傅提现记录列表
+export const listWorkerWithdrawal = (params) => request.get('/finance/userWithdrawal/listWorkerWithdrawal',params)
+
+// 用户查询提现记录账单详情
+export const queryDetails = (withdrawalId) => request.get('/finance/userWithdrawal/queryDetails/'+withdrawalId)

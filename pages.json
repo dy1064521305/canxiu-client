@@ -96,7 +96,16 @@
 			}
 
 		}
-	],
+	    ,{
+            "path" : "subpkg/suiyoubao/suiyoubao",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"subPackages": [{
 			"root": "subpkgChat",
 			"pages": [
