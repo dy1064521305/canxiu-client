@@ -29,7 +29,6 @@ import store from '@/store';
 // 全局的暂无数据
 import EmptyPage from '@/components/empty/emptyPage.vue'
 Vue.component('empty-page', EmptyPage);
-
 const app = new Vue({
 	store,
 	...App

@@ -146,7 +146,7 @@
 
 
 		<view v-if="status" class="index" style="z-index: 999999999999;">
-			<wu-app-update ></wu-app-update>
+			<wu-app-update></wu-app-update>
 		</view>
 
 	</view>
@@ -189,7 +189,7 @@
 		},
 		data() {
 			return {
-				status:true,
+				status: true,
 				serviceTypesList: [],
 				isShowMoney: false, //未登录不显示金额
 				loading: false, //是否展示 “正在加载” 字样
@@ -279,7 +279,7 @@
 			if (this.tabsBg !== '#F5F9FA') this.tabsBg = '#F5F9FA'
 		},
 		onShow() {
-			this.status=true
+			this.status = true
 			if (storage.get('AccessToken')) {
 				this.isShowMoney = true
 				getCarNum().then(res => {
@@ -365,7 +365,7 @@
 
 		},
 		onHide() {
-			this.status=false
+			this.status = false
 			const apps = getApp()
 			apps.type = undefined
 			// this.getLoction()
@@ -1072,7 +1072,7 @@
 		position: fixed;
 		right: 36.23rpx;
 		bottom: 39.86rpx;
-		z-index: 10000;
+		z-index: 1000;
 
 		.dot {
 			z-index: 10;

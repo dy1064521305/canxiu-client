@@ -91,8 +91,7 @@
 				<view class="counts">
 					<text class="counts-title">常用功能</text>
 					<view class="counts-type acea-row">
-						<view class="counts-type-all flex-colum-center" @click="$jump(i.url)" v-for="(i) in useList"
-							:key="i.id">
+						<view class="counts-type-all " @click="$jump(i.url)" v-for="(i) in useList" :key="i.id">
 							<image :class="'img-'+i.id" :src="i.img" mode=""></image>
 							<view>{{i.label}}</view>
 						</view>
@@ -291,7 +290,7 @@
 		<!-- 拨打电话 -->
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="actionList" :show="showPhone"></u-action-sheet>
-	
+
 
 	</view>
 
@@ -356,6 +355,18 @@
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/0014a1afca2c45f884445a2635df407e.png",
 						label: "钱包余额",
 						url: "/subpkg/center/myMoney/myMoney"
+					},
+					{
+						id: 4,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/15/600d6ba6d8314b6e8a444dfea554fa6d.png",
+						label: "师傅管理",
+						url: "/subpkg/staging/workers/workers"
+					},
+					{
+						id: 5,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/15/600d6ba6d8314b6e8a444dfea554fa6d.png",
+						label: "结算记录",
+						url: "/subpkg/staging/workers/records"
 					}
 				],
 				list: [{
@@ -720,7 +731,7 @@
 	}
 
 	.center {
-		padding: 0 30rpx 0;
+		padding: 0 30rpx 100rpx;
 		width: 100%;
 		box-sizing: border-box;
 		position: absolute;
@@ -898,8 +909,18 @@
 				padding: 20rpx 0 40rpx;
 				justify-content: space-around;
 				margin-top: 22rpx;
+				display: grid;
+				text-align: center;
+				grid-template-columns: repeat(4, 1fr);
+				grid-column-gap: 0rpx;
+				grid-row-gap: 30rpx;
 
 				&-all {
+					image {
+						width: 58rpx;
+						height: 58rpx;
+					}
+
 					.img-0 {
 						width: 58rpx;
 						height: 58rpx;

@@ -168,7 +168,7 @@
 					"style": {
 						"navigationBarTitleText": "选择服务地址",
 						"enablePullDownRefresh": false
-						
+
 					}
 
 				}
@@ -362,6 +362,42 @@
 			]
 		},
 		{
+			"root": "subpkg/staging",
+			"pages": [{
+					"path": "workers/workers",
+					"style": {
+						"navigationBarTitleText": "师傅管理",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "workers/set",
+					"style": {
+						"navigationBarTitleText": "师傅设置",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "workers/workerInfo/workerInfo",
+					"style": {
+						"navigationBarTitleText": "师傅详情",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "workers/records",
+					"style": {
+						"navigationBarTitleText": "结算记录",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+
+				}
+			]
+		},
+		{
 			"root": "subpkg/center",
 			"pages": [
 				// {
@@ -450,9 +486,49 @@
 				}, {
 					"path": "myMoney/myMoney",
 					"style": {
-						"navigationBarTitleText": "我的余额"
+						"navigationBarTitleText": "我的余额",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": false
 					}
 
+				},
+				{
+					"path": "myMoney/invest/account",
+					"style": {
+						"navigationBarTitleText": "投资客账户",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "myMoney/invest/out",
+					"style": {
+						"navigationBarTitleText": "转出",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "myMoney/invest/into",
+					"style": {
+						"navigationBarTitleText": "转入",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "myMoney/invest/yue",
+					"style": {
+						"navigationBarTitleText": "余额明细",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "myMoney/invest/butie",
+					"style": {
+						"navigationBarTitleText": "资金补贴记录",
+						"enablePullDownRefresh": false
+					}
 				},
 				{
 					"path": "invite/invite",
@@ -558,25 +634,22 @@
 
 				}
 
-			    ,{
-                    "path" : "myStore/myStore",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "我的门店",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "myStore/addStore/addStore",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+				, {
+					"path": "myStore/myStore",
+					"style": {
+						"navigationBarTitleText": "我的门店",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "myStore/addStore/addStore",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+
+				}
+			]
 		}
 
 	],
