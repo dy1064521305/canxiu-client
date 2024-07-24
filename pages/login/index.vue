@@ -21,8 +21,8 @@
 			</view>
 			<view class="fonts" @click="checked = !checked">
 				<view style="margin-top:3rpx;">
-					<view v-if="!checked" class="check" ></view>
-					<view v-else >
+					<view v-if="!checked" class="check"></view>
+					<view v-else>
 						<!-- 	<image style="width: 100%;height: 100%;"
 											src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
 										</image> -->
@@ -61,7 +61,7 @@
 			</view> -->
 		</view>
 
-			<view class="index" style="z-index: 999999999999;">
+		<view class="index" style="z-index: 999999999999;">
 			<wu-app-update></wu-app-update>
 		</view>
 	</view>
@@ -80,7 +80,7 @@
 		isEmpty,
 		isPhone
 	} from '@/utils/verify.js'
-
+	import storage from '@/utils/storage'
 
 	import logger from '../../utils/logger';
 
@@ -148,7 +148,7 @@
 					this.agreementList = res.data
 				})
 			},
-		
+
 			radioChange() {
 				console.log(this.check);
 			},
@@ -215,7 +215,7 @@
 							phonenumber: app.phone,
 							smsCode: app.code,
 						}).then(result => {
-						
+
 							if (result.data.type == 'Error') {
 								uni.$u.toast(result.data.msg)
 								return
@@ -240,7 +240,7 @@
 								getInfoById(result.data.clientId).then(res => {
 									console.log(res);
 									this.userInfo = res.data
-								
+									uni.setStorageSync(`isLogin${storage.get('ClientId')}`, true)
 									let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 									if (result.data.type == 'Success' && res.data.customerStoreId) {
 										const pages = uni.$u.pages();
@@ -273,11 +273,11 @@
 										// })
 										let info = {
 											type: 'login',
-										storeInfo: {
-											storeImg: res.data.storeImg,
-											storeName: res.data.storeName,
-											storeTypeId: res.data.storeTypeId,
-										}
+											storeInfo: {
+												storeImg: res.data.storeImg,
+												storeName: res.data.storeName,
+												storeTypeId: res.data.storeTypeId,
+											}
 										}
 										uni.navigateTo({
 											url: '../../subpkg/center/myStore/addStore/addStore?info=' +

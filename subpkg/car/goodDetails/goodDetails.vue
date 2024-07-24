@@ -378,7 +378,7 @@
 				serviceImgList: [],
 				currentNum: 0,
 				query: {},
-				isLogin: storage.get('AccessToken'),
+				isLogin:uni.getStorageSync(`isLogin${storage.get('ClientId')}`),
 				isJoinCar: 0, //是否加入维修车
 				chargeList: [], //收费标准
 				melList: [],
@@ -474,6 +474,7 @@
 
 		},
 		onShow() {
+			this.isLogin=uni.getStorageSync(`isLogin${storage.get('ClientId')}`)
 			this.$nextTick(() => {
 				uni.createSelectorQuery().in(this)
 					.select(".navbar")
@@ -505,7 +506,7 @@
 			});
 			// #endif
 			console.log(this.statusHeight, '448888888');
-			this.isLogin = storage.get('AccessToken')
+			// this.isLogin = storage.get('AccessToken')
 			//获取购物车数量
 			if (this.isLogin) {
 				this.getCarList()

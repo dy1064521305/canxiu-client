@@ -49,6 +49,7 @@ export const actions = {
 				}
 			}).then(response => {
 				const result = response.data;
+			
 				loginSuccess(commit, result)
 				resolve(response)
 			}).catch(reject)
@@ -77,9 +78,11 @@ export const actions = {
 		commit
 	}, data) {
 		return new Promise((resolve, reject) => {
+				uni.removeStorageSync(`isLogin${storage.get('ClientId')}`)
 			//  LoginApi.logout(data, { custom: { catch: true } }).then(response => {
 			storage.remove(ACCESS_TOKEN)
 			storage.remove(CLIENID)
+		
 			commit('SET_TOKEN', '')
 			commit('SET_CLIENTID', '')
 			// resolve(response)
