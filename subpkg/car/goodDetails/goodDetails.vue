@@ -378,7 +378,7 @@
 				serviceImgList: [],
 				currentNum: 0,
 				query: {},
-				isLogin:uni.getStorageSync(`isLogin${storage.get('ClientId')}`),
+				isLogin: uni.getStorageSync(`isLogin${storage.get('ClientId')}`),
 				isJoinCar: 0, //是否加入维修车
 				chargeList: [], //收费标准
 				melList: [],
@@ -416,7 +416,7 @@
 				navbarColorOpacity: 0,
 				mainFlagTop: 0,
 				city: undefined,
-				type:''
+				type: ''
 			}
 		},
 		//#ifdef MP-WEIXIN
@@ -427,24 +427,37 @@
 					path: '',
 					imageUrl: this.serviceImgList[0],
 				}
-				let id=this.query.typeId?this.query.typeId:this.query.serviceId
-				data.path = '/subpkg/car/goodDetails/goodDetails?typeId='+id+'&type=share';
-				resolve(data) 
+				let id = this.query.typeId ? this.query.typeId : this.query.serviceId
+				data.path = '/subpkg/car/goodDetails/goodDetails?typeId=' + id + '&type=share';
+				resolve(data)
 			})
 		},
 		onShareTimeline(res) { //分享到朋友圈
+			// return new Promise((resolve, reject) => {
+			// 	let data = {
+			// 		title: this.goodInfo.serviceName,
+			// 		path: '',
+			// 		imageUrl: this.serviceImgList[0],
+			// 	}
+			// 	let id = this.query.typeId ? this.query.typeId : this.query.serviceId
+			// 	data.path = '/subpkg/car/goodDetails/goodDetails?typeId=' + id + '&type=share';
+			// 	resolve(data)
+			// })
+			let id=this.query.typeId?this.query.typeId:this.query.serviceId
 			return {
-				title: this.title,
-				imageUrl: this.thumb,
+				query:`typeId=${id}&type=share&address=${this.query.address}`,
+				title: this.goodInfo.serviceName,
+				path: '/subpkg/car/goodDetails/goodDetails',
+				imageUrl: this.serviceImgList[0],
 			}
 		},
 		//#endif
 		onLoad(options) {
 			// console.log(this.isLogin);
-			 console.log(options);
+			console.log(options);
 			let name = uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
-			this.query.address = name
-			this.type=options.type
+			this.query.address = name?name:options.address
+			this.type = options.type
 			this.city = this.query.address.split('-')[2]
 			this.query.clientId = !storage.get('ClientId') ? '' : storage.get('ClientId')
 			// console.log(this.query);
@@ -474,7 +487,7 @@
 
 		},
 		onShow() {
-			this.isLogin=uni.getStorageSync(`isLogin${storage.get('ClientId')}`)
+			this.isLogin = uni.getStorageSync(`isLogin${storage.get('ClientId')}`)
 			this.$nextTick(() => {
 				uni.createSelectorQuery().in(this)
 					.select(".navbar")
@@ -556,10 +569,13 @@
 
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
-
-					// uni.setNavigationBarTitle({
-					// 	title: this.goodInfo.serviceName
-					// })
+					
+					// if (this.type=='share') {
+					// 	uni.setNavigationBarTitle({
+					// 		title: this.goodInfo.serviceName
+					// 	})
+					// }
+					
 
 					for (let key in this.goodInfo.materialVoMap) {
 						this.melList.push({
@@ -594,7 +610,7 @@
 					if (this.isLogin) {
 						// this.getCarList()
 						this.getListByWorkerType()
-					} 
+					}
 					// else {
 					// 	this.goodInfo.serviceStartingFree = this.replaceMoney(this.goodInfo.serviceStartingFree)
 					// 	this.goodInfo.discountPrice = this.replaceMoney(this.goodInfo.discountPrice)
@@ -681,15 +697,15 @@
 			},
 			goBack() {
 				if (this.isLogin) {
-					this.type=='share'?uni.switchTab({
-						url:'/pages/home/index'
-					}):	uni.navigateBack()
-				} else{
+					this.type == 'share' ? uni.switchTab({
+						url: '/pages/home/index'
+					}) : uni.navigateBack()
+				} else {
 					uni.navigateTo({
-						url:'/pages/login/index'
+						url: '/pages/login/index'
 					})
 				}
-			
+
 			},
 			//去登录
 			confirm() {

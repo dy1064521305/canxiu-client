@@ -12,7 +12,7 @@
 		</view>
 		<view class="main">
 			<view class="input-box">
-				<input type="number" v-model="phone" placeholder="请输入您的手机号">
+				<input type="number" v-model="phone" placeholder="请输入您的手机号" @input="numberInput">
 			</view>
 			<view class="input-box">
 				<input type="number" v-model="code" placeholder="请输入验证码">
@@ -148,7 +148,14 @@
 					this.agreementList = res.data
 				})
 			},
-
+			numberInput() {
+				setTimeout(() => {
+					if (this.phone == '') {
+						this.countDownNum = 0
+						clearInterval(this.timer);
+					}
+				}, 800)
+			},
 			radioChange() {
 				console.log(this.check);
 			},
