@@ -46,21 +46,19 @@
 					{
 						name: '支付宝支付',
 						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/15/9955d4e3556e402091654a20d34956aa.png',
-					},
-					{
-						name: '集团代付',
-						url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/15/7483d75ee78344d7b12762f5585a5bdd.png',
-					},
+					}
+
 				],
 				currentIndex: undefined,
 				info: {},
 				code: '',
 				type: '',
-				wxCode: ''
+				wxCode: '',
 			};
 		},
 		onLoad(option) {
 			this.info = JSON.parse(decodeURIComponent(option.item))
+			this.isGroupPayHandle()
 			console.log(this.info);
 			// #ifdef MP-WEIXIN
 			this.list.splice(1, 1)
@@ -85,6 +83,16 @@
 
 		},
 		methods: {
+			isGroupPayHandle() {
+				pay.isGroupPay(this.info.orderId).then(res => {
+					if (res.data.msg) {
+						this.list.push({
+							name: '集团代付',
+							url: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/15/7483d75ee78344d7b12762f5585a5bdd.png',
+						}, )
+					}
+				})
+			},
 			choseMethod(i, n) {
 				this.currentIndex = i
 				this.type = n
@@ -132,12 +140,12 @@
 							repairId: this.info.repairId ? this.info.repairId : undefined
 						}).then(res => {
 							console.log(res);
-							if (res.data.code!=200) {
+							if (res.data.code != 200) {
 								this.$refs.uToast.show({
 									type: 'error',
 									message: res.data.message
 								});
-							} else{
+							} else {
 								console.log(res);
 								let data = res.data.data
 								let that = this
@@ -158,7 +166,7 @@
 									}
 								});
 							}
-						
+
 						})
 					} else {
 						pay.appWeChatPay({
@@ -231,7 +239,7 @@
 						repairId: this.info.repairId ? this.info.repairId : undefined
 					}).then(res => {
 						uni.showToast({
-							title: '操作成功',
+							title: res.data.msg,
 							duration: 800,
 							icon: 'none'
 						});

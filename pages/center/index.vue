@@ -14,36 +14,116 @@
 				</view>
 			</view>
 		</view>
-		<view v-else class="">
-			<image class="bg"
+		<view v-else>
+			<view class="bg"></view>
+			<!-- <image class="bg"
 				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png">
-			</image>
-
+			</image> -->
 			<view class="center">
-
-				<view class="info" @click="editInfo">
-					<view>
-						<image v-if="userInfo.storeImg==null||userInfo.storeImg==''" style="width: 136rpx;height: 136rpx;"
+				<view class="info">
+					<view class="info-image">
+						<image v-if="userInfo.storeImg==null||userInfo.storeImg==''"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
 						</image>
-						<u--image v-else width='136rpx' height='136rpx' :src="userInfo.storeImg" shape="circle">
+						<u--image v-else width='60rpx' height='60rpx' :src="userInfo.storeImg" shape="circle">
 						</u--image>
 					</view>
-					<view class="name">
-						<view v-if="userInfo.storeName!=null " style="font-size: 36rpx;">
-							{{userInfo.storeName}}
-						</view>
-						<view style="font-size: 29rpx;">
+					<view class="name  acea-row">
+						<view class="name-left">
 							{{userInfo.phone}}
 						</view>
+						<!-- <view style="font-size: 29rpx;">
+							{{userInfo.phone}}
+						</view> -->
 					</view>
-					<view style="display: flex;align-items: center;">
+					<!-- <view style="display: flex;align-items: center;">
 						<image style="width: 16rpx;height: 29rpx;"
 							src='http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/6840f46a9289454198777dd3471d456b.png'
 							mode=""></image>
+					</view> -->
+				</view>
+				<view class="balance acea-row  row-between-wrapper">
+					<view class="balance-two ">
+						<view class="balance-two-num ">
+							{{couponNum}}
+						</view>
+						<text>优惠券</text>
+					</view>
+					<view class="balance-two ">
+						<view class="balance-two-num ">
+							{{balance}}
+						</view>
+						<text>钱包余额</text>
 					</view>
 				</view>
-				<view class="tixian" @click="goMyMoney">
+				<view class="order_list acea-row row-between-wrapper">
+					<view class="order_list-item" v-for="(item,index) in list"
+						@click="$jump('/subpkg/center/myOrder/myOrder?name='+item.name)" :key="item.val">
+						<view class="image">
+							<image :src="item.img" mode=""></image>
+							<view class="topValue acea-row row-between-wrapper" v-if="item.num">{{item.num}}</view>
+						</view>
+						<text>{{item.name}}</text>
+					</view>
+				</view>
+				<!-- <view class="counts">
+					<view class="counts-title">
+						<view>门店订单数据</view>
+						<view style="margin-right: 30rpx;" @click="$jump('/subpkg/center/myOrder/myOrder?name=全部订单')">
+							全部></view>
+					</view>
+					<view class="counts-status">
+						<view class="counts-status-items acea-row " v-for="(item,index) in orderList2" :key="index">
+							<view class="counts-status-items-value">{{item.num||0}}</view>
+							<text>{{item.label}}</text>
+						</view>
+					</view>
+						<view class="counts-other acea-row">
+						<view class="counts-other-items acea-row">
+							今日待上门<text>12</text>
+						</view>
+						<view class="counts-other-items acea-row">
+							今日异常订单<text>12</text>
+						</view>
+					</view>
+				</view> -->
+				<!-- <view class="swiperBanner"></view> -->
+				<view class="counts">
+					<text class="counts-title">常用功能</text>
+					<view class="counts-type acea-row">
+						<view class="counts-type-all flex-colum-center" @click="$jump(i.url)" v-for="(i) in useList"
+							:key="i.id">
+							<image :class="'img-'+i.id" :src="i.img" mode=""></image>
+							<view>{{i.label}}</view>
+						</view>
+
+					</view>
+				</view>
+				<view class="setUp">
+					<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
+						v-for="(item) in typeList.slice(0,3)" :key="item.id">
+						<view class="setUp-list-left">
+							<image :src="item.img" :class="'img-'+item.id" mode=""></image>
+							<text>{{item.label}}</text>
+						</view>
+						<view class="setUp-list-right">
+							<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
+						</view>
+					</view>
+				</view>
+				<view class="setUp">
+					<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
+						v-for="(item) in typeList.slice(3,4)" :key="item.id">
+						<view class="setUp-list-left">
+							<image :src="item.img" :class="'img2-'+item.id" mode=""></image>
+							<text>{{item.label}}</text>
+						</view>
+						<view class="setUp-list-right">
+							<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
+						</view>
+					</view>
+				</view>
+				<!-- <view class="tixian" @click="goMyMoney">
 					<view class="imgPlace">
 						<image style="width: 36rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/baaacef4cc9f4aecad3f6458f07d7fdf.png"
@@ -57,8 +137,8 @@
 					<view class="btn">
 						去提现
 					</view>
-				</view>
-			<!-- 	<view class="order">
+				</view> -->
+				<!-- <view class="order">
 					<view class="title">
 						<text>我的订单</text>
 						<text @click='allOrder'>全部订单</text>
@@ -160,8 +240,7 @@
 							<text style="margin-left:-3rpx;">设置</text>
 						</view>
 					</view> -->
-					<u-cell-group :border='false'>
-
+					<!-- <u-cell-group :border='false'>
 						<u-cell size='large' isLink url="../../subpkg/car/myAddress/myAddress">
 							<view slot="title" style="display: flex;align-items: center;">
 								<image src="../../static/center/address.png"></image>
@@ -198,22 +277,21 @@
 							</view>
 
 						</u-cell>
+					</u-cell-group> -->
 
-					</u-cell-group>
 
-					
 				</view>
-				
-				<view @click="showPhone=true"
-					style="width:100%;margin:0 auto;color: #3398F3; text-align: center; margin:80rpx 0;">
+
+				<!-- <view @click="showPhone=true"
+					style="width:100%;margin:0 auto;color: #3398F3; text-align: center; margin:80rpx 0; ">
 					有疑问？联系客服
-				</view>
+				</view> -->
 			</view>
 		</view>
 		<!-- 拨打电话 -->
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="actionList" :show="showPhone"></u-action-sheet>
-			
+	
 
 	</view>
 
@@ -225,11 +303,14 @@
 		getUserWallet
 	} from '@/api/money.js'
 	import {
-		getOrderList
+		getOrderList,
+		queryOrderCount
 	} from '@/api/order.js'
 	import {
 		getInfoById,
-		queryMyInfo
+		queryMyInfo,
+		getOrderStatics,
+		getCouponList
 	} from '@/api/user.js'
 	import {
 		callPhone
@@ -237,7 +318,7 @@
 	export default {
 		data() {
 			return {
-				balance: '', //账户余额
+				balance: 0, //账户余额
 				actionList: [{
 						name: '0571-88387761'
 					},
@@ -251,6 +332,94 @@
 				showPhone: false, //底部电话显示
 				isLogin: false,
 				userInfo: {}, //用户信息
+				couponNum: 0,
+				useList: [{
+						id: 0,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/07a80dbb32384b938c78184567842312.png",
+						label: "地址关联",
+						url: "/subpkg/car/myAddress/myAddress"
+					},
+					{
+						id: 1,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/8bdc159406b841fd946f943af4f31aee.png",
+						label: "门店管理",
+						url: "/subpkg/center/myStore/myStore"
+					},
+					{
+						id: 2,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/ecd9fc9012614c4b81cf4c0c4987fddb.png",
+						label: "优惠卷",
+						url: "/pages/users/reward/coupon"
+					},
+					{
+						id: 3,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/0014a1afca2c45f884445a2635df407e.png",
+						label: "钱包余额",
+						url: "/subpkg/center/myMoney/myMoney"
+					}
+				],
+				list: [{
+						name: '待服务',
+						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/09/b4ac3b7d1a7d4a5e91d82e4a4fcad32d.png',
+						num: 0,
+						val: 'waitService',
+					},
+					{
+						name: '服务中',
+						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/09/ad35c651adda44e9be897bc7d1a4b193.png',
+						num: 0,
+						val: 'servicing',
+					},
+					{
+						name: '待付款',
+						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/09/9244875972c54c91a934c1265cd95eb4.png',
+						num: 0,
+						val: 'waitPay',
+					},
+					{
+						name: '返修',
+						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/09/64ca56e7c5ef40ffa55f2339198effe5.png',
+						num: 0,
+						val: 'repair',
+					},
+					{
+						name: '全部订单',
+						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/09/57449f60ec5e4d189e21a6aa57e4f15c.png',
+						num: 0,
+						val: 'total',
+					},
+				],
+				orderList2: [{
+						label: "待接单",
+						value: "grabOrder",
+						num: 0,
+					},
+					{
+						label: "待上门",
+						value: "waitDoor",
+						num: 0,
+					},
+					{
+						label: "待验收",
+						value: "waitAcc",
+						num: 0,
+					},
+					{
+						label: "待付款",
+						value: "waitPay",
+						num: 0,
+					},
+					{
+						label: "返修中",
+						value: "repairing",
+						num: 0,
+					},
+					{
+						label: "完工/关闭",
+						value: "finishClose",
+						num: 0,
+					},
+				],
 				orderList: [{
 						url: '../../static/center/daijiedan.png',
 						name: '待接单',
@@ -276,8 +445,52 @@
 						name: '售后中',
 						num: undefined
 					},
+
 				],
-			};
+				typeList: [{
+						id: 0,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/266f8fc9d00b4e67b40dd52f66a66ec5.png",
+						label: "帮助中心",
+						url: "/subpkg/center/setting/setting"
+					},
+					// {
+					// 	id: 1,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/3c00a6d37f0b4a3d94ba09cd8f6abb41.png",
+					// 	label: "建议反馈",
+					// 	url: ""
+					// },
+					{
+						id: 2,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/cc78fbf88e5e476eafdeef2fe0c9a6d6.png",
+						label: "联系客服",
+						url: ""
+					},
+					{
+						id: 3,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "关于我们",
+						url: "/subpkg/center/aboutUs/aboutUs"
+					},
+					// {
+					// 	id: 4,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/7320eca633d8472692bceca08d92aae4.png",
+					// 	label: "我是师傅",
+					// 	url: ""
+					// },
+					// {
+					// 	id: 5,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/68c1018663124c87a10a016b25eabae0.png",
+					// 	label: "我是商家/品牌连锁",
+					// 	url: ""
+					// },
+					{
+						id: 6,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/16/bc36c90670804e7fae1c865ccf174c43.png",
+						label: "申请成为合伙人",
+						url: "/subpkg/car/partner/index"
+					},
+				]
+			}
 		},
 		onTabItemTap: function(item) {
 			uni.removeStorage({
@@ -285,8 +498,14 @@
 			})
 		},
 		onShow() {
-			this.getList()
-			this.isLogin = storage.get('AccessToken')
+
+			this.isLogin = storage.get('ClientId')
+			console.log(this.isLogin);
+			if (this.isLogin) {
+				this.getList()
+				this.getOrderlistHandle(1, 10)
+			}
+
 		},
 		methods: {
 			getList() {
@@ -304,7 +523,7 @@
 						console.log(item);
 						getOrderList({
 							clientId: storage.get('ClientId'),
-							orderStatus: item.name,
+							orderStatus: item.label,
 							pageSize: 10,
 							pageNum: 1
 						}).then(res => {
@@ -316,6 +535,18 @@
 						userType: 'c'
 					}).then(res => {
 						this.balance = res.data.balance
+					})
+					getOrderStatics(storage.get('ClientId')).then(res => {
+						console.log(res, '5300000000');
+						this.orderList2.forEach(item => {
+							item.num = res.data[item['value']]
+						})
+					})
+					getCouponList({
+						clientId: storage.get('ClientId')
+					}).then(res => {
+
+						this.couponNum = res.total
 					})
 
 				}
@@ -411,6 +642,29 @@
 					this.showPhone = false
 				}
 			},
+			// 跳转
+			toUrl(item) {
+				if (item.id == 2) {
+					this.showPhone = true
+				} else {
+					this.$jump(item.url)
+				}
+				// switch (id){
+				// 	case value:
+				// 		break;
+				// 	default:
+				// 		break;
+				// }
+			},
+			getOrderlistHandle(pageNo, pageSize) {
+				queryOrderCount({
+					clientId: storage.get('ClientId')
+				}).then(res => {
+					this.list.forEach(item => {
+						item.num = res.data[item.val]
+					})
+				})
+			},
 		}
 	}
 </script>
@@ -461,27 +715,272 @@
 
 	.bg {
 		width: 100%;
-		height: 543rpx;
+		height: 409rpx;
+		background: linear-gradient(181deg, #A4D091 0%, #FFFFFF 100%);
 	}
 
 	.center {
-		padding: 0 29rpx;
-		width: 92%;
+		padding: 0 30rpx 0;
+		width: 100%;
+		box-sizing: border-box;
 		position: absolute;
 		top: 10rpx;
 
 		.info {
 			margin-top: 120rpx;
-
 			display: flex;
 
+			&-image {
+				width: 60rpx;
+				height: 60rpx;
+				border-radius: 50%;
+
+				image {
+					width: 100%;
+					height: 100%;
+				}
+			}
+
 			.name {
-				width: 80%;
-				margin-left: 29rpx;
+				margin-left: 8rpx;
+				line-height: 60rpx;
+				color: #000000;
+				font-size: 33rpx;
+
+				&-left {
+					max-width: 400rpx;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+			}
+		}
+
+		.balance {
+			height: 174rpx;
+			display: flex;
+
+			&-two {
+				width: 40%;
 				display: flex;
 				flex-direction: column;
-				justify-content: space-evenly;
-				color: #3D3F3E;
+				align-items: center;
+				justify-content: center;
+				box-sizing: border-box;
+
+
+				&-num {
+					font-weight: bold;
+					font-size: 45rpx;
+					color: #000000;
+				}
+
+				text {
+					font-size: 22rpx;
+					color: #5E625C;
+					margin-top: 6rpx;
+				}
+			}
+		}
+
+		.order_list {
+			height: 126rpx;
+			background: #FFFFFF;
+			border-radius: 14rpx;
+			font-family: PingFangSC, PingFang SC;
+			font-weight: 500;
+			font-size: 22rpx;
+			color: #3D3F3E;
+			padding: 0 28rpx;
+
+			&-item {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+
+				.image {
+					width: 38rpx;
+					height: 36rpx;
+					position: relative;
+
+					image {
+						width: 100%;
+						height: 100%;
+					}
+
+					.topValue {
+						position: absolute;
+						top: -20rpx;
+						right: -15rpx;
+						height: 22rpx;
+						background: #EC5722;
+						border-radius: 200rpx;
+						padding: 2rpx 10rpx 4rpx;
+						font-size: 18rpx;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						color: #fff;
+					}
+				}
+
+				text {
+					margin-top: 7rpx;
+				}
+			}
+		}
+
+		.counts {
+			background: #FFFFFF;
+			border-radius: 14rpx;
+			margin-top: 20rpx;
+			padding-top: 20rpx;
+			box-sizing: border-box;
+			font-size: 25rpx;
+			color: #3D3F3E;
+
+			&-title {
+				font-family: PingFangSC, PingFang SC;
+				font-weight: 600;
+				font-size: 28rpx;
+				margin-left: 30rpx;
+				display: flex;
+				justify-content: space-between;
+			}
+
+			&-status {
+
+				width: 100%;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-around;
+				margin-top: 30rpx;
+
+				&-items {
+					width: 33%;
+					// padding: 24rpx 0;
+					flex-direction: column;
+					align-items: center;
+					// justify-content: center;
+					height: 130rpx;
+
+					&-value {
+						font-weight: bold;
+						color: #A4D091;
+						font-size: 33rpx;
+						margin-bottom: 8rpx;
+					}
+				}
+			}
+
+			&-other {
+				height: 82rpx;
+				line-height: 82rpx;
+				border-top: 1rpx solid #ececec;
+
+				&-items {
+					width: 50%;
+					justify-content: center;
+
+					text {
+						font-family: PingFangSC, PingFang SC;
+						font-weight: bold;
+						font-size: 25rpx;
+						color: #A4D091;
+						margin-left: 6rpx;
+
+					}
+				}
+			}
+
+			&-type {
+				padding: 20rpx 0 40rpx;
+				justify-content: space-around;
+				margin-top: 22rpx;
+
+				&-all {
+					.img-0 {
+						width: 58rpx;
+						height: 58rpx;
+					}
+
+					.img-1 {
+						width: 64rpx;
+						height: 58rpx;
+					}
+
+					.img-2 {
+						width: 59rpx;
+						height: 58rpx;
+					}
+
+					.img-3 {
+						width: 55rpx;
+						height: 58rpx;
+					}
+
+					view {
+						font-size: 25rpx;
+						color: #3D3F3E;
+						margin-top: 15rpx;
+					}
+				}
+			}
+		}
+
+		.swiperBanner {
+			height: 164rpx;
+			border-radius: 14rpx;
+			background-color: #F1F8EE;
+			margin-top: 20rpx;
+		}
+
+		.setUp {
+			padding: 0 20rpx;
+			background-color: #fff;
+			border-radius: 14rpx;
+			margin-top: 22rpx;
+
+			&-list {
+				height: 100rpx;
+				border-bottom: 1rpx solid #ececec;
+
+				&-left {
+					display: flex;
+					align-items: center;
+
+					image {
+						width: 38rpx;
+						height: 36rpx;
+						margin-left: 26rpx;
+
+
+						&.img-3 {
+							width: 43rpx;
+						}
+
+						&.img2-5 {
+							width: 39rpx;
+						}
+
+						&.img2-6 {
+							width: 43rpx;
+						}
+					}
+
+					text {
+						font-size: 25rpx;
+						color: #333333;
+						margin-left: 18rpx;
+					}
+				}
+
+				&-right {}
+			}
+
+			&-list:nth-last-child(1) {
+				border-bottom: none;
 			}
 		}
 
@@ -516,7 +1015,8 @@
 			height: 238rpx;
 			background: #FFFFFF;
 
-border-radius: 14rpx;
+			border-radius: 14rpx;
+
 			.title {
 				padding: 22rpx;
 				align-items: center;

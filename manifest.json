@@ -2,8 +2,8 @@
     "name" : "餐修",
     "appid" : "__UNI__16112CC",
     "description" : "",
-    "versionName" : "1.4.4",
-    "versionCode" : 140,
+    "versionName" : "1.5.2",
+    "versionCode" : 152,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -29,8 +29,7 @@
             "Payment" : {},
             "VideoPlayer" : {},
             "Maps" : {},
-            "Record" : {},
-            "Contacts" : {}
+            "Record" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -48,20 +47,18 @@
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
-                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
                     "<uses-permission android:name=\"android.permission.INTERNET\"/>",
                     "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
-                    "<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ],
                 "abiFilters" : [ "armeabi-v7a", "arm64-v8a" ],
-                "targetSdkVersion" : 30
+                "targetSdkVersion" : 30,
+                "schemes" : "canxiu"
             },
             /* ios打包配置 */
             "ios" : {
@@ -73,7 +70,8 @@
                     "NSPhotoLibraryUsageDescription" : "允许读取存储种的图片、视频、文件等内容，主要用于调取您手机中的照片或图片，进行头像设置、订单完成等操作",
                     "NSPhotoLibraryAddUsageDescription" : "生成维修报告保存本地",
                     "NSCameraUsageDescription" : "我们访问您的相机是为了使您可以使用摄像头进行拍摄上传拍照的照片来做头像、订单完成等操作"
-                }
+                },
+                "urltypes" : "canxiu"
             },
             /* SDK配置 */
             "sdkConfigs" : {
@@ -113,8 +111,9 @@
                         "__platform__" : [ "ios", "android" ]
                     },
                     "weixin" : {
-                        "__platform__" : [ "android" ],
-                        "appid" : "wxfa2f854719fe847e"
+                        "__platform__" : [ "ios", "android" ],
+                        "appid" : "wxfa2f854719fe847e",
+                        "UniversalLinks" : "https://www.canxiukeji.com"
                     }
                 }
             },

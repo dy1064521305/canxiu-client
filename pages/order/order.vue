@@ -27,7 +27,10 @@
 						<view class="top">
 							<view
 								style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
-								{{item.warrantyStore}}
+								<view style="display: flex;align-items: center;">
+									{{item.warrantyStore||''}}
+									<text v-if="item.isClientAppoint==1" class="appoint">门店指派</text>
+								</view>
 								<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
 							</view>
@@ -45,7 +48,8 @@
 							<view>下单时间：{{item.orderTime}}</view>
 							<view :style="{'color':item.orderStatus=='待接单'||item.orderStatus=='售后中'||item.orderStatus=='待评价'?'#F3B133':
 								item.orderStatus=='待上门'?'#3398F3':
-								item.orderStatus=='已完成'?'#A5A7A7':'#A4D091'}">{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.orderStatus}}</view>
+								item.orderStatus=='已完成'?'#A5A7A7':'#A4D091'}">{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.orderStatus}}
+							</view>
 						</view>
 					</view>
 					<view class="">
@@ -66,10 +70,11 @@
 					<view class="btns">
 						<!-- 	<view @click.stop='backFix(item)' class="btn-white"
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view> -->
-					<!-- 	<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
+						<!-- 	<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
 							@click="handleRoute(item)">联系师傅</view> -->
-							<view @click.stop='orderDetail(item.orderId)' class="btn-white" v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
-								返修</view>
+						<view @click.stop='orderDetail(item.orderId)' class="btn-white"
+							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
+							返修</view>
 						<view @click.stop='orderDetail(item.orderId)' class="btn-green" v-if="item.orderStatus=='待评价'">
 							去评价</view>
 						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
@@ -94,7 +99,9 @@
 	import {
 		getOrderNum
 	} from '@/utils/api.js'
-	import {queryUnreadNum} from '@/api/tim.js'
+	import {
+		queryUnreadNum
+	} from '@/api/tim.js'
 	import storage from '@/utils/storage'
 	import formatter from '@/utils/formatter.js'
 	import projectCard from '@/components/projectCard/projectCard.vue'
@@ -114,31 +121,31 @@
 						name: '待服务',
 						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/09/b4ac3b7d1a7d4a5e91d82e4a4fcad32d.png',
 						num: 0,
-						val:'waitService'
+						val: 'waitService'
 					},
 					{
 						name: '服务中',
 						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/09/ad35c651adda44e9be897bc7d1a4b193.png',
 						num: 0,
-						val:'servicing'
+						val: 'servicing'
 					},
 					{
 						name: '待付款',
 						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/09/9244875972c54c91a934c1265cd95eb4.png',
 						num: 0,
-						val:'waitPay'
+						val: 'waitPay'
 					},
 					{
 						name: '返修',
 						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/09/64ca56e7c5ef40ffa55f2339198effe5.png',
 						num: 0,
-						val:'repair'
+						val: 'repair'
 					},
 					{
 						name: '全部订单',
 						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/09/57449f60ec5e4d189e21a6aa57e4f15c.png',
 						num: 0,
-						val:'total'
+						val: 'total'
 					},
 				]
 			};
@@ -147,30 +154,30 @@
 			this.getOrderlistHandle(1, 10)
 			this.queryParams.clientId = storage.get('ClientId')
 			if (storage.get('AccessToken')) {
-			
+
 				getOrderNum().then(res => {
 					uni.setTabBarBadge({
 						index: 3,
 						text: res
 					})
 				})
-				queryUnreadNum().then(ress => {
-					 let num = (parseInt(totalUnreadCount) + parseInt(ress.data.num))>99?'99+': parseInt(totalUnreadCount) + parseInt(ress.data.num)
-					
-					if (num > 0) {
-						uni.setTabBarBadge({
-							index: 2,
-							text:num+ ''
-						})
-					} else {
-						uni.removeTabBarBadge({
-							index: 2
-						})
-					}
-				})
-			}else{
+				// queryUnreadNum().then(ress => {
+				// 	 let num = (parseInt(totalUnreadCount) + parseInt(ress.data.num))>99?'99+': parseInt(totalUnreadCount) + parseInt(ress.data.num)
+
+				// 	if (num > 0) {
+				// 		uni.setTabBarBadge({
+				// 			index: 2,
+				// 			text:num+ ''
+				// 		})
+				// 	} else {
+				// 		uni.removeTabBarBadge({
+				// 			index: 2
+				// 		})
+				// 	}
+				// })
+			} else {
 				uni.navigateTo({
-					url:'/pages/login/index'
+					url: '/pages/login/index'
 				})
 			}
 		},
@@ -202,7 +209,7 @@
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})
 				queryOrderCount({
-				clientId:storage.get('ClientId')
+					clientId: storage.get('ClientId')
 				}).then(res => {
 					console.log(res);
 
@@ -253,8 +260,8 @@
 			//订单详情
 			orderDetail(id, type) {
 				if (type == '售后中') {
-					let info={
-						id:id
+					let info = {
+						id: id
 					}
 					uni.navigateTo({
 						url: '../../subpkg/car/repairingOrder/repairingOrder?info=' + JSON.stringify(info)
@@ -267,7 +274,7 @@
 
 			},
 			refresh() {
-			
+
 				this.$refs.paging.reload();
 			},
 		}
@@ -311,8 +318,19 @@
 					font-size: 26rpx;
 
 					.top {
+
 						// display: flex;
 						// justify-content: space-between;
+						.appoint {
+							color: #fff;
+								background-color: black;
+							border-radius: 7rpx;
+							font-size: 22rpx;
+							text-align: center;
+							margin-left:15rpx;
+							padding: 8rpx 17rpx;
+						}
+
 
 						.right {
 							//background-color: red;

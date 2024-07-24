@@ -19,10 +19,10 @@
 				<text v-if="countDownNum==0" @click="getCode">获取验证码</text>
 				<text style="width: 24%;text-align:end;" v-if="countDownNum!=0">{{countDownNum}}s</text>
 			</view>
-			<view class="fonts">
+			<view class="fonts" @click="checked = !checked">
 				<view style="margin-top:3rpx;">
-					<view v-if="!checked" class="check" @click="check"></view>
-					<view v-else @click="check">
+					<view v-if="!checked" class="check" ></view>
+					<view v-else >
 						<!-- 	<image style="width: 100%;height: 100%;"
 											src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/cfc57172d7654b4ea531302d3592eca3.png">
 										</image> -->
@@ -33,7 +33,7 @@
 				<view style="margin-left: 8rpx;width:610rpx;">
 					未注册手机号登录后将自动生成账号，且代表已阅读并同意
 					<text v-for="(item,index) in agreementList" :key="index"
-						@click="goAgreement(item)">《{{item.agreementName}}》<text
+						@click.stop="goAgreement(item)">《{{item.agreementName}}》<text
 							v-if="index!=agreementList.length-1">、</text></text>
 				</view>
 			</view>
@@ -60,8 +60,8 @@
 
 			</view> -->
 		</view>
-		
-		<view class="index" style="z-index: 999999999999;">
+
+			<view class="index" style="z-index: 999999999999;">
 			<wu-app-update></wu-app-update>
 		</view>
 	</view>
@@ -148,9 +148,7 @@
 					this.agreementList = res.data
 				})
 			},
-			check() {
-				this.checked = !this.checked
-			},
+		
 			radioChange() {
 				console.log(this.check);
 			},
@@ -217,7 +215,7 @@
 							phonenumber: app.phone,
 							smsCode: app.code,
 						}).then(result => {
-							console.log(result.data);
+						
 							if (result.data.type == 'Error') {
 								uni.$u.toast(result.data.msg)
 								return
@@ -242,12 +240,9 @@
 								getInfoById(result.data.clientId).then(res => {
 									console.log(res);
 									this.userInfo = res.data
+								
 									let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
-									if (result.data.type == 'Success' && !isEmpty(this.userInfo.storeImg) && !
-										isEmpty(this.userInfo.storeName) && !isEmpty(this.userInfo
-											.detailAddress) && !isEmpty(this.userInfo.region) && !isEmpty(this
-											.userInfo
-											.storeTypeId)) {
+									if (result.data.type == 'Success' && res.data.customerStoreId) {
 										const pages = uni.$u.pages();
 										console.log(pages);
 										apps.type = 'login'
@@ -260,7 +255,6 @@
 											prevPage.$vm.otherFun(object);
 											uni.navigateBack()
 										} else {
-											console.log('666666666666666666666');
 											uni.switchTab({
 												url: '/pages/home/index',
 												fail(err) {
@@ -270,14 +264,24 @@
 										}
 
 									} else {
-										console.log(!isEmpty(this.userInfo.avatarUrl), !isEmpty(this.userInfo
-											.clientName), !isEmpty(this.userInfo.detailAddress), !isEmpty(
-											this.userInfo.region), !isEmpty(this.userInfo.storeTypeId));
+
+										// uni.navigateTo({
+										// 	url: '../../subpkg/login/info/info?id=' + result.data.clientId,
+										// 	fail(err) {
+										// 		console.log(err)
+										// 	}
+										// })
+										let info = {
+											type: 'login',
+										storeInfo: {
+											storeImg: res.data.storeImg,
+											storeName: res.data.storeName,
+											storeTypeId: res.data.storeTypeId,
+										}
+										}
 										uni.navigateTo({
-											url: '../../subpkg/login/info/info?id=' + result.data.clientId,
-											fail(err) {
-												console.log(err)
-											}
+											url: '../../subpkg/center/myStore/addStore/addStore?info=' +
+												encodeURIComponent(JSON.stringify(info))
 										})
 									}
 									//	this.fileList.push({url:arr[0]})

@@ -10,7 +10,7 @@
 			<u-cell size="large">
 				<view slot="title">
 					<text class="u-cell-text">客服电话</text>
-					<text>400-5213-1255</text>
+					<text>0571-88387761</text>
 				</view>
 			</u-cell>
 			<u-cell size="large">

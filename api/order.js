@@ -59,10 +59,14 @@ export const queryOrderCount = (params) => request.get('/client/order/queryOrder
 //查询我的全部订单各状态数量
 export const queryAllOrderCount = (params) => request.get('/client/order/queryAllOrderCount',params)
 
-
 //获取客户端返修订单详细信息
-export const getRepairOrderInfo = (repairId) => request.get('client/order/queryRepair/'+repairId)
+export const getRepairOrderInfo = (repairId) => request.get('/client/order/queryRepair/'+repairId)
 
 //提交订单后推送
 export const orderSend = (data) => request.post('/client/order/send',data)
 
+//获取指派人员
+export const findWorker = (data) => request.post('/client/order/assign/findWorker ',data)
+
+//下单页根据地址重新获取产品服务价格
+export const refreshPrice = (params) => request.get('/client/service/refreshPrice',params)

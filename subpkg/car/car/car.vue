@@ -111,7 +111,7 @@
 					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/125e056702434056b9b3bc5f7768eb0a.png"
 					text='维修车为空' marginTop='100' width="210px">
 				</u-empty>
-
+				
 
 			</view>
 
@@ -269,6 +269,7 @@
 			this.coudanShow = false
 			this.workerType = undefined,
 				this.searchName = ''
+			
 		},
 		methods: {
 
@@ -424,17 +425,18 @@
 						this.addressList = res.rows
 						if (this.addressList.length == 0) {
 							uni.removeStorage({
-								key: 'address_info'
+								key: `address_info${storage.get('ClientId')}`,
+								
 							})
 						} else {
 							try {
-								const value = uni.getStorageSync('address_info');
+								const value = uni.getStorageSync(`address_info${storage.get('ClientId')}`);
 								if (value) {
 									let arr = this.addressList.filter(item => {
 										return item.addressId == value.addressId
 									})
 									arr.length == 0 ? uni.removeStorage({
-										key: 'address_info'
+										key: `address_info${storage.get('ClientId')}`
 									}) : this.addressInfo = value
 
 									console.log(value);
@@ -444,7 +446,7 @@
 											this.addressInfo = item
 											console.log(111, '118111111111111111111');
 											uni.setStorage({
-												key: 'address_info',
+												key:`address_info${storage.get('ClientId')}`,
 												data: item,
 											})
 										}
@@ -476,9 +478,12 @@
 			// 	})
 			// },
 			getCarList() {
+				// let place=uni.getS
+				console.log(uni.getStorageSync('address_refreash'));
 				//维修车列表
 				car.getCarList({
-					clientId: storage.get('ClientId')
+					clientId: storage.get('ClientId'),
+					address: uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 				}).then(res => {
 					console.log(res, '3145455555>>>>>>>>>');
 
@@ -578,7 +583,7 @@
 				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
 				if (this.checkedList.length == 0) {
 					uni.showToast({
-						title: '请选择商品',
+						title: '请选择项目',
 						duration: 2000,
 						icon: 'none'
 					})
@@ -691,7 +696,8 @@
 				car.listByWorkerType({
 					clientId: storage.get('ClientId'),
 					type: this.workerType,
-					name: this.searchName
+					name: this.searchName,
+					address:uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 				}).then(res => {
 					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
 					this.coudanList = res.data
@@ -782,7 +788,7 @@
 
 		.bottom {
 			width: 100%;
-			height: 114rpx;
+			height: 138rpx;
 			background: #fff;
 			position: fixed;
 			display: flex;

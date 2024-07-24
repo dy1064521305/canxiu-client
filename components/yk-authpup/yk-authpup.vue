@@ -29,7 +29,7 @@
 			//是否是原生头部
 			isNativeHead:{
 				type: Boolean,
-				default: true
+				default: false
 			},
 			permissionID: {
 				type: [String, Number],
@@ -125,6 +125,10 @@
 									_this.showPopup = false
 								}, 0)
 							})
+							if (e.granted.length == 0) {
+								//当前查询权限已授权，此时可以通知页面执行接下来的操作
+								_this.$emit('notPermissions');
+							}
 							console.log(e,'kkkkk')
 							if (e.granted.length > 0) {
 								//当前查询权限已授权，此时可以通知页面执行接下来的操作
@@ -132,6 +136,7 @@
 							}
 							if (e.deniedAlways.length > 0) {
 								//当前查询权限已被永久禁用，此时需要引导用户跳转手机系统设置去开启
+								_this.$emit('notPermissions');
 								uni.showModal({
 									title: '温馨提示',
 									content: '还没有该权限，立即去设置开启？',

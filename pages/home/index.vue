@@ -1,15 +1,7 @@
 <template>
 	<view>
 		<view v-if="locationStatus=='authorized'||locationStatus==''" class="home">
-			<view class="swiper_style">
-				<u-swiper height='700rpx' :list="list5" @change="e => current = e.current" :autoplay="false">
-					<view slot="indicator" class="indicator">
-						<view class="indicator__dot" v-for="(item, index) in list5" :key="index"
-							:class="[index === current && 'indicator__dot--active']">
-						</view>
-					</view>
-				</u-swiper>
-			</view>
+
 			<u-navbar :height="navHeight" :bgColor="'RGBA(147, 189, 134, '+opacity+')'">
 				<view slot='left'>
 
@@ -20,7 +12,7 @@
 					<view class="search" @click="goSearch">
 						<view class="left">
 							<view class="citys">
-								<view @click.stop="choseCity">{{cityName}}
+								<view @click.stop="choseCity">{{cityName.length>=5?cityName.slice(0,5)+'...':cityName}}
 								</view>
 								<image @click.stop="choseCity" style="width: 25rpx;height: 16rpx;"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/9f18ad7cede3427ab1d2bb6c4f1d0a8e.png"
@@ -39,9 +31,19 @@
 				</view>
 			</u-navbar>
 
-			<view class="content">
+			<view class="content" :style="{paddingTop:(navHeight+statusBarHeight)+'px'}">
+				<view v-if="list5.length!=0" class="swiper_style">
+					<u-swiper height='300rpx' :list="list5" @change="e => current = e.current" :autoplay="false">
+						<view slot="indicator" class="indicator">
+							<view class="indicator__dot" v-for="(item, index) in list5" :key="index"
+								:class="[index === current && 'indicator__dot--active']">
+							</view>
+						</view>
+					</u-swiper>
+				</view>
 				<view class="types">
-					<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="ACCESS_FINE_LOCATION">
+					<yk-authpup ref="authpup" type="top" @notPermissions='notPermissions' @changeAuth="changeAuth"
+						permissionID="ACCESS_FINE_LOCATION">
 					</yk-authpup>
 
 					<view v-for="(item,index) in typesList" :key='index' class="box" @click='goService(item.typeName)'>
@@ -53,7 +55,7 @@
 					</view>
 				</view>
 
-				<view class="fault-area">
+				<view v-if="regionService.length!=0" class="fault-area">
 					<view class="title blod">
 						故障区域
 					</view>
@@ -143,9 +145,9 @@
 		</view>
 
 
-		<!-- 	<view class="index" style="z-index: 999999999999;">
-		<wu-app-update></wu-app-update>
-	</view> -->
+		<view v-if="status" class="index" style="z-index: 999999999999;">
+			<wu-app-update ></wu-app-update>
+		</view>
 
 	</view>
 </template>
@@ -187,6 +189,7 @@
 		},
 		data() {
 			return {
+				status:true,
 				serviceTypesList: [],
 				isShowMoney: false, //未登录不显示金额
 				loading: false, //是否展示 “正在加载” 字样
@@ -219,21 +222,24 @@
 				promiseList: [false, false],
 				carNum: 0,
 				typeName: undefined,
-				list5: [
-					'https://cdn.uviewui.com/uview/swiper/swiper3.png',
-					'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-					'https://cdn.uviewui.com/uview/swiper/swiper1.png',
-				],
+				list5: [],
 				current: 0,
 				addressName: undefined,
 				statusHeight: 0,
 				statusBarHeight: 0,
-				address:undefined
+				address: undefined
 			}
 		},
 		onReady() {
 			this.scrollHeight = uni.$u.sys().windowHeight - this.offsetTop
+			uni.getSystemInfo({
+				success: (info) => {
+					this.statusBarHeight = info.statusBarHeight
+					// 你可以根据这个高度来设置你的内容区域的padding-top等
+				}
+			});
 		},
+
 		watch: {
 			promiseList: {
 				handler(n) {
@@ -273,13 +279,14 @@
 			if (this.tabsBg !== '#F5F9FA') this.tabsBg = '#F5F9FA'
 		},
 		onShow() {
-			console.log( this.serviceSymptomsName);
+			this.status=true
 			if (storage.get('AccessToken')) {
+				this.isShowMoney = true
 				getCarNum().then(res => {
 					this.carNum = res
 
 				});
-				
+
 				getOrderNum().then(res => {
 					res == 0 ? uni.removeTabBarBadge({
 						index: 3
@@ -289,62 +296,51 @@
 					})
 
 				})
-				// #ifdef MP-WEIXIN
-				this.getLoction()
-				// #endif
-				// #ifdef APP-PLUS
-				this.$refs['authpup'].open()
+				this.queryState();
+				getC2cUnreadMsgNum().then(res => {
+					queryUnreadNum().then(ress => {
 
-				// #endif
+						let num = (parseInt(res.data.AllC2CUnreadMsgNum) ? parseInt(res
+							.data.AllC2CUnreadMsgNum) : 0) + parseInt(ress
+							.data.num)
+						if (num > 0) {
+							uni.setTabBarBadge({
+								index: 2,
+								text: num > 99 ? '99+' : num + ''
+							})
+						} else {
+							uni.removeTabBarBadge({
+								index: 2
+							})
+						}
+					})
+				})
+			} else {
+				this.carNum = 0
+				this.isShowMoney = false
+				uni.removeTabBarBadge({
+					index: 2
+				})
+				uni.removeTabBarBadge({
+					index: 3
+				})
 			}
 			// #ifdef MP-WEIXIN
 			this.getHeight();
 			this.navHeight = 100
 			this.titleHeight = 120
 			this.offsetTop = 145
-
 			// #endif
-			//this.queryParams.pageNum = 1
+			// const apps = getApp()
+			// if (apps.type == 'login') {
+			// 	this.queryParams.pageNum = 1
 
-			uni.getStorage({
-				key: 'AccessToken',
-				complete: (res) => {
-					this.isShowMoney = Boolean(res.data)
-
-					if (this.isShowMoney) {
-						this.queryState();
-						getC2cUnreadMsgNum().then(res => {
-							queryUnreadNum().then(ress => {
-
-								let num = (parseInt(res.data.AllC2CUnreadMsgNum) ? parseInt(res
-									.data.AllC2CUnreadMsgNum) : 0) + parseInt(ress
-									.data.num)
-								if (num > 0) {
-									uni.setTabBarBadge({
-										index: 2,
-										text: num > 99 ? '99+' : num + ''
-									})
-								} else {
-									uni.removeTabBarBadge({
-										index: 2
-									})
-								}
-							})
-						})
-					}
-					const apps = getApp()
-					if (apps.type == 'login') {
-						this.queryParams.pageNum = 1
-						console.log('335================================>>>>');
-						this.getServiceSymptomsHandle()
-					} else {
-						this.getServiceSymptoms()
-					}
-				}
-			})
-
-
-
+			// 	this.getServiceSymptomsHandle()
+			// } else {
+			// 	this.getServiceSymptoms()
+			// }
+			this.choseAddress()
+			console.log('335================================>>>>');
 			uni.$on('totalUnreadCount', function(data) {
 				getC2cUnreadMsgNum().then(res => {
 					queryUnreadNum().then(ress => {
@@ -369,26 +365,37 @@
 
 		},
 		onHide() {
+			this.status=false
 			const apps = getApp()
 			apps.type = undefined
+			// this.getLoction()
+		},
+
+		onTabItemTap() {
+
+			if (uni.getStorageSync(`city${storage.get('ClientId')}`).addressDetailed == '杭州市拱墅区') {
+				// #ifdef APP-PLUS
+				this.$refs['authpup'].open()
+				// #endif
+				// #ifdef MP-WEIXIN
+				this.getLoction()
+				// #endif
+			}
+
 		},
 		onLoad() {
+			this.notPermissions()
 			this.getServiceTypesList()
 			this.locationStatus = ''
+			this.getList()
+
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
 
 					this.isShowMoney = Boolean(res.data)
 					if (this.isShowMoney) {
-						// #ifdef APP-PLUS
-						this.$nextTick(() => {
-							this.$refs['authpup'].open()
-						})
-						// #endif
-						// #ifdef MP-WEIXIN
-						this.getLoction()
-						// #endif
+
 						this.queryState();
 					}
 				}
@@ -405,7 +412,8 @@
 
 			queryState() {
 				accountQueryState().then(res => {
-					if (res.data.QueryResult[0].State == 'Offline') {
+					console.log(res.data);
+					if (res.data.QueryResult && res.data.QueryResult[0].State == 'Offline') {
 						getUserSig().then(ress => {
 							uni.$TUIKit.login({
 								userID: res.data.QueryResult[0].To_Account,
@@ -438,14 +446,21 @@
 					.currentIndex].params.symptoms = this.serviceSymptomsName[this.currentIndex].name
 				this.getServiceSymptomsHandle()
 			},
-			// //上拉函数
+			//下拉刷新函数
 			onPullDownRefresh() {
 				console.log(this.serviceSymptomsName);
 				this.serviceSymptomsName.forEach(service => {
 					service.params.pageNum = 1
 				})
+				// // #ifdef APP-PLUS
+				// this.$refs['authpup'].open()
+				// // #endif
+				// // #ifdef MP-WEIXIN
+				// this.getLoction()
+				// // #endif
 				this.getServiceSymptomsHandle()
-				this.getLoction()
+
+
 
 
 			},
@@ -455,17 +470,21 @@
 			},
 
 			getServiceSymptomsHandle() {
-				console.log(this.address,this.serviceSymptomsName[this.currentIndex]);
+				// if (!this.address) return
+				console.log(this.address, this.serviceSymptomsName,
+					'getServiceSymptomsHandlegetServiceSymptomsHandlegetServiceSymptomsHandle');
 				//获取故障现象
 				this.loading = true
 				const params = this.serviceSymptomsName.length < 1 ? {
 					pageSize: 10,
 					pageNum: 1,
-					symptoms: '',
-					address:this.address
+					symptoms: ''
 				} : this.serviceSymptomsName[this.currentIndex].params
-				console.log(this.serviceSymptomsName[this.currentIndex]);
-				getServiceSymptoms(params).then(res => {
+				console.log(params);
+				getServiceSymptoms({
+					...params,
+					address: this.address
+				}).then(res => {
 					this.serviceSymptomsName = res.data.map((d, i) => ({
 						...this.serviceSymptomsName[i],
 						name: d.symptomsName,
@@ -473,7 +492,6 @@
 							pageSize: 10,
 							pageNum: 1,
 							symptoms: '',
-							address:this.address
 						},
 						list: this.serviceSymptomsName[i]?.list || []
 					}))
@@ -507,6 +525,7 @@
 					}).exec();
 			},
 			getServiceSymptoms() {
+				console.log('5177777777777777', this.address);
 				this.loading = true
 				this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
 					name: d.name,
@@ -517,12 +536,11 @@
 								.servicePrice) : rec.servicePrice
 					})),
 					total: d.total,
-					params :{
-							pageSize: 10,
-							pageNum: 1,
-							symptoms: '',
-							address:this.address
-						},
+					params: {
+						pageSize: 10,
+						pageNum: 1,
+						symptoms: '',
+					},
 				}))
 				this.loading = false
 			},
@@ -542,91 +560,83 @@
 				}).finally(() => {
 					this.promiseList.splice(0, 1, true)
 				})
-				if (this.addressName) {
-					this.promiseList.splice(0, 1, false)
-					//this.promiseList.splice(1, 1, false)
-					//获取热门报修
-					// getHotService().then(res => {
-					// 	//	console.log(res, '1111111111111');
+				this.promiseList.splice(0, 1, false)
+				this.promiseList.splice(1, 1, false)
 
-					// 	if (res.data != []) {
-					// 		res.data.forEach(item => {
-					// 			item.imgs = item.serviceImg.split(',')
-					// 			item.servicePrice = !this.isShowMoney ? this.replaceMoney(item
-					// 					.servicePrice) :
-					// 				item.servicePrice
-					// 		})
-					// 	}
-					// 	this.hotServiceList = res.data
-					// 	this.hotServiceListFour = this.hotServiceList.filter((item, index) => index <= 3)
-					// }).finally(() => {
-					// 	this.promiseList.splice(1, 1, true)
-					// })
-					this.promiseList.splice(1, 1, false)
-
-					//获取故障区域
-					getRegion().then(res => {
-						this.regionService = res.data
-					}).finally(() => {
-						this.promiseList.splice(1, 1, true)
-					})
-				}
+				//获取故障区域
+				getRegion().then(res => {
+					this.regionService = res.data
+				}).finally(() => {
+					this.promiseList.splice(1, 1, true)
+				})
 
 
 
 			},
 			getLoction() {
+				console.log('getLoctiongetLoctiongetLoctiongetLoction');
 				var that = this
-				//获取地址
-				//	this.checkForAuthorization('scope.userLocation', 'locationAuthorized').then((res) => {
-
 				uni.getLocation({
-
 					success: (suc) => {
-						// this.location.latitude = suc.latitude
-						// this.location.longitude = suc.longitude
 						var demo = new QQMapWX({
 							key: 'X6YBZ-S42K2-OULU2-C5VJG-ZSRG6-7KFOO'
 						})
 						demo.reverseGeocoder({
 							location: suc.latitude + "," + suc.longitude,
+
 							success: function(res) {
-								that.cityName = res.result
-									.address_component.city
-								that.address = res.result
-									.address_component.province + '-' + res.result
-									.address_component.city + '-' + res.result
-									.address_component.district 
+								console.log(res, '588111111111');
+								let result = res.result.address_component
+								that.cityName = result.street_number !=
+									'' ? result.street_number : result
+									.street
+								that.address = result.province + '-' +
+									result.city + '-' + result.district
 								uni.setStorage({
-									key: 'address_refreash',
+									key: `address_refreash${storage.get('ClientId')}`,
 									data: that.address
 								})
-								that.addressName = uni.getStorageSync('address_refreash')
+								uni.setStorage({
+									key: `city${storage.get('ClientId')}`,
+									data: {
+										addressDetailed: that.cityName
+									}
+								})
+								that.addressName = that.address
 								that.getList()
 								that.getServiceSymptomsHandle()
-								// that.position = res.result.address_component
-								// 	.city;
-								// let item = {
-								// 	cityName:
-								// }
-								// that.back_city(item);
+
+
 							}
 						})
 					},
 					fail(err) {
-						console.log(err);
-						// uni.showToast({
-						// 	title: err.errMsg,
-						// 	icon: "none"
-						// })
+						console.log(err, '63333333');
+
+
 					}
 				})
-				//	})
+
+
+
 
 
 
 			},
+			choseAddress() {
+				uni.getStorage({
+					key: `city${storage.get('ClientId')}`,
+					success: (res) => {
+						console.log(res, '623333333');
+						this.cityName = res.data.addressDetailed
+						this.addressName = this.address = uni.getStorageSync(
+							`address_refreash${storage.get('ClientId')}`)
+						this.getList()
+						this.getServiceSymptomsHandle()
+					},
 
+				})
+			},
 			//设置定位权限
 			setting() {
 				if (this.locationStatus != 'authorized' && this.locationStatus != 'errMsg') {
@@ -721,7 +731,41 @@
 				this.getLoction()
 
 			},
+			notPermissions() {
+				console.log('notPermissionsnotPermissionsnotPermissionsnotPermissions');
+				uni.getStorage({
+					key: `city${storage.get('ClientId')}`,
+					success: (res) => {
+						console.log(res);
+						this.cityName = res.data.addressDetailed
+						this.addressName = this.address = uni.getStorageSync(
+							`address_refreash${storage.get('ClientId')}`)
+						this.getList()
+						this.getServiceSymptomsHandle()
+					},
+					fail: () => {
+						this.cityName = '杭州市拱墅区'
+						this.address = '浙江省-杭州市-拱墅区'
+						uni.setStorage({
+							key: `address_refreash${storage.get('ClientId')}`,
+							data: this.address
+						})
+						uni.setStorage({
+							key: `city${storage.get('ClientId')}`,
+							data: {
+								addressDetailed: this
+									.cityName,
+								type: 'defalut'
+							}
+						})
+						console.log('744444444');
+						this.getList()
+						this.getServiceSymptomsHandle()
+					}
+				})
 
+
+			},
 			goCar() {
 				uni.navigateTo({
 					url: '../../subpkg/car/car/car'
@@ -737,40 +781,15 @@
 <style lang="scss" scoped>
 	.home {
 		position: relative;
-		// min-height: 100vh;
-		// background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png) no-repeat;
-		// background-size: 100% auto;
+		min-height: 100vh;
+		background: url(http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png) no-repeat;
+		background-size: 100% auto;
 
 		// overflow: unset;
 		.blod {
 			font-weight: bold;
 		}
 
-		.swiper_style {
-
-			// margin: 0 20rpx;
-			::v-deep.u-swiper__indicator {
-				bottom: 60rpx !important;
-			}
-
-			.indicator {
-				@include flex(row);
-				justify-content: center;
-
-				&__dot {
-					height: 6px;
-					width: 6px;
-					border-radius: 100px;
-					background-color: rgba(255, 255, 255, 0.35);
-					margin: 0 5px;
-					transition: background-color 0.3s;
-
-					&--active {
-						background-color: black;
-					}
-				}
-			}
-		}
 
 		//height: 100vh;
 		.homeBg {
@@ -836,10 +855,36 @@
 
 		.content {
 
-			position: relative;
-			top: -42rpx;
+			.swiper_style {
+				padding: 0 20rpx;
+				margin-bottom: 20rpx;
+
+				// margin: 0 20rpx;
+				::v-deep.u-swiper__indicator {
+					bottom: 30rpx !important;
+				}
+
+				.indicator {
+					@include flex(row);
+					justify-content: center;
+
+					&__dot {
+						height: 6px;
+						width: 6px;
+						border-radius: 100px;
+						background-color: rgba(255, 255, 255, 0.35);
+						margin: 0 5px;
+						transition: background-color 0.3s;
+
+						&--active {
+							background-color: black;
+						}
+					}
+				}
+			}
+
 			// top: 87rpx;
-			//margin: 0 20rpx;
+			// margin: 0 20rpx;
 
 
 			.types {

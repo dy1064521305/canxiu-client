@@ -9,7 +9,6 @@ import * as UserApi from '@/api/user'
 const loginSuccess = (commit, result) => {
 	// 过期时间30天
 	const expiryTime = 30 * 86400
-	console.log(result);
 	// 保存tokne和userId到缓存
 	storage.set(ACCESS_TOKEN, result.token, expiryTime)
 	storage.set(CLIENID, result.clientId, expiryTime)
@@ -50,7 +49,6 @@ export const actions = {
 				}
 			}).then(response => {
 				const result = response.data;
-				console.log(result);
 				loginSuccess(commit, result)
 				resolve(response)
 			}).catch(reject)
@@ -79,11 +77,9 @@ export const actions = {
 		commit
 	}, data) {
 		return new Promise((resolve, reject) => {
-			console.log(1111);
 			//  LoginApi.logout(data, { custom: { catch: true } }).then(response => {
 			storage.remove(ACCESS_TOKEN)
 			storage.remove(CLIENID)
-
 			commit('SET_TOKEN', '')
 			commit('SET_CLIENTID', '')
 			// resolve(response)

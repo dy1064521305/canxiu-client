@@ -19,7 +19,7 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">报修门店</text>
-				<text>{{info.warrantyStore}}</text>
+				<text>{{info.warrantyStore||""}}</text>
 			</view>
 			<!-- 	<view class="line">
 			<text class="ziduan">下单人</text>
@@ -31,7 +31,7 @@
 			</view>
 			<view class="line">
 				<text class="ziduan">服务地址</text>
-				<text>{{addressVo.addressRegion}}{{addressVo.addressDetailed}}</text>
+				<text>{{addressVo.addressRegion||""}}{{addressVo.addressDetailed||""}}</text>
 
 			</view>
 			<view class="line">

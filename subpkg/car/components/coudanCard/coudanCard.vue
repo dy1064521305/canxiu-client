@@ -20,7 +20,7 @@
 					<text style="color: #EC5722;font-size: 34rpx;font-weight: bold;"
 						class="blod">¥{{info.discountPrice}}</text>
 					<text style="font-size: 22rpx;color: #A5A7A7;"><text
-							style="text-decoration:line-through;margin: 0 14rpx 0 4rpx;">¥{{info.projectPrice}}</text>工时:{{info.serviceTime}}小时</text>
+							style="text-decoration:line-through;margin: 0 14rpx 0 4rpx;">¥{{info.projectPrice}}</text>工时:{{info.serviceTime}}分钟</text>
 
 				</view>
 				<view style="display: flex;">

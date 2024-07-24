@@ -41,7 +41,7 @@
 							
 					</view>
 					<view style="display: flex;justify-content: space-between;">
-							<text style="color: #A5A7A7;">工时：{{info.projectHours}}小时</text>
+							<text style="color: #A5A7A7;">工时：{{info.projectHours}}分钟</text>
 							<text v-if="type=='repair'"
 								style="font-size: 30rpx;color: #EC5722;">服务费：¥{{Number(info.price)*Number(info.projectNumber)}}</text>
 					</view>
@@ -82,14 +82,14 @@
 			};
 		},
 		created() {
-		 console.log(this.pro,this.type);
+		 // console.log(this.pro,this.type);
 			this.info = this.pro
 			this.info.productName = this.pro.productName ? this.pro.productName : this.pro.serviceProductName
 			this.info.projectHours = this.pro.projectHours ? this.pro.projectHours : this.pro.serviceTime
 			this.info.typeName = this.pro.typeName ? this.pro.typeName : this.pro.serviceTypeName
 			this.info.price = this.info.discountPrice ? this.info.discountPrice : this.info.projectPrice
 			this.illustrate = this.info.illustrate ? this.info.illustrate : this.info.remark
-			console.log(this.info);
+			// console.log(this.info);
 		}
 
 	}

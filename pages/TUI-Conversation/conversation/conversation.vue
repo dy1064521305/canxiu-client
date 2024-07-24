@@ -64,10 +64,7 @@
 				</view>
 			</view> -->
 		</view>
-		
-		<view class="index" style="z-index: 100000;">
-			<wu-app-update></wu-app-update>
-		</view>
+	
 	</view>
 </template>
 <!-- 这里有个加载的补丁逻辑待优化，页面向SDK请求conversationList的时候会有时延，
@@ -112,10 +109,10 @@
 						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/gdzs.png',
 						num: 0
 					},
-					{
-						title: '通讯录',
-						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/30/6f32fb36a5c04cf096ce765d2c2d5603.png'
-					}
+					// {
+					// 	title: '通讯录',
+					// 	img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/01/30/6f32fb36a5c04cf096ce765d2c2d5603.png'
+					// }
 				]
 			};
 		},
