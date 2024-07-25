@@ -3,7 +3,7 @@ export default {
 		return {
 			shareTitle: '餐修-让维修更简单',
 			sharePath: '/pages/home/index',
-			shareImageUrl: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/24/5217493e2f0a4041a21076db3058d121.jpg',
+			shareImageUrl: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/25/e0044854de1148b58e8db7bbe1675d87.jpg',
 			pageTitle: '',
 			pageRoute: null,
 			pagePath: '',

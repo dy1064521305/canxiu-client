@@ -696,15 +696,9 @@
 
 			},
 			goBack() {
-				if (this.isLogin) {
-					this.type == 'share' ? uni.switchTab({
-						url: '/pages/home/index'
-					}) : uni.navigateBack()
-				} else {
-					uni.navigateTo({
-						url: '/pages/login/index'
-					})
-				}
+				this.type == 'share' ? uni.switchTab({
+					url: '/pages/home/index'
+				}) : uni.navigateBack()
 
 			},
 			//去登录
