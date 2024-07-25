@@ -336,7 +336,7 @@
 				useList: [{
 						id: 0,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/07a80dbb32384b938c78184567842312.png",
-						label: "地址关联",
+						label: "地址管理",
 						url: "/subpkg/car/myAddress/myAddress"
 					},
 					{
