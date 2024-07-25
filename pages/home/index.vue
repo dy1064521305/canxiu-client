@@ -478,12 +478,14 @@
 				const params = this.serviceSymptomsName.length < 1 ? {
 					pageSize: 10,
 					pageNum: 1,
-					symptoms: ''
+					symptoms: '',
+					clientId:storage.get('ClientId')||''
 				} : this.serviceSymptomsName[this.currentIndex].params
 				console.log(params);
 				getServiceSymptoms({
 					...params,
-					address: this.address
+					address: this.address,
+					clientId:storage.get('ClientId')||''
 				}).then(res => {
 					this.serviceSymptomsName = res.data.map((d, i) => ({
 						...this.serviceSymptomsName[i],
@@ -492,6 +494,8 @@
 							pageSize: 10,
 							pageNum: 1,
 							symptoms: '',
+							address: this.address,
+							clientId:storage.get('ClientId')||''
 						},
 						list: this.serviceSymptomsName[i]?.list || []
 					}))
@@ -540,6 +544,8 @@
 						pageSize: 10,
 						pageNum: 1,
 						symptoms: '',
+						address: this.address,
+						clientId:storage.get('ClientId')||''
 					},
 				}))
 				this.loading = false

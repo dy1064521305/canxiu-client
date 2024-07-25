@@ -2,7 +2,8 @@
 	<view class="search-main">
 		<header>
 			<view class="search">
-				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png"></image>
+				<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/2ffd73b23d39409e83870d4edf2885ea.png">
+				</image>
 				<view style="width: 85%;">
 					<u--input @input='searchs("change")' @clear="searchs('clear')" @confirm="searchs('search')"
 						clearable border='none' v-model="serviceName" type="text" placeholder="请输入需要的服务" />
@@ -31,7 +32,9 @@
 					<view class="right" @click="clearHitory">
 						<text>清除</text>
 						<view style="display: flex;margin-top: 5rpx;">
-							<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/0aa7a1c7323a4a398f1614df4201f852.png" mode=""></image>
+							<image
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/06/06/0aa7a1c7323a4a398f1614df4201f852.png"
+								mode=""></image>
 						</view>
 					</view>
 				</view>
@@ -67,7 +70,7 @@
 </template>
 
 <script>
-		import storage from '@/utils/storage'
+	import storage from '@/utils/storage'
 	import goodCard from '../../../components/goodCard/goodCard.vue'
 	import {
 		search
@@ -186,7 +189,8 @@
 				this.searchList = []
 				search({
 					serviceName: name,
-					address:uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
+					address: uni.getStorageSync(`address_refreash${storage.get('ClientId')}`),
+					clientId: storage.get('ClientId')
 				}).then(res => {
 					console.log(this.serviceName);
 					this.searchList = res.data
@@ -208,7 +212,7 @@
 
 				})
 			},
-			
+
 
 		}
 	}
