@@ -239,7 +239,7 @@
 				}
 			});
 		},
-
+	
 		watch: {
 			promiseList: {
 				handler(n) {

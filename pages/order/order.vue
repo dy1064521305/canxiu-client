@@ -151,10 +151,10 @@
 			};
 		},
 		onShow() {
-			this.getOrderlistHandle(1, 10)
-			this.queryParams.clientId = storage.get('ClientId')
-			if (storage.get('AccessToken')) {
 
+			this.queryParams.clientId = storage.get('ClientId')
+			if (storage.get('ClientId')) {
+				this.getOrderlistHandle(1, 10)
 				getOrderNum().then(res => {
 					uni.setTabBarBadge({
 						index: 3,
@@ -190,6 +190,7 @@
 				})
 			},
 			getOrderlistHandle(pageNo, pageSize) {
+				if(!storage.get('ClientId'))return
 				console.log(this.queryParams);
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
@@ -323,11 +324,11 @@
 						// justify-content: space-between;
 						.appoint {
 							color: #fff;
-								background-color: black;
+							background-color: black;
 							border-radius: 7rpx;
 							font-size: 22rpx;
 							text-align: center;
-							margin-left:15rpx;
+							margin-left: 15rpx;
 							padding: 8rpx 17rpx;
 						}
 
