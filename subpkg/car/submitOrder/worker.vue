@@ -47,8 +47,8 @@
 						<view class="lists-item">
 							<view class="lists-item-top acea-row">
 								<view class="lists-item-top-img">
-									<image v-if="!item.avatarUrl"
-										src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
+									<image v-if="item.avatarUrl"
+										src="item.avatarUrl"
 										mode=""></image>
 									<image v-else
 										src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/4f491865b70d4651a9d1aea7bc8524b8.png"
