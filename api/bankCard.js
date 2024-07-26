@@ -15,3 +15,6 @@ export const editBankCard = (data) => request.put('/client/bankCard',data)
 
 // 获取客户银行卡详细信息
 export const getBankCardInfo = (cardId) => request.get('/client/bankCard/'+cardId)
+
+// 用户校验是否有签约银行卡
+export const checkIsSign = (params) => request.get('/client/bankCard/checkIsSign',params)

@@ -4,13 +4,13 @@
 			<view class="fonts" style="font-weight: bold;margin-bottom: 20rpx;">
 				提现到
 			</view>
-			<view class="cardInfo">
+			<view class="cardInfo" @click="goCard">
 				<view class="fonts">
 					<text v-if="bankName!=''">{{bankName}}（{{card}}）</text>
 					<text v-else>选择银行卡</text>
 					<text style="color: #A5A7A7;margin-left: 10rpx;">快捷</text>
 				</view>
-				<view @click="goCard">
+				<view >
 					<image style="width:16rpx;height: 32rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png">
 					</image>

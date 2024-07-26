@@ -1,5 +1,7 @@
 <template>
 	<view class="money">
+		<u-navbar title="我的余额" placeholder @leftClick="$jump('pages/center/index')">
+		</u-navbar>
 		<view class="main">
 			<view class="top">
 				<view style="width: 10%;">
@@ -57,7 +59,14 @@
 
 <script>
 	import storage from '@/utils/storage'
-	import {getUserWallet} from '@/api/money.js'
+	import {
+		getUserWallet,
+		getAsset,
+		getListRetention
+	} from '@/api/money.js'
+	import{
+		checkIsSign
+	}from '@/api/bankCard.js'
 	export default {
 		data() {
 			return {
@@ -89,10 +98,42 @@
 					this.info=res.data
 				})
 			},
-			goCashOut(){
-				uni.navigateTo({
-					url:'cashOut/cashOut'
+			goCashOut() {
+				// uni.navigateTo({
+				// 	url:'../../suiyoubao/suiyoubao'
+				// })
+				// return
+				this.getSignStatusHandle().then(res => {
+					console.log(res, '<<<<====res');
+					if (res) {
+						let info = {
+							withdrawal: this.info.activityRewardAmount,
+							type: 'activity'
+						}
+						uni.navigateTo({
+							url: 'cashOut/cashOut?info=' + JSON.stringify(info)
+						})
+					}else{
+						console.log('187777777');
+						uni.navigateTo({
+							url:'../../suiyoubao/suiyoubao'
+						})
+					}
+			
 				})
+			
+			},
+			getSignStatusHandle() {
+				let msg = ''
+				return new Promise((r, j) => {
+					checkIsSign({
+						userId: storage.get('ClientId'),
+					}).then(res => {
+						console.log(res);
+						r(res.data)
+					})
+				})
+			
 			}
 		}
 	}

@@ -459,7 +459,8 @@
 				}, {
 					"path": "myMoney/myMoney",
 					"style": {
-						"navigationBarTitleText": "我的余额"
+						"navigationBarTitleText": "我的余额",
+							"navigationStyle": "custom"
 					}
 
 				},

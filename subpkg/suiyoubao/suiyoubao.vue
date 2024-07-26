@@ -33,14 +33,14 @@
 					<view class="box" style="padding:0" v-if='isSign'>
 
 
-						<u-form-item label="*姓名" prop="workerName" ref="item1">
-							<u--input v-model="form.workerName" border="none" placeholder="请输入姓名"></u--input>
+						<u-form-item label="*姓名" prop="inviter" ref="item1">
+							<u--input v-model="form.inviter" border="none" placeholder="请输入姓名"></u--input>
 						</u-form-item>
 						<u-form-item label="*身份证号" prop="cardNumber" ref="item1">
 							<u--input v-model="form.cardNumber" border="none" placeholder="请输入身份证号"></u--input>
 						</u-form-item>
-						<u-form-item label="*手机号" prop="workerPhone" ref="item1" style="border-bottom:none">
-							<u--input v-model="form.workerPhone" border="none" placeholder="请输入手机号"></u--input>
+						<u-form-item label="*手机号" prop="phoneNumber" ref="item1" style="border-bottom:none">
+							<u--input v-model="form.phoneNumber" border="none" placeholder="请输入手机号"></u--input>
 						</u-form-item>
 
 					</view>
@@ -151,7 +151,8 @@
 	} from '@/utils/verify.js'
 	import {
 		signSubmit,
-		getSignStatus
+		getSignStatus,
+		getSignCache
 	} from '@/api/money.js'
 	import {
 			callPhone
@@ -184,7 +185,7 @@
 					'font-size': '31rpx'
 				},
 				form: {
-					workerName: '',
+					inviter: '',
 					phone: '',
 					addressDetailed: '',
 
@@ -193,7 +194,7 @@
 					resTips: 'init'
 				},
 				rules: {
-					'workerName': {
+					'inviter': {
 						type: 'string',
 						required: true,
 						message: '请填写姓名',
@@ -211,7 +212,7 @@
 						message: '请填写银行卡号',
 						trigger: ['blur', 'change']
 					},
-					'workerPhone': [{
+					'phoneNumber': [{
 							type: 'number',
 							required: true,
 							message: '请输入手机号',
@@ -241,11 +242,11 @@
 		},
 		methods: {
 			getInfo() {
-				getInfoById(storage.get('workerId')).then(res => {
+				getInfoById(storage.get('ClientId')).then(res => {
 					console.log(res);
 					this.form = res.data
-					// this.workerName = userInfo.workerName
-					// this.code = userInfo.cardNumber
+					 // this.workerName = userInfo.workerName
+					 // this.code = userInfo.cardNumber
 					this.cardReverseImg = this.form.cardReverseImg
 					this.cardPositiveImg = this.form.cardPositiveImg
 				})
@@ -365,16 +366,16 @@
 						}
 
 						signSubmit({
-							userId: storage.get('workerId'),
+							userId: storage.get('ClientId'),
 							userType: "c",
 							cardType: "1",
-							talentName: this.form.workerName,
+							talentName: this.form.inviter,
 							talentCard: this.form.cardNumber,
 							payType: "1",
 							account: this.form.bankNumber,
 							cardReverseImg: this.cardReverseImg,
 							cardPositiveImg: this.cardPositiveImg,
-							telphone: this.form.workerPhone
+							telphone: this.form.phoneNumber
 						}).then(res => {
 							this.$refs.uToast.show({
 								type: res.data.code == 200 ? 'success' : 'error',
@@ -387,9 +388,9 @@
 					} else {
 						console.log('35000000000');
 						getSignStatus({
-							talentName: this.form.workerName,
+							talentName: this.form.inviter,
 							talentCard: this.form.cardNumber,
-							userId: storage.get('workerId'),
+							userId: storage.get('ClientId'),
 							userType: 'c'
 						}).then(res => {
 							console.log(res);
@@ -409,6 +410,17 @@
 							} else if (this.signInfo.requestResult == '未查询到签约数据') {
 								this.isSign = false
 							}else if(this.signInfo.resTips=='签约失败'){
+								getSignCache({
+									userId: storage.get('workerId'),
+									userType: 'w'
+								}).then(res => {
+									// console.log(res);
+									let info = res.data
+									this.cardReverseImg = info.cardReverseImg
+									this.cardPositiveImg = info.cardPositiveImg
+									this.cardType='银行卡'
+									this.form.bankNumber = info.account
+								})
 								uni.setNavigationBarTitle({
 									title: '审核进度'
 								})

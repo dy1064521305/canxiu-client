@@ -1,6 +1,6 @@
 import request from '@/config/request.js';
 
-// 获取师傅端用户详细信息
+// 获取用户钱包详细信息
 export const getUserWallet = (params) => request.get('/finance/userWallet/getInfo',params)
 
 // 查询用户收支明细列表
@@ -18,11 +18,16 @@ export const getListRetention = (params) => request.get('/finance/walletDetails/
 // 用户查询签约状态
 export const getSignStatus = (params) => request.get('/finance/sign/getSignStatus',params)
 
-// 师傅校验是否有签约银行卡
-export const checklsSign = (params) => request.get('/worker/bankCard/checklsSign',params)
 
-// 查询师傅提现记录列表
+// 查询用户提现记录列表
 export const listWorkerWithdrawal = (params) => request.get('/finance/userWithdrawal/listWorkerWithdrawal',params)
 
 // 用户查询提现记录账单详情
 export const queryDetails = (withdrawalId) => request.get('/finance/userWithdrawal/queryDetails/'+withdrawalId)
+
+// 用户提交灵活用工签约信息
+export const signSubmit = (data) => request.post('/finance/sign/submit',data)
+
+
+// 签约失败获取缓存签约信息
+export const getSignCache = (params) => request.get('/finance/sign/getSignCache',params)
