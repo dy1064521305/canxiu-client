@@ -44,3 +44,13 @@ export const getWorkers = (data) => request.post('/partner/worker/workerList', d
 export const getWorkersTypeList = (params) => request.get('/basic/workerType/list', params)
 // 修改师傅工费结算规则
 export const putSettlementRule = (data) => request.put('/partner/worker/edit/settlement/rule', data)
+
+// 结算记录列表
+export const getWorkerSettlementList = (params) => request.get('/partner/worker/workerSettlementList', params)
+
+// 调整金额
+export const putAdjust = (data) => request.put('/partner/worker/walletDetail/adjust', data)
+// 立即结算
+export const putSettlement = (data) => request.put('/partner/worker/walletDetail/immediate/settlement', data)
+// 关闭结算
+export const putInvalid = (data) => request.put('/partner/worker/walletDetail/invalid', data)

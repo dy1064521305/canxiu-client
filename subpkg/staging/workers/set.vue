@@ -63,10 +63,12 @@
  			if (options && options.workerId) {
  				this.where.workerId = options.workerId
  			}
+ 			if (options && options.day) {
+ 				this.where.freezeDay = options.day
+ 			}
  		},
  		methods: {
  			sureSet() {
-
  				if (this.where.freezeDay < 1) return this.$toast('冻结时间不能小于1天')
  				putSettlementRule(this.where).then(res => {
  					this.$toast('设置成功')

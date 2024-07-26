@@ -1073,6 +1073,9 @@
 		right: 36.23rpx;
 		bottom: 39.86rpx;
 		z-index: 1000;
+		/* #ifdef H5 */
+		bottom: 120.86rpx;
+		/* #endif */
 
 		.dot {
 			z-index: 10;

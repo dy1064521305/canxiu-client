@@ -51,8 +51,9 @@
 				<text style="color: #212121; font-size: 28rpx; margin-top: 14rpx;margin-right: 20rpx;">全部转出</text>
 			</view>
 		</view>
-		<view class="pages-fangshi acea-row row-between-wrapper">
-			<view>付款方式</view>
+		<view class="pages-fangshi acea-row row-between-wrapper"
+			@click="$jump('/subpkg/center/myMoney/invest/toExamine')">
+			<view>审核记录</view>
 			<u-icon name="arrow-right"></u-icon>
 		</view>
 		<view class="pages-btn">

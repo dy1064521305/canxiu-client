@@ -66,7 +66,7 @@
 					</view>
 					<view class="right acea-row">
 						<view class="right-rule acea-row row-column row-center row-middle"
-							@click.stop="$jump('/subpkg/staging/workers/set?workerId='+item.workerId)">
+							@click.stop="$jump('/subpkg/staging/workers/set?workerId='+item.workerId+'&day='+item.freezeDay)">
 							<image
 								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/19/96db4164069e4a0fa10d584ac72e97c1.png"
 								mode=""></image>
@@ -302,16 +302,17 @@
 		onLoad() {
 			this.getArea()
 		},
+		onShow() {
+			this.getList()
+		},
 		methods: {
 			getArea() {
-
 				var that = this
 				uni.request({
 					url: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/6cfc99b225184b0eafbed58cd5c6ede5.json',
 					method: 'GET',
 					complete(res) {
 						that.addressData = res.data
-
 						that.province = that.addressData.map(it => it)
 						that.province.forEach(item => {
 							item.num = 0

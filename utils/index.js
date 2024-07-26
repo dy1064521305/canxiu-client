@@ -113,7 +113,7 @@ export function Alert(title, isConfirm, options) {
 			content,
 			showCancel: isConfirm == 1 ? true : false,
 			confirmText: isConfirm == 1 ? '确认' : '我知道了',
-			confirmColor: '#FF7700',
+			confirmColor: '#A4D091',
 			cancelColor: '#303133',
 			success: (res) => {
 				resolve(res)

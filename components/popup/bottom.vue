@@ -4,7 +4,7 @@
 			<view class="mask" @click="$emit('tap-mask')"></view>
 			<slot name="wrapper">
 				<view class="wrapper acea-row row-column">
-					<view v-if="!hideTitle" class="title" :class="{on:noContentTop}">
+					<view v-if="!hideTitle" class="title acea-row row-between-wrapper" :class="{on:noContentTop}">
 						<slot name="title">
 							<text>{{title}}</text>
 						</slot>
@@ -94,6 +94,7 @@
 				padding: 30rpx 36rpx;
 				position: relative;
 				width: 100%;
+				font-size: #212121;
 				box-sizing: border-box;
 
 				&.on {
