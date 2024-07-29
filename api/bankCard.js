@@ -18,3 +18,6 @@ export const getBankCardInfo = (cardId) => request.get('/client/bankCard/'+cardI
 
 // 用户校验是否有签约银行卡
 export const checkIsSign = (params) => request.get('/client/bankCard/checkIsSign',params)
+
+// 根据银行卡号获取银行卡相关信息
+export const getCardInfo = (params) => request.get('/finance/sign/getCardInfo',params)

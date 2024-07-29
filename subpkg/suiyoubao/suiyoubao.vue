@@ -33,13 +33,13 @@
 					<view class="box" style="padding:0" v-if='isSign'>
 
 
-						<u-form-item label="*姓名" prop="inviter" ref="item1">
+						<u-form-item label="姓名" prop="inviter" ref="item1" required>
 							<u--input v-model="form.inviter" border="none" placeholder="请输入姓名"></u--input>
 						</u-form-item>
-						<u-form-item label="*身份证号" prop="cardNumber" ref="item1">
+						<u-form-item label="身份证号" prop="cardNumber" ref="item1" required>
 							<u--input v-model="form.cardNumber" border="none" placeholder="请输入身份证号"></u--input>
 						</u-form-item>
-						<u-form-item label="*手机号" prop="phoneNumber" ref="item1" style="border-bottom:none">
+						<u-form-item label="手机号" prop="phoneNumber" ref="item1" style="border-bottom:none" required>
 							<u--input v-model="form.phoneNumber" border="none" placeholder="请输入手机号"></u--input>
 						</u-form-item>
 
@@ -93,12 +93,12 @@
 								1、一旦绑定签约成功后，不可修改银行卡信息；</br>
 								2、务必绑定本人银行卡信息，否则会签约失败；</br>
 							</view>
-							<u-form-item label="*银行卡" prop="bankNumber" ref="item1" style="border-bottom:none">
+							<u-form-item label="银行卡" prop="bankNumber" ref="item1" style="border-bottom:none" required>
 								<u--input @confirm='getBankInfo' v-model="form.bankNumber" border="none"
-									placeholder="请输入你的银行卡" clearable></u--input>
+									placeholder="请输入你的银行卡" clearable @blur='getBankInfo'></u--input>
 							</u-form-item>
-							<u-form-item label="账户类型">
-								<u--input v-model="cardType" border="none" placeholder="请输入账户类型"></u--input>
+							<u-form-item label="银行名称">
+								<u--input v-model="bankName" border="none" disabled placeholder="自动读取"></u--input>
 							</u-form-item>
 
 						</view>
@@ -155,11 +155,14 @@
 		getSignCache
 	} from '@/api/money.js'
 	import {
-			callPhone
-		} from '@/utils/phone.js'
+		callPhone
+	} from '@/utils/phone.js'
 	import {
 		getInfoById,
 	} from '@/api/user.js'
+	import {
+		getCardInfo,
+	} from '@/api/bankCard.js'
 	const {
 		environment
 	} = require('../../config/environment')
@@ -178,7 +181,7 @@
 					},
 				], //拨打电话
 				isSign: true,
-				cardType: '',
+				bankName: '',
 				cardReverseImg: '', //身份证反面照
 				cardPositiveImg: '', //正面
 				labelStyle: {
@@ -242,14 +245,24 @@
 		},
 		methods: {
 			getInfo() {
-				getInfoById(storage.get('ClientId')).then(res => {
-					console.log(res);
-					this.form = res.data
-					 // this.workerName = userInfo.workerName
-					 // this.code = userInfo.cardNumber
-					this.cardReverseImg = this.form.cardReverseImg
-					this.cardPositiveImg = this.form.cardPositiveImg
+				getSignCache({
+					userId: storage.get('ClientId'),
+					userType: 'c'
+				}).then(res => {
+					if (res.data != null) {
+						let info = res.data
+						this.form.phoneNumber = info.telphone
+						this.form.cardNumber = info.talentCard
+						this.form.inviter = info.talentName
+					} else {
+						getInfoById(storage.get('ClientId')).then(res => {
+							console.log(res);
+							this.form = res.data
+						})
+					}
+
 				})
+
 
 			},
 			billChooseImage(type) {
@@ -321,12 +334,17 @@
 				});
 			},
 			getBankInfo() {
-				if (!bank.verifyBankCardNumber(this.form.bankNumber)) {
-					uni.$u.toast('请填写正确的银行卡号')
-					return
-				}
-				let info = bank.bankCardAttribution(this.form.bankNumber)
-				this.cardType = info.cardTypeName
+				getCardInfo({
+					account: this.form.bankNumber
+				}).then(res => {
+					if (!res.data.validated) {
+						this.bankName =''
+						uni.$u.toast('校验失败')
+					} else {
+						this.bankName = res.data.bankName
+					}
+
+				})
 
 
 			},
@@ -395,7 +413,7 @@
 						}).then(res => {
 							console.log(res);
 							this.signInfo = res.data
-						
+
 							if (this.signInfo.resTips == '签约成功') {
 								this.$refs.uToast.show({
 									type: 'warning',
@@ -409,16 +427,16 @@
 
 							} else if (this.signInfo.requestResult == '未查询到签约数据') {
 								this.isSign = false
-							}else if(this.signInfo.resTips=='签约失败'){
+							} else if (this.signInfo.resTips == '签约失败') {
 								getSignCache({
-									userId: storage.get('workerId'),
-									userType: 'w'
+									userId: storage.get('ClientId'),
+									userType: 'c'
 								}).then(res => {
 									// console.log(res);
 									let info = res.data
 									this.cardReverseImg = info.cardReverseImg
 									this.cardPositiveImg = info.cardPositiveImg
-									this.cardType='银行卡'
+									this.bankName = info.bankName
 									this.form.bankNumber = info.account
 								})
 								uni.setNavigationBarTitle({
@@ -453,6 +471,10 @@
 			padding: 28rpx 36rpx;
 			background: #FFF9ED;
 			// margin-bottom: 20rpx;
+		}
+
+		/deep/.u-input__content__field-wrapper__field {
+			background-color: #fff;
 		}
 
 		.step {

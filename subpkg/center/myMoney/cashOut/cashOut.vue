@@ -1,12 +1,12 @@
 <template>
 	<view class="cash-out">
-		<view class="one">
+		<view class="one" @click="goCard">
 			<view class="fonts" style="font-weight: bold;margin-bottom: 20rpx;">
 				提现到
 			</view>
-			<view class="cardInfo" @click="goCard">
+			<view class="cardInfo" >
 				<view class="fonts">
-					<text v-if="bankName!=''">{{bankName}}（{{card}}）</text>
+					<text v-if="card">{{bankName||''}}（{{card}}）</text>
 					<text v-else>选择银行卡</text>
 					<text style="color: #A5A7A7;margin-left: 10rpx;">快捷</text>
 				</view>
@@ -86,9 +86,13 @@
 				this.bankId = item.cardId
 			},
 			goCard() {
-				uni.navigateTo({
-					url: '../myCard/myCard?type=' + 'cash'
-				})
+			let info = {
+				type: 'cash',
+				bankId: this.bankId
+			}
+			uni.navigateTo({
+				url: '../myCard/myCard?info=' + JSON.stringify(info)
+			})
 			},
 			//提现记录
 			goRecord() {
@@ -97,6 +101,7 @@
 				})
 			},
 			cashOut() {
+		
 				if (this.amount == '') {
 					this.$refs.uToast.show({
 						type: 'error',
@@ -118,6 +123,11 @@
 					bankId: this.bankId
 				}).then(res => {
 					console.log(res);
+					if (res.data.code==200) {
+						uni.navigateTo({
+							url:'../cashOutDetailed/cashOutDetailed'
+						})
+					}
 					this.$refs.uToast.show({
 						type: 'default',
 						message: res.data.msg

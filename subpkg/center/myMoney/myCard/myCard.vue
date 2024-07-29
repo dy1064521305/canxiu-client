@@ -9,13 +9,15 @@
 			</view>
 			<view v-for="(item,index) in bankCardList" :key='index' class="box" @click="choseCard(item)">
 				<view
-					style="padding: 40rpx 34rpx;">
+					style="padding: 40rpx 34rpx;display: flex;
+    align-items: center;
+    justify-content: space-between;">
 
 					<view class="left">
 						<view class="top">
 							<view class="">
-								<text style="font-size: 35rpx;font-weight: bold;">{{item.bankName}}</text>
-								<text v-if='!type' style="margin-left: 20rpx;">{{item.cardTypeName}}</text>
+								<text style="font-size: 35rpx;font-weight: bold;">{{item.bankName||""}}</text>
+								<text v-if='!type' style="margin-left: 20rpx;">{{item.cardTypeName||""}}</text>
 								<text v-else>
 									<text v-if="item.isSign==1" class="sign">已签约</text>
 								</text>
@@ -158,9 +160,11 @@
 			},
 			//提现选择银行卡
 			choseCard(item) {
+				console.log(this.type,111111111);
 				if (this.type != 'cash') {
 					return
 				} else {
+					console.log(111111111);
 					let pages = getCurrentPages()
 					let prevPage = pages[pages.length - 2]
 					prevPage.$vm.getCardInfo(item)
@@ -200,7 +204,7 @@
 			}
 
 			.left {
-
+				width: 100%;
 				.top {
 					display: flex;
 					align-items: flex-end;
