@@ -104,10 +104,10 @@
 				})
 			},
 			goCashOut() {
-				uni.navigateTo({
-					url: 'cashOut/cashOut'
-				})
-				return
+				// uni.navigateTo({
+				// 	url: 'cashOut/cashOut'
+				// })
+				// return
 				this.getSignStatusHandle().then(res => {
 					console.log(res, '<<<<====res');
 					if (res) {
