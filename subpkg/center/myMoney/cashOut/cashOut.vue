@@ -57,6 +57,7 @@
 		getUserWallet
 	} from '@/api/money.js'
 	import storage from '@/utils/storage'
+	import {getBankCardList} from '@/api/bankCard.js'
 	export default {
 		data() {
 			return {
@@ -68,16 +69,30 @@
 			};
 		},
 		onLoad() {
-			getUserWallet({
-				userId: storage.get('ClientId'),
-				userType: 'c'
-			}).then(res => {
-				console.log(res);
-				this.withdrawal = res.data.withdrawal
-			})
+			this.getLoad()
 
 		},
 		methods: {
+			getLoad(){
+				getUserWallet({
+					userId: storage.get('ClientId'),
+					userType: 'c'
+				}).then(res => {
+					console.log(res);
+					this.withdrawal = res.data.withdrawal
+				})
+				getBankCardList({
+					pageSize: 10,
+					pageNum: 1,
+					isDefault: 'Y',
+					userId: storage.get('ClientId'),
+				}).then(res => {
+					console.log(res.rows[0]);
+					this.bankName = res.rows[0].bankName
+					this.card = res.rows[0].cardNumber.substr(-4)
+					this.bankId = res.rows[0].cardId
+				})
+			},
 			//获取银行卡信息
 			getCardInfo(item) {
 				console.log(item);

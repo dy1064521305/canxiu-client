@@ -46,11 +46,11 @@
 				<span>提现银行卡</span>
 				<span>{{info.bankName||''}}（{{info.cardNumber&&info.cardNumber.substr(-4)}}）</span>
 			</view>
-			<view v-if="info.status=='已打款'&&info.receipt!=null">
+		<!-- 	<view v-if="info.status=='已打款'&&info.receipt!=null">
 				<span>回执单</span>
 				<span style="color:#A4D091;"
 					@click='goHuizhidan'>查看详情》</span>
-			</view>
+			</view> -->
 		</view>
 		<view v-if="info.status=='待审核'"  class="btn" @click="showCancel=true">
 			取消申请
