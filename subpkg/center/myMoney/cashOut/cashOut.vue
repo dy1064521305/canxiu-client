@@ -4,13 +4,13 @@
 			<view class="fonts" style="font-weight: bold;margin-bottom: 20rpx;">
 				提现到
 			</view>
-			<view class="cardInfo" >
+			<view class="cardInfo">
 				<view class="fonts">
 					<text v-if="card">{{bankName||''}}（{{card}}）</text>
 					<text v-else>选择银行卡</text>
 					<text style="color: #A5A7A7;margin-left: 10rpx;">快捷</text>
 				</view>
-				<view >
+				<view>
 					<image style="width:16rpx;height: 32rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png">
 					</image>
@@ -86,13 +86,13 @@
 				this.bankId = item.cardId
 			},
 			goCard() {
-			let info = {
-				type: 'cash',
-				bankId: this.bankId
-			}
-			uni.navigateTo({
-				url: '../myCard/myCard?info=' + JSON.stringify(info)
-			})
+				let info = {
+					type: 'cash',
+					bankId: this.bankId
+				}
+				uni.navigateTo({
+					url: '../myCard/myCard?info=' + JSON.stringify(info)
+				})
 			},
 			//提现记录
 			goRecord() {
@@ -101,7 +101,7 @@
 				})
 			},
 			cashOut() {
-		
+
 				if (this.amount == '') {
 					this.$refs.uToast.show({
 						type: 'error',
@@ -123,10 +123,11 @@
 					bankId: this.bankId
 				}).then(res => {
 					console.log(res);
-					if (res.data.code==200) {
+					if (res.data.msg == '申请提现成功') {
 						uni.navigateTo({
-							url:'../cashOutDetailed/cashOutDetailed'
+							url: '../cashOutDetailed/cashOutDetailed'
 						})
+						this.withdrawal = 0
 					}
 					this.$refs.uToast.show({
 						type: 'default',
@@ -139,8 +140,8 @@
 				this.card = '',
 					this.bankName = '',
 					this.amount = '',
-					this.bankId = '',
-					this.withdrawal = 0
+					this.bankId = ''
+
 			},
 			//全部
 			getAllMoney() {

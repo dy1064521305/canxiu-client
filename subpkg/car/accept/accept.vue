@@ -877,7 +877,7 @@
 			width: 100%;
 			justify-content: space-evenly;
 			align-items: end;
-			margin: 20rpx 0;
+			margin:20rpx 0  40rpx;
 
 			.btn {
 				width: 335rpx;

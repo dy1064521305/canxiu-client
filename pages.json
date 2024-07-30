@@ -12,8 +12,8 @@
 			"path": "pages/welcome/welcome",
 			"style": {
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-
+				"enablePullDownRefresh": false,
+				 "disableScroll":true
 			}
 
 		},
@@ -22,7 +22,8 @@
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				 "disableScroll":true
 			}
 
 		},
@@ -41,7 +42,9 @@
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "",
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				 "disableScroll":true
+				
 			}
 		},
 
@@ -582,6 +585,24 @@
                     "style" :                                                                                    
                 {
                     "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+                ,{
+                    "path" : "myMoney/paymentInfo/paymentInfo",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "提现详情",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+                ,{
+                    "path" : "myMoney/paymentInfo/huizhidan/huizhidan",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "回执单",
                     "enablePullDownRefresh": false
                 }
                 

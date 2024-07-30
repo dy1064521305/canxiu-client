@@ -280,6 +280,7 @@
 		},
 		onShow() {
 			this.status=true
+			
 			if (storage.get('AccessToken')) {
 				this.isShowMoney = true
 				getCarNum().then(res => {
@@ -384,6 +385,7 @@
 
 		},
 		onLoad() {
+			console.log('38777777777777');
 			this.notPermissions()
 			this.getServiceTypesList()
 			this.locationStatus = ''
@@ -639,7 +641,11 @@
 							`address_refreash${storage.get('ClientId')}`)
 						this.getList()
 						this.getServiceSymptomsHandle()
-					},
+					},fail: (err) => {
+						// #ifdef MP-WEIXIN
+						this.getLoction()
+						// #endif
+					}
 
 				})
 			},

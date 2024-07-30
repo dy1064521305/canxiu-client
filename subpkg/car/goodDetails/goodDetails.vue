@@ -2,8 +2,8 @@
 	<view class="good-detail-page">
 		<view class="navbar"
 			:style="{padding:(statusHeight*2)+'rpx 0px 24rpx 16rpx',backgroundColor:'rgba(255,255,255,'+navbarColorOpacity+')'}">
-			<u-icon name="arrow-left" size="19" @click="goBack()"></u-icon>
-			<text>{{city}}</text>
+		
+			<view @click="goBack()">	<u-icon color="#fff" name="arrow-left" size="19" ></u-icon>{{city}}</view>
 		</view>
 
 		<scroll-view class="serviceInfo" ref="target" :scroll-y="true" :scroll-into-view="scrollIntoView"
@@ -653,6 +653,17 @@
 					this.serviceImgList = this.goodInfo.serviceImg !== null && this.goodInfo.serviceImg !== "" ?
 						this.goodInfo.serviceImg.split(',') : []
 
+				}).catch((err)=>{
+					// #ifdef MP-WEIXIN
+					this.$refs.uToast.show({
+						type: 'error',
+						message: err.msg
+					});
+					// #endif
+					setTimeout(()=>{
+						uni.navigateBack()
+					},800)
+					
 				})
 
 
@@ -798,11 +809,13 @@
 				// 	return
 				// }
 				let newSetArray = [] //新数组
-
+				console.log(this.projectForm,'80111111111');
+				this.goodInfo.remark=''
 				newSetArray.push({
 					clientId: storage.get('ClientId'),
 					...this.goodInfo,
 					...this.projectForm,
+					remark: this.projectForm.remarks,
 					serviceProjectImg: this.goodInfo.serviceImg,
 					serviceProductName: this.goodInfo.serviceName,
 					projectPrice: this.goodInfo.projectAmount
@@ -1120,10 +1133,10 @@
 			padding-left: 16rpx;
 			z-index: 10;
 
-			text {
-				display: inline-block;
+			view {
+				display: flex;
 				background: rgba(0, 0, 0, 0.45);
-				padding: 10rpx 20rpx;
+				padding: 10rpx 20rpx 10rpx 7rpx;
 				border-radius: 7rpx;
 				font-size: 29rpx;
 				color: #FFFFFF;

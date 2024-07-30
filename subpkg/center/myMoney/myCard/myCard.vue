@@ -4,7 +4,7 @@
 		<z-paging ref="paging" v-model="bankCardList" @query="getList">
 
 			<view slot='top'>
-				<u-navbar title="我的银行卡" placeholder @leftClick="leftClick">
+				<u-navbar :title="!type?'我的银行卡':'选择提现账户'" placeholder @leftClick="leftClick">
 				</u-navbar>
 			</view>
 			<view v-for="(item,index) in bankCardList" :key='index' class="box" @click="choseCard(item)">
@@ -210,6 +210,14 @@
 					align-items: flex-end;
 					margin-bottom: 30rpx;
 					justify-content: space-between;
+					.sign {
+						border-radius: 5rpx;
+						padding: 0 8rpx;
+						margin-left: 20rpx;
+						background-color: #a5d092;
+						color: #fff;
+					}
+					
 				}
 
 			}

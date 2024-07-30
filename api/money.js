@@ -7,7 +7,7 @@ export const getUserWallet = (params) => request.get('/finance/userWallet/getInf
 export const getWalletDetails = (params) => request.get('/finance/walletDetails/list',params)
 
 // 查询用户提现记录列表
-export const getUserWithdrawal = (params) => request.get('/finance/userWithdrawal/list',params)
+export const getUserWithdrawal = (params) => request.get('finance/userWithdrawal/listPartnerWithdrawal',params)
 
 // 新增用户提现记录
 export const addUserWithdrawal = (data) => request.post('/finance/userWithdrawal',data)
@@ -31,3 +31,6 @@ export const signSubmit = (data) => request.post('/finance/sign/submit',data)
 
 // 签约失败获取缓存签约信息
 export const getSignCache = (params) => request.get('/finance/sign/getSignCache',params)
+
+//取消申请
+export const cancelWithdrawal = (params) => request.put('/finance/userWithdrawal/cancelWithdrawal', params)

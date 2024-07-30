@@ -1,11 +1,11 @@
 <template>
 	<view class="">
 		<view style="background-color: #fff;margin-top: 20rpx;">
-			<!-- 	<a @click='goInfo'>
+			<a @click='goInfo'>
 				<image src="../../../static/center/info.png"></image>
 				<text>个人信息</text>
 				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
-			</a> -->
+			</a>
 			<!-- 	<a @click='goAboutUs'>
 				<image src="../../../static/center/aboutUs.png"></image>
 				<text>关于我们</text>

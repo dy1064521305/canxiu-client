@@ -729,7 +729,7 @@
 						item.projectImg = this.toStrings(item.projectImg)
 						item.shoppingCartStatus = 1
 						item.urgentPrice = this.info.isUrgent == 1 ? item.urgentPrice : 0
-						item.remark = item.remarks
+						item.remark = item.remark
 						item.productId = item.serviceId ? item.serviceId : item.productId
 					})
 					let timeObj = {}
@@ -748,12 +748,12 @@
 					this.info.beforeStartingFreeMap = beforeStartingFree
 					this.info.costStartingFreeMap = costStartingFreeMap
 					//this.info.expectTime = this.info.expectTime + ':00'
-					console.log(this.info);
+					
 					this.info.customerId = this.addressInfo.customerId
 					this.workerList = this.trimSpace(this.workerList)
 					this.info.workerIds = this.workerList.map(item => item.workerId)
 					this.info.clientCouponId = this.choseCoupon.id
-
+					
 					postOrder(this.info).then(res => {
 						if (res.code == 200) {
 							orderSend(res.data).then(res => {})
@@ -1049,9 +1049,9 @@
 			&-img {
 				width: 58rpx;
 				height: 58rpx;
-				background: #99BF87;
+				// background: #99BF87;
 				margin-right: 15rpx;
-				border-radius: 6rpx;
+				border-radius: 50%;
 				position: relative;
 
 				&-pop {
