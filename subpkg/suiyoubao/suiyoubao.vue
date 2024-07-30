@@ -20,7 +20,7 @@
 							style="width: 31rpx;height: 31rpx;"></image>
 					</view>
 					<view style="display: flex;justify-content: space-between;padding:12rpx 125rpx;">
-						<text>签约状态查询</text>
+						<text @click="back">签约状态查询</text>
 						<text>绑定银行卡</text>
 					</view>
 				</view>
