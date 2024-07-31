@@ -54,3 +54,12 @@ export const putAdjust = (data) => request.put('/partner/worker/walletDetail/adj
 export const putSettlement = (data) => request.put('/partner/worker/walletDetail/immediate/settlement', data)
 // 关闭结算
 export const putInvalid = (data) => request.put('/partner/worker/walletDetail/invalid', data)
+
+// 根据合伙人ID获取预存款信息
+export const getInvestmentClient = (partnerId) => request.get('/partner/investment/client/' + partnerId)
+
+// 拿取合伙人的信息
+export const putImmediate = (id) => request.get('/client/partner/' + id)
+
+// 查询合伙人资金补贴记录明细列表
+export const getSubsidyDetail = (id, params) => request.get('/partner/user/subsidy/detail/' + id, params)

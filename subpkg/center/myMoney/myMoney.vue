@@ -273,9 +273,9 @@
 						label: "我的银行卡",
 						url: "/subpkg/center/myMoney/myCard/myCard"
 					},
-				]
+				],
+				scrollTop: 0
 			};
-			scrollTop: 0
 		},
 		onShow() {
 			this.getList()
@@ -315,7 +315,7 @@
 		color: #3D3F3E;
 
 		&-image {
-			height: 528rpx;
+			// height: 528rpx;
 			background: linear-gradient(180deg, #B3D9A3 0%, #A4D091 48%, #A4D091 100%);
 			padding: 184rpx 0rpx 0;
 			color: #FFFFFF;

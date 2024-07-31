@@ -4,7 +4,7 @@
 			<view slot='top'>
 				<view class="search">
 					<u-search :showAction="false" placeholder="输入师傅名称或手机号" @clear='queryList'
-						v-model="queryParams.search" @search="queryList">
+						v-model="queryParams.keyword" @search="queryList">
 					</u-search>
 					<view class="status">
 						<view :class="['box',index==currentTabIndex?'active':'']" v-for="(item,index) in list1"
@@ -286,7 +286,7 @@
 				queryParams: {
 					pageSize: 10,
 					pageNum: 1,
-					search: '',
+					keyword: '',
 					orderByColumn: '推荐'
 				},
 				workerTypeList: [],

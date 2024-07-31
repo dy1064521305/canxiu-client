@@ -113,7 +113,13 @@
                     "weixin" : {
                         "__platform__" : [ "ios", "android" ],
                         "appid" : "wxfa2f854719fe847e",
-                        "UniversalLinks" : "https://www.canxiukeji.com"
+                        "UniversalLinks" : "https://www.canxiukeji.com/"
+                    }
+                },
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wxfa2f854719fe847e",
+                        "UniversalLinks" : "https://www.canxiukeji.com/"
                     }
                 }
             },

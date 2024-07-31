@@ -43,6 +43,7 @@
 		isEmpty,
 		isPhone
 	} from '@/utils/verify.js'
+	import storage from '@/utils/storage'
 	export default {
 		components: {
 			pickers
@@ -54,7 +55,8 @@
 				where: {
 					realName: "",
 					cellPhone: "",
-					region: ""
+					region: "",
+					clientId: storage.get('ClientId'),
 				}
 			}
 		},
@@ -65,9 +67,9 @@
 			})
 		},
 		methods: {
-
 			addressHandle(e) {
 				this.where.region = e.value1.toString().replace(/,/g, "/")
+				console.log(e, "eee");
 			},
 			submit() {
 				if (!this.where.realName) return this.$toast('您的姓名不能为空')
@@ -95,7 +97,6 @@
 	.pages {
 		min-height: 100vh;
 		background-color: #fff;
-		position: relative;
 
 		.banner {
 			height: 390rpx;
@@ -121,9 +122,7 @@
 		}
 
 		.content-btn {
-			position: absolute;
-			left: 64rpx;
-			bottom: 100rpx;
+			margin: 500rpx auto 0;
 			width: 622rpx;
 			height: 88rpx;
 			background: #A4D091;

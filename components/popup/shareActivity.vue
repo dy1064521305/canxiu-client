@@ -1,14 +1,5 @@
 <template>
 	<view>
-		<!-- #ifdef MP -->
-		<template v-if="!hideBtn && isLogin">
-			<view class="fix-bottom">
-				<view class="share-btn" @click="mpTap">{{shareText}}</view>
-			</view>
-			<view style="height: 130rpx;"></view>
-			<status-bar type="bottom"></status-bar>
-		</template>
-		<!-- #endif -->
 		<view v-if="show" class="share-pop acea-row row-column" :style="{height: winH+'px'}">
 			<view class="mask" @click="hideMask" :style="{width:750+'rpx', height: winH+'px'}"></view>
 			<view class="share-content acea-con acea-row row-center" :style="{width: posterWidth+'rpx'}">
@@ -37,24 +28,20 @@
 </template>
 
 <script>
-	// import {
-	// 	getKzShareBanner
-	// } from '@/api/user.js'
-	// import {
-	// 	mapGetters
-	// } from 'vuex'
-	// import {
-	// 	shareImage,
-	// 	saveImage,
-	// 	umengEventHandle,
-	// 	checkAuth
-	// } from '@/utils/index.js'
-	// import StrongNum from '@/components/StrongNum.vue'
+	import {
+		getKzShareBanner
+	} from '@/api/user.js'
+	import {
+		mapGetters
+	} from 'vuex'
+	import {
+		shareImage,
+		saveImage,
+		umengEventHandle,
+		// checkAuth
+	} from '@/utils/index.js'
 
 	export default {
-		// components: {
-		// 	StrongNum
-		// },
 		name: 'PopupShareActivity',
 		props: {
 			type: Number | String,
@@ -89,12 +76,6 @@
 			const sys = uni.getSystemInfoSync();
 			this.safeArea = sys.safeAreaInsets;
 			this.winW = sys.windowWidth;
-			// #ifdef APP-NVUE
-			this.winH = sys.windowHeight;
-			uni.$on('nvueOpenSharePopup', (poster) => {
-				this.open(poster)
-			})
-			// #endif
 		},
 		computed: {
 			...mapGetters(['isLogin']),
@@ -104,21 +85,8 @@
 				this.show = false;
 				this.$emit('hideMask');
 			},
-			mpTap() {
-				if (this.type) {
-					return this.open();
-				}
-				this.$emit('mp-btn-tap');
-			},
 			open(poster) {
-				// #ifdef APP-NVUE
-				setTimeout(() => {
-					if (checkAuth(1) !== 200) return;
-				}, 500)
-				// #endif
-				// #ifndef APP-NVUE
-				if (checkAuth(1) !== 200) return;
-				// #endif
+				// if (checkAuth(1) !== 200) return;
 				if (poster && typeof poster == 'string') {
 					this.poster = poster;
 				} else {
@@ -131,33 +99,8 @@
 					// #ifndef MP-WEIXIN
 					this.show = true;
 					// #endif
-					umengEventHandle('activity_poster_share');
 					return;
 				}
-				uni.showLoading({
-					title: '加载中...'
-				})
-				let data = {
-					type: this.type
-				}
-				if (this.sid) {
-					data.sid = this.sid;
-				}
-				getKzShareBanner(data).then(res => {
-					uni.hideLoading();
-					this.poster = res.data.poster;
-					// #ifdef MP-WEIXIN
-					this.sharePoster();
-					// #endif
-					// #ifndef MP-WEIXIN
-					this.show = true;
-					// #endif
-
-					umengEventHandle('activity_poster_share');
-				}).catch(err => {
-					uni.hideLoading();
-					this.$alert(err);
-				})
 
 			},
 			sharePoster() {

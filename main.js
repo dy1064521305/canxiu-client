@@ -29,6 +29,10 @@ import store from '@/store';
 // 全局的暂无数据
 import EmptyPage from '@/components/empty/emptyPage.vue'
 Vue.component('empty-page', EmptyPage);
+// 顶部的距离
+import StatusBar from '@/components/StatusBar.vue'
+Vue.component('status-bar', StatusBar);
+
 const app = new Vue({
 	store,
 	...App

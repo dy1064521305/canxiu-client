@@ -91,7 +91,7 @@
 				<view class="counts">
 					<text class="counts-title">常用功能</text>
 					<view class="counts-type acea-row">
-						<view class="counts-type-all " @click="$jump(i.url)" v-for="(i) in useList" :key="i.id">
+						<view class="counts-type-all " @click="toDetail(i)" v-for="(i) in useList" :key="i.id">
 							<image :class="'img-'+i.id" :src="i.img" mode=""></image>
 							<view>{{i.label}}</view>
 						</view>
@@ -110,7 +110,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="setUp">
+				<view class="setUp" v-if="partnerInfo==null">
 					<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
 						v-for="(item) in typeList.slice(3,4)" :key="item.id">
 						<view class="setUp-list-left">
@@ -314,6 +314,9 @@
 	import {
 		callPhone
 	} from '@/utils/phone.js'
+	import {
+		putImmediate
+	} from "@/api/brand.js"
 	export default {
 		data() {
 			return {
@@ -358,12 +361,28 @@
 					},
 					{
 						id: 4,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/15/600d6ba6d8314b6e8a444dfea554fa6d.png",
+						label: '邀请师傅',
+						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/5356f25f26ec464b929b0d380bead987.png',
+						url: "/subpkg/center/inviteWorker/inviteWorker"
+					}, {
+						id: 5,
+						label: '邀请品牌',
+						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/9e22b888d28e43f9bbec2316ea9c364b.png',
+						url: "/subpkg/center/brand/inviterQrCode"
+					},
+					{
+						id: 6,
+						label: '邀请门店',
+						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/e98f2f8ab0a9476f9ceb030c1b83745a.png',
+						url: "/subpkg/center/inviteActivity/inviteActivity"
+					}, {
+						id: 7,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/10/74c5b5bf7ea94a2f9aa0c6a5e74da786.png",
 						label: "师傅管理",
 						url: "/subpkg/staging/workers/workers"
 					},
 					{
-						id: 5,
+						id: 8,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/15/600d6ba6d8314b6e8a444dfea554fa6d.png",
 						label: "结算记录",
 						url: "/subpkg/staging/workers/records"
@@ -500,7 +519,8 @@
 						label: "申请成为合伙人",
 						url: "/subpkg/car/partner/index"
 					},
-				]
+				],
+				partnerInfo: {}
 			}
 		},
 		onTabItemTap: function(item) {
@@ -515,6 +535,7 @@
 			if (this.isLogin) {
 				this.getList()
 				this.getOrderlistHandle(1, 10)
+				this.getInfo()
 			}
 
 		},
@@ -563,6 +584,11 @@
 				}
 
 
+			},
+			getInfo() {
+				putImmediate(storage.get('ClientId')).then(res => {
+					this.partnerInfo = res.data
+				})
 			},
 			//全部订单
 			allOrder() {
@@ -676,6 +702,31 @@
 					})
 				})
 			},
+			toDetail(i) {
+				console.log(i.id, "2");
+				if (i.id > 3) {
+					if (this.partnerInfo == null) return this.$toast('请先申请合伙人噢')
+					let par = this.partnerInfo
+					switch (i.id) {
+						case 4:
+							this.$jump(i.url + '?partnerId=' + par.partnerId + '&region=' + par.region)
+							break;
+						case 6:
+							this.$jump(i.url + '?partnerId=' + par.partnerId + '&region=' + par.region)
+							break;
+						case 8:
+							this.$jump(i.url + '?partnerId=' + par.partnerId)
+							break;
+						default:
+							this.$jump(i.url)
+							break;
+					}
+
+				} else {
+					this.$jump(i.url)
+				}
+			}
+
 		}
 	}
 </script>
@@ -913,7 +964,7 @@
 				text-align: center;
 				grid-template-columns: repeat(4, 1fr);
 				grid-column-gap: 0rpx;
-				grid-row-gap: 30rpx;
+				grid-row-gap: 42rpx;
 
 				&-all {
 					image {

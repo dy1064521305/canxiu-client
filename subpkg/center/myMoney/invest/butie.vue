@@ -5,18 +5,16 @@
 				<view class="box" v-for="(item,index) in dataList" :key="index">
 					<view class="">
 						<text style="color: #212121; ">
-							<text>提现至-{{item.bankName}}</text>
-							（{{item.cardNumber}}）
+							<text>{{item.recipientTime}}资金补贴</text>
 						</text>
-						<text
-							:style="{'color':item.status=='待审核'||item.status=='审核通过'?'#F3B133':item.status=='已驳回'?'#EC5722':'#A4D091'}">{{item.status=='待审核'||item.status=='审核通过'?'审核中':item.status=='已驳回'?'提现失败':'提现成功'}}</text>
+						<text> ￥{{item.capitalSubsidyAmount}}</text>
 
 					</view>
 					<view style="color: #999999; font-size: 24rpx;">
 						<text>
-							{{item.askTime}}
+							当月消耗: ￥{{item.investmentExpend}}
 						</text>
-						<text>余额：¥{{item.amount}}</text>
+						<text>{{item.recipientTime}} 到账</text>
 					</view>
 				</view>
 			</view>
@@ -26,8 +24,8 @@
 
 <script>
 	import {
-		getListPartnerWithdrawal
-	} from '@/api/money.js'
+		getSubsidyDetail
+	} from '@/api/staging.js'
 	import storage from '@/utils/storage'
 	export default {
 		data() {
@@ -49,8 +47,8 @@
 			getList(pageNo, pageSize) {
 				this.where.pageNum = pageNo;
 				this.where.pageSize = pageSize;
-				this.where.userId = storage.get('userId'),
-					getListPartnerWithdrawal(this.where).then(res => {
+				this.where.userId = storage.get('ClientId'),
+					getSubsidyDetail(storage.get('ClientId'), this.where).then(res => {
 						console.log(res);
 						console.log(1111);
 						this.$refs.paging.completeByTotal(res.rows, res.total);
@@ -66,7 +64,7 @@
 		height: 100%;
 
 		&-lists {
-			min-height: 80vh;
+			// min-height: 80vh;
 			background-color: #fff;
 
 			.box {

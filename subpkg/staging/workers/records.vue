@@ -6,9 +6,9 @@
 					<view class="u-nav-slot" slot="left">
 						<u-icon name="arrow-left" size="19" @click="$jump(-1)"></u-icon>
 					</view>
+					<!-- :class="{on:type==item.label}" -->
 					<view class="two_change" style="display: flex; align-items: center;" slot="center">
-						<text v-for="(item) in typeTab" :key="item.id" :class="{on:type==item.label}"
-							@click="typeClick(item)">{{item.label}}</text>
+						<text v-for="(item) in typeTab" :key="item.id" @click="typeClick(item)">{{item.label}}</text>
 					</view>
 				</u-navbar>
 				<view class="data-box acea-row row-middle">
@@ -113,7 +113,7 @@
 								<text>失效原因：{{item.reason||'暂无原因'}}</text>
 							</view>
 							<view class="top" style="margin: 14rpx 0;">
-								<text>失效时间：{{item.invalidTime}}</text>
+								<text>失效时间：{{item.invalidTime||'-'}}</text>
 							</view>
 						</template>
 					</view>
@@ -136,20 +136,21 @@
 		<PopupBottom :title="popTitle==1?'支付订单结算金额':'调整金额'" :show="accountShow" @close="accountShow=false;"
 			@confirm="confirmSelect">
 			<view class="popMent" v-if="popTitle">
-				<view class="error acea-row row-between-wrapper">
+				<view class="error acea-row row-between-wrapper"
+					v-show="Number(investmentBalance)<Number(info.orderCost)">
 					<view class="error-left acea-row row-middle">
 						<image
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/26/9d02cce963824ced916a8e5551c7e0cb.png"
 							mode=""></image>账户余额不足，请充值后再操作！
 					</view>
-					<view class="acea-row row-middle">
+					<view class="acea-row row-middle" @click="$jump('/subpkg/center/myMoney/invest/into')">
 						去充值 <u-icon name="arrow-right" color="#FF991C" size="12" style="margin-top: 4rpx;"></u-icon>
 					</view>
 				</view>
 				<view class="popMent-price">
 					<view class="popMent-price-t acea-row row-center row-middle">
 						<text style="margin: 18rpx 4rpx 0 0;">¥</text>
-						<view>88</view>
+						<view>{{info.orderCost}}</view>
 					</view>
 					<view class="popMent-price-b">共1单，合计</view>
 				</view>
@@ -162,7 +163,7 @@
 							<image :src="item.img" mode=""></image>
 							<view class="acea-row" style="flex-direction: column;">
 								<view class="">{{item.title}}</view>
-								<text class="mess" v-if="item.type=='yue'">余额；1.22</text>
+								<text class="mess" v-if="item.type=='yue'">余额；{{investmentBalance}}</text>
 								<text class="mess" v-else>由你所在团队负责人审核并进行付款结算</text>
 							</view>
 						</view>
@@ -182,7 +183,8 @@
 				</view>
 				<view class="popMoney-mess">
 					<text>信息备注</text>
-					<textarea maxlength="1000" placeholder="请输入备注信息（非必填）" placeholder-style="color:#CCCCCC;"></textarea>
+					<textarea maxlength="1000" v-model="remark" placeholder="请输入备注信息（非必填）"
+						placeholder-style="color:#CCCCCC;"></textarea>
 				</view>
 				<view class="btn" @click="edit()">保存编辑</view>
 			</view>
@@ -195,7 +197,8 @@
 		getWorkerSettlementList,
 		putInvalid,
 		putAdjust,
-		putSettlement
+		putSettlement,
+		getInvestmentClient
 	} from "@/api/staging.js"
 	import PopupBottom from "@/components/popup/bottom.vue"
 	const userId = '1813153736056799234'
@@ -213,10 +216,10 @@
 						id: 0,
 						label: "结算记录"
 					},
-					{
-						id: 1,
-						label: "审核记录"
-					},
+					// {
+					// 	id: 1,
+					// 	label: "审核记录"
+					// },
 				],
 				showTypeChange: [{
 						type: 0,
@@ -257,14 +260,14 @@
 						img_yes: img_yes,
 						check: true
 					},
-					{
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/26/a8f6b40b96af494e8ed5bc029cfc6e1f.png",
-						type: "pay",
-						title: "团队负责人代付",
-						img_no: img_no,
-						img_yes: img_yes,
-						check: false
-					},
+					// {
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/26/a8f6b40b96af494e8ed5bc029cfc6e1f.png",
+					// 	type: "pay",
+					// 	title: "团队负责人代付",
+					// 	img_no: img_no,
+					// 	img_yes: img_yes,
+					// 	check: false
+					// },
 				],
 				showAction_two: false,
 				searchValue: "",
@@ -285,16 +288,22 @@
 				exceptionCount: "",
 				popTitle: 0,
 				info: {},
-				adjustDetailAmount: ""
+				adjustDetailAmount: "",
+				remark: "",
+				investmentBalance: ""
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			if (options && options.partnerId) {
+
+			}
 
 		},
 		methods: {
 			getList(pageNo, pageSize) {
 				this.where.pageNum = pageNo
 				this.where.pageSize = pageSize
+				this.where.userId = userId
 				// return
 				getWorkerSettlementList(this.where).then(res => {
 					// if (!res.rows) {
@@ -310,6 +319,14 @@
 				this.where = {
 					pageSize: 10,
 					pageNum: 1,
+					// 关键字类型：0 - 师傅信息； 1 - 订单号
+					type: this.where.type,
+					keyword: this.where.keyword,
+					userId: userId,
+					status: this.where.status,
+					// 状态: 0- 正常: 1 异常
+					normalStatus: this.where.normalStatus,
+					reviewStatus: this.where.normalStatus
 				}
 				this.$refs.paging.reload()
 			},
@@ -374,11 +391,15 @@
 					case 2:
 						this.popTitle = 0
 						this.accountShow = true
+						this.adjustDetailAmount = this.info.orderCost || ''
 						break;
 					case 3:
 						this.popTitle = 1
 						this.accountShow = true
-						if (item.orderStatus == '售后中') return thiamin.$toast('该笔订单正处于售后中，不可结算')
+						if (item.orderStatus == '售后中') return this.$toast('该笔订单正处于售后中，不可结算')
+						getInvestmentClient(userId).then(res => {
+							this.investmentBalance = res.data.investmentBalance || ''
+						})
 						break;
 					default:
 						break;
@@ -391,10 +412,26 @@
 				if (this.adjustDetailAmount <= 0) return this.$toast('金额不能小于0')
 				let data = {
 					userId: userId,
-					detailsId: this.info.detailsId
+					detailsId: this.info.detailsId,
+					adjustDetailAmount: this.adjustDetailAmount,
+					remark: this.remark
+
 				}
 				putAdjust(data).then(res => {
 					this.$toast('调整成功')
+					this.accountShow = false
+					this.$refs.paging.reload()
+				})
+
+			},
+			surePay() {
+				if (Number(this.investmentBalance) < Number(this.info.orderCost)) return this.$toast('余额不足')
+				let data = {
+					userId: userId,
+					detailIds: [this.info.detailsId]
+				}
+				putSettlement(data).then(res => {
+					this.$toast('支付成功')
 					this.accountShow = false
 					this.$refs.paging.reload()
 				})

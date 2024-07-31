@@ -412,6 +412,64 @@
 
 				// , 
 				{
+					"path": "brand/index",
+					"style": {
+						"navigationBarTitleText": "品牌管理",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "brand/Signing",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "品牌签约管理"
+					}
+				},
+				{
+					"path": "brand/inviter",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "填写资料"
+					}
+				},
+				{
+					"path": "brand/inviterQrCode",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "邀请品牌方入驻"
+					}
+				},
+				{
+					"path": "brand/settings",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "签约设置"
+					}
+				},
+				{
+					"path": "brand/order",
+					"style": {
+						"enablePullDownRefresh": true,
+						"navigationBarTitleText": "我的订单"
+					}
+				},
+				{
+					"path": "brand/footRewrad",
+					"style": {
+						"enablePullDownRefresh": true,
+						"navigationBarTitleText": "佣金结算记录"
+					}
+				},
+				{
+					"path": "brand/footDetail",
+					"style": {
+						"enablePullDownRefresh": true,
+						"navigationBarTitleText": "签约记录"
+					}
+				},
+				{
 					"path": "myOrder/myOrder",
 					"style": {
 						"navigationBarTitleText": "订单",
@@ -459,7 +517,34 @@
 						"navigationBarTitleText": "开票记录",
 						"enablePullDownRefresh": false
 					}
-
+				},
+				{
+					"path": "inviteActivity/inviteActivity",
+					"style": {
+						"navigationBarTitleText": "邀请门店活动",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "inviteActivity/inviteStoreList",
+					"style": {
+						"navigationBarTitleText": "我邀请的商家",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "acceptInvitation/acceptInvitation",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "shareInvite/shareInvite",
+					"style": {
+						"navigationBarTitleText": "分享邀请",
+						"enablePullDownRefresh": false
+					}
 				}, {
 					"path": "drawBill/drawBill",
 					"style": {
@@ -551,6 +636,14 @@
 						"enablePullDownRefresh": false
 					}
 
+				},
+				{
+					"path": "inviteWorker/inviteRewards",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
 				}, {
 					"path": "InviteCustomers/InviteCustomers",
 					"style": {
