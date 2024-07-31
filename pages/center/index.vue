@@ -51,7 +51,7 @@
 					</view>
 					<view class="balance-two ">
 						<view class="balance-two-num ">
-							{{balance}}
+							{{totalAmount}}
 						</view>
 						<text>钱包余额</text>
 					</view>
@@ -318,7 +318,7 @@
 	export default {
 		data() {
 			return {
-				balance: 0, //账户余额
+				totalAmount: 0, //账户余额
 				actionList: [{
 						name: '0571-88387761'
 					},
@@ -534,7 +534,7 @@
 						userId: storage.get('ClientId'),
 						userType: 'c'
 					}).then(res => {
-						this.balance = res.data.balance
+						this.totalAmount = res.data.totalAmount
 					})
 					getOrderStatics(storage.get('ClientId')).then(res => {
 						console.log(res, '5300000000');

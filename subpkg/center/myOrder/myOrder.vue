@@ -37,8 +37,11 @@
 						<view class="top">
 							<view
 								style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
-								{{item.warrantyStore}}
-								<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
+								<view style="display: flex;align-items: center;">
+									<text v-if="item.warrantyStore!=null" style="margin-right: 15rpx;">{{item.warrantyStore}}</text>
+									<text v-if="item.isClientAppoint==1" class="appoint">门店指派</text>
+								</view>
+								<img style="width: 83rpx;height: 36rpx;"   v-if="item.isUrgent==1||item.isUrgent==2"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
 							</view>
 							<view style="display: flex;margin: 7rpx 0;">
@@ -596,7 +599,14 @@
 					.top {
 						// display: flex;
 						// justify-content: space-between;
-
+						.appoint {
+							color: #fff;
+							background-color: black;
+							border-radius: 7rpx;
+							font-size: 22rpx;
+							text-align: center;
+							padding: 8rpx 17rpx;
+						}
 						.right {
 							//background-color: red;
 							padding: 8rpx 28rpx 8rpx 20rpx;

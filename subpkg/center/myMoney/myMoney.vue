@@ -14,7 +14,7 @@
 						账户余额(元)
 					</view>
 					<view style="margin-top: 14rpx;">
-						{{info.balance}}
+						{{info.totalAmount}}
 					</view>
 				</view>
 				<view class="btn" @click="goCashOut">

@@ -28,7 +28,7 @@
 							<view
 								style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
 								<view style="display: flex;align-items: center;">
-									{{item.warrantyStore||''}}
+									<text v-if="item.warrantyStore!=null" style="margin-right: 15rpx;">{{item.warrantyStore}}</text>
 									<text v-if="item.isClientAppoint==1" class="appoint">门店指派</text>
 								</view>
 								<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
@@ -328,7 +328,6 @@
 							border-radius: 7rpx;
 							font-size: 22rpx;
 							text-align: center;
-							margin-left: 15rpx;
 							padding: 8rpx 17rpx;
 						}
 
