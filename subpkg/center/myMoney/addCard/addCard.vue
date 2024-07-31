@@ -31,7 +31,7 @@
 					</u-form-item>
 					<u-form-item label="卡号" prop="card.cardNumber" borderBottom>
 						<u--input v-model="model2.card.cardNumber" @blur='getBankInfo' border="none"
-							placeholder="持卡人本人银行卡号" @confirm='getBankInfo'></u--input>
+							placeholder="持卡人本人银行卡号" @confirm='getBankInfo' @keyboardheightchange='getBankInfo'></u--input>
 					</u-form-item>
 					<u-form-item label="卡类型" borderBottom>
 						<view style="display: flex;">
@@ -253,6 +253,10 @@
 				})
 			},
 			getBankInfo() {
+				console.log(this.model2.card.cardNumber,'25666666');
+				if (!this.model2.card.cardNumber) {
+					return
+				}
 				getCardInfo({
 					account: this.model2.card.cardNumber
 				}).then(res => {

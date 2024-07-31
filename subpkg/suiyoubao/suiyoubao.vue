@@ -95,7 +95,8 @@
 							</view>
 							<u-form-item label="银行卡" prop="bankNumber" ref="item1" style="border-bottom:none" required>
 								<u--input @confirm='getBankInfo' v-model="form.bankNumber" border="none"
-									placeholder="请输入你的银行卡" clearable @blur='getBankInfo'></u--input>
+									placeholder="请输入你的银行卡" clearable @blur='getBankInfo'
+									@keyboardheightchange='getBankInfo'></u--input>
 							</u-form-item>
 							<u-form-item label="银行名称">
 								<u--input v-model="bankName" border="none" disabled placeholder="自动读取"></u--input>
@@ -162,6 +163,7 @@
 	} from '@/api/user.js'
 	import {
 		getCardInfo,
+		getBankCardList
 	} from '@/api/bankCard.js'
 	const {
 		environment
@@ -169,6 +171,8 @@
 	export default {
 		data() {
 			return {
+				camera: false,
+				storagee: false,
 				showPhone: false,
 				actionList: [{
 						name: '0571-88387761'
@@ -275,26 +279,21 @@
 				this.upLoadImage()
 				// #endif
 			},
-			back() {
-				this.isSign = true
+
+			changeAuthCamera() {
+				this.camera = true
+
 			},
+
 			changeAuthStorage() {
 				this.storagee = true
 				if (this.camera && this.storagee) {
 					this.upLoadImage()
 				}
 			},
-			uploadImg() {
-				// #ifdef APP-PLUS
-				this.$refs['authpupCamera'].open()
-				this.$refs['authpupStorage'].open()
-				// #endif
-				// #ifdef MP-WEIXIN
-				this.upLoadImage()
-				// #endif
-
+			back() {
+				this.isSign = true
 			},
-
 			upLoadImage() {
 				let that = this
 				uni.chooseImage({
@@ -338,8 +337,8 @@
 					account: this.form.bankNumber
 				}).then(res => {
 					if (!res.data.validated) {
-						this.bankName =''
-						uni.$u.toast('校验失败')
+						this.bankName = ''
+						// uni.$u.toast('校验失败')
 					} else {
 						this.bankName = res.data.bankName
 					}
@@ -427,6 +426,13 @@
 
 							} else if (this.signInfo.requestResult == '未查询到签约数据') {
 								this.isSign = false
+								//获取银行卡信息
+								getBankCardList({
+									userId: storage.get('ClientId')
+								}).then(res => {
+									this.bankName = res.rows[0].bankName
+									this.form.bankNumber = res.rows[0].cardNumber
+								})
 							} else if (this.signInfo.resTips == '签约失败') {
 								getSignCache({
 									userId: storage.get('ClientId'),
