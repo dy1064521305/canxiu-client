@@ -1,6 +1,6 @@
 <template>
 	<view class="center-con">
-		<view v-if="!isLogin" style="padding-top: 330rpx;">
+		<view v-if="!isLogin" style="padding-top:31vh">
 			<u-empty mode="permission"
 				icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
 				text="您还未登录">
@@ -51,7 +51,7 @@
 					</view>
 					<view class="balance-two ">
 						<view class="balance-two-num ">
-							{{balance}}
+							{{totalAmount}}
 						</view>
 						<text>钱包余额</text>
 					</view>
@@ -320,7 +320,7 @@
 	export default {
 		data() {
 			return {
-				balance: 0, //账户余额
+				totalAmount: 0, //账户余额
 				actionList: [{
 						name: '0571-88387761'
 					},
@@ -338,7 +338,7 @@
 				useList: [{
 						id: 0,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/07a80dbb32384b938c78184567842312.png",
-						label: "地址关联",
+						label: "地址管理",
 						url: "/subpkg/car/myAddress/myAddress"
 					},
 					{
@@ -566,7 +566,7 @@
 						userId: storage.get('ClientId'),
 						userType: 'c'
 					}).then(res => {
-						this.balance = res.data.balance
+						this.totalAmount = res.data.totalAmount
 					})
 					getOrderStatics(storage.get('ClientId')).then(res => {
 						console.log(res, '5300000000');

@@ -1,12 +1,12 @@
 <template>
 	<view class="">
 		<view style="background-color: #fff;margin-top: 20rpx;">
-		<!-- 	<a @click='goInfo'>
+			<a @click='goInfo'>
 				<image src="../../../static/center/info.png"></image>
 				<text>个人信息</text>
 				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
-			</a> -->
-		<!-- 	<a @click='goAboutUs'>
+			</a>
+			<!-- 	<a @click='goAboutUs'>
 				<image src="../../../static/center/aboutUs.png"></image>
 				<text>关于我们</text>
 				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
@@ -118,7 +118,7 @@
 				})
 				app.$store.dispatch('Logout').then(result => {
 						console.log(1111);
-					
+
 						// uni.switchTab({
 						// 	url: '/pages/index/index',
 						// 	fail(err) {
@@ -168,7 +168,7 @@
 					uni.removeStorageSync(`address_info${storage.get('ClientId')}`)
 					uni.removeStorageSync("AccessToken")
 					uni.removeStorageSync("ClientId")
-				
+					uni.removeStorageSync(`isLogin${storage.get('ClientId')}`)
 					setTimeout(function() {
 						uni.switchTab({
 							url: '/pages/center/index'
@@ -181,15 +181,16 @@
 					url: '../aboutUs/aboutUs'
 				})
 			},
-			goUrl(i,type) {
+			goUrl(i, type) {
 				console.log(this.agreementList);
-				let info={
-					name:type,
-					content:getContent(this.agreementList, type)
+				let info = {
+					name: type,
+					content: getContent(this.agreementList, type)
 				}
-			
+
 				uni.navigateTo({
-					url: './privacyRegistrationAgreement/privacyRegistrationAgreement?info=' + encodeURIComponent(JSON
+					url: './privacyRegistrationAgreement/privacyRegistrationAgreement?info=' + encodeURIComponent(
+						JSON
 						.stringify(info)),
 
 				})

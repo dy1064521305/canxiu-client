@@ -19,7 +19,7 @@
 							{{item.storeName||'暂无名称'}}
 						</view>
 						<view style="font-size: 25rpx;color: #A5A7A7;margin-top: 14rpx;">
-							{{item.storeType}}
+							{{item.storeType||""}}
 						</view>
 					</view>
 

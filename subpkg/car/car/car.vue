@@ -664,7 +664,7 @@
 					item1.children.forEach(item2 => {
 						arr.forEach(arr => {
 							if (item2.id === arr.id) {
-								item2.remark = arr.remarks
+								item2.remark = arr.remark
 							}
 						})
 

@@ -153,7 +153,7 @@
 						<!-- <upLoadFile :fileListt='item.projectVideo' types='video' :index='index' :isDel='false' /> -->
 					</view>
 				</view>
-				<view v-if="item.remark!=''" class="info-box">
+				<view v-if="item.remark&&item.remark!=null" class="info-box">
 					<view class="font">
 						订单备注
 					</view>
@@ -343,7 +343,7 @@
 						types='image' :isDel='false' :isInfo='true' />
 				</view>
 			</view>
-			<view class="info-box">
+			<view  v-if="info.deliveryVo.remark&&info.deliveryVo.remark!=null" class="info-box">
 				<view class="font">
 					订单备注
 				</view>

@@ -15,51 +15,54 @@
 			</view>
 
 		</view>
+		<template v-if="isLogin">
+			<view v-if="addressList.length!=0" class="list">
+				<view class="title">
+					<text>服务地址</text>
+					<text @click="goMyAddress">地址管理</text>
+				</view>
+				<view style="overflow: scroll;height: 35vh;">
+					<view v-for="(item,index) in addressList" :key='index' class="box" @click="choseAddress(item)">
+						<view class="">
+							<view v-if="choseForm.addressId==item.addressId" class="moren"
+								@click.stop="choseAddress(item)">
+								<image style="width: 32rpx;margin-right: 11rpx;height: 32rpx;"
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
+								</image>
+							</view>
+							<view v-else class="un">
+								<view class="circle"></view>
+							</view>
+						</view>
+						<view class="main">
+							<view>
+								{{item.contact}}
+							</view>
+							<view style="font-size: 25rpx;color: #A5A7A7;">
+								{{item.addressDetailed}}
+							</view>
 
-		<view v-if="addressList.length!=0" class="list">
-			<view class="title">
-				<text>服务地址</text>
-				<text @click="goMyAddress">地址管理</text>
-			</view>
-			<view style="overflow: scroll;height: 35vh;">
-				<view v-for="(item,index) in addressList" :key='index' class="box" @click="choseAddress(item)">
-					<view class="">
-						<view v-if="choseForm.addressId==item.addressId" class="moren" @click.stop="choseAddress(item)">
-							<image style="width: 32rpx;margin-right: 11rpx;height: 32rpx;"
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
-							</image>
-						</view>
-						<view v-else class="un">
-							<view class="circle"></view>
-						</view>
-					</view>
-					<view class="main">
-						<view>
-							{{item.contact}}
-						</view>
-						<view style="font-size: 25rpx;color: #A5A7A7;">
-							{{item.addressDetailed}}
-						</view>
 
-
+						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		<view v-else class="noData">
-			<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/14/9fbc00d1e6954ee6b19f5b911155c85a.png"
-				style="width:320rpx;height:248rpx"></image>
-			<view style="font-size: 36rpx;
-color: #3D3F3E;">
-				暂未创建服务地址
+			<view v-else class="noData">
+				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/14/9fbc00d1e6954ee6b19f5b911155c85a.png"
+					style="width:320rpx;height:248rpx"></image>
+				<view style="font-size: 36rpx;
+			color: #3D3F3E;">
+					暂未创建服务地址
+				</view>
+				<view style="color: #A5A7A7;margin: 10rpx 0;">
+					点击下方按钮新增
+				</view>
+				<view class="btn" @click="goAddAdress">
+					新增服务地址
+				</view>
 			</view>
-			<view style="color: #A5A7A7;margin: 10rpx 0;">
-				点击下方按钮新增
-			</view>
-			<view class="btn" @click="goAddAdress">
-				新增服务地址
-			</view>
-		</view>
+
+		</template>
 
 		<view class="nearby-box">
 			<text style="font-size: 25rpx;color: #A5A7A7;">附近地址</text>
@@ -116,13 +119,14 @@ color: #3D3F3E;">
 				addressList: [],
 				choseForm: {},
 				nearbyList: [],
+				isLogin:false
 			}
 		},
 
 		onLoad() {
 			console.log('onLoadonLoadonLoadonLoad');
-			this.failLocation = uni.getStorageSync(`isFirst${storage.get('ClientId')}`)!=='1'
-		
+			this.failLocation = uni.getStorageSync(`isFirst${storage.get('ClientId')}`) !== '1'
+
 			console.log(uni.getStorageSync('city'), '1266666666666');
 			// #ifdef APP-PLUS
 			this.$nextTick(() => {
@@ -133,12 +137,13 @@ color: #3D3F3E;">
 			this.getLocation()
 			// #endif
 
-
-
-
 		},
 		onShow() {
+			this.isLogin=storage.get('ClientId')
+			if (storage.get('ClientId')) {
 				this.getList()
+			}
+
 		},
 		methods: {
 			getList() {
@@ -217,7 +222,7 @@ color: #3D3F3E;">
 							success: function(res) {
 
 								console.log('againnnnnnnnnn', that.again);
-								if (that.failLocation) { 
+								if (that.failLocation) {
 									that.failLocation = false
 									that.choseForm = {}
 									let result = res.result.address_component
@@ -232,7 +237,7 @@ color: #3D3F3E;">
 									that.address = result.province + '-' +
 										result.city + '-' + result.district
 									uni.setStorage({
-										key:  `address_refreash${storage.get('ClientId')}`,
+										key: `address_refreash${storage.get('ClientId')}`,
 										data: that.address
 									})
 								} else {
@@ -270,13 +275,14 @@ color: #3D3F3E;">
 						info.district)
 				} else {
 					this.choseForm = item
-					uni.setStorageSync(`address_refreash${storage.get('ClientId')}`, item.addressRegion.replace(/\//g, "-"))
+					uni.setStorageSync(`address_refreash${storage.get('ClientId')}`, item.addressRegion.replace(/\//g,
+						"-"))
 				}
 				uni.setStorageSync(`city${storage.get('ClientId')}`, this.choseForm)
 				const pages = uni.$u.pages()
 				pages[pages.length - 2].$vm.choseAddress()
 				uni.navigateBack()
-				this.failLocation||uni.setStorageSync(`isFirst${storage.get('ClientId')}`,'1')
+				this.failLocation || uni.setStorageSync(`isFirst${storage.get('ClientId')}`, '1')
 			},
 			goAddAdress() {
 				uni.navigateTo({

@@ -11,7 +11,7 @@
 					<view class="bg-c-top" v-if="item.isExclusive=='1'">专属师傅</view>
 					<view class="bg-c-content acea-row">
 						<view class="bg-c-content-img">
-							<image v-if="item.avatarUrl"
+							<image v-if="item.avatarUrl!=null"
 								:src="item.avatarUrl"
 								mode=""></image>
 							<image v-else
@@ -47,11 +47,11 @@
 						<view class="lists-item">
 							<view class="lists-item-top acea-row">
 								<view class="lists-item-top-img">
-									<image v-if="!item.avatarUrl"
-										src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
+									<image v-if="item.avatarUrl!=null"
+										:src="item.avatarUrl"
 										mode=""></image>
 									<image v-else
-										src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/4f491865b70d4651a9d1aea7bc8524b8.png"
+										src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
 										mode=""></image>
 								</view>
 								<view class="lists-item-top-peo">
@@ -193,7 +193,6 @@
  				&-top {
  					position: absolute;
  					top: 0;
- 					left: 0;
  					width: 139rpx;
  					height: 45rpx;
  					background-color: #A4D091;
@@ -202,6 +201,7 @@
  					line-height: 45rpx;
  					font-size: 25rpx;
 					z-index: 10;
+					left: 0;
  				}
 
  				&-content {
@@ -210,7 +210,7 @@
  					&-img {
  						width: 181rpx;
  						height: 181rpx;
- 						background-color: #ececec;
+ 						// background-color: #ececec;
  						border-radius: 50%;
 
  						image {
@@ -317,7 +317,7 @@
  					&-img {
  						width: 100rpx;
  						height: 100rpx;
- 						background: #ECF7ED;
+ 						// background: #ECF7ED;
 
  						image {
  							width: 100%;

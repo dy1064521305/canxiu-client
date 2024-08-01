@@ -28,7 +28,7 @@
 							<view
 								style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
 								<view style="display: flex;align-items: center;">
-									{{item.warrantyStore||''}}
+									<text v-if="item.warrantyStore!=null" style="margin-right: 15rpx;">{{item.warrantyStore}}</text>
 									<text v-if="item.isClientAppoint==1" class="appoint">门店指派</text>
 								</view>
 								<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
@@ -151,10 +151,10 @@
 			};
 		},
 		onShow() {
-			this.getOrderlistHandle(1, 10)
-			this.queryParams.clientId = storage.get('ClientId')
-			if (storage.get('AccessToken')) {
 
+			this.queryParams.clientId = storage.get('ClientId')
+			if (storage.get('ClientId')) {
+				this.getOrderlistHandle(1, 10)
 				getOrderNum().then(res => {
 					uni.setTabBarBadge({
 						index: 3,
@@ -190,6 +190,7 @@
 				})
 			},
 			getOrderlistHandle(pageNo, pageSize) {
+				if(!storage.get('ClientId'))return
 				console.log(this.queryParams);
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
@@ -323,11 +324,10 @@
 						// justify-content: space-between;
 						.appoint {
 							color: #fff;
-								background-color: black;
+							background-color: black;
 							border-radius: 7rpx;
 							font-size: 22rpx;
 							text-align: center;
-							margin-left:15rpx;
 							padding: 8rpx 17rpx;
 						}
 

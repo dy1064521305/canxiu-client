@@ -1,7 +1,8 @@
 import App from './App'
 import Vue from 'vue'
 import uView from 'uni_modules/uview-ui'
-
+//全局分享
+import mixinShare from '@/polyfill/share.js'
 // 全局mixins，用于实现setData等功能';
 import Mixin from './polyfill/mixins';
 import {
@@ -13,7 +14,7 @@ import {
 Vue.mixin(Mixin);
 
 Vue.use(uView)
-
+Vue.mixin(mixinShare)
 // canxiuclientalias
 // canxiu
 Vue.config.productionTip = false

@@ -7,12 +7,12 @@
 			<view v-show="num==0">
 				<u--form labelPosition="left" :label-style='labelStyle' :model="model1" :rules="rules1" ref="form1"
 					labelWidth='150rpx'>
-					<u-form-item label="姓名" prop="info.name" borderBottom>
-						<u--input v-model="model1.info.name" border="none" placeholder="请输入姓名"></u--input>
+					<u-form-item label="姓名" prop="info.cardHolder" borderBottom>
+						<u--input v-model="model1.info.cardHolder" border="none" placeholder="请输入姓名"></u--input>
 					</u-form-item>
-					<u-form-item label="身份证" prop="info.myNumber" borderBottom>
+					<u-form-item label="身份证" prop="info.idCard" borderBottom>
 						<view style="display: flex;">
-							<u--input v-model="model1.info.myNumber" border="none" placeholder="请输入本人身份证号"></u--input>
+							<u--input v-model="model1.info.idCard" border="none" placeholder="请输入本人身份证号"></u--input>
 							<!-- 	<image
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/03/af49c9cbdf6545b2b941ee25d447f2fa.png"
 								style="width: 45rpx;height: 40rpx;"></image> -->
@@ -27,11 +27,11 @@
 				<u--form labelPosition="left" :label-style='labelStyle' :model="model2" :rules="rules1" ref="form2"
 					labelWidth='180rpx'>
 					<u-form-item label="持卡人" borderBottom>
-						<u--input disabled disabledColor="#ffffff" v-model="model2.card.name" border="none"></u--input>
+						<u--input disabled disabledColor="#ffffff" v-model="model2.card.cardHolder" border="none"></u--input>
 					</u-form-item>
 					<u-form-item label="卡号" prop="card.cardNumber" borderBottom>
 						<u--input v-model="model2.card.cardNumber" @blur='getBankInfo' border="none"
-							placeholder="持卡人本人银行卡号"></u--input>
+							placeholder="持卡人本人银行卡号" @confirm='getBankInfo' @keyboardheightchange='getBankInfo'></u--input>
 					</u-form-item>
 					<u-form-item label="卡类型" borderBottom>
 						<view style="display: flex;">
@@ -105,7 +105,8 @@
 		validateSmsCode
 	} from '@/api/captcha.js'
 	import {
-		addBankCard
+		addBankCard,
+		getCardInfo
 	} from '@/api/bankCard.js'
 	export default {
 		data() {
@@ -120,26 +121,26 @@
 				countDownNum: 0, //获取验证码后倒数
 				model1: {
 					info: {
-						name: '',
-						myNumber: '',
+						cardHolder: '',
+						idCard: '',
 					}
 				},
 				model2: {
 					card: {
-						name: '',
+						cardHolder: '',
 						cardNumber: '',
 						//6214837409745597
 						phone: '',
 					}
 				},
 				rules1: {
-					'info.name': {
+					'info.cardHolder': {
 						type: 'string',
 						required: true,
 						message: '请填写姓名',
 						trigger: ['blur', 'change']
 					},
-					'info.myNumber': {
+					'info.idCard': {
 						type: 'string',
 						required: true,
 						message: '请填写身份证号',
@@ -199,8 +200,8 @@
 
 				this.num == 0 && this.$refs.form1.validate().then(res => {
 					this.num = 1
-					this.model2.card.name = this.model1.info.name
-
+					this.model2.card.cardHolder = this.model1.info.cardHolder
+					
 				}).catch(errors => {
 					uni.$u.toast('校验失败')
 					console.log('1111');
@@ -218,11 +219,13 @@
 					smsCode: this.code
 				}).then(res => {
 					if (res.code == 200) {
+						this.model2.card.userId = storage.get('ClientId')
+						this.model2.card.userType = 'c'
 						addBankCard(this.model2.card).then(res => {
 							uni.showToast({
-									title: '添加成功',
-									duration: 2000
-								});
+								title: '添加成功',
+								duration: 2000
+							});
 							setTimeout(() => {
 								uni.reLaunch({
 									url: '../myCard/myCard'
@@ -235,7 +238,7 @@
 				console.log(this.num);
 			},
 			getCodeHandle() {
-				
+
 
 				getCode({
 					phonenumber: this.model2.card.phone
@@ -250,19 +253,33 @@
 				})
 			},
 			getBankInfo() {
-				if (!bank.verifyBankCardNumber(this.model2.card.cardNumber)) {
-					uni.$u.toast('请填写正确的银行卡号')
+				console.log(this.model2.card.cardNumber,'25666666');
+				if (!this.model2.card.cardNumber) {
 					return
 				}
-				let info = bank.bankCardAttribution(this.model2.card.cardNumber)
-				this.cardType = info.bankName==undefined&&info.cardTypeName==undefined?'':info.bankName + ' ' +info.cardTypeName
-				this.model2.card.bankCode = info.bankCode
-				this.model2.card.bankName = info.bankName
-				this.model2.card.cardType = info.cardType
-				this.model2.card.cardTypeName = info.cardTypeName
-				this.model2.card.userId = storage.get('ClientId')
-				this.model2.card.userType = 'c'
-				console.log(this.model2.card);
+				getCardInfo({
+					account: this.model2.card.cardNumber
+				}).then(res => {
+					if (!res.data.validated) {
+						this.cardType = ''
+						this.model2.card.bankCode = ''
+						this.model2.card.bankName = ''
+						this.model2.card.cardType = ''
+						this.model2.card.cardTypeName = ''
+						uni.$u.toast('校验失败')
+					} else {
+						let info = res.data
+						this.cardType = info.bankName == undefined && info.cardTypeName == undefined ? '' : info
+							.bankName + ' ' +
+							info.cardTypeName
+						this.model2.card.bankCode = info.bank
+						this.model2.card.bankName = info.bankName
+						this.model2.card.cardType = info.cardType
+						this.model2.card.cardTypeName = info.cardTypeName
+						console.log(this.model2.card);
+					}
+
+				})
 			}
 		}
 	}
