@@ -22,6 +22,7 @@
 											color="#A4D091"></u-icon>
 									</view>
 
+
 								</view>
 								<view style="margin-left: 10rpx;">
 									<view @click.stop="sortIconClick('downac')">
@@ -41,7 +42,9 @@
 					</view>
 				</view>
 			</view>
-
+			<block v-if="loading&&!workerList.length">
+				<x-skeleton type="list" :loading="true" :configs="listConfigs" />
+			</block>
 			<view v-for="(item,index) in workerList" :key="index" class="swipe-action u-border-top u-border-bottom"
 				@click="goInfo(item)">
 				<view style="    background-color: #fff;
@@ -211,6 +214,8 @@
 </template>
 
 <script>
+	// import xSkeleton from '@/components/x-skeleton/x-skeleton.vue'
+	import xSkeleton from '@/components/x-skeleton/x-skeleton.vue'
 	import storage from '@/utils/storage'
 	import * as customer from '@/api/staging.js'
 	import {
@@ -220,8 +225,22 @@
 		callPhone
 	} from '@/utils/phone.js'
 	export default {
+		components: {
+			xSkeleton
+		},
 		data() {
 			return {
+				listConfigs: {
+					gridRows: 6,
+					gridRowsGap: '30rpx',
+					textRowsGap: '26rpx',
+					itemAlign: 'center',
+					gridColumns: 1, //列数
+					headHeight: '208rpx', //head高度
+					textRows: 4,
+					textHeight: ['30rpx', '30rpx', '20rpx', '40rpx'],
+					textWidth: ['100%', '100%', '10%', '100%'], //文本的行数
+				},
 				list1: ['推荐排序', '位置区域', '工种'],
 				sortList: [{
 						name: '推荐排序',
@@ -297,6 +316,7 @@
 				activeProvinceIndex: undefined,
 				activeCityIndex: undefined,
 				activeAreaIndex: undefined,
+				loading: false
 			};
 		},
 		onLoad() {
@@ -332,9 +352,10 @@
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
 				console.log(this.queryParams);
-				uni.showLoading({
-					mask: true
-				});
+				// uni.showLoading({
+				// 	mask: true
+				// });
+				this.loading = true
 				getWorkers(this.queryParams).then(res => {
 					console.log(res)
 					var reg = /^(\d{3})\d{4}(\d{4})$/;
@@ -342,7 +363,8 @@
 						item.regPhone = item.workerPhone != null ? item.workerPhone.replace(reg,
 							"$1****$2") : ''
 					})
-					uni.hideLoading()
+					this.loading = false
+					// uni.hideLoading()
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})
 			},

@@ -136,7 +136,7 @@
 					</view>
 					<view v-if="workerList.length!=0"
 						style="color: #A5A7A7; font-size: 26rpx; padding: 10rpx 0 10rpx 0;"
-						@click="$jump('/subpkg/center/inviteList/inviteList?activityId='+activeInfo.activityId+'&inviterId=' +partnerId)">
+						@click="$jump('/subpkg/center/inviteWorker/inviteList?activityId='+activeInfo.activityId+'&inviterId=' +partnerId)">
 						仅显示最近10条数据，点击查看全部 >
 					</view>
 				</view>
@@ -318,12 +318,6 @@
 			},
 			changeAuth() {
 				this.showPhone = true
-			},
-			goInviteList() {
-				uni.navigateTo({
-					url: '../inviteList/inviteList?activityId=' + this.activeInfo.activityId + '&inviterId=' + this
-						.partnerId,
-				})
 			},
 			goUrl(type) {
 				switch (type) {

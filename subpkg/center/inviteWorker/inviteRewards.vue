@@ -31,11 +31,8 @@
 									<u-icon name="arrow-down-fill" size="10"></u-icon>
 								</view>
 							</view>
-							<input type="text" @confirm="searchActivity(1)" v-model="searchActValue"
+							<input type="text" @confirm="searchActivity(1)" @input="seachValue" v-model="searchActValue"
 								:placeholder="'请输入'+whereActType">
-							<u-icon v-show="searchActValue" @click="searchActivity()"
-								style="position: absolute;top: 18rpx; right: 65rpx;" color="#D8DCDB"
-								name="close-circle"></u-icon>
 							<view class="input-s" @click="searchActivity(1)"></view>
 
 						</view>
@@ -65,10 +62,12 @@
 								<u-icon name="arrow-down-fill" size="10"></u-icon>
 							</view>
 						</view>
-						<input type="text" @confirm="search(1)" v-model="searchValue" :placeholder="'请输入'+whereType">
-						<u-icon v-show="searchValue" @click="search()"
-							style="position: absolute;top: 18rpx; right: 65rpx;" color="#D8DCDB"
-							name="close-circle"></u-icon>
+						<input type="text" @confirm="search(1)" v-model="searchValue" @input="seachValue"
+							:placeholder="'请输入'+whereType">
+
+						<!-- <u-icon v-if="searchValue" @click="search()"
+							style="position: relative; top: 0rpx; right: -20rpx;" color="#D8DCDB"
+							name="close-circle"></u-icon> -->
 						<view class="input-s" @click="search(1)"></view>
 
 
@@ -513,6 +512,11 @@
 					this.query.storeName = ""
 				}
 				this.$refs.paging.reload()
+			},
+			seachValue(e) {
+				if (!e.target.value) {
+					this.$refs.paging.reload()
+				}
 			},
 			tabClick(e) {
 				this.query.type = e.value

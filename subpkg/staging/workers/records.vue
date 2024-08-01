@@ -159,7 +159,7 @@
 					<view class="popMent-type-items acea-row row-middle row-between-wrapper"
 						v-for="(item,index) in payList" :key="item.type" @click="checkAll(item,index)"
 						:class="{on:item.check}">
-						<view class="popMent-type-items-left acea-row">
+						<view class="popMent-type-items-left acea-row row-middle">
 							<image :src="item.img" mode=""></image>
 							<view class="acea-row" style="flex-direction: column;">
 								<view class="">{{item.title}}</view>
@@ -167,7 +167,7 @@
 								<text class="mess" v-else>由你所在团队负责人审核并进行付款结算</text>
 							</view>
 						</view>
-						<view class="popMent-type-items-right">
+						<view class="popMent-type-items-right acea-row row-middle">
 							<image v-if="!item.check" :src="item.img_no" mode=""></image>
 							<image v-else :src="item.img_yes" mode=""></image>
 						</view>
@@ -193,6 +193,7 @@
 </template>
 
 <script>
+	import storage from '@/utils/storage'
 	import {
 		getWorkerSettlementList,
 		putInvalid,
@@ -279,7 +280,7 @@
 					// 关键字类型：0 - 师傅信息； 1 - 订单号
 					type: 0,
 					keyword: "",
-					userId: '',
+					userId: storage.get('ClientId'),
 					status: "",
 					// 状态: 0- 正常: 1 异常
 					normalStatus: "",
@@ -291,7 +292,7 @@
 				adjustDetailAmount: "",
 				remark: "",
 				investmentBalance: "",
-				userId: "",
+				userId: '',
 			}
 		},
 		onLoad(options) {
@@ -303,12 +304,8 @@
 			getList(pageNo, pageSize) {
 				this.where.pageNum = pageNo
 				this.where.pageSize = pageSize
-				this.where.userId = this.userId
 				// return
 				getWorkerSettlementList(this.where).then(res => {
-					// if (!res.rows) {
-					// 	this.dataList = []
-					// }
 					if (res.pair) {
 						this.exceptionCount = res.pair.value
 					}
@@ -322,7 +319,7 @@
 					// 关键字类型：0 - 师傅信息； 1 - 订单号
 					type: this.where.type,
 					keyword: this.where.keyword,
-					userId: this.userId,
+					userId: storage.get('ClientId'),
 					status: this.where.status,
 					// 状态: 0- 正常: 1 异常
 					normalStatus: this.where.normalStatus,
@@ -392,6 +389,7 @@
 						this.popTitle = 0
 						this.accountShow = true
 						this.adjustDetailAmount = this.info.orderCost || ''
+						this.remark = ''
 						break;
 					case 3:
 						this.popTitle = 1

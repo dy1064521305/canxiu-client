@@ -110,7 +110,7 @@
 					</view>
 				</view>
 				<view v-if="inviteStore!=0" class="alert"
-					@click="$jump('/subpkg/center/inviteActivity/inactiveList/inactiveList?activityId='+query.activityId+'&partnerId='+partnerInfo.partnerId)">
+					@click="$jump('/subpkg/center/inviteActivity/inactiveList/inactiveList?activityId='+query.activityId+'&partnerId='+query.inviterId)">
 					<u-icon name="info-circle-fill" color="#FF991C" size='20'></u-icon>
 					<text style="margin-left: 20rpx;">还有{{inviteStore}}家商户未激活账号</text>
 				</view>
@@ -250,7 +250,6 @@
 				], //拨打电话
 				showPhone: false, //底部电话显示
 				inviteStore: 0,
-				partnerInfo: {},
 				searchTypes: [{
 						label: '累计下单',
 						sort_by: 1,
@@ -345,7 +344,7 @@
 						keyWord: '',
 						isAsc: '',
 						orderBy: '',
-						inviterId: this.partnerInfo.partnerld,
+						inviterId: this.query.inviterId,
 						activityId: this.query.activityId
 					},
 					this.asc = this.desc = false

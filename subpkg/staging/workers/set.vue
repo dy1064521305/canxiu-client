@@ -27,13 +27,13 @@
  		</view>
  		<view class="title">规则设置</view>
  		<view class="box">
- 			<text style="color: #212121;">冻结天数</text>
+ 			<view style="margin-bottom: 20rpx; color: #646566; font-size: 28rpx;">冻结天数</view>
  			<view class="input">
- 				<u--input style="margin: 24rpx 0  14rpx; width: 564rpx;" v-model="where.freezeDay" type="number"
- 					placeholder="请输入(1天及以上）" border="surround" clearable></u--input>
+ 				<u--input style="width: 564rpx;" v-model="where.freezeDay" type="number" placeholder="请输入(1天及以上）"
+ 					border="surround" clearable></u--input>
  				<view class="input_s">天</view>
  			</view>
- 			<text style="color: #999999;font-size: 24rpx;">编辑后，仅针对新产生的订单生效，已产生的订单不变</text>
+ 			<view style="color: #999999;font-size: 24rpx; margin-top: 16rpx;">编辑后，仅针对新产生的订单生效，已产生的订单不变</view>
  		</view>
  		<view class="btn" @click="sureSet">
  			保存设置
@@ -64,7 +64,8 @@
  				this.where.workerId = options.workerId
  			}
  			if (options && options.day) {
- 				this.where.freezeDay = options.day
+ 				this.where.freezeDay = options.day == 'null' ? '' : options.day
+ 				console.log(this.where.freezeDay, "this.where.freezeDay");
  			}
  		},
  		methods: {

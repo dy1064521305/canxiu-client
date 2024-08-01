@@ -29,7 +29,8 @@
             "Payment" : {},
             "VideoPlayer" : {},
             "Maps" : {},
-            "Record" : {}
+            "Record" : {},
+            "Share" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -76,6 +77,12 @@
             /* SDK配置 */
             "sdkConfigs" : {
                 "oauth" : {},
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wxfa2f854719fe847e",
+                        "UniversalLinks" : "https://www.canxiukeji.com/"
+                    }
+                },
                 "geolocation" : {
                     "system" : {
                         "__platform__" : [ "ios", "android" ]
@@ -112,12 +119,6 @@
                     },
                     "weixin" : {
                         "__platform__" : [ "ios", "android" ],
-                        "appid" : "wxfa2f854719fe847e",
-                        "UniversalLinks" : "https://www.canxiukeji.com/"
-                    }
-                },
-                "share" : {
-                    "weixin" : {
                         "appid" : "wxfa2f854719fe847e",
                         "UniversalLinks" : "https://www.canxiukeji.com/"
                     }

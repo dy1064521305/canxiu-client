@@ -32,25 +32,33 @@
 				<view class="item-menu-name">{{item.typeName}}</view>
 			</view>
 		</view>
-		<u-loading-page :loading="loading"></u-loading-page>
+		<!-- <u-loading-page :loading="loading"></u-loading-page> -->
 		<view v-if="!isSearch" class="main">
 			<view class="u-wrap">
 				<view class="u-menu-wrap">
 					<scroll-view style="background: #fff;" scroll-y scroll-with-animation
 						class="u-tab-view menu-scroll-view" :scroll-top="scrollTop" :scroll-into-view="itemId">
+						<block v-if="loading&&!typesList.length">
+							<x-skeleton type="list" :loading="true" :configs="listConfigs2" />
+						</block>
 						<view v-for="(item,index) in typesList" :key="index" class="u-tab-item"
 							:class="[current == index ? 'u-tab-item-active' : '']" @tap.stop="swichMenu(index)">
 							<text :class="[current == index ? 'u-line-1' : 'u-line']">{{item.typeName}}</text>
 						</view>
 					</scroll-view>
+
 					<scroll-view :scroll-top="scrollRightTop" scroll-y scroll-with-animation class="right-box"
 						@scroll="rightScroll">
 						<view class="page-view">
+							<block v-if="loading&&!typesList.length">
+								<x-skeleton type="list" :loading="true" :configs="listConfigs" />
+							</block>
 							<view class="class-item" :id="'item' + index" v-for="(item , index) in typesList"
 								:key="index">
 								<view class="item-title">
 									<text>{{item.typeName}}</text>
 								</view>
+
 								<view v-for="(item1, index1) in item.children" :key="index1" :id="'box' + index"
 									style="margin-top: 30rpx;">
 									<view class="item-title" style="margin-left: 15rpx;">
@@ -84,7 +92,7 @@
 		</view>
 
 		<u-toast ref="uToast"></u-toast>
-		
+
 	</view>
 </template>
 
@@ -93,9 +101,35 @@
 	import {
 		getCarNum
 	} from '@/utils/api.js'
+	import xSkeleton from '@/components/x-skeleton/x-skeleton.vue'
 	export default {
+		components: {
+			xSkeleton
+		},
 		data() {
 			return {
+				listConfigs: {
+					gridRows: 5,
+					gridRowsGap: '30rpx',
+					textRowsGap: '26rpx',
+					itemAlign: 'center',
+					gridColumns: 1, //列数
+					headHeight: '208rpx', //head高度
+					textRows: 4,
+					textHeight: ['30rpx', '30rpx', '20rpx', '40rpx'],
+					textWidth: ['100%', '100%', '10%', '100%'], //文本的行数
+				},
+				listConfigs2: {
+					gridRows: 14,
+					gridRowsGap: '0rpx',
+					textRowsGap: '0rpx',
+					itemAlign: 'center',
+					gridColumns: 1, //列数
+					headHeight: '65rpx', //head高度
+					textRows: 4,
+					textHeight: ['0rpx'],
+					textWidth: ['100%', ], //文本的行数
+				},
 				loading: false,
 				scrollTop: 100, //tab标题的滚动条位置
 				oldScrollTop: 100, // tab标题的滚动条旧位置
@@ -170,6 +204,7 @@
 				// });
 				this.loading = true
 				service.getService(this.query).then(res => {
+					this.loading = false
 					if (type == 'search') {
 						console.log(111);
 						console.log(res.data);
@@ -457,7 +492,7 @@
 				width: 100%;
 				text-align: center;
 				display: inline-block;
-				background:#A4D091;
+				background: #A4D091;
 				border-radius: 30rpx;
 
 				height: 60rpx;
@@ -571,7 +606,7 @@
 					height: 141rpx;
 					background: #F4F4F4;
 					border-radius: 11rpx;
-					
+
 					text {
 						font-size: 23rpx;
 						color: #A4D091;
@@ -587,7 +622,7 @@
 				height: 141rpx;
 				text-align: center;
 				line-height: 120rpx;
-					border-radius: 11rpx;
+				border-radius: 11rpx;
 			}
 		}
 

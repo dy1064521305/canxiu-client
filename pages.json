@@ -13,7 +13,7 @@
 			"style": {
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false,
-				 "disableScroll":true
+				"disableScroll": true
 			}
 
 		},
@@ -23,7 +23,7 @@
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom",
-				 "disableScroll":true
+				"disableScroll": true
 			}
 
 		},
@@ -43,8 +43,8 @@
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				 "disableScroll":true
-				
+				"disableScroll": true
+
 			}
 		},
 
@@ -98,17 +98,15 @@
 				"navigationBarBackgroundColor": "#fff"
 			}
 
+		}, {
+			"path": "subpkg/suiyoubao/suiyoubao",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
 		}
-	    ,{
-            "path" : "subpkg/suiyoubao/suiyoubao",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+	],
 	"subPackages": [{
 			"root": "subpkgChat",
 			"pages": [
@@ -545,6 +543,14 @@
 					}
 				},
 				{
+					"path": "inviteActivity/inactiveList/inactiveList",
+					"style": {
+						"navigationBarTitleText": "未激活的商家",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
 					"path": "acceptInvitation/acceptInvitation",
 					"style": {
 						"navigationBarTitleText": "",
@@ -650,6 +656,14 @@
 
 				},
 				{
+					"path": "inviteWorker/inviteList",
+					"style": {
+						"navigationBarTitleText": "邀请记录",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
 					"path": "inviteWorker/inviteRewards",
 					"style": {
 						"navigationBarTitleText": "",
@@ -744,44 +758,36 @@
 						"enablePullDownRefresh": false
 					}
 
+				}, {
+					"path": "myStore/myStore",
+					"style": {
+						"navigationBarTitleText": "我的门店",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "myStore/addStore/addStore",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "myMoney/paymentInfo/paymentInfo",
+					"style": {
+						"navigationBarTitleText": "提现详情",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "myMoney/paymentInfo/huizhidan/huizhidan",
+					"style": {
+						"navigationBarTitleText": "回执单",
+						"enablePullDownRefresh": false
+					}
+
 				}
-			    ,{
-                    "path" : "myStore/myStore",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "我的门店",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "myStore/addStore/addStore",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "myMoney/paymentInfo/paymentInfo",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "提现详情",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "myMoney/paymentInfo/huizhidan/huizhidan",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "回执单",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+			]
 		}
 
 	],

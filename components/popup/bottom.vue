@@ -8,7 +8,10 @@
 						<slot name="title">
 							<text>{{title}}</text>
 						</slot>
-						<u-icon name="close" class="icon-x" @click="$emit('close')"></u-icon>
+						<view class="acea-row row-middle" style="width: 70rpx;height: 40rpx;justify-content: flex-end;"
+							@click="$emit('close')">
+							<u-icon name="close" class="icon-x"></u-icon>
+						</view>
 					</view>
 					<slot name="content">
 						<view class="content acea-con" :class="{on:noContentTop}">
