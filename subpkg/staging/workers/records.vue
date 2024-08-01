@@ -201,7 +201,7 @@
 		getInvestmentClient
 	} from "@/api/staging.js"
 	import PopupBottom from "@/components/popup/bottom.vue"
-	const userId = '1813153736056799234'
+	// const userId = '1813153736056799234'
 	const img_no = 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/26/73f7603eb003465fa5198a7fb04cd22e.png'
 	const img_yes = 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/26/0533ff643a9b40acaa0fb32980d58842.png'
 	export default {
@@ -279,7 +279,7 @@
 					// 关键字类型：0 - 师傅信息； 1 - 订单号
 					type: 0,
 					keyword: "",
-					userId: userId,
+					userId: '',
 					status: "",
 					// 状态: 0- 正常: 1 异常
 					normalStatus: "",
@@ -290,20 +290,20 @@
 				info: {},
 				adjustDetailAmount: "",
 				remark: "",
-				investmentBalance: ""
+				investmentBalance: "",
+				userId: "",
 			}
 		},
 		onLoad(options) {
 			if (options && options.partnerId) {
-
+				this.userId = options.partnerId
 			}
-
 		},
 		methods: {
 			getList(pageNo, pageSize) {
 				this.where.pageNum = pageNo
 				this.where.pageSize = pageSize
-				this.where.userId = userId
+				this.where.userId = this.userId
 				// return
 				getWorkerSettlementList(this.where).then(res => {
 					// if (!res.rows) {
@@ -322,7 +322,7 @@
 					// 关键字类型：0 - 师傅信息； 1 - 订单号
 					type: this.where.type,
 					keyword: this.where.keyword,
-					userId: userId,
+					userId: this.userId,
 					status: this.where.status,
 					// 状态: 0- 正常: 1 异常
 					normalStatus: this.where.normalStatus,
@@ -378,7 +378,7 @@
 						}).then((res) => {
 							if (res.confirm) {
 								let data = {
-									userId: userId,
+									userId: this.userId,
 									detailsId: item.detailsId
 								}
 								putInvalid(data).then(res => {
@@ -397,7 +397,7 @@
 						this.popTitle = 1
 						this.accountShow = true
 						if (item.orderStatus == '售后中') return this.$toast('该笔订单正处于售后中，不可结算')
-						getInvestmentClient(userId).then(res => {
+						getInvestmentClient(this.userId).then(res => {
 							this.investmentBalance = res.data.investmentBalance || ''
 						})
 						break;
@@ -411,7 +411,7 @@
 				if (!this.adjustDetailAmount) return this.$toast('金额不能为空')
 				if (this.adjustDetailAmount <= 0) return this.$toast('金额不能小于0')
 				let data = {
-					userId: userId,
+					userId: this.userId,
 					detailsId: this.info.detailsId,
 					adjustDetailAmount: this.adjustDetailAmount,
 					remark: this.remark
@@ -427,7 +427,7 @@
 			surePay() {
 				if (Number(this.investmentBalance) < Number(this.info.orderCost)) return this.$toast('余额不足')
 				let data = {
-					userId: userId,
+					userId: this.userId,
 					detailIds: [this.info.detailsId]
 				}
 				putSettlement(data).then(res => {

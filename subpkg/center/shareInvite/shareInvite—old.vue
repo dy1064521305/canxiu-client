@@ -2,9 +2,8 @@
 	<view class="shareInvite">
 		<view class="poster" :style="{background:'url('+bg+') no-repeat',backgroundSize:'100% 100%'}">
 			<image class="code" :src="code" mode=""></image>
-			<canvas class="poster-canvas" canvas-id="myCanvas" v-if="imageRectInfo.length>0&&loading"
+			<canvas class="poster-canvas" canvas-id="myCanvas" v-if="imageRectInfo.length>0"
 				:style="{width: imageRectInfo[0].width+'px',height: imageRectInfo[0].height+'px'}"></canvas>
-
 		</view>
 
 		<!-- <canvas canvas-id="myCanvas" style="width: 690rpx;height: 668rpx;position: absolute;left: 100%;"></canvas> -->
@@ -31,8 +30,8 @@
 		<yk-authpup ref="authpup" type="top" @changeAuth="changeAuth" permissionID="WRITE_EXTERNAL_STORAGE">
 		</yk-authpup>
 
-		<u-toast ref="uToast"></u-toast>
 
+		<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 
@@ -55,7 +54,6 @@
 				loading: false,
 				activeInfo: {},
 				link: undefined,
-				type: '',
 				list: [{
 						type: '复制链接',
 						img: 'http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/18/8eaf4f09525a459cba2a07f470bdee78.png'
@@ -76,28 +74,9 @@
 			}
 		},
 		onLoad(option) {
-
 			this.activeInfo = JSON.parse(decodeURIComponent(option.info))
-			this.type = option.type || ''
-			//判断是否是单页面
-			if (uni.getLaunchOptionsSync().scene != 1154) {
-				this.type = ''
-			}
-			// let workerId = option.workerId ? option.workerId : storage.get('workerId')
-			if (this.type) {
-				this.list.splice(2, 3)
-			}
+			console.log(this.activeInfo, "22");
 			this.bg = this.activeInfo.activityPoster
-			// getShareLink({
-			// 	activityId: this.activeInfo.activityId,
-			// 	workerId: workerId,
-			// 	userType: 0,
-			// 	activityType: this.activeInfo.activityType,
-			// 	inviterId: workerId
-			// }).then(res => {
-			// 	console.log(res);
-			// 	this.link = res.data
-			// })
 			let infoId = this.activeInfo
 			// 固定 1客户 0师傅 2合伙人
 			getShareLink({
@@ -110,17 +89,18 @@
 				console.log(res);
 				this.link = res.data
 			})
-
-			// this.code =
-			// 	`${environment.baseURL}/worker/friend/invite/getQrCode?activityId=${this.activeInfo.activityId}&workerId=${workerId}&userType=0&inviterId=${workerId}&activityType=${this.activeInfo.activityType}`
 			this.code =
 				`${environment.baseURL}/worker/friend/invite/getQrCode?activityId=${this.activeInfo.activityId}&workerId=${infoId.partnerId}&userType=2&inviterId=${infoId.partnerId}&activityType=${this.activeInfo.activityType}`
-			wx.showShareMenu({
-				menus: ['shareAppMessage',
-					'shareTimeline'
-				], //'shareAppMessage'打开分享好友功能 | 'shareTimeline'打开分享到朋友圈功能
-			});
-
+			// wx.showShareMenu({
+			// 	menus: ['shareAppMessage',
+			// 		'shareTimeline'
+			// 	], //'shareAppMessage'打开分享好友功能 | 'shareTimeline'打开分享到朋友圈功能
+			// });
+			if (option.info.from == 'shareTimeline') {
+				uni.reLaunch({
+					url: '/subpkg/center/acceptInvitation/acceptInvitation'
+				});
+			}
 		},
 		onReady() {
 			// 此处获取两张图片的宽高,本地图片路径
@@ -132,25 +112,23 @@
 		},
 		onShareAppMessage(res) {
 			this.activityDataHandle()
-			let inviteCode = uni.getStorageSync('userInfo').invitationCode
 			return {
 				title: this.activeInfo.shareTitle,
 				desc: this.activeInfo.shareContent,
 				imageUrl: this.activeInfo.shareImg,
-				path: `/subpkg/center/acceptInvitation/acceptInvitation?activityId=${this.activeInfo.activityId}&inviteCode=${inviteCode}&workerId=${storage.get('ClientId')}&userType=2&inviterId=${storage.get('ClientId')}&activityType=${this.activeInfo.activityType}`,
+				path: '/subpkg/center/acceptInvitation/acceptInvitation',
 			}
 		},
 		onShareTimeline() {
 			return {
 				title: this.activeInfo.shareTitle,
 				imageUrl: this.activeInfo.shareImg,
-				query: `info=${encodeURIComponent(JSON.stringify(this.activeInfo))}&type=share&workerId=${storage.get('ClientId')}`
+				query: 'info.form=shareTimeline'
 			}
 		},
 		methods: {
 			shareToTimeline() {
 				this.activityDataHandle()
-				console.log('请点击右上角分享到朋友圈');
 				this.$refs.uToast.show({
 					type: 'waring',
 					message: '请点击右上角分享到朋友圈'
@@ -231,13 +209,6 @@
 				this.savePoster();
 			},
 			goHandle(type) {
-				if (this.type) {
-					this.$refs.uToast.show({
-						type: 'waring',
-						message: '请前往小程序进行操作'
-					});
-					return
-				}
 
 				switch (type) {
 					case '复制链接':
@@ -249,12 +220,13 @@
 						});
 						break;
 					case '保存海报':
-						// #ifdef APP-PLUS
-						this.$refs['authpup'].open()
-						// #endif 
-						// #ifdef MP-WEIXIN
+						// 	// #ifdef APP-PLUS
+						// 	this.$refs['authpup'].open()
+						// 	// #endif 
+						// 	// #ifdef MP-WEIXIN
+
+						// 	// #endif 
 						this.changeAuth()
-						// #endif 
 						break;
 					case '朋友圈':
 						this.activityDataHandle()
@@ -342,14 +314,14 @@
 		.poster {
 			position: relative;
 			// width: 100%;
-			height: 74vh;
-			margin: 27rpx 42rpx;
+			height: 76vh;
+			margin: 22rpx;
 
 			image {
 				position: absolute;
 				width: 30vw;
 				height: 30vw;
-				bottom: 0px;
+				bottom: 0rpx;
 				right: 0px;
 			}
 
@@ -357,7 +329,7 @@
 				position: absolute;
 				opacity: 0;
 				pointer-events: none;
-				z-index: 1
+
 			}
 		}
 
@@ -384,14 +356,13 @@
 
 			.list {
 				display: flex;
-				justify-content: space-evenly;
 
 				.box {
 					position: relative;
 					display: flex;
 					flex-direction: column;
 					align-items: center;
-					// width: 25%;
+					width: 50%;
 					margin: 24rpx 0;
 					font-size: 25rpx;
 
