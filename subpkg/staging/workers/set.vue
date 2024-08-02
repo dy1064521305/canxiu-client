@@ -1,40 +1,43 @@
  <template>
- 	<view class="pages">
- 		<view class="title">结算规则</view>
- 		<view class="box">
- 			<view class="box-top acea-row row-middle">
- 				<image
- 					src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/19/2a62ece157694edcb8ca9f621384fa6f.png"
- 					mode=""></image>
- 				自动结算
- 				<!-- <view class="acea-row ">
- 					<radio-group @change="radioChange" class="acea-row">
- 						<label style="width: 280rpx;" class="acea-row row-middle" v-for="(item, index) in radio"
- 							:key="item.value">
- 							<view style="position: relative; top:4rpx;">
- 								<radio :value="item.value" style="transform:scale(0.7)" color="#A4D091"
- 									:checked="item.value == where.settlementRule" />
- 							</view>
- 							<view>{{item.label}}</view>
- 						</label>
- 					</radio-group>
- 				</view> -->
+ 	<view class="pages" :style="{height: clientHeight+'px'}">
+ 		<view>
+ 			<view class="title">结算规则</view>
+ 			<view class="box">
+ 				<view class="box-top acea-row row-middle">
+ 					<image
+ 						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/19/2a62ece157694edcb8ca9f621384fa6f.png"
+ 						mode=""></image>
+ 					自动结算
+ 					<!-- <view class="acea-row ">
+						<radio-group @change="radioChange" class="acea-row">
+							<label style="width: 280rpx;" class="acea-row row-middle" v-for="(item, index) in radio"
+								:key="item.value">
+								<view style="position: relative; top:4rpx;">
+									<radio :value="item.value" style="transform:scale(0.7)" color="#A4D091"
+										:checked="item.value == where.settlementRule" />
+								</view>
+								<view>{{item.label}}</view>
+							</label>
+						</radio-group>
+					</view> -->
+ 				</view>
+ 				<view class="box-me">
+ 					<view style="margin-bottom: 10rpx;"> 用户完成验收后，超过工费冻结时长后系统会自动将服务 费结算给到接单师傅钱包账号中；</view>
+ 					<text style="color:#ED6A0C ; margin-top: 10rpx;">*当您的钱包余额不足时，将无法自动结算</text>
+ 				</view>
  			</view>
- 			<view class="box-me">
- 				<view style="margin-bottom: 10rpx;"> 用户完成验收后，超过工费冻结时长后系统会自动将服务 费结算给到接单师傅钱包账号中；</view>
- 				<text style="color:#ED6A0C ; margin-top: 10rpx;">*当您的钱包余额不足时，将无法自动结算</text>
+ 			<view class="title">规则设置</view>
+ 			<view class="box">
+ 				<view style="margin-bottom: 20rpx; color: #646566; font-size: 28rpx;">冻结天数</view>
+ 				<view class="input">
+ 					<u--input style="width: 564rpx;" v-model="where.freezeDay" type="number" placeholder="请输入(1天及以上）"
+ 						border="surround" clearable></u--input>
+ 					<view class="input_s">天</view>
+ 				</view>
+ 				<view style="color: #999999;font-size: 24rpx; margin-top: 16rpx;">编辑后，仅针对新产生的订单生效，已产生的订单不变</view>
  			</view>
  		</view>
- 		<view class="title">规则设置</view>
- 		<view class="box">
- 			<view style="margin-bottom: 20rpx; color: #646566; font-size: 28rpx;">冻结天数</view>
- 			<view class="input">
- 				<u--input style="width: 564rpx;" v-model="where.freezeDay" type="number" placeholder="请输入(1天及以上）"
- 					border="surround" clearable></u--input>
- 				<view class="input_s">天</view>
- 			</view>
- 			<view style="color: #999999;font-size: 24rpx; margin-top: 16rpx;">编辑后，仅针对新产生的订单生效，已产生的订单不变</view>
- 		</view>
+
  		<view class="btn" @click="sureSet">
  			保存设置
  		</view>
@@ -56,6 +59,7 @@
  					workerId: "",
  					settlementRule: 0,
  					freezeDay: '',
+ 					clientHeight: ""
  				}
  			}
  		},
@@ -67,6 +71,7 @@
  				this.where.freezeDay = options.day == 'null' ? '' : options.day
  				console.log(this.where.freezeDay, "this.where.freezeDay");
  			}
+ 			this.getClineHeight()
  		},
  		methods: {
  			sureSet() {
@@ -77,14 +82,26 @@
  						this.$jump(-1)
  					}, 1000)
  				})
- 			}
+ 			},
+ 			//获取可视区域高度
+ 			getClineHeight() {
+ 				const res = uni.getSystemInfo({
+ 					success: (res => {
+ 						this.clientHeight = res.windowHeight;
+ 						// this.clientHeight = res.windowHeight - uni.upx2px(80) - this.getBarHeight();
+ 					})
+ 				});
+ 			},
  		}
  	}
  </script>
 
  <style lang="scss" scoped>
  	.pages {
- 		height: 100%;
+ 		// height: 100%;
+ 		display: flex;
+ 		flex-direction: column;
+ 		justify-content: space-between;
  		padding: 0 22rpx;
 
  		.title {
@@ -137,6 +154,7 @@
  	}
 
  	.btn {
+ 		margin: 0rpx auto 70rpx;
  		width: 622rpx;
  		height: 88rpx;
  		background: #A4D091;
@@ -145,6 +163,5 @@
  		color: #FFFFFF;
  		text-align: center;
  		line-height: 88rpx;
- 		margin: 450rpx auto;
  	}
  </style>

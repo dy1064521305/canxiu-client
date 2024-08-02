@@ -5,11 +5,11 @@
 				<view class="left">
 					<view style="color: #000000;">
 						<text>商户ID： </text>
-						{{item.clientId}}
+						{{item.clientId||''}}
 					</view>
 					<view style="font-size: 25rpx;color: #A5A7A7;margin-top: 14rpx;">
 						<text>注册时间：</text>
-						{{item.registerDate}}
+						{{item.registerDate||''}}
 					</view>
 				</view>
 				<view class="call" @click.stop="showPhoneHandle(item.phoneNumber)">

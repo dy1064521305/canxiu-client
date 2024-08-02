@@ -132,12 +132,12 @@
 						</view>
 						<view>
 							<view class="">
-								{{item.storeName}}
+								{{item.storeName||''}}
 							</view>
 							<view class="acea-row row-middle"
 								style="font-size: 25rpx;color: #A5A7A7;margin-top: 14rpx;">
-								{{item.storeType}}<text style="margin: 0 4rpx;" v-if="item.businessDistrict">|
-								</text> {{item.businessDistrict}}
+								{{item.storeType||''}}<text style="margin: 0 4rpx;" v-if="item.businessDistrict">|
+								</text> {{item.businessDistrict||''}}
 
 							</view>
 						</view>

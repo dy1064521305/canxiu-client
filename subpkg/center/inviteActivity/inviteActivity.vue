@@ -72,11 +72,11 @@
 						</view>
 						<view class="right">
 							<view style="display: flex;justify-content: space-between;">
-								{{item.inviterName}}
+								{{item.inviterName||'暂无昵称'}}
 								<text style="color: #FE6801;font-size: 30rpx;">{{item.rewardAmount}}</text>
 							</view>
 							<view style="display: flex;justify-content: space-between;color: #A5A7A7;margin-top: 6rpx;">
-								{{item.region}}
+								{{item.region||'暂无区域'}}
 								<text>
 									已邀请
 									<text style="color:#FE6801;margin: 0 4rpx;">{{item.inviteCount}}</text>
