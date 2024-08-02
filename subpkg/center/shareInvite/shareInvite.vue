@@ -46,6 +46,9 @@
 		getQrCode,
 		activityData
 	} from '@/api/invite.js'
+	import {
+		queryURLParams
+	} from '@/utils/index'
 	export default {
 		data() {
 			return {
@@ -76,7 +79,6 @@
 			}
 		},
 		onLoad(option) {
-
 			this.activeInfo = JSON.parse(decodeURIComponent(option.info))
 			this.type = option.type || ''
 			//判断是否是单页面
@@ -88,16 +90,6 @@
 				this.list.splice(2, 3)
 			}
 			this.bg = this.activeInfo.activityPoster
-			// getShareLink({
-			// 	activityId: this.activeInfo.activityId,
-			// 	workerId: workerId,
-			// 	userType: 0,
-			// 	activityType: this.activeInfo.activityType,
-			// 	inviterId: workerId
-			// }).then(res => {
-			// 	console.log(res);
-			// 	this.link = res.data
-			// })
 			let infoId = this.activeInfo
 			// 固定 1客户 0师傅 2合伙人
 			getShareLink({
@@ -107,12 +99,10 @@
 				userType: 2,
 				inviterId: infoId.partnerId
 			}).then(res => {
-				console.log(res);
+				console.log(res, '-');
 				this.link = res.data
-			})
 
-			// this.code =
-			// 	`${environment.baseURL}/worker/friend/invite/getQrCode?activityId=${this.activeInfo.activityId}&workerId=${workerId}&userType=0&inviterId=${workerId}&activityType=${this.activeInfo.activityType}`
+			})
 			this.code =
 				`${environment.baseURL}/worker/friend/invite/getQrCode?activityId=${this.activeInfo.activityId}&workerId=${infoId.partnerId}&userType=2&inviterId=${infoId.partnerId}&activityType=${this.activeInfo.activityType}`
 			wx.showShareMenu({
@@ -132,12 +122,11 @@
 		},
 		onShareAppMessage(res) {
 			this.activityDataHandle()
-			let inviteCode = uni.getStorageSync('userInfo').invitationCode
 			return {
 				title: this.activeInfo.shareTitle,
 				desc: this.activeInfo.shareContent,
 				imageUrl: this.activeInfo.shareImg,
-				path: `/subpkg/center/acceptInvitation/acceptInvitation?activityId=${this.activeInfo.activityId}&inviteCode=${inviteCode}&workerId=${storage.get('ClientId')}&userType=2&inviterId=${storage.get('ClientId')}&activityType=${this.activeInfo.activityType}`,
+				path: `/subpkg/center/acceptInvitation/acceptInvitation?activityId=${this.activeInfo.activityId}&inviteCode=${queryURLParams(this.link, 'inviteCode')}&workerId=${storage.get('ClientId')}&userType=2&inviterId=${storage.get('ClientId')}&activityType=${this.activeInfo.activityType}`,
 			}
 		},
 		onShareTimeline() {
@@ -155,8 +144,6 @@
 					type: 'waring',
 					message: '请点击右上角分享到朋友圈'
 				});
-				// wx.showShareMenu()
-
 			},
 			// 将海报保存到本地
 			savePoster() {

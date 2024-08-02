@@ -21,6 +21,9 @@
 						</view>
 						<input type="text" @confirm="search(1)" @clear='search(1)' v-model="searchValue"
 							:placeholder="'请输入'+whereType">
+						<view class="" style="position: absolute; top: 17rpx; right: 80rpx;">
+							<u-icon v-if="searchValue" @click="search()" color="#D8DCDB" name="close-circle"></u-icon>
+						</view>
 						<view class="input-s" @click="search(1)"></view>
 					</view>
 				</view>
@@ -344,8 +347,12 @@
 
 				this.$refs.paging.reload();
 			},
-			search() {
-				this.where.keyword = this.searchValue
+			search(i) {
+				if (i) {
+					this.where.keyword = this.searchValue
+				} else {
+					this.where.keyword = this.searchValue = ''
+				}
 				this.$refs.paging.reload()
 			},
 			actionSelect_two(e) {
@@ -539,6 +546,7 @@
 				width: 400rpx;
 				height: 62rpx;
 				margin-left: 20rpx;
+				font-size: 26rpx;
 
 			}
 

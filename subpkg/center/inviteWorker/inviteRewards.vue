@@ -33,6 +33,10 @@
 							</view>
 							<input type="text" @confirm="searchActivity(1)" @input="seachValue" v-model="searchActValue"
 								:placeholder="'请输入'+whereActType">
+							<view class="" style="position: absolute; top: 17rpx; right: 70rpx;">
+								<u-icon v-if="searchActValue" @click="searchActivity()" color="#D8DCDB"
+									name="close-circle"></u-icon>
+							</view>
 							<view class="input-s" @click="searchActivity(1)"></view>
 
 						</view>
@@ -64,10 +68,9 @@
 						</view>
 						<input type="text" @confirm="search(1)" v-model="searchValue" @input="seachValue"
 							:placeholder="'请输入'+whereType">
-
-						<!-- <u-icon v-if="searchValue" @click="search()"
-							style="position: relative; top: 0rpx; right: -20rpx;" color="#D8DCDB"
-							name="close-circle"></u-icon> -->
+						<view class="" style="position: absolute; top: 17rpx; right: 70rpx;">
+							<u-icon v-if="searchValue" @click="search()" color="#D8DCDB" name="close-circle"></u-icon>
+						</view>
 						<view class="input-s" @click="search(1)"></view>
 
 
@@ -789,7 +792,7 @@
 			width: 340rpx;
 			height: 62rpx;
 			margin-left: 20rpx;
-
+			font-size: 26rpx;
 		}
 
 		.input-s {

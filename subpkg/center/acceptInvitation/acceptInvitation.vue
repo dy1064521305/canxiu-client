@@ -144,7 +144,6 @@ padding: 20rpx 0;">
 		environment
 	} = require('../../../config/environment')
 	import storage from '@/utils/storage'
-
 	import {
 		isEmpty,
 		isPhone

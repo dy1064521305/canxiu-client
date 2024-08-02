@@ -216,10 +216,10 @@
 								activityId: this.activeInfo.activityId,
 							}).then(res => {
 								res.rows.forEach(item => {
-									let arr = item.serviceAddress.split('/')
-									item.region = arr[1] + '-' + arr[2]
+									// let arr = item.serviceAddress.split('/')
+									// item.region = arr[1] + '-' + arr[2]
 									this.textList.push(
-										`${item.inviterName}已累计获得￥${item.rewardAmount}订单分成奖励`
+										`${item.inviterName||'一位用户'}已累计获得￥${item.rewardAmount}订单分成奖励`
 									)
 								})
 								this.workerList = res.rows

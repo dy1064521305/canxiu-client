@@ -531,7 +531,6 @@
 		onShow() {
 
 			this.isLogin = storage.get('ClientId')
-			console.log(this.isLogin);
 			if (this.isLogin) {
 				this.getList()
 				this.getOrderlistHandle(1, 10)
@@ -544,7 +543,6 @@
 				//获取用户信息
 				if (storage.get('ClientId')) {
 					getInfoById(storage.get('ClientId')).then(res => {
-						console.log(res);
 						this.userInfo = res.data
 						//	let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 						this.userInfo.phone = this.geTel(this.userInfo.phoneNumber)
@@ -552,7 +550,6 @@
 					})
 					//获取订单数量
 					this.orderList.forEach(item => {
-						console.log(item);
 						getOrderList({
 							clientId: storage.get('ClientId'),
 							orderStatus: item.label,
@@ -569,7 +566,6 @@
 						this.totalAmount = res.data.totalAmount
 					})
 					getOrderStatics(storage.get('ClientId')).then(res => {
-						console.log(res, '5300000000');
 						this.orderList2.forEach(item => {
 							item.num = res.data[item['value']]
 						})
@@ -666,7 +662,6 @@
 				})
 			},
 			actionSelect(e) {
-				console.log(e);
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
@@ -703,7 +698,6 @@
 				})
 			},
 			toDetail(i) {
-				console.log(i.id, "2");
 				if (i.id > 3) {
 					if (this.partnerInfo == null) return this.$toast('请先申请合伙人噢')
 					let par = this.partnerInfo

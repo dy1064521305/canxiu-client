@@ -61,3 +61,11 @@ export const getClientStatisticsRank = (params) => request.get('/worker/friend/i
 // 师傅的接口
 
 export const queryUnreadNum = () => request.get('/common/getui/queryUnreadNum')
+
+//查询活动优惠券
+export const activityCoupon = (activityId) => request.get('/worker/friend/invite/activityCoupon/' + activityId)
+//验证用户
+export const clientSmsLogin = (data) => request.post('/client/login/smsLogin', data)
+
+//验证师傅
+export const workerSmsLogin = (data) => request.post('/worker/login/smsLogin', data)

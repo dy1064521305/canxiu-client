@@ -109,7 +109,7 @@
 		data() {
 			return {
 				listConfigs: {
-					gridRows: 5,
+					gridRows: 6,
 					gridRowsGap: '30rpx',
 					textRowsGap: '26rpx',
 					itemAlign: 'center',

@@ -143,3 +143,87 @@ export function copy(data, tip) {
 		})
 	})
 }
+// 截取URL中的参数
+export function queryURLParams(url, paramName) {
+	// 正则表达式模式，用于匹配URL中的参数部分。正则表达式的含义是匹配不包含 ?、&、= 的字符作为参数名，之后是等号和不包含 & 的字符作为参数值
+	let pattern = /([^?&=]+)=([^&]+)/g;
+	let params = {};
+
+	// match用于存储正则匹配的结果
+	let match;
+	// while 循环和正则表达式 exec 方法来迭代匹配URL中的参数
+	while ((match = pattern.exec(url)) !== null) {
+		// 在字符串url中循环匹配pattern，并对每个匹配项进行解码操作，将解码后的键和值分别存储在key和value变量中
+		let key = decodeURIComponent(match[1]);
+		let value = decodeURIComponent(match[2]);
+
+		if (params[key]) {
+			if (Array.isArray(params[key])) {
+				params[key].push(value);
+			} else {
+				params[key] = [params[key], value];
+			}
+		} else {
+			// 参数名在 params 对象中不存在，将该参数名和对应的值添加到 params 对象中
+			params[key] = value;
+		}
+	}
+
+	if (!paramName) {
+		// 没有传入参数名称, 返回含有所有参数的对象params
+		return params;
+	} else {
+		if (params[paramName]) {
+			return params[paramName];
+		} else {
+			return '';
+		}
+	}
+}
+
+/**
+ * 跳转其他微信小程序
+ * @param {String} params.appId
+ * @param {String} params.path
+ * @param {String} params.url 非小程序下起作用
+ * @param {String} params.type develop（开发版），trial（体验版），release（正式版）
+ */
+export function openMiniProgram(params) {
+	let env = params.env || 'release'
+	// #ifdef MP
+	if (!params.appId) return;
+	return wx.navigateToMiniProgram({
+		appId: params.appId,
+		path: decodeURIComponent(params.path),
+		envVersion: env
+	});
+	// #endif
+	// #ifdef APP-PLUS
+	if (params.ghid) {
+		plus.share.getServices(
+			res => {
+				let sweixin = null;
+				for (let i in res) {
+					if (res[i].id == 'weixin') {
+						sweixin = res[i];
+					}
+				}
+				//唤醒微信小程序
+				if (sweixin) {
+					return sweixin.launchMiniProgram({
+						id: params.ghid,
+						type: params.type || 0, //小程序版本  0-正式版； 1-测试版； 2-体验版。
+						path: decodeURIComponent(params.path)
+					});
+				} else {
+					return Toast('未检测到微信')
+				}
+			}
+		);
+	}
+	// #endif
+	// #ifdef H5
+	if (!params.url) return;
+	return jumpUrl(decodeURIComponent(params.url));
+	// #endif
+}
