@@ -57,7 +57,9 @@
 		getUserWallet
 	} from '@/api/money.js'
 	import storage from '@/utils/storage'
-	import {getBankCardList} from '@/api/bankCard.js'
+	import {
+		getBankCardList
+	} from '@/api/bankCard.js'
 	export default {
 		data() {
 			return {
@@ -73,7 +75,7 @@
 
 		},
 		methods: {
-			getLoad(){
+			getLoad() {
 				getUserWallet({
 					userId: storage.get('ClientId'),
 					userType: 'c'
