@@ -1,5 +1,7 @@
 <template>
 	<view class="map-min-box">
+		<u-navbar title="选择地址" @leftClick="getbacktrack" placeholder>
+		</u-navbar>
 		<!-- 可视化地图 -->
 		<view class="map-min-1" v-if="maptype == 1">
 			<view class="map-box" v-if="longitude">
@@ -46,11 +48,11 @@
 				</view>
 			</view>
 		</view>
-		<view class="map-min-2" v-if="maptype == 2">	
+		<view class="map-min-2" v-if="maptype == 2">
 			<view class="map-min-2-search-box">
 				<input v-model="keyword" placeholder="搜索地点" @input="changeword" @confirm="changeword"
 					class="locationpicker-search-content-ipt" />
-				
+
 				<view class="locationpicker-search-clear" @click="onClearInput">
 					<image src="https://lbs.gtimg.com/visual/miniprogram-plugin/location-picker/assets/btn_close@2x.png"
 						class="locationpicker-search-clear-ipt" mode=""></image>
@@ -310,6 +312,7 @@
 			},
 			// 返回
 			getbacktrack() {
+				console.log(this.maptype, '315555555');
 				if (this.maptype == 2) {
 					var that = this;
 					this.page = 1;
@@ -748,7 +751,9 @@
 				}
 
 				.list-item-name-box {
-					height: calc(100% - 108rpx - 160rpx);
+
+					// height: calc(100% - 108rpx - 160rpx);
+					height: 50%;
 					width: calc(100% - 60rpx);
 					padding: 0 20rpx 0 40rpx;
 

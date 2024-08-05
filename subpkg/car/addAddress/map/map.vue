@@ -31,13 +31,13 @@
 				console.log(this.latitude);
 			
 		},
-		onShow() {
+		onReady() {
 			this.$refs.maps.getData(this.latitude,this.longitude)	
 		},
 		methods: {
 			commitCheck(e) {
 				console.log(e, 565);
-				if (e.district||!e.district) {
+				if (!e.district||e.district==null) {
 					e.district=e.city
 				}
 				if (!e.province) {
