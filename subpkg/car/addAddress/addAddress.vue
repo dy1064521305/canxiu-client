@@ -29,7 +29,7 @@
 					<u--textarea :disabled='isSubmit&&id!=""' v-model="model1.address.addressDetailed" border='none'
 						placeholder="请输入详细地址"></u--textarea>
 				</u-form-item>
-				<u-form-item label="门牌号" prop="address.houseNum"  ref="item1">
+				<u-form-item label="门牌号" prop="address.houseNum" ref="item1">
 					<u--input v-model="model1.address.houseNum" border="none" placeholder="例：4号楼2603">
 					</u--input>
 
@@ -42,7 +42,7 @@
 				<u-form-item label="联系人" prop="address.contact" borderBottom ref="item1">
 					<u--input v-model="model1.address.contact" border="none" placeholder="请输入联系人"></u--input>
 				</u-form-item>
-				<u-form-item label="联系电话" prop="address.phone"  ref="item1">
+				<u-form-item label="联系电话" prop="address.phone" ref="item1">
 					<u--input v-model="model1.address.phone" border="none" placeholder="请输入联系电话"></u--input>
 				</u-form-item>
 			</view>
@@ -144,7 +144,7 @@
 				id: '',
 				isSubmit: false,
 				addressData: [],
-				addressList:[]
+				addressList: []
 			}
 		},
 		onLoad(option) {
@@ -164,7 +164,7 @@
 				getAddressInfo(this.id).then(res => {
 					console.log(res);
 					this.model1.address = res.data
-					this.model1.address.addressRegion=this.model1.address.addressRegion.replace(/\//g, '-')
+					this.model1.address.addressRegion = this.model1.address.addressRegion.replace(/\//g, '-')
 				})
 			}
 			console.log(this.id);
@@ -176,20 +176,29 @@
 		},
 		methods: {
 			getAddressCode() {
-				uni.request({
-						url: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/30/78ed8008c9ef4aa6a6c29f101bb0c9ec.json',
-						method: 'GET',
-						complete: (res) => {
-							this.addressData = res.data
-						}
-					}),
-					getAddressList({
-						clientId:storage.get('ClientId'),
-					}).then(res => {
-						console.log(res);
-						this.addressList = res.rows
+				// uni.request({
+				// 		url: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/30/78ed8008c9ef4aa6a6c29f101bb0c9ec.json',
+				// 		method: 'GET',
+				// 		complete: (res) => {
+				// 			this.addressData = res.data
+				// 		}
+				// 	}),
+				getAddressList({
+					clientId: storage.get('ClientId'),
+				}).then(res => {
+					console.log(res);
+					this.addressList = res.rows
 
-					})
+				})
+			},
+			commitCheck(e) {
+				console.log(e);
+				let location = e.location.split(',')
+				this.model1.address.latitude = location[1]
+				this.model1.address.longitude = location[0]
+				this.model1.address.addressRegion = e.province + '-' + e.city + (e.district ? '-' + e.district : '')
+				this.model1.address.regionCode = e.adcode
+				this.model1.address.addressDetailed = e.name
 			},
 			/**
 			   * 格式化位置
@@ -203,7 +212,7 @@
 			     }
 			   */
 			captureLocation(res) {
-				// console.log('res', res);
+				console.log('res', res);
 				var regex = /^(北京市|天津市|重庆市|上海市|香港特别行政区|澳门特别行政区)/;
 				var province = [];
 				var addressBean = {
@@ -216,6 +225,7 @@
 				function regexAddressBean(address, addressBean) {
 					regex = /^(.*?[市]|.*?[州]|.*?地区|.*?特别行政区)(.*?[区]|.*?[市]|.*?[县])(.*?)$/g;
 					var addxress = regex.exec(address);
+					console.log(addxress);
 					addressBean.city = addxress[1];
 					addressBean.country = addxress[2];
 					addressBean.address = addxress[3] + '(' + res.name + ')';
@@ -234,11 +244,19 @@
 			},
 
 			getAddress() {
+				let info={
+					longitude:this.model1.address.longitude,
+					latitude:this.model1.address.latitude
+				}
+				uni.navigateTo({
+					url:'./map/map?info='+JSON.stringify(info)
+				})
+				return
 				console.log(12121);
 				let params = {}
-				if(this.model1.address.latitude)params = {
-					latitude:this.model1.address.latitude,
-					longitude:this.model1.address.longitude,
+				if (this.model1.address.latitude) params = {
+					latitude: this.model1.address.latitude,
+					longitude: this.model1.address.longitude,
 				}
 				uni.chooseLocation({
 					...params,
@@ -281,10 +299,10 @@
 
 				})
 			},
-			
+
 			addAndEditAddress() {
 				this.$refs.form1.validate().then(res => {
-					this.model1.address.addressRegion=this.model1.address.addressRegion.replace(/-/g, '/')
+					this.model1.address.addressRegion = this.model1.address.addressRegion.replace(/-/g, '/')
 					if (this.model1.address.isDefault == "0") {
 						this.setMoren()
 					}
@@ -340,7 +358,7 @@
 			margin: 0 20rpx 20rpx 0;
 			border-radius: 11rpx;
 			padding: 10rpx 20rpx;
-			
+
 			.moren {
 				color: #A4D091;
 			}

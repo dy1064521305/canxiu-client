@@ -191,7 +191,7 @@
 	<view class="money">
 		<Header listen-scroll :scroll-top="scrollTop" :offset-top="400" title="我的资产" no-blank>
 			<template #back>
-				<u-icon name="arrow-left" size="20" color="#fff" @click="$jump(-1)"></u-icon>
+				<u-icon name="arrow-left" size="20" color="#fff" @click="$jump('pages/center/index')"></u-icon>
 				<!-- <text class="iconfont icon-zuo" style="font-size: 42rpx;"></text> -->
 			</template>
 			<text style="font-size: 34rpx;">我的资产</text>
@@ -273,6 +273,9 @@
 		getUserWallet,
 		getPartnerAsset
 	} from '@/api/money.js'
+	import {
+		checkIsSign
+	} from '@/api/bankCard.js'
 	export default {
 		components: {
 			Header,
@@ -348,11 +351,36 @@
 			// },
 			goCashOut() {
 				// uni.navigateTo({
-				// 	url: 'cashOut/cashOut?amount=' + this.info.totalAmount
+				// 	url: 'cashOut/cashOut'
 				// })
-				uni.navigateTo({
-					url: 'cashOut/cashOut'
+				// return
+				this.getSignStatusHandle().then(res => {
+					console.log(res, '<<<<====res');
+					if (res) {
+						uni.navigateTo({
+							url: 'cashOut/cashOut'
+						})
+					} else {
+						console.log('187777777');
+						uni.navigateTo({
+							url: '../../suiyoubao/suiyoubao'
+						})
+					}
+
 				})
+
+			},
+			getSignStatusHandle() {
+				let msg = ''
+				return new Promise((r, j) => {
+					checkIsSign({
+						userId: storage.get('ClientId'),
+					}).then(res => {
+						console.log(res);
+						r(res.data)
+					})
+				})
+
 			},
 			leftClick() {
 				uni.switchTab({

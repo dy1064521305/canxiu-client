@@ -369,7 +369,18 @@
 					}
 
 				}
-			]
+			    ,{
+                    "path" : "addAddress/map/map",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "选择地址",
+                    "enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+                }
+                
+                }
+               
+            ]
 		},
 		{
 			"root": "subpkg/staging",
