@@ -205,7 +205,7 @@
 					<text @click="$jump('/subpkg/center/myMoney/invest/into')">去转入</text>
 				</view>
 			</view>
-			<view class="money-image-name">可提现金额：¥{{item.totalAmount}}</view>
+			<view class="money-image-name">可提现金额：¥{{info.totalAmount||0}}</view>
 			<view class="money-image-type acea-row row-between-wrapper">
 				<view class="money-image-type-item acea-row flex-colum-center">
 					<text>投资款余额</text>
