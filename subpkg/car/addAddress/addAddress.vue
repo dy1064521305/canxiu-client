@@ -12,11 +12,11 @@
 					</pickers> -->
 					<view style="display: flex;align-items: center;">
 						<view style="width:360rpx;">
-							<u--input v-if="!isSubmit||id==''" placeholder="请选择所在城市" disabled
+							<u--input  placeholder="请选择所在城市" disabled
 								v-model="model1.address.addressRegion" border="none">
 							</u--input>
 						</view>
-						<view @click="getAddress">
+						<view v-if="!isSubmit||id==''" @click="getAddress">
 							<image style="width: 28rpx;height: 32rpx;margin-right:10rpx;"
 								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/25/90ecfbde05f64a089bf4a946f8c0f554.png"
 								mode=""></image>定位
