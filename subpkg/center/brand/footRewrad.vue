@@ -91,7 +91,7 @@
 				],
 				scrollTop: 0,
 				where: {
-					userId: storage.get('userId'),
+					userId: storage.get('ClientId'),
 					brandName: "",
 					// 发放状态；-1-已驳回，0-待处理，1-转账中，2已打款
 					approvalStatus: "",

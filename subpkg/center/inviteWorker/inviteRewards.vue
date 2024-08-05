@@ -125,7 +125,11 @@
 								</image> <text style="font-size: 22rpx;">{{item.name||'暂无昵称'}}</text>
 							</view>
 							<view>
-								{{(item.status=='0'?item.settleTime+'注册':item.status==1?item.settleTime+'结算':'失效原因'+item.reason)||''}}
+								<text v-if="item.status=='0'">{{item.settleTime}}<text
+										v-if="item.settleTime">注册</text></text>
+								<text v-else-if="item.status=='1'">{{item.settleTime}} <text
+										v-if="item.settleTime">结算</text></text>
+								<text v-else> <text v-if="item.reason">失效原因</text>{{item.reason}}</text>
 							</view>
 						</view>
 					</view>
@@ -145,7 +149,7 @@
 							<view class=" acea-row row-middle">关联订单：{{item.orderNumber}}
 							</view>
 							<view>
-								{{item.settlementTime||''}}结算
+								{{item.settlementTime||''}} <text v-if="item.settlementTime">结算</text>
 							</view>
 						</view>
 					</view>

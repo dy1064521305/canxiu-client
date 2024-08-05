@@ -66,8 +66,20 @@
 						<view class="form-row acea-row row-middle" style="height: 160rpx;">
 							<text class="form-key" style="margin-bottom: 100rpx;">品牌logo</text>
 							<view class=" acea-con upImg " style="justify-content: flex-end;">
-								<upLoadFile :isSignIn='true' :limit='1' :fileListt="fileListt" types='image'
-									@getUrl='getUrl' />
+								<view class="acea-row row-middle" style="display: flex; flex-wrap: wrap;">
+									<view class="tap_image" v-for="(i,index_1) in invoice_img" :key="index_1">
+										<image :src="i" mode="aspectFill"></image>
+										<view class="iconfont" @click="del_img(index_1)">
+											<u-icon name="close-circle" color="#ccc" size="22"></u-icon>
+										</view>
+									</view>
+									<view class="tap_images" v-if="invoice_img.length<1" @tap="chooseImage">
+										<image src="https://img.reduxingke.com/2023/05/22/e303d202305221431166432.png"
+											mode="">
+										</image>
+										<view>上传图片</view>
+									</view>
+								</view>
 							</view>
 						</view>
 					</view>
@@ -92,6 +104,9 @@
 		isEmpty,
 		isPhone
 	} from '@/utils/verify.js'
+	import {
+		uploadImageHandler
+	} from '@/utils/index.js'
 	export default {
 		components: {
 			pickers,
@@ -99,6 +114,7 @@
 		},
 		data() {
 			return {
+				invoice_img: [],
 				city: "",
 				isSubmit: false,
 				addCompanyShow: false,
@@ -148,12 +164,29 @@
 				this.where.companyList[0].brandLog = url.urls.toString()
 			},
 			add() {
-
 				this.where.companyList = [{
 					companyName: "",
 					brandName: "",
 					brandLog: ""
 				}]
+			},
+			// 上传和删除
+			del_img(index) {
+				this.invoice_img.splice(index, 1)
+			},
+			chooseImage() {
+				uni.chooseImage({
+					count: 9, // 最多可以选择的图片数量
+					sizeType: ["compressed"], // 压缩图
+					sourceType: ["album", "camera"], // 图片来源，相册或相机
+					success: (res) => {
+						const img = res.tempFilePaths;
+						uploadImageHandler(img, (res) => {
+							this.invoice_img.push(res)
+							this.where.companyList[0].brandLog = this.invoice_img[0].toString()
+						})
+					},
+				})
 			},
 			submit() {
 				let where = this.where
@@ -181,7 +214,7 @@
 							brandLog: ""
 						}],
 					}
-					this.fileListt = []
+					this.invoice_img = []
 				})
 			},
 			//获取可视区域高度
@@ -238,7 +271,7 @@
 			margin: 26rpx 0 0rpx 0;
 
 			&-mess {
-				padding: 0 30rpx 200rpx;
+				padding: 0 30rpx 0rpx;
 
 				.form-row:nth-last-child(1) {
 					border-bottom: none;
@@ -263,10 +296,11 @@
 		}
 
 		.content-btn {
-			margin: 0rpx auto 70rpx;
+			margin: 40rpx auto 70rpx;
 			// margin: 120rpx 0 0 64rpx;
 			width: 622rpx;
-			height: 88rpx;
+			// height: 88rpx;
+			padding: 20rpx 0;
 			background: #A4D091;
 			border-radius: 8rpx;
 			font-family: PingFangSC, PingFang SC;
@@ -296,5 +330,54 @@
 		}
 
 
+	}
+
+	.tap_image {
+		width: 130rpx;
+		height: 130rpx;
+		margin-right: 30rpx;
+		border-radius: 12rpx;
+		position: relative;
+		margin-bottom: 20rpx;
+
+		image {
+			width: 100%;
+			height: 100%;
+		}
+
+		.iconfont {
+			position: absolute;
+			top: -14rpx;
+			right: -14rpx;
+		}
+
+	}
+
+	.tap_images {
+		width: 130rpx;
+		height: 130rpx;
+		background: #F8F8F8;
+		border-radius: 12rpx;
+		border: 2rpx dashed #D5D5D5;
+		position: relative;
+		margin-bottom: 40rpx;
+
+		image {
+			width: 34rpx;
+			height: 34rpx;
+			position: absolute;
+			top: 30rpx;
+			left: 46rpx;
+		}
+
+		view {
+			height: 34rpx;
+			font-size: 20rpx;
+			color: #A4D091;
+			line-height: 34rpx;
+			position: absolute;
+			top: 82rpx;
+			left: 28rpx;
+		}
 	}
 </style>

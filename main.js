@@ -34,6 +34,11 @@ Vue.component('empty-page', EmptyPage);
 import StatusBar from '@/components/StatusBar.vue'
 Vue.component('status-bar', StatusBar);
 
+import LoadingPage from '@/components/Loading/page.vue'
+Vue.component('loading-page', LoadingPage);
+import LoadingMore from '@/components/Loading/more.vue'
+Vue.component('loading-more', LoadingMore);
+
 const app = new Vue({
 	store,
 	...App

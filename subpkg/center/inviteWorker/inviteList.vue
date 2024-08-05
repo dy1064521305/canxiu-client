@@ -224,7 +224,7 @@
 						registerDate: this.query.registerDate,
 						keyWord: this.query.keyWord ? this.query.keyWord : '',
 						type: this.query.type,
-						inviterId: storage.get('workerId'),
+						inviterId: storage.get('ClientId'),
 						activityId: this.query.activityId
 					},
 					this.dateCancel()

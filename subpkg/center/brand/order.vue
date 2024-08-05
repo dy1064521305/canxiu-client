@@ -197,7 +197,7 @@
 			if (options && options.id) {
 				this.queryParams.customerId = options.id
 			} else {
-				this.queryParams.userId = storage.get('userId')
+				this.queryParams.userId = storage.get('ClientId')
 			}
 		},
 		onShow() {

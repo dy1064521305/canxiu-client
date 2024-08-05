@@ -81,7 +81,7 @@
 			getList(pageNo, pageSize) {
 				this.where.pageNum = pageNo;
 				this.where.pageSize = pageSize;
-				this.where.userId = storage.get('userId'),
+				this.where.userId = storage.get('ClientId'),
 					getListPartnerWithdrawal(this.where).then(res => {
 						console.log(res);
 						console.log(1111);

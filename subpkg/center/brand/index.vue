@@ -169,7 +169,7 @@
 					searchValue: "",
 					pageNum: 1,
 					pageSize: 10,
-					userId: storage.get('userId'),
+					userId: storage.get('ClientId'),
 					// orderByColumn: "",
 					// isAsc: ""
 				},

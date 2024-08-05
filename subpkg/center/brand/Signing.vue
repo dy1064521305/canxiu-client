@@ -142,7 +142,7 @@
 				],
 				scrollTop: 0,
 				where: {
-					userId: storage.get('userId'),
+					userId: storage.get('ClientId'),
 					searchValue: "",
 					// 审核状态；0-待审核，1审核通过，-1审核驳回
 					reviewStatus: "",

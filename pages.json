@@ -404,6 +404,14 @@
 						"navigationStyle": "custom"
 					}
 
+				},
+				{
+					"path": "workers/team",
+					"style": {
+						"navigationBarTitleText": "团队管理",
+						"enablePullDownRefresh": false
+					}
+
 				}
 			]
 		},
