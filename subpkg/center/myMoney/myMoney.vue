@@ -199,16 +199,16 @@
 		<view class="money-image">
 			<view class="money-image-name">总资产（元）</view>
 			<view class="money-image-money acea-row row-between-wrapper">
-				<text class="money-image-money-left">8852</text>
+				<text class="money-image-money-left">{{info.totalAssetsAmount}}</text>
 				<view class="money-image-money-right acea-row">
 					<text @click="goCashOut">提现</text>
 					<text @click="$jump('/subpkg/center/myMoney/invest/into')">去转入</text>
 				</view>
 			</view>
-			<view class="money-image-name">可投资现金：¥20,000.00</view>
+			<view class="money-image-name">可提现金额：¥{{item.totalAmount}}</view>
 			<view class="money-image-type acea-row row-between-wrapper">
 				<view class="money-image-type-item acea-row flex-colum-center">
-					<text>投资余款</text>
+					<text>投资款余额</text>
 					<view>11</view>
 				</view>
 				<view class="money-image-type-item  acea-row flex-colum-center">
@@ -224,11 +224,11 @@
 		<view class="money-get acea-row">
 			<view class="money-get-item acea-row row-column row-center">
 				<text>累计收益（元）</text>
-				<view>33</view>
+				<view>{{info.totalRevenueAmount}}</view>
 			</view>
 			<view class="money-get-item  acea-row row-column row-center">
 				<text>待结算收益（元）</text>
-				<view>33</view>
+				<view>{{info.unsettledAmount}}</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center">
 				<text>累计活动奖励（元）</text>
@@ -271,6 +271,7 @@
 	import storage from '@/utils/storage'
 	import {
 		getUserWallet,
+		getPartnerAsset
 	} from '@/api/money.js'
 	export default {
 		components: {
@@ -321,21 +322,30 @@
 			};
 		},
 		onShow() {
-			this.getList()
+			this.getInfo()
 		},
 		onPageScroll(e) {
 			this.scrollTop = e.scrollTop;
 		},
 		methods: {
-			getList() {
-				getUserWallet({
-					userId: storage.get('ClientId'),
-					userType: 'c'
-				}).then(res => {
+			// getList() {
+			// 	getUserWallet({
+			// 		userId: storage.get('ClientId'),
+			// 		userType: 'c'
+			// 	}).then(res => {
+			// 		console.log(res);
+			// 		this.info = res.data
+			// 	})
+			// },
+			getInfo() {
+				getPartnerAsset(storage.get('ClientId')).then(res => {
 					console.log(res);
 					this.info = res.data
 				})
 			},
+			// getMoney() {
+
+			// },
 			goCashOut() {
 				// uni.navigateTo({
 				// 	url: 'cashOut/cashOut?amount=' + this.info.totalAmount

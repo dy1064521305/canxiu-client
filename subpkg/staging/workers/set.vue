@@ -59,8 +59,8 @@
  					workerId: "",
  					settlementRule: 0,
  					freezeDay: '',
- 					clientHeight: ""
- 				}
+ 				},
+ 				clientHeight: ""
  			}
  		},
  		onLoad(options) {

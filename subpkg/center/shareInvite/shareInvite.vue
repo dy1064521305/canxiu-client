@@ -117,7 +117,7 @@
 			Promise.all([this.getImageRectInfo('.poster', this.bg), this.getImageRectInfo('.code', this.code)]).then(
 				res => {
 					this.imageRectInfo = res
-					console.log(this.imageRectInfo);
+					console.log(this.imageRectInfo, "22222");
 				})
 		},
 		onShareAppMessage(res) {
@@ -153,7 +153,6 @@
 				})
 				this.loading = true
 				const ctx = uni.createCanvasContext('myCanvas', this)
-				console.log(ctx, this.imageRectInfo);
 				// 绘制第一张图片
 				const item1 = this.imageRectInfo[0]
 				ctx.drawImage(item1.tempFilePath, 0, 0, item1.width, item1.height);
@@ -162,7 +161,7 @@
 				ctx.drawImage(item2.tempFilePath, item1.width - item2.width, item1.height - item2.height, item2.width,
 					item2.height);
 				// 绘制完成后保存Canvas图片
-				ctx.draw(false, () => {
+				ctx.draw(false, (() => {
 					setTimeout(() => {
 						uni.canvasToTempFilePath({
 							canvasId: 'myCanvas',
@@ -186,8 +185,8 @@
 							}
 						}, this);
 					}, 200);
-				});
 
+				})())
 			},
 			// 获取图片路径,并将图片链接下载为本地链接
 			getImageRectInfo(seletor, path) {
