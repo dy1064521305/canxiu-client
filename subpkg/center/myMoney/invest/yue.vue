@@ -22,8 +22,9 @@
 						<text style="color: #212121; ">
 							<text>{{item.detailName}}</text>
 						</text>
-						<text :style="{color:item.adjustAmount>0?'#A4D091':'#FA6400'}"><text
-								v-if="item.adjustAmount>0">+</text> {{item.adjustAmount}}</text>
+						<text :style="{color:item.type==1?'#FA6400':'#A4D091'}"><text v-if="item.type==1">-</text> <text
+								v-else>+</text>
+							{{item.adjustAmount}}</text>
 
 					</view>
 					<view style="color: #999999; font-size: 24rpx;">

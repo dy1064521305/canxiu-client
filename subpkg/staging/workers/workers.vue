@@ -306,7 +306,7 @@
 					pageNum: 1,
 					keyword: '',
 					orderByColumn: '推荐',
-					userId: ""
+					userId: storage.get('ClientId'),
 				},
 				workerTypeList: [],
 				addressData: [],
@@ -320,9 +320,7 @@
 			};
 		},
 		onLoad(options) {
-			if (options && options.partnerId) {
-				this.queryParams.userId = options.partnerId
-			}
+
 			this.getArea()
 		},
 		onBackPress(event) {
