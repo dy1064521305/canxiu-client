@@ -4,8 +4,8 @@
 			<view>转入金额</view>
 			<view class="value price-font">
 				<text class="value-icon">￥</text>
-				<input :value="brokerage" @input="brokerageInput" placeholder="请输入转入金额"
-					placeholder-style="color:#999999;" type="digit" :maxlength="maxLength" />
+				<input v-model="where.transferAmount" placeholder="请输入转入金额" placeholder-style="color:#999999;"
+					type="digit" :maxlength="maxLength" />
 			</view>
 			<view class="wenan">
 				转入后，这部分钱将无法直接提现
@@ -18,11 +18,11 @@
 					mode=""></image>
 				<view class="pages-fangshi-yue-right acea-row row-column row-center">
 					<text>钱包余额</text>
-					<view>可提现金额：¥8,888.11</view>
+					<view>可提现金额：¥{{amount}}</view>
 				</view>
 			</view>
 		</view>
-		<view class="pages-btn">
+		<view class="pages-btn" @click="sureInto">
 			确认转入
 		</view>
 		<view class="pages-message">
@@ -34,17 +34,45 @@
 </template>
 
 <script>
+	import {
+		putTransferIn,
+		getClientAsset
+	} from '@/api/money.js'
+	import storage from '@/utils/storage'
 	export default {
 		data() {
 			return {
-				brokerage: ""
+				where: {
+					userId: storage.get('ClientId'),
+					transferAmount: ""
+				},
+				amount: 0
 			}
 		},
 		onLoad() {
-
+			this.getInfo()
 		},
 		methods: {
+			getInfo() {
+				getClientAsset(storage.get('ClientId')).then(res => {
+					console.log(res);
+					let data = res.data
+					this.amount = data.withdrawnAmount
+				})
+			},
+			sureInto() {
+				console.log(this.where.transferAmount, " this.where.transferAmount");
+				if (this.amount < this.where.transferAmount) return this.$toast('可转入金额不足')
+				if (this.where.transferAmount <= 0) return this.$toast('转入金额不能小于0')
+				putTransferIn(this.where).then(res => {
+					this.$toast('转入成功')
+					setTimeout(() => {
+						this.getInfo()
+						this.where.transferAmount = ''
+					}, 1000)
 
+				})
+			}
 		}
 	}
 </script>

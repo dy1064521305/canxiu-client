@@ -36,13 +36,22 @@ export const getSignCache = (params) => request.get('/finance/sign/getSignCache'
 export const cancelWithdrawal = (params) => request.put('/finance/userWithdrawal/cancelWithdrawal', params)
 
 // 获取合伙人我的资产
-export const getPartnerAsset = (userId) => request.get('/finance/userWallet/getPartnerAsset/' + userId)
-
-// 获取用户钱包详细信息
-export const getUserWalletGetInfo = (params) => request.get('/finance/userWallet/getInfo', params)
-
-// 获取客户我的资产
 export const getClientAsset = (userId) => request.get('/finance/userWallet/getClientAsset/' + userId)
 
-// 获取师傅我的资产
-export const getAsset = (workerId) => request.get('/finance/userWallet/getAsset/' + workerId)
+// 获取客户余额明细
+export const getBalanceDetail = (params) => request.get('/finance/userWallet/client/balanceDetail', params)
+
+// 获取客户投资款详情
+export const getInvestmentInfo = (userId) => request.get('/client/investment/getInvestmentInfo/' + userId)
+
+// 获取客户投资款变动明细
+export const getInvestmentDetail = (params) => request.get('/client/investment/detail', params)
+
+// 余额转入投资款
+export const putTransferIn = (params) => request.put('/client/investment/transferIn', params)
+
+// 投资款转出
+export const putTransferOut = (params) => request.put('/client/investment/transferOut', params)
+
+// 投资款转出审批列表(userId必传)
+export const postWithdrawList = (data) => request.post('/client/investment/withdraw/list', data)

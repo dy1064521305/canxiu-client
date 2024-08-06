@@ -1,6 +1,10 @@
 import {
 	TABBAR_PATH
 } from '@/config/environment.js'
+const {
+	environment
+} = require('@/config/environment.js')
+import storage from '@/utils/storage'
 
 export function numSimpWan(num) {
 	if (!num) return 0;
@@ -226,4 +230,60 @@ export function openMiniProgram(params) {
 	if (!params.url) return;
 	return jumpUrl(decodeURIComponent(params.url));
 	// #endif
+}
+
+
+export function uploadImageHandler(img, successCallback, errorCallback) {
+	uni.showLoading({
+		title: '图片上传中',
+	});
+	for (let i = 0; i < img.length; i++) {
+		const path = img[i];
+		console.log(path, 'path');
+		(function(i) {
+			setTimeout(function() {
+				uni.uploadFile({
+					url: environment.baseURL + '/system/oss/upload',
+					filePath: path,
+					fileType: 'image',
+					name: 'file',
+					formData: {
+						'filename': 'pics'
+					},
+					header: {
+						// #ifdef MP
+						"Content-Type": "multipart/form-data",
+						// #endif
+						Authorization: 'Bearer ' + storage.get('AccessToken')
+					},
+					success: function(res) {
+						uni.hideLoading();
+						if (res.statusCode == 403) {
+							Toast(res.data)
+						} else {
+							let data = res.data ? JSON.parse(res.data) : {};
+							console.log(data, "data");;
+							if (data.code == 200) {
+								console.log(data, "@");
+								let list = []
+								list.push(data.data
+									.url)
+								successCallback && successCallback(list)
+							} else {
+								errorCallback && errorCallback(data);
+								Toast(data.msg)
+							}
+						}
+					},
+					fail: function(res) {
+						uni.hideLoading();
+						Toast('上传图片失败');
+					}
+				});
+				if (i == res.tempFiles.length - 1) {
+					uni.hideLoading();
+				}
+			}, (i + 1) * 1000);
+		})(i)
+	}
 }

@@ -214,7 +214,6 @@
 </template>
 
 <script>
-	// import xSkeleton from '@/components/x-skeleton/x-skeleton.vue'
 	import xSkeleton from '@/components/x-skeleton/x-skeleton.vue'
 	import storage from '@/utils/storage'
 	import * as customer from '@/api/staging.js'
@@ -306,7 +305,8 @@
 					pageSize: 10,
 					pageNum: 1,
 					keyword: '',
-					orderByColumn: '推荐'
+					orderByColumn: '推荐',
+					userId: ""
 				},
 				workerTypeList: [],
 				addressData: [],
@@ -319,8 +319,15 @@
 				loading: false
 			};
 		},
-		onLoad() {
+		onLoad(options) {
+			if (options && options.partnerId) {
+				this.queryParams.userId = options.partnerId
+			}
 			this.getArea()
+		},
+		onBackPress(event) {
+			this.$jump('/pages/center/index')
+			return true;
 		},
 		onShow() {
 			this.getList()
@@ -337,13 +344,10 @@
 						that.province.forEach(item => {
 							item.num = 0
 						})
-						console.log(that.province, '11111111111', that.addressData);
-
 					}
 				})
 			},
 			goInfo(item) {
-				console.log(item);
 				uni.navigateTo({
 					url: 'workerInfo/workerInfo?info=' + JSON.stringify(item)
 				})
@@ -351,13 +355,11 @@
 			getList(pageNo, pageSize) {
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
-				console.log(this.queryParams);
 				// uni.showLoading({
 				// 	mask: true
 				// });
 				this.loading = true
 				getWorkers(this.queryParams).then(res => {
-					console.log(res)
 					var reg = /^(\d{3})\d{4}(\d{4})$/;
 					res.rows.forEach(item => {
 						item.regPhone = item.workerPhone != null ? item.workerPhone.replace(reg,
@@ -423,14 +425,10 @@
 				} else if (i == 2) {
 					this.showWorkerType = true
 					customer.getWorkersTypeList().then(res => {
-						console.log(res);
 						this.workerTypeList = res.rows
 					})
 				} else {
 					this.showArea = true
-					// if (this.addressData.length==0) {
-					// 	this.getArea()
-					// }
 				}
 				this.currentTabIndex = i
 
@@ -475,17 +473,6 @@
 					this.province = this.area = this.city = []
 					this.queryParams.regionList = []
 					this.getArea()
-					// this.province.forEach(item=>{
-					// 	item.num=0
-					// })
-					// this.addressData.forEach(yiji=>{
-
-					// 	yiji.children.forEach(erji=>{
-					// 		erji.children.forEach(sanji=>{
-					// 			sanji.check=false
-					// 		})
-					// 	})
-					// })
 
 				} else {
 					let arr = []

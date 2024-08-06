@@ -68,17 +68,27 @@
 </template>
 
 <script>
+	import {
+		getClientAsset
+	} from '@/api/money.js'
+	import storage from '@/utils/storage'
 	export default {
 		data() {
 			return {
-				brokerage: ""
+				brokerage: "",
+				info: {}
 			}
 		},
 		onLoad() {
-
+			this.getInfo()
 		},
 		methods: {
-
+			getInfo() {
+				getClientAsset(storage.get('ClientId')).then(res => {
+					console.log(res);
+					this.info = res.data
+				})
+			},
 		}
 	}
 </script>

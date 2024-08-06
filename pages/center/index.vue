@@ -43,13 +43,13 @@
 					</view> -->
 				</view>
 				<view class="balance acea-row  row-between-wrapper">
-					<view class="balance-two ">
+					<view class="balance-two " @click="$jump('/pages/users/reward/coupon')">
 						<view class="balance-two-num ">
 							{{couponNum}}
 						</view>
 						<text>优惠券</text>
 					</view>
-					<view class="balance-two ">
+					<view class="balance-two " @click="$jump('/subpkg/center/myMoney/myMoney')">
 						<view class="balance-two-num ">
 							{{totalAmount}}
 						</view>
@@ -375,18 +375,20 @@
 						label: '邀请门店',
 						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/e98f2f8ab0a9476f9ceb030c1b83745a.png',
 						url: "/subpkg/center/inviteActivity/inviteActivity"
-					}, {
-						id: 7,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/10/74c5b5bf7ea94a2f9aa0c6a5e74da786.png",
-						label: "师傅管理",
-						url: "/subpkg/staging/workers/workers"
 					},
+					// {
+					// 	id: 7,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/10/74c5b5bf7ea94a2f9aa0c6a5e74da786.png",
+					// 	label: "师傅管理",
+					// 	url: "/subpkg/staging/workers/workers"
+					// },
 					{
 						id: 8,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/15/600d6ba6d8314b6e8a444dfea554fa6d.png",
-						label: "结算记录",
-						url: "/subpkg/staging/workers/records"
-					}
+						label: "团队管理",
+						url: "/subpkg/staging/workers/team"
+					},
+					// 注意，id>3的会提示先申请合伙人
 				],
 				list: [{
 						name: '待服务',
@@ -708,11 +710,15 @@
 						case 6:
 							this.$jump(i.url + '?partnerId=' + par.partnerId + '&region=' + par.region)
 							break;
-						case 8:
-							this.$jump(i.url + '?partnerId=' + par.partnerId)
-							break;
+							// case 7:
+							// 	this.$jump(i.url + '?partnerId=' + par.partnerId)
+							// 	break;
+
+							// case 8:
+							// 	this.$jump(i.url + '?partnerId=' + par.partnerId)
+							// 	break;
 						default:
-							this.$jump(i.url)
+							this.$jump(i.url + '?partnerId=' + par.partnerId)
 							break;
 					}
 

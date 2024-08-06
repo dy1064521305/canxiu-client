@@ -199,54 +199,63 @@
 		<view class="money-image">
 			<view class="money-image-name">总资产（元）</view>
 			<view class="money-image-money acea-row row-between-wrapper">
-				<text class="money-image-money-left">{{info.totalAssetsAmount}}</text>
+				<text class="money-image-money-left">{{info.totalAssetsAmount||0}}</text>
 				<view class="money-image-money-right acea-row">
 					<text @click="goCashOut">提现</text>
 					<text @click="$jump('/subpkg/center/myMoney/invest/into')">去转入</text>
 				</view>
 			</view>
-			<view class="money-image-name">可提现金额：¥{{info.totalAmount||0}}</view>
+			<view class="money-image-name">可提现金额：¥{{info.withdrawnAmount||0}}</view>
 			<view class="money-image-type acea-row row-between-wrapper">
 				<view class="money-image-type-item acea-row flex-colum-center">
 					<text>投资款余额</text>
-					<view>11</view>
+					<view>{{info.investmentBalance||0}}</view>
 				</view>
 				<view class="money-image-type-item  acea-row flex-colum-center">
 					<text>本月消耗</text>
-					<view>22</view>
+					<view>{{info.currentMonthConsumedAmount||0}}</view>
 				</view>
 				<view class="money-image-type-item  acea-row flex-colum-center">
 					<text>预计补贴</text>
-					<view>33</view>
+					<view>{{info.predictSubsidyAmount||0}}</view>
 				</view>
 			</view>
 		</view>
 		<view class="money-get acea-row">
 			<view class="money-get-item acea-row row-column row-center">
-				<text>累计收益（元）</text>
-				<view>{{info.totalRevenueAmount}}</view>
+				<text>累计收益</text>
+				<view>{{info.totalRevenueAmount||0}}</view>
 			</view>
 			<view class="money-get-item  acea-row row-column row-center">
-				<text>待结算收益（元）</text>
-				<view>{{info.unsettledAmount}}</view>
+				<text>待结算收益</text>
+				<view>{{info.unsettledAmount||0}}</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center">
-				<text>累计活动奖励（元）</text>
-				<view>33</view>
+				<text>业务推广收益</text>
+				<view>{{info.orderSharingAmount||0}}</view>
+			</view>
+			<!-- <view class="money-get-item acea-row row-column row-center">
+				<text>订单消耗收益</text>
+				<view>{{info.totalRevenueAmount||0}}</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center">
-				<text>推广累计收益（元）</text>
-				<view>33</view>
+				<text>团队育成奖励</text>
+				<view>{{info.totalRevenueAmount||0}}</view>
+			</view> -->
+			<view class="money-get-item acea-row row-column row-center">
+				<text>区域运营补贴</text>
+				<view>{{info.regionOrderSharingAmount||0}}</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center">
-				<text>团队累计奖励（元）</text>
-				<view>33</view>
+				<text>活动参与奖励</text>
+				<view>{{info.totalActivityAmount||0}}</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center"
 				@click="$jump('/subpkg/center/myMoney/invest/butie')">
-				<text>资金补贴合计（元）</text>
-				<view>33</view>
+				<text>投资款资金补贴</text>
+				<view>{{info.totalCapitalSubsidyAmount||0}}</view>
 			</view>
+
 		</view>
 		<view class="setUp">
 			<view class="setUp-list acea-row row-between-wrapper" @click="$jump(item.url)" v-for="(item) in typeList"
@@ -271,7 +280,7 @@
 	import storage from '@/utils/storage'
 	import {
 		getUserWallet,
-		getPartnerAsset
+		getClientAsset
 	} from '@/api/money.js'
 	import {
 		checkIsSign
@@ -341,7 +350,7 @@
 			// 	})
 			// },
 			getInfo() {
-				getPartnerAsset(storage.get('ClientId')).then(res => {
+				getClientAsset(storage.get('ClientId')).then(res => {
 					console.log(res);
 					this.info = res.data
 				})
