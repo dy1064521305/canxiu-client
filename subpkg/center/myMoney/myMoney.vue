@@ -202,7 +202,7 @@
 				<text class="money-image-money-left">{{info.totalAssetsAmount||0}}</text>
 				<view class="money-image-money-right acea-row">
 					<text @click="goCashOut">提现</text>
-					<text @click="$jump('/subpkg/center/myMoney/invest/into?amount='+info.withdrawnAmount)">去转入</text>
+					<text @click="$jump('/subpkg/center/myMoney/invest/into')">去转入</text>
 				</view>
 			</view>
 			<view class="money-image-name">可提现金额：¥{{info.withdrawnAmount||0}}</view>

@@ -35,7 +35,8 @@
 
 <script>
 	import {
-		putTransferIn
+		putTransferIn,
+		getClientAsset
 	} from '@/api/money.js'
 	import storage from '@/utils/storage'
 	export default {
@@ -48,12 +49,17 @@
 				amount: 0
 			}
 		},
-		onLoad(options) {
-			if (options && options.amount) {
-				this.amount = options.amount
-			}
+		onLoad() {
+			this.getInfo()
 		},
 		methods: {
+			getInfo() {
+				getClientAsset(storage.get('ClientId')).then(res => {
+					console.log(res);
+					let data = res.data
+					this.amount = data.withdrawnAmount
+				})
+			},
 			sureInto() {
 				console.log(this.where.transferAmount, " this.where.transferAmount");
 				if (this.amount < this.where.transferAmount) return this.$toast('可转入金额不足')
@@ -61,7 +67,8 @@
 				putTransferIn(this.where).then(res => {
 					this.$toast('转入成功')
 					setTimeout(() => {
-						this.$jump(-1)
+						this.getInfo()
+						this.where.transferAmount = ''
 					}, 1000)
 
 				})
