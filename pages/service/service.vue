@@ -97,6 +97,7 @@
 </template>
 
 <script>
+	import storage from '@/utils/storage'
 	import * as service from '@/api/service.js'
 	import {
 		getCarNum
@@ -203,8 +204,11 @@
 				// 	title: '加载中...'
 				// });
 				this.loading = true
-				service.getService(this.query).then(res => {
-					this.loading = false
+				
+				service.getService({
+					...this.query,
+					clientId:storage.get('ClientId')
+				}).then(res => {
 					if (type == 'search') {
 						console.log(111);
 						console.log(res.data);
