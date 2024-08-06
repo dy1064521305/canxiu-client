@@ -55,21 +55,17 @@
 		methods: {
 			getInfo() {
 				getClientAsset(storage.get('ClientId')).then(res => {
-					console.log(res);
-					let data = res.data
+					let data = res.data || {}
 					this.amount = data.withdrawnAmount
 				})
 			},
 			sureInto() {
-				console.log(this.where.transferAmount, " this.where.transferAmount");
-				if (this.amount < this.where.transferAmount) return this.$toast('可转入金额不足')
-				if (this.where.transferAmount <= 0) return this.$toast('转入金额不能小于0')
+				if (Number(this.amount) < Number(this.where.transferAmount)) return this.$toast('可转入金额不足')
+				if (Number(this.where.transferAmount) <= 0) return this.$toast('转入金额不能小于0')
 				putTransferIn(this.where).then(res => {
+					this.getInfo()
+					this.where.transferAmount = ''
 					this.$toast('转入成功')
-					setTimeout(() => {
-						this.getInfo()
-						this.where.transferAmount = ''
-					}, 1000)
 
 				})
 			}

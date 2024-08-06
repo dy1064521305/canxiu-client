@@ -167,15 +167,15 @@
 			this.scrollTop = e.scrollTop;
 		},
 		onLoad() {
-			this.getList()
 			this.getBank()
 		},
 		onShow() {
-			uni.$on('listOnshow', show => {
-				if (show) {
-					this.getList()
-				}
-			})
+			this.getList()
+			// uni.$on('listOnshow', show => {
+			// 	if (show) {
+			// 		this.getList()
+			// 	}
+			// })
 			uni.$on('getBankshow', show => {
 				if (show) {
 					this.getBank()

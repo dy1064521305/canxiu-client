@@ -31,24 +31,25 @@
 			<view class="pages-money-type acea-row">
 				<view class="pages-money-type-1 acea-row row-column row-center">
 					<text>个人投资款（元）</text>
-					<view>8,888.11</view>
+					<view>{{info.personInvestmentBalance||0}}</view>
 				</view>
 				<view class="pages-money-type-1  acea-row row-column row-center">
-					<text>个人投资款（元）</text>
-					<view>8,888.11</view>
+					<text>投资分红</text>
+					<view>{{info.capitalSubsidyAmount||0}}</view>
 				</view>
 			</view>
 			<view class="wenan">
-				可转出余额：¥8,888.11
+				可转出余额：¥{{info.transferableAmount||0}}
 			</view>
 		</view>
 		<view class="pages-money" style="padding-bottom: 60rpx;">
 			<view>转出金额</view>
 			<view class="value price-font">
 				<text class="value-icon">￥</text>
-				<input :value="brokerage" @input="brokerageInput" placeholder="请输入转入金额"
-					placeholder-style="color:#999999;" type="digit" :maxlength="10" />
-				<text style="color: #212121; font-size: 28rpx; margin-top: 14rpx;margin-right: 20rpx;">全部转出</text>
+				<input v-model="where.transferAmount" placeholder="请输入转出金额" placeholder-style="color:#999999;"
+					type="digit" :maxlength="10" />
+				<text style="color: #212121; font-size: 28rpx; margin-top: 14rpx;margin-right: 20rpx;"
+					@click="allOut">全部转出</text>
 			</view>
 		</view>
 		<view class="pages-fangshi acea-row row-between-wrapper"
@@ -56,7 +57,7 @@
 			<view>审核记录</view>
 			<u-icon name="arrow-right"></u-icon>
 		</view>
-		<view class="pages-btn">
+		<view class="pages-btn" @click="sureOut">
 			确认转出
 		</view>
 		<view class="pages-message">
@@ -69,13 +70,17 @@
 
 <script>
 	import {
-		getClientAsset
+		getInvestmentInfo,
+		putTransferOut
 	} from '@/api/money.js'
 	import storage from '@/utils/storage'
 	export default {
 		data() {
 			return {
-				brokerage: "",
+				where: {
+					userId: storage.get('ClientId'),
+					transferAmount: ""
+				},
 				info: {}
 			}
 		},
@@ -84,11 +89,25 @@
 		},
 		methods: {
 			getInfo() {
-				getClientAsset(storage.get('ClientId')).then(res => {
-					console.log(res);
-					this.info = res.data
+				getInvestmentInfo(storage.get('ClientId')).then(res => {
+					this.info = res.data || {}
 				})
 			},
+			sureOut() {
+				console.log(this.info.transferableAmount, "this.info.transferableAmount ");
+				console.log(this.where.transferAmount, "this.where.transferAmount ");
+				if (Number(this.info.transferableAmount) < Number(this.where.transferAmount)) return this.$toast('可转出金额不足')
+				if (Number(this.where.transferAmount) <= 0) return this.$toast('转出金额不能小于0')
+				putTransferOut(this.where).then(res => {
+					this.getInfo()
+					this.where.transferAmount = ''
+					this.$toast('转出成功')
+
+				})
+			},
+			allOut() {
+				this.where.transferAmount = this.info.transferableAmount
+			}
 		}
 	}
 </script>
