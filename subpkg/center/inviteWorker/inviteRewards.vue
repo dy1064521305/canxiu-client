@@ -259,7 +259,7 @@
 					pageNum: 1,
 					type: '',
 					registerDate: this.getCurrentMonth() + '-01',
-					inviterId: '',
+					inviterId: storage.get('ClientId'),
 					workerName: "",
 					workerPhone: "",
 					storeName: "",
