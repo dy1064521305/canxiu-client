@@ -332,11 +332,9 @@
 						})
 						break;
 					case 'invite':
-						console.log(this.activeInfo, "//");
 						this.activeInfo.userType = 0
 						this.activeInfo.partnerId = this.partnerId
 						this.getParticipation().then(res => {
-							console.log(res, '3211111111111');
 							if (res.code == 200) {
 								uni.navigateTo({
 									url: '../shareInvite/shareInvite?info=' + encodeURIComponent(
