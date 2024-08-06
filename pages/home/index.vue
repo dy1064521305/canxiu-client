@@ -89,9 +89,11 @@
 							}" itemStyle="padding-left: 15px; padding-right: 15px; height: 45px;" @click="tabClick">
 						</u-tabs>
 					</view>
+					
+				<view style="text-align: center;margin-top: 28rpx;" v-if='loading'>正在加载...</view>
 					<swiper v-if="serviceSymptomsName.length>0"
 						:style="{minHeight:(serviceItemHeight*10)+'px',height:(serviceItemHeight*serviceSymptomsName[currentIndex].list.length)+'px'}"
-						:current="currentIndex" @change="swiper_change">
+						:current="currentIndex" @change="swiper_change" >
 						<swiper-item v-for="(item,index) in serviceSymptomsName" :key="index">
 							<view class="scroll-view" v-if="item.list">
 								<view v-for="(item1,index1) in item.list" :key="index1" class="service-item">
@@ -108,7 +110,7 @@
 									icon="http://cdn.uviewui.com/uview/empty/list.png">
 								</u-empty>
 								<view class='btns'>
-									<view v-if='loading'>正在加载...</view>
+									
 									<view v-if='item.list.length==item.total&&item.list.length!=0'>-已加载全部-</view>
 								</view>
 							</view>
@@ -445,8 +447,10 @@
 				this.serviceSymptomsName[this.currentIndex].params.pageNum++
 				if (!this.serviceSymptomsName[this.currentIndex].params.symptoms) this.serviceSymptomsName[this
 					.currentIndex].params.symptoms = this.serviceSymptomsName[this.currentIndex].name
-					console.log(this.serviceSymptomsName[this.currentIndex].list.length,this.serviceSymptomsName[this.currentIndex].total);
-				if (this.serviceSymptomsName[this.currentIndex].list.length==this.serviceSymptomsName[this.currentIndex].total) return
+				console.log(this.serviceSymptomsName[this.currentIndex].list.length, this.serviceSymptomsName[this
+					.currentIndex].total);
+				if (this.serviceSymptomsName[this.currentIndex].list.length == this.serviceSymptomsName[this.currentIndex]
+					.total) return
 				this.getServiceSymptomsHandle()
 			},
 			refreshHandle() {
@@ -455,14 +459,30 @@
 					if (service.params) {
 						service.params.pageNum = 1
 					}
-
 					service.list ? service.list.length = 0 : []
 				})
+				this.serviceItemHeight=0
+				// uni.pageScrollTo({
+				// 	selector: '.flag',
+				// 	success: () => {
+				// 		setTimeout(() => {
+				// 			this.tabsBg = '#fff'
+				// 		}, 300)
+				// 	}
+				// });
 				this.getServiceSymptomsHandle()
 			},
 			//下拉刷新函数
 			onPullDownRefresh() {
-				this.refreshHandle()
+				this.serviceSymptomsName.forEach(service => {
+					if (service.params) {
+						service.params.pageNum = 1
+					}
+					service.total=0
+					service.list ? service.list.length = 0 : []
+				})
+
+				this.getServiceSymptomsHandle()
 			},
 			swiper_change(e) {
 				if (e.detail.current === this.currentIndex) return
@@ -525,7 +545,7 @@
 			getServiceHeight() {
 				uni.createSelectorQuery().in(this).select('.service-item')
 					.boundingClientRect(data1 => {
-						this.serviceItemHeight = data1 != null ? data1.height + 15 : 100
+						this.serviceItemHeight = data1 != null ? data1.height + 13 : 100
 					}).exec();
 			},
 			// getServiceSymptoms() {
