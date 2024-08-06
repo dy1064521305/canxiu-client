@@ -1,32 +1,35 @@
 <template>
 	<view class="pages">
-		<view slot='top'>
-			<view class="header-type">
-				<view class="filter-row acea-row row-between-wrapper">
-					<view v-for="(item, index) in searchTypes" :key="index" class="filter-row-item acea-row"
-						:class="{on: where.reviewStatus === item.type}" @click="productSort(item.type)">
-						{{item.label}}
+
+		<z-paging ref="paging" v-model="dataList" @query="getList" @onRefresh='refresh'>
+			<view slot='top'>
+				<view class="header-type">
+					<view class="filter-row acea-row row-between-wrapper">
+						<view v-for="(item, index) in searchTypes" :key="index" class="filter-row-item acea-row"
+							:class="{on: where.approvalStatus === item.type}" @click="productSort(item.type)">
+							{{item.label}}
+						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		<z-paging ref="paging" v-model="dataList" @query="getList" @onRefresh='refresh'>
 			<view class="pages-lists">
 				<view class="box" v-for="(item,index) in dataList" :key="index">
 					<view class="">
 						<text style="color: #212121; ">
-							<text>提现至-{{item.bankName}}</text>
-							（{{item.cardNumber}}）
+							<text>投资款转出</text>
 						</text>
-						<text
-							:style="{'color':item.status=='待审核'||item.status=='审核通过'?'#F3B133':item.status=='已驳回'?'#EC5722':'#A4D091'}">{{item.status=='待审核'||item.status=='审核通过'?'审核中':item.status=='已驳回'?'提现失败':'提现成功'}}</text>
-
+						<text>{{item.amount}}</text>
 					</view>
 					<view style="color: #999999; font-size: 24rpx;">
 						<text>
-							{{item.askTime}}
+							{{item.updateTime}}
 						</text>
-						<text>余额：¥{{item.amount}}</text>
+						<view class="acea-row row-middle" @click="oncancel(item.approvalStatus,item.approvalRemark)"
+							:style="{'color':item.approvalStatus==1?'#A4D091':item.approvalStatus==2?'#E02020':'#F7B500'}">
+							<text>{{item.approvalStatus==1?'审核通过':item.approvalStatus==2?'审核驳回':'待审核'}}</text>
+							<u-icon v-if="item.approvalStatus==2" style="margin-left: 4rpx;" name="question-circle"
+								color="#E02020" size="16"></u-icon>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -36,19 +39,18 @@
 
 <script>
 	import {
-		getListPartnerWithdrawal
+		postWithdrawList
 	} from '@/api/money.js'
 	import storage from '@/utils/storage'
 	export default {
 		data() {
 			return {
 				where: {
-					brandName: "",
-					orderNumber: "",
-					code: "",
 					pageSize: 10,
 					pageNum: 1,
-					reviewStatus: ""
+					approvalStatus: "",
+					userId: storage.get('ClientId'),
+
 				},
 				dataList: [],
 				searchTypes: [{
@@ -67,32 +69,39 @@
 
 					},
 					{
-						type: -1,
+						type: 2,
 						label: '审核驳回',
 
 					}
 				],
 			}
 		},
-		onLoad() {
-
-		},
 		methods: {
 			getList(pageNo, pageSize) {
 				this.where.pageNum = pageNo;
 				this.where.pageSize = pageSize;
-				this.where.userId = storage.get('ClientId'),
-					getListPartnerWithdrawal(this.where).then(res => {
-						console.log(res);
-						console.log(1111);
-						this.$refs.paging.completeByTotal(res.rows, res.total);
-						//this.info=res.data
-					})
+				postWithdrawList(
+					this.where
+				).then(res => {
+					this.$refs.paging.completeByTotal(res.rows, res.total);
+					//this.info=res.data
+				})
 			},
 			productSort(status) {
-				this.where.reviewStatus = status;
+				this.where.approvalStatus = status;
 				this.$refs.paging.reload();
 			},
+			oncancel(i, resoin) {
+				if (i != 2) return
+				this.$alert('驳回原因', 2, {
+					content: resoin,
+					confirmText: '我知道了',
+				}).then((res) => {
+					if (res.confirm) {
+						return
+					}
+				})
+			}
 		}
 	}
 </script>
@@ -108,9 +117,9 @@
 			.filter-row {
 				box-sizing: border-box;
 				height: 88rpx;
-				margin-top: 20rpx;
-				border-top: 1rpx solid #ececec;
-				padding: 0 30rpx;
+				background-color: #fff;
+				margin-bottom: 20rpx;
+				padding: 0 60rpx;
 
 				.filter-row-item {
 					color: #969799;
@@ -161,7 +170,6 @@
 		}
 
 		&-lists {
-			min-height: 80vh;
 			background-color: #fff;
 
 			.box {

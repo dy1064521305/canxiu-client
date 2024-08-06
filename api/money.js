@@ -1,3 +1,6 @@
+import {
+	data
+} from '../uni_modules/uview-ui/libs/mixin/mixin';
 import request from '@/config/request.js';
 
 // 获取用户钱包详细信息
@@ -54,4 +57,4 @@ export const putTransferIn = (params) => request.put('/client/investment/transfe
 export const putTransferOut = (params) => request.put('/client/investment/transferOut', params)
 
 // 投资款转出审批列表(userId必传)
-export const postWithdrawList = (data) => request.post('/client/investment/withdraw/list', data)
+export const postWithdrawList = (params) => request.get('/client/investment/withdraw/list', params)
