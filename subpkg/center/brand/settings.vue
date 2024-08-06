@@ -130,17 +130,17 @@
 				保存编辑
 			</view>
 		</view>
-		<multiple-picker title="请选择" :show="show_1" :columns="userList" :defaultIndex="index_1"
-			@confirm="confirmMultiple" @cancel="show_1 = false" @change="changeMultiple"></multiple-picker>
-		<multiple-picker title="请选择" :show="show_2" :columns="userList" :defaultIndex="index_2"
-			@confirm="confirmMultiple" @cancel="show_2 = false" @change="changeMultiple"></multiple-picker>
-		<multiple-picker title="请选择" :show="show_3" :columns="userList" :defaultIndex="index_3"
-			@confirm="confirmMultiple" @cancel="show_3 = false" @change="changeMultiple"></multiple-picker>
+		<multiplePicker title="请选择" :show="show_1" :columns="userList" :defaultIndex="index_1"
+			@confirm="confirmMultiple" @cancel="show_1 = false" @change="changeMultiple"></multiplePicker>
+		<multiplePicker title="请选择" :show="show_2" :columns="userList" :defaultIndex="index_2"
+			@confirm="confirmMultiple" @cancel="show_2 = false" @change="changeMultiple"></multiplePicker>
+		<multiplePicker title="请选择" :show="show_3" :columns="userList" :defaultIndex="index_3"
+			@confirm="confirmMultiple" @cancel="show_3 = false" @change="changeMultiple"></multiplePicker>
 	</view>
 </template>
 
 <script>
-	import pickers from "@/components/ming-picker/ming-picker.vue"
+	import multiplePicker from "@/components/multiple-picker/multiple-picker"
 	import upLoadFile from '../../../components/uploadFile/uploadFile.vue'
 	import {
 		postAddContractInfoOf,
@@ -154,7 +154,7 @@
 	} = require('@/config/environment')
 	export default {
 		components: {
-			pickers,
+			multiplePicker,
 			upLoadFile,
 		},
 		data() {
@@ -337,7 +337,7 @@
 						})
 						this.maintenanceNames = temp.toString()
 						this.where.maintenanceNames = temp;
-						this.where.maintenanceIds = e.value;
+						this.where.maintenanceIds = e.value || [];
 						this.show_3 = false
 						break;
 					}
@@ -381,14 +381,14 @@
 						repairRatio: data.repairRatio,
 						groupPay: data.groupPay,
 						contractImg: data.contractImg,
-						serviceNames: data.customerService ? [...data.customerService.split(',')] : '',
-						serviceIds: data.customerServiceId ? [...data.customerServiceId.split(',')] : "",
-						saleNames: data.exclusiveSale ? [...data.exclusiveSale.split(',')] : "",
-						saleIds: data.exclusiveSaleId ? [...data.exclusiveSaleId.split(',')] : "",
+						serviceNames: data.customerService ? [...data.customerService.split(',')] : [],
+						serviceIds: data.customerServiceId ? [...data.customerServiceId.split(',')] : [],
+						saleNames: data.exclusiveSale ? [...data.exclusiveSale.split(',')] : [],
+						saleIds: data.exclusiveSaleId ? [...data.exclusiveSaleId.split(',')] : [],
 						maintenanceIds: data.maintenanceSupervisorId ? [...data.maintenanceSupervisorId.split(
-							',')] : "",
+							',')] : [],
 						maintenanceNames: data.maintenanceSupervisor ? [...data.maintenanceSupervisor.split(
-							',')] : "",
+							',')] : [],
 					}
 					this.maintenanceRatio = data.maintenanceRatio || ''
 					this.repairRatio = data.repairRatio || ''
@@ -429,7 +429,7 @@
 				console.log(this.where, "this.where");
 				postAddContractInfoOf(this.where).then(res => {
 					this.$toast('设置成功')
-					uni.$emit("listOnshow", true)
+					// uni.$emit("listOnshow", true)
 					setTimeout(() => {
 						this.$jump(-1)
 					}, 1000)
