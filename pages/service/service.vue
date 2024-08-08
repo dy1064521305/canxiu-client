@@ -165,6 +165,9 @@
 		},
 		onTabItemTap: function() {
 			this.getList()
+			this.swichMenu(0)
+			this.arr=[]
+			
 
 		},
 		onShow() {
@@ -191,7 +194,6 @@
 
 		},
 		onHide() {
-			console.log(111);
 			getApp().index = undefined
 
 		},
@@ -199,44 +201,37 @@
 		methods: {
 			getList(type) {
 				this.typesList = []
-				console.log(type);
 				// uni.showLoading({
 				// 	title: '加载中...'
 				// });
 				this.loading = true
-				
 				service.getService({
 					...this.query,
 					clientId:storage.get('ClientId')?storage.get('ClientId'):''
 				}).then(res => {
+					this.loading = false
 					if (type == 'search') {
-						console.log(111);
-						console.log(res.data);
 						this.typesList = []
 						res.data.forEach(item => {
 							if (item.typeLevel == 3) {
 								this.typesList.push(item)
 							}
 						})
-						console.log(this.typesList);
 						this.isSearch = true
 						//uni.hideLoading()
 
 					} else {
-						console.log(11111);
 						this.typesList = res.data
 						this.isSearch = false
 					}
 
 					this.loading = false
-					console.log(this.typesList);
 				})
 			},
 			// 获取微信右上角胶囊高度
 			getHeight() {
 				let res = wx.getMenuButtonBoundingClientRect();
 				this.titleHeight = res.top + 30;
-				console.log(this.titleHeight);
 			},
 			//搜索
 			goSearch() {
@@ -360,7 +355,6 @@
 
 				this.query.name = ''
 				this.isSearch = false
-				console.log(this.current);
 				let info = {
 					scrollTop: this.oldScrollTop,
 					current: this.current
@@ -377,8 +371,6 @@
 			},
 			//搜索
 			search() {
-				// console.log(this.searchName);
-				// console.log(this.typesList);
 				if (this.query.name == '') {
 					this.$refs.uToast.show({
 						type: 'error',
@@ -406,7 +398,6 @@
 
 			toNext(type) {
 				if (this.query.name != '' && type == 'input') {
-					console.log(type);
 
 					this.getList('search')
 				} else {
@@ -416,7 +407,6 @@
 					this.isSearch = false
 					this.getList()
 				}
-				console.log(this.query.name);
 			}
 		}
 	}
