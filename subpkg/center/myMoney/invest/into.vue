@@ -5,7 +5,7 @@
 			<view class="value price-font">
 				<text class="value-icon">￥</text>
 				<input v-model="where.transferAmount" placeholder="请输入转入金额" placeholder-style="color:#999999;"
-					type="digit" :maxlength="maxLength" />
+					type="digit" />
 			</view>
 			<view class="wenan">
 				转入后，这部分钱将无法直接提现
@@ -63,10 +63,9 @@
 				if (Number(this.amount) < Number(this.where.transferAmount)) return this.$toast('可转入金额不足')
 				if (Number(this.where.transferAmount) <= 0) return this.$toast('转入金额不能小于0')
 				putTransferIn(this.where).then(res => {
+					uni.$u.toast('转入成功')
 					this.getInfo()
 					this.where.transferAmount = ''
-					this.$toast('转入成功')
-
 				})
 			}
 		}
@@ -97,7 +96,7 @@
 					flex: 1;
 					display: flex;
 					align-items: center;
-					font-size: 48rpx;
+					font-size: 42rpx;
 					margin-left: 24rpx;
 				}
 			}

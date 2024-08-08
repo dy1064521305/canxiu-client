@@ -55,6 +55,7 @@ export const putSettlement = (data) => request.put('/partner/worker/walletDetail
 // 关闭结算
 export const putInvalid = (data) => request.put('/partner/worker/walletDetail/invalid', data)
 
+
 // 根据合伙人ID获取预存款信息
 export const getInvestmentClient = (partnerId) => request.get('/partner/investment/client/' + partnerId)
 
@@ -63,3 +64,7 @@ export const putImmediate = (id) => request.get('/client/partner/' + id)
 
 // 查询合伙人资金补贴记录明细列表
 export const getSubsidyDetail = (id, params) => request.get('/partner/user/subsidy/detail/' + id, params)
+
+// 调整金额并结算
+export const putImmediateSettlement = (data) => request.put('/partner/worker/walletDetail/adjust/immediateSettlement',
+	data)
