@@ -234,14 +234,14 @@
 				<text>业务推广收益</text>
 				<view>{{info.orderSharingAmount||0}}</view>
 			</view>
-			<!-- <view class="money-get-item acea-row row-column row-center">
+			<view class="money-get-item acea-row row-column row-center">
 				<text>订单消耗收益</text>
-				<view>{{info.totalRevenueAmount||0}}</view>
+				<view>0</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center">
 				<text>团队育成奖励</text>
-				<view>{{info.totalRevenueAmount||0}}</view>
-			</view> -->
+				<view>0</view>
+			</view>
 			<view class="money-get-item acea-row row-column row-center">
 				<text>区域运营补贴</text>
 				<view>{{info.regionOrderSharingAmount||0}}</view>

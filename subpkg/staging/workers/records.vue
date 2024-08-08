@@ -123,7 +123,7 @@
 					<view class="invite_list-item-time acea-row" v-if="item.status=='待结算'">
 						<view class="invite_list-item-time-btn acea-row">
 							<view @click="close(1,item)">关闭结算</view>
-							<view @click="close(2,item)">调整金额</view>
+							<!-- <view @click="close(2,item)">调整金额</view> -->
 							<view @click="close(3,item)">立即结算</view>
 						</view>
 					</view>
@@ -303,6 +303,9 @@
 				this.userId = options.partnerId
 			}
 		},
+		onShow() {
+			this.getList(1, 10)
+		},
 		methods: {
 			getList(pageNo, pageSize) {
 				this.where.pageNum = pageNo
@@ -393,17 +396,25 @@
 						})
 						break;
 					case 2:
-						this.popTitle = 0
-						this.accountShow = true
-						this.adjustDetailAmount = this.info.orderCost || ''
-						this.remark = ''
+						// this.popTitle = 0
+						// this.accountShow = true
+						// this.adjustDetailAmount = this.info.orderCost || ''
+						// this.remark = ''
 						break;
 					case 3:
-						this.popTitle = 1
-						this.accountShow = true
+						// this.popTitle = 1
+						// this.accountShow = true
 						if (item.orderStatus == '售后中') return this.$toast('该笔订单正处于售后中，不可结算')
 						getInvestmentClient(this.userId).then(res => {
 							this.investmentBalance = res.data.investmentBalance || ''
+							let data = {
+								investmentBalance: this.investmentBalance || '',
+								isRepairOrder: item.isRepairOrder,
+								detailId: item.detailsId || '',
+								orderCost: item.orderCost || '',
+								// partnerId: this.userId
+							}
+							this.$jump('/subpkg/staging/workers/tie?data=' + JSON.stringify(data))
 						})
 						break;
 					default:

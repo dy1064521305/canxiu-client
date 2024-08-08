@@ -47,7 +47,7 @@
 			<view class="value price-font">
 				<text class="value-icon">￥</text>
 				<input v-model="where.transferAmount" placeholder="请输入转出金额" placeholder-style="color:#999999;"
-					type="digit" :maxlength="10" />
+					type="digit" />
 				<text style="color: #212121; font-size: 28rpx; margin-top: 14rpx;margin-right: 20rpx;"
 					@click="allOut">全部转出</text>
 			</view>
@@ -99,9 +99,9 @@
 				if (Number(this.info.transferableAmount) < Number(this.where.transferAmount)) return this.$toast('可转出金额不足')
 				if (Number(this.where.transferAmount) <= 0) return this.$toast('转出金额不能小于0')
 				putTransferOut(this.where).then(res => {
+					uni.$u.toast('转出成功')
 					this.getInfo()
 					this.where.transferAmount = ''
-					this.$toast('转出成功')
 
 				})
 			},
@@ -154,7 +154,7 @@
 					flex: 1;
 					display: flex;
 					align-items: center;
-					font-size: 48rpx;
+					font-size: 42rpx;
 					margin-left: 24rpx;
 				}
 			}
