@@ -189,7 +189,7 @@
 </style> -->
 <template>
 	<view class="money">
-		<Header listen-scroll :scroll-top="scrollTop" :offset-top="400" title="我的资产" no-blank>
+		<Header listen-scroll bg="#B3D9A3" :scroll-top="scrollTop" :offset-top="400" title="我的资产" no-blank>
 			<template #back>
 				<u-icon name="arrow-left" size="20" color="#fff" @click="$jump(-1)"></u-icon>
 				<!-- <text class="iconfont icon-zuo" style="font-size: 42rpx;"></text> -->

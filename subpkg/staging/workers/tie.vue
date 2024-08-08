@@ -18,8 +18,7 @@
  				</view>
  				<view class="wenan acea-row row-middle">
  					<text style="color: #212121;">信息备注</text>
- 					<textarea maxlength="1000" v-model="where.remark" placeholder="请输入（非必填）"
- 						placeholder-style="color:#CCCCCC;"></textarea>
+ 					<input v-model="where.remark" placeholder="请输入（非必填）" placeholder-style="color:#CCCCCC;"></input>
  				</view>
  			</view>
  			<view class="title">付款方式</view>
@@ -185,11 +184,9 @@
  				border-top: 1rpx solid #E5E5E5;
  				margin-top: 20rpx;
 
- 				textarea {
+ 				input {
  					flex: 1;
  					height: 90rpx;
- 					// line-height: 90rpx;
- 					padding-top: 26rpx;
  					margin-left: 30rpx;
  					box-sizing: border-box;
  				}
@@ -247,7 +244,7 @@
  		border-radius: 8rpx;
  		font-size: 32rpx;
  		color: #FFFFFF;
- 		padding: 20rpx 0 40rpx;
+ 		padding: 30rpx 0 50rpx;
  		position: relative;
 
  		.tit {

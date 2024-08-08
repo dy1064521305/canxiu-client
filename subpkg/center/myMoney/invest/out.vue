@@ -42,10 +42,10 @@
 				可转出余额：¥{{info.transferableAmount||0}}
 			</view>
 		</view>
-		<view class="pages-money" style="padding-bottom: 60rpx;">
+		<view class="pages-money" style="padding-bottom: 50rpx;">
 			<view>转出金额</view>
 			<view class="value price-font">
-				<text class="value-icon">￥</text>
+				<text class="value-icon" style="margin-top: 14rpx;">￥</text>
 				<input v-model="where.transferAmount" placeholder="请输入转出金额" placeholder-style="color:#999999;"
 					type="digit" />
 				<text style="color: #212121; font-size: 28rpx; margin-top: 14rpx;margin-right: 20rpx;"
@@ -65,6 +65,7 @@
 			<view>1、这里显示预存款转入规则说明这里显示预存款转入规则说明这里显示预存款转入规则说明</view>
 			<view>2、这里显示预存款转入规则说明 </view>
 		</view>
+		<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 
@@ -84,7 +85,9 @@
 				info: {}
 			}
 		},
-		onLoad() {
+		// onLoad() {
+		// },
+		onShow() {
 			this.getInfo()
 		},
 		methods: {
@@ -99,9 +102,21 @@
 				if (Number(this.info.transferableAmount) < Number(this.where.transferAmount)) return this.$toast('可转出金额不足')
 				if (Number(this.where.transferAmount) <= 0) return this.$toast('转出金额不能小于0')
 				putTransferOut(this.where).then(res => {
-					uni.$u.toast('转出成功')
-					this.getInfo()
-					this.where.transferAmount = ''
+					// uni.$u.toast('')
+					// this.$refs.uToast.show({
+					// 	type: 'error',
+					// 	message: '转出成功'
+					// });
+					uni.showToast({
+						title: '转出成功',
+						duration: 2000,
+						icon: 'none'
+					});
+					// this.getInfo()
+					setTimeout(() => {
+						this.$jump('/subpkg/center/myMoney/invest/toExamine')
+						this.where.transferAmount = ''
+					}, 1000)
 
 				})
 			},

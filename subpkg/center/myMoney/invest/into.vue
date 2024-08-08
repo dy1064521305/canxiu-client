@@ -3,7 +3,7 @@
 		<view class="pages-money">
 			<view>转入金额</view>
 			<view class="value price-font">
-				<text class="value-icon">￥</text>
+				<text class="value-icon" style="margin-top: 14rpx;">￥</text>
 				<input v-model="where.transferAmount" placeholder="请输入转入金额" placeholder-style="color:#999999;"
 					type="digit" />
 			</view>
@@ -64,8 +64,10 @@
 				if (Number(this.where.transferAmount) <= 0) return this.$toast('转入金额不能小于0')
 				putTransferIn(this.where).then(res => {
 					uni.$u.toast('转入成功')
-					this.getInfo()
 					this.where.transferAmount = ''
+					setTimeout(() => {
+						this.getInfo()
+					}, 1000)
 				})
 			}
 		}
