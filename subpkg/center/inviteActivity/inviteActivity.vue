@@ -76,7 +76,7 @@
 								<text style="color: #FE6801;font-size: 30rpx;">{{item.rewardAmount}}</text>
 							</view>
 							<view style="display: flex;justify-content: space-between;color: #A5A7A7;margin-top: 6rpx;">
-								{{item.region||'暂无区域'}}
+								{{item.serviceAddress||'暂无区域'}}
 								<text>
 									已邀请
 									<text style="color:#FE6801;margin: 0 4rpx;">{{item.inviteCount}}</text>
