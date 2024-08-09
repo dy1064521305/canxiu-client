@@ -92,7 +92,7 @@
 						<view class="top acea-row row-between-wrapper">
 							<text>订单编号：{{item.orderNumber}}</text>
 							<view class="acea-row row-middle">
-								<view @click="$jump('/subpkg/car/orderDetail/orderDetail?id='+item.orderId)">详情</view>
+								<view @click="toDetail(item)">详情</view>
 								<text></text>
 								<view @click="$copy(item.orderNumber)">复制</view>
 							</view>
@@ -493,6 +493,18 @@
 					url: '../../center/workerDetailed/workerDetailed?info=' + JSON.stringify(info)
 				})
 
+			},
+			// 去详情
+			toDetail(item) {
+				if (item.isRepairOrder) {
+					let info = {
+						id: item.orderId,
+						type: '返修'
+					}
+					this.$jump('/subpkg/car/repairingOrder/repairingOrder?info=' + JSON.stringify(info))
+				} else {
+					this.$jump('/subpkg/car/orderDetail/orderDetail?id=' + item.orderId)
+				}
 			}
 
 		}

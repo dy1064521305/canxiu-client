@@ -471,7 +471,6 @@
 			};
 		},
 		onLoad(option) {
-			console.log(JSON.parse(option.info));
 			this.optionInfo = JSON.parse(option.info)
 			// this.id = option.id
 			this.getList()
@@ -485,11 +484,9 @@
 			getList() {
 				//详情
 				this.optionInfo.type == '返修' ? order.getRepairOrderInfo(this.optionInfo.id).then(res => {
-					console.log(res);
 					this.info = res.data
 					this.getInfo()
 				}) : order.getOrderInfo(this.optionInfo.id).then(res => {
-					console.log(res);
 					this.info = res.data
 					this.getInfo()
 
@@ -524,13 +521,11 @@
 					}
 					// this.info.deliveryVo.deliveryImg=[]
 					// this.info.deliveryVo.remark=''
-					console.log(this.info.deliveryVo);
 				}
 
 				if (this.status == '') {
 					this.status = this.info.orderStatus
 					this.content = this.info.orderStatus
-					console.log(this.status, '7066666666666');
 				}
 				//师傅信息
 				this.info.workerId != null && order.getWorkerInfo(this.info.workerId).then(res => {
@@ -553,8 +548,6 @@
 							break;
 					}
 				})
-				console.log(this.info.orderStatus);
-
 				//获取追踪列表
 				order.orderTrackList({
 					orderId: this.info.orderId
@@ -568,17 +561,12 @@
 							content: item.trackContent
 						})
 					})
-					console.log(this.content);
 					this.step.push({
 						name: this.status,
 						content: this.content,
 					})
-					console.log(this.step);
 					this.step = this.step.reverse()
 				})
-				console.log(this.status);
-
-				console.log(this.info.projectDataVoList[0].workerType, '8000000000000000');
 				this.workerType = this.info.projectDataVoList[0].workerType
 				this.info.projectDataVoList.forEach(item => {
 					item.projectImg = item.projectImg != null && item.projectImg != '' ? item
@@ -591,7 +579,6 @@
 			},
 			//计算返修方案价格
 			getRollBackTotal() {
-				console.log(this.rollBackProject);
 				this.rollBackTotalPro = this.rollBackProject.length != 0 && (this.rollBackProject.reduce((pre, item) => {
 					return pre + Number(item.projectPrice) * Number(item.projectNumber)
 				}, 0)).toFixed(0)
@@ -604,7 +591,6 @@
 			},
 			//取消
 			cancelOrder() {
-
 				order.cancelOrder({
 					orderId: this.info.orderId,
 					repairId: this.info.repairId
@@ -613,11 +599,11 @@
 						title: '取消成功',
 						duration: 2000
 					});
-					setTimeout(()=>{
-							uni.navigateBack()
-					},800)
-				
-				
+					setTimeout(() => {
+						uni.navigateBack()
+					}, 800)
+
+
 					this.show = false
 				})
 			},
@@ -648,7 +634,6 @@
 			},
 			//生成维修报告
 			report(type) {
-				console.log(this.newProject);
 				let name = type == '待评价' || type == '待支付' ? '维修报告' : '服务验收'
 				this.info.addressVo = this.addressVo
 
