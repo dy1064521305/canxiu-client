@@ -518,7 +518,7 @@
 				}
 				address = arr.join('-')
 				refreshPrice({
-					clientId: storage.get('ClientId'),
+					customerId:this.addressInfo.customerId||this.addressInfo.customerId!=null?this.addressInfo.customerId:'',
 					address: address,
 					serviceIds: this.serviceIds
 				}).then(res => {
