@@ -1,32 +1,33 @@
 {
-	"pages": [{
-			"path": "pages/init/init",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
+	"pages": [
+		// {
+		// 	"path": "pages/init/init",
+		// 	"style": {
+		// 		"navigationBarTitleText": "",
+		// 		"enablePullDownRefresh": false
+		// 	}
 
-		},
-		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/welcome/welcome",
-			"style": {
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false,
-				 "disableScroll":true
-			}
+		// },
+		// //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		// {
+		// 	"path": "pages/welcome/welcome",
+		// 	"style": {
+		// 		"navigationStyle": "custom",
+		// 		"enablePullDownRefresh": false,
+		// 		 "disableScroll":true
+		// 	}
 
-		},
-		{
-			"path": "pages/swiper/swiper",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false,
-				"navigationStyle": "custom",
-				 "disableScroll":true
-			}
+		// },
+		// {
+		// 	"path": "pages/swiper/swiper",
+		// 	"style": {
+		// 		"navigationBarTitleText": "",
+		// 		"enablePullDownRefresh": false,
+		// 		"navigationStyle": "custom",
+		// 		 "disableScroll":true
+		// 	}
 
-		},
+		// },
 
 		{
 			"path": "pages/home/index",
