@@ -20,7 +20,7 @@
 				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png">
 			</image> -->
 			<view class="center">
-				<view class="info">
+				<view class="info" @click="$jump('/subpkg/users/setting/my-setting')">
 					<view class="info-image">
 						<image v-if="userInfo.storeImg==null||userInfo.storeImg==''"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
@@ -388,6 +388,19 @@
 						label: "团队管理",
 						url: "/subpkg/staging/workers/team"
 					},
+					{
+						id: 5,
+						label: '我的邀请码',
+						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/9e22b888d28e43f9bbec2316ea9c364b.png',
+						url: "/subpkg/center/brand/MyinviterQrCode"
+					},
+					{
+						id: 5,
+						label: '申请成为合伙人',
+						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/9e22b888d28e43f9bbec2316ea9c364b.png',
+						url: "/subpkg/car/partner/new"
+					},
+
 					// 注意，id>3的会提示先申请合伙人
 				],
 				list: [{

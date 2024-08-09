@@ -368,19 +368,25 @@
 						"enablePullDownRefresh": false
 					}
 
-				}
-			    ,{
-                    "path" : "addAddress/map/map",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "选择地址",
-                    "enablePullDownRefresh": false,
+				},
+				{
+					"path": "partner/new",
+					"style": {
+						"navigationBarTitleText": "成为合伙人",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "addAddress/map/map",
+					"style": {
+						"navigationBarTitleText": "选择地址",
+						"enablePullDownRefresh": false,
 						"navigationStyle": "custom"
-                }
-                
-                }
-               
-            ]
+					}
+
+				}
+
+			]
 		},
 		{
 			"root": "subpkg/staging",
@@ -435,6 +441,24 @@
 			]
 		},
 		{
+			"root": "subpkg/users",
+			"pages": [{
+					"path": "setting/my-setting",
+					"style": {
+						"navigationBarTitleText": "基本资料",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "setting/avatar",
+					"style": {
+						"navigationBarTitleText": "设置头像昵称",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
+		{
 			"root": "subpkg/center",
 			"pages": [
 				// {
@@ -476,6 +500,13 @@
 					"style": {
 						"enablePullDownRefresh": false,
 						"navigationBarTitleText": "邀请品牌方入驻"
+					}
+				},
+				{
+					"path": "brand/MyinviterQrCode",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "我的邀请码"
 					}
 				},
 				{

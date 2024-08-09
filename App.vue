@@ -165,4 +165,9 @@
 	// @import 'static/style/bahnschrift.css';
 	@import '@/static/style/base.scss';
 	@import '@/static/style/style.scss';
+	@import 'static/iconfont/iconfont.css';
+
+	.iconfont {
+		font-size: 1em;
+	}
 </style>
