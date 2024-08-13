@@ -46,7 +46,8 @@
 
  <script>
  	import {
- 		putSettlementRule
+ 		putSettlementRule,
+ 		getOrderSetList
  	} from "@/api/staging.js"
  	export default {
  		data() {
@@ -60,7 +61,8 @@
  					settlementRule: 0,
  					freezeDay: '',
  				},
- 				clientHeight: ""
+ 				clientHeight: "",
+ 				afterTimeout: "",
  			}
  		},
  		onLoad(options) {
@@ -69,19 +71,53 @@
  			}
  			if (options && options.day) {
  				this.where.freezeDay = options.day == 'null' ? '' : options.day
- 				console.log(this.where.freezeDay, "this.where.freezeDay");
  			}
  			this.getClineHeight()
+ 			this.getSet()
  		},
  		methods: {
+ 			getSet() {
+ 				getOrderSetList({
+ 					pageNum: 1,
+ 					pageSize: 10
+ 				}).then(res => {
+ 					let row = res.rows;
+ 					if (row.length > 0) {
+ 						let rowOne = res.rows[0]
+ 						this.afterTimeout = rowOne.afterTimeout || ''
+ 					}
+ 				});
+ 			},
  			sureSet() {
- 				if (this.where.freezeDay < 1) return this.$toast('冻结时间不能小于1天')
- 				putSettlementRule(this.where).then(res => {
- 					this.$toast('设置成功')
- 					setTimeout(() => {
- 						this.$jump(-1)
- 					}, 1000)
- 				})
+ 				if (Number(this.where.freezeDay) < 1) return this.$toast('冻结时间不能小于1天')
+ 				if (Number(this.where.freezeDay) <= this.afterTimeout) {
+ 					this.$alert('温馨提示', 1, {
+ 						content: '所设置的冻结天数小于订单售后有效期（' + this.afterTimeout +
+ 							'天），如用户发起售后服务已结算的订单金额将无法追回。',
+ 						confirmText: '保存设置',
+ 						cancelText: '重新设置',
+ 					}).then((res) => {
+ 						if (res.confirm) {
+ 							putSettlementRule(this.where).then(res => {
+ 								this.$toast('设置成功')
+ 								setTimeout(() => {
+ 									this.$jump(-1)
+ 								}, 1000)
+ 							})
+ 						}
+
+ 					}).catch((res) => {
+ 						return
+ 					})
+ 				} else {
+ 					putSettlementRule(this.where).then(res => {
+ 						this.$toast('设置成功')
+ 						setTimeout(() => {
+ 							this.$jump(-1)
+ 						}, 1000)
+ 					})
+ 				}
+
  			},
  			//获取可视区域高度
  			getClineHeight() {

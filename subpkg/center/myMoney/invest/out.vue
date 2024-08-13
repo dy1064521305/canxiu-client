@@ -62,8 +62,9 @@
 		</view>
 		<view class="pages-message">
 			<view>操作须知 </view>
-			<view>1、这里显示预存款转入规则说明这里显示预存款转入规则说明这里显示预存款转入规则说明</view>
-			<view>2、这里显示预存款转入规则说明 </view>
+			<view>1、仅支持将投资款账户中可转出余额申请转出到账户钱包。</view>
+			<view>2、转出申请需工作人员审核通过后才可进行提现，反之将原路退回至投资款账户余额。</view>
+			<view>3、转出审核过程中，该部分金额将无法使用。</view>
 		</view>
 		<u-toast ref="uToast"></u-toast>
 	</view>

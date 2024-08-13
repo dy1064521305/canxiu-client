@@ -68,3 +68,5 @@ export const getSubsidyDetail = (id, params) => request.get('/partner/user/subsi
 // 调整金额并结算
 export const putImmediateSettlement = (data) => request.put('/partner/worker/walletDetail/adjust/immediateSettlement',
 	data)
+// 查询订单设置列表
+export const getOrderSetList = (params) => request.get('/basic/orderSet/list', params)
