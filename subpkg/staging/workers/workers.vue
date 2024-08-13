@@ -391,28 +391,28 @@
 				this.info = item
 				this.showModal = true
 			},
-			// confirmHandle() {
-			// 	this.showModal = false
-			// 	customer.removeWorker(this.info).then(res => {
-			// 		uni.showToast({
-			// 			title: '移除成功',
-			// 			duration: 800
-			// 		});
-			// 		console.log(res);
-			// 		this.getList()
-			// 	})
-			// },
-			// handle(item, name) {
-			// 	item.status = name == 'disabled' ? 1 : 0
-			// 	customer.updateWorkerStatus(item).then(res => {
-			// 		console.log(res);
-			// 		uni.showToast({
-			// 			title: name == 'disabled' ? '禁用成功' : '启用成功',
-			// 			duration: 800
-			// 		});
-			// 		this.getList()
-			// 	})
-			// },
+			confirmHandle() {
+				this.showModal = false
+				customer.removeWorker(this.info).then(res => {
+					uni.showToast({
+						title: '移除成功',
+						duration: 800
+					});
+					console.log(res);
+					this.getList()
+				})
+			},
+			handle(item, name) {
+				item.status = name == 'disabled' ? 1 : 0
+				customer.updateWorkerStatus(item).then(res => {
+					console.log(res);
+					uni.showToast({
+						title: name == 'disabled' ? '禁用成功' : '启用成功',
+						duration: 800
+					});
+					this.getList()
+				})
+			},
 			queryList() {
 				this.$refs.paging.reload();
 			},
