@@ -61,7 +61,7 @@
 					</view>
 					<view style="display: flex;flex-direction: column;justify-content: space-around;flex: 1;">
 						<view class="" style="font-size: 32rpx;">
-							{{item.workerName}}
+							{{item.workerName||'暂无名称'}}
 						</view>
 						<view class="" style="font-size: 28rpx; color: #999999;">
 							{{item.regPhone}}
@@ -316,19 +316,27 @@
 				activeProvinceIndex: undefined,
 				activeCityIndex: undefined,
 				activeAreaIndex: undefined,
-				loading: false
+				loading: false,
+				infoRes: ""
 			};
 		},
 		onLoad(options) {
-
 			this.getArea()
+			uni.$on('confirm', res => {
+				if (res) {
+					this.infoRes = res
+					this.getList(1, 10)
+				}
+			})
 		},
 		onBackPress(event) {
 			this.$jump('/pages/center/index')
 			return true;
 		},
-		onShow() {
-			this.getList()
+		onHide() {
+			if (this.infoRes) {
+				uni.$off('confirm', this.infoRes)
+			}
 		},
 		methods: {
 			getArea() {
