@@ -100,9 +100,14 @@
  						if (res.confirm) {
  							putSettlementRule(this.where).then(res => {
  								this.$toast('设置成功')
- 								setTimeout(() => {
- 									this.$jump(-1)
+ 								uni.$emit('confirm', 1)
+ 								setTimeout(function() {
+ 									//返回上一页
+ 									uni.navigateBack({
+ 										delta: 1,
+ 									});
  								}, 1000)
+
  							})
  						}
 
@@ -113,7 +118,9 @@
  					putSettlementRule(this.where).then(res => {
  						this.$toast('设置成功')
  						setTimeout(() => {
- 							this.$jump(-1)
+ 							uni.navigateBack({
+ 								delta: 1,
+ 							});
  						}, 1000)
  					})
  				}
