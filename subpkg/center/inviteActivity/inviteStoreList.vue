@@ -292,8 +292,6 @@
 		},
 		methods: {
 			productSort(item, index) {
-				console.log(item, "rrr");
-				console.log(index, "iii");
 				if (item.order_by === 2) {
 					this.searchTypes[index].order_by = 1
 				} else if (item.order_by === 1) {
@@ -321,7 +319,7 @@
 				})
 				getInactiveList({
 					inviterId: this.query.inviterId || '',
-					activityId: this.query.activityId
+					activityId: this.query.activityId || ''
 				}).then(res => {
 					this.inviteStore = res.data.length
 				})

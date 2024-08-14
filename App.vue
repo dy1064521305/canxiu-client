@@ -170,4 +170,8 @@
 	.iconfont {
 		font-size: 1em;
 	}
+
+	page {
+		background-color: #F2F2F2;
+	}
 </style>

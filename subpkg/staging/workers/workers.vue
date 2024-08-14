@@ -323,10 +323,10 @@
 
 			this.getArea()
 		},
-		onBackPress(event) {
-			this.$jump('/pages/center/index')
-			return true;
-		},
+		// onBackPress(event) {
+		// 	this.$jump('/pages/center/index')
+		// 	return true;
+		// },
 		onShow() {
 			this.getList()
 		},

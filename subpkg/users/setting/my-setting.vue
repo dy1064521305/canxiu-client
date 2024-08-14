@@ -28,7 +28,8 @@
 				</view>
 				<view class="value">
 					<text class="text"> {{item.value}}</text>
-					<text class="iconfont icon" style="margin:0 -14rpx 0 -12rpx;" v-if="item.id==7">&#xe604;</text>
+					<text class="iconfont icon" style="margin:0 -14rpx 0 -12rpx;"
+						@click="$jump('/subpkg/users/setting/region')" v-if="item.id==7">&#xe604;</text>
 				</view>
 			</view>
 
