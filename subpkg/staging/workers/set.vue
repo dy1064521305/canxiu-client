@@ -117,6 +117,7 @@
  				} else {
  					putSettlementRule(this.where).then(res => {
  						this.$toast('设置成功')
+ 						uni.$emit('confirm', 1)
  						setTimeout(() => {
  							uni.navigateBack({
  								delta: 1,
