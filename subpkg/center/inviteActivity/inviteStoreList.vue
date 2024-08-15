@@ -342,8 +342,8 @@
 						keyWord: '',
 						isAsc: '',
 						orderBy: '',
-						inviterId: this.query.inviterId,
-						activityId: this.query.activityId
+						inviterId: this.query.inviterId || '',
+						activityId: this.query.activityId || ''
 					},
 					this.asc = this.desc = false
 				this.$refs.paging.reload();

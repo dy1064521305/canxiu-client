@@ -2,7 +2,7 @@
 	<view class="my-order">
 		<z-paging ref="paging" v-model="orderList" @query="getOrderlistHandle" @onRefresh="refresh">
 			<view slot='top'>
-				<u-navbar title="订单管理" placeholder :safeAreaInsetTop="false" :autoBack="true"> </u-navbar>
+				<!-- <u-navbar title="订单管理" placeholder :safeAreaInsetTop="false" :autoBack="true"> </u-navbar> -->
 				<view class=" acea-row row-middle" style=" padding: 20rpx 24rpx; background-color: #fff;">
 					<view style="flex: 1;">
 						<u-search v-model="queryParams.projectName" @search="queryList" @clear="queryList"
@@ -14,7 +14,6 @@
 							mode="widthFix"></image>
 						筛选
 					</view>
-
 				</view>
 
 
@@ -31,7 +30,7 @@
 					<view class="type-image" @click="screenShow=!screenShow">
 						<u-icon name="list-dot" color="#F3B23E" size="20"></u-icon>
 					</view>
-					<view class="type-count" v-show='screenShow'>
+					<view class="type-count" v-if='screenShow'>
 						<view class="items" v-for="(item,index) in list1" :key="index"
 							:class="{on:item.name===typeName}" @click="statusClick(item,index)">
 							{{item.name}} <text v-if="item.badge">({{item.badge.value||0}})</text>

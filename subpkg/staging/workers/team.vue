@@ -443,8 +443,8 @@
 					view {
 						display: inline-block;
 						background: #F3B23E;
-						font-size: 22rpx;
-						padding: 2rpx 8rpx;
+						font-size: 20rpx;
+						padding: 0rpx 8rpx;
 						color: #fff;
 						border-radius: 6rpx;
 					}

@@ -34,8 +34,6 @@
 			</view>
 
 		</view>
-
-		<!-- #endif -->
 	</view>
 </template>
 

@@ -55,9 +55,9 @@
 			};
 		},
 		onLoad(option) {
-			if (option && option.activityId) {
-				this.query.activityId = option.activityId
-				this.query.inviterId = option.partnerId
+			if (option && option.partnerId) {
+				this.query.activityId = option.activityId || ''
+				this.query.inviterId = option.partnerId || ''
 			}
 		},
 		methods: {
