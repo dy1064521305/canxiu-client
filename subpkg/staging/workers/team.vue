@@ -30,14 +30,14 @@
 					<view>{{baseInfo.teamWorkerCount||0}}</view>
 					<text>团队师傅</text>
 				</view>
-				<view class="topBg-team-items acea-row flex-colum-center"
-					@click="$jump('/subpkg/center/inviteActivity/inviteStoreList?partnerId='+ userId)">
+				<view class="topBg-team-items acea-row flex-colum-center" @click="$jump('/subpkg/center/brand/index')">
 					<view>{{baseInfo.brandCount||0}}</view>
 					<text>推广品牌</text>
 				</view>
-				<view class="topBg-team-items acea-row flex-colum-center">
+				<view class="topBg-team-items acea-row flex-colum-center"
+					@click="$jump('/subpkg/center/inviteActivity/inviteStoreList?partnerId='+ userId)">
 					<view>{{baseInfo.customerCount||0}}</view>
-					<text>已结算</text>
+					<text>推广门店</text>
 				</view>
 			</view>
 		</view>
@@ -97,8 +97,8 @@
 			</view>
 			<view class="counts countsMoney">
 				<view class="countsMoney-change acea-row row-middle row-center">
-					<view :class="{on:type==0}" @click="onChange">个人</view>
-					<view :class="{on:type==1}" @click="onChange">团队</view>
+					<view :class="{on:type==0}" @click="onChange(0)">个人</view>
+					<view :class="{on:type==1}" @click="onChange(1)">团队</view>
 				</view>
 				<text class="text" style="margin-left: 24rpx;">累计销售额（元）</text>
 				<view class="countsMoney-money">{{saleInfo.totalSaleAmount||0}}</view>
@@ -113,7 +113,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="setUp">
+			<!-- 	<view class="setUp">
 				<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)" v-for="(item) in typeList"
 					:key="item.id">
 					<view class="setUp-list-left">
@@ -124,7 +124,7 @@
 						<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
 					</view>
 				</view>
-			</view>
+			</view> -->
 		</view>
 
 	</view>
@@ -371,7 +371,8 @@
 					}
 				})
 			},
-			onChange() {
+			onChange(t) {
+				if (t == this.type) return
 				this.type = this.type == 0 ? 1 : 0
 				this.getSaleInfo()
 			},
@@ -474,7 +475,7 @@
 		}
 
 		.content {
-			padding: 0 32rpx;
+			padding: 0 32rpx 30rpx;
 		}
 
 		.team {

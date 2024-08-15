@@ -403,6 +403,7 @@
 <style lang="scss" scoped>
 	.money {
 		color: #3D3F3E;
+		padding-bottom: 40rpx;
 
 		&-image {
 			// height: 528rpx;
@@ -598,6 +599,7 @@
 		background-color: #fff;
 		border-radius: 14rpx;
 		margin-top: 22rpx;
+
 
 		&-list {
 			height: 100rpx;

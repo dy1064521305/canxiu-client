@@ -206,23 +206,21 @@
 
 				view {
 					width: 288rpx;
-					height: 70rpx;
+					height: 72rpx;
 					background: #FFFFFF;
 					border-radius: 8rpx;
 					border: 1rpx solid #CCCCCC;
 					font-family: PingFangSC, PingFang SC;
 					font-weight: bold;
 					font-size: 28rpx;
-					line-height: 70rpx;
+					line-height: 72rpx;
 					text-align: center;
 				}
 
 				view:nth-child(2) {
-					height: 72rpx;
-					line-height: 72rpx;
 					background: #A4D091;
 					color: #FFFFFF;
-					border: none;
+					border: 1rpx solid #A4D091;
 				}
 			}
 		}
