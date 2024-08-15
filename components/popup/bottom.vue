@@ -10,7 +10,7 @@
 						</slot>
 						<view class="acea-row row-middle" style="width: 70rpx;height: 40rpx;justify-content: flex-end;"
 							@click="$emit('close')">
-							<u-icon name="close" class="icon-x"></u-icon>
+							<u-icon name="close"></u-icon>
 						</view>
 					</view>
 					<slot name="content">

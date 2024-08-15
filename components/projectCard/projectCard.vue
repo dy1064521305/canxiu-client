@@ -3,7 +3,7 @@
 		<view class="">
 			<view :style="{'display':'flex','height':height+'rpx'}">
 				<view v-if="info.img.length==0||info.img[0]==''" :style="{'width':height+'rpx'}" class="no-img">
-					<img   style="width:110rpx ;height: 77rpx;"
+					<img style="width:110rpx ;height: 77rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
 						mode=""></img>
 					<text>暂无图片</text>
@@ -13,7 +13,7 @@
 						:class="!info.projectType||info.projectType==0?'weixiu':info.projectType==1?'baoyang':''">
 						{{!info.projectType||info.projectType==0?'维修':info.projectType==1?'维保':''}}
 					</view>
-					<img   :style="{'width':height+'rpx','height':'100%','border-radius':'11rpx'}" :src="info.img[0]">
+					<img :style="{'width':height+'rpx','height':'100%','border-radius':'11rpx'}" :src="info.img[0]">
 					</img>
 					<!-- 	<view class="weixiu" >
 					维修
@@ -34,18 +34,18 @@
 						<view style="width: 80%;color: #A5A7A7;">
 							{{info.typeName}}
 						</view>
-						<view  style="width: 20%;text-align: end;color: #EC5722;">
+						<view style="width: 20%;text-align: end;color: #EC5722;">
 							¥{{type!='myOrder'?info.price:info.discountPrice}}
-							
+
 						</view>
-							
+
 					</view>
 					<view style="display: flex;justify-content: space-between;">
-							<text style="color: #A5A7A7;">工时：{{info.projectHours}}分钟</text>
-							<text v-if="type=='repair'"
-								style="font-size: 30rpx;color: #EC5722;">服务费：¥{{Number(info.price)*Number(info.projectNumber)}}</text>
+						<text style="color: #A5A7A7;">工时：{{info.projectHours}}分钟</text>
+						<text v-if="type=='repair'"
+							style="font-size: 30rpx;color: #EC5722;">服务费：¥{{Number(info.price)*Number(info.projectNumber)}}</text>
 					</view>
-				
+
 				</view>
 			</view>
 		</view>
@@ -53,8 +53,7 @@
 			{{illustrate}}
 		</view>
 		<view v-if="type!='myOrder'&&type!='repair'" style="text-align: end;margin-top: 7rpx;">
-			<text 
-				style="font-size: 30rpx;color: #EC5722;">服务费：¥{{Number(info.price)*Number(info.projectNumber)}}</text>
+			<text style="font-size: 30rpx;color: #EC5722;">服务费：¥{{Number(info.price)*Number(info.projectNumber)}}</text>
 		</view>
 	</view>
 </template>
@@ -69,7 +68,7 @@
 				type: String,
 				default: ''
 			},
-			height:{
+			height: {
 				type: Number,
 				default: 130
 			}
@@ -82,7 +81,7 @@
 			};
 		},
 		created() {
-		 // console.log(this.pro,this.type);
+			// console.log(this.pro,this.type);
 			this.info = this.pro
 			this.info.productName = this.pro.productName ? this.pro.productName : this.pro.serviceProductName
 			this.info.projectHours = this.pro.projectHours ? this.pro.projectHours : this.pro.serviceTime
