@@ -329,10 +329,10 @@
 				}
 			})
 		},
-		onBackPress(event) {
-			this.$jump('/pages/center/index')
-			return true;
-		},
+		// onBackPress(event) {
+		// 	this.$jump('/pages/center/index')
+		// 	return true;
+		// },
 		onHide() {
 			if (this.infoRes) {
 				uni.$off('confirm', this.infoRes)
