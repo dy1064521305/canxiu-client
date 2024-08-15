@@ -26,6 +26,8 @@ const environment = {
 
 module.exports = {
 	environment: environment[process.env.NODE_ENV],
+	// 缓存时间 0 永久
+	EXPIRE: 0,
 	// 首页底部菜单页
 	TABBAR_PATH: [
 		'/pages/home/index',

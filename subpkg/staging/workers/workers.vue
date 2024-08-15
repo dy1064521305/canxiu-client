@@ -61,7 +61,7 @@
 					</view>
 					<view style="display: flex;flex-direction: column;justify-content: space-around;flex: 1;">
 						<view class="" style="font-size: 32rpx;">
-							{{item.workerName||'暂无名称'}}
+							{{item.workerName||'暂无昵称'}}
 						</view>
 						<view class="" style="font-size: 28rpx; color: #999999;">
 							{{item.regPhone}}
