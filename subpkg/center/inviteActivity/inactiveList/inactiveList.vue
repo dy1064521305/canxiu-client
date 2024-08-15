@@ -5,11 +5,11 @@
 				<view class="left">
 					<view style="color: #000000;">
 						<text>商户ID： </text>
-						{{item.clientId||''}}
+						{{item.clientId||'暂无'}}
 					</view>
 					<view style="font-size: 25rpx;color: #A5A7A7;margin-top: 14rpx;">
 						<text>注册时间：</text>
-						{{item.registerDate||''}}
+						{{item.registerDate||'暂无'}}
 					</view>
 				</view>
 				<view class="call" @click.stop="showPhoneHandle(item.phoneNumber)">
@@ -26,7 +26,8 @@
 
 <script>
 	import {
-		getInactiveList
+		getInactiveList,
+		getInactiveListPage
 	} from '@/api/invite.js'
 	import storage from '@/utils/storage'
 	import {
@@ -40,6 +41,7 @@
 					pageSize: 10,
 					pageNum: 1,
 					inviterId: "",
+					activityId: "",
 				},
 				showPhone: false,
 				actionList: [{
@@ -64,10 +66,16 @@
 			getList(pageNo, pageSize) {
 				this.query.pageNum = pageNo;
 				this.query.pageSize = pageSize;
-				getInactiveList(this.query).then(res => {
-					this.$refs.paging.completeByTotal(res.data, res.total);
-					//this.info=res.data
-				})
+				if (this.query.activityId) {
+					getInactiveList(this.query).then(res => {
+						this.$refs.paging.completeByTotal(res.data, res.total);
+					})
+				} else {
+					getInactiveListPage(this.query).then(res => {
+						this.$refs.paging.completeByTotal(res.data.rows, res.data.total);
+					})
+				}
+
 			},
 			//显示电话
 			showPhoneHandle(e) {
