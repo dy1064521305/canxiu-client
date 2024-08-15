@@ -43,7 +43,7 @@
 								style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
 								<view class=" acea-row row-middle">
 									{{item.warrantyStore||''}}
-									<text v-if="item.isClientAppoint==1" class="appoint">门店指派</text>
+									<text v-if="item.isAppoint==1" class="appoint">门店指派</text>
 								</view>
 								<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
