@@ -109,8 +109,7 @@
 						</view>
 					</view>
 				</view>
-				<view v-if="inviteStore!=0" class="alert"
-					@click="$jump('/subpkg/center/inviteActivity/inactiveList/inactiveList?activityId='+query.activityId+'&partnerId='+query.inviterId)">
+				<view v-if="inviteStore!=0" class="alert" @click=" toTive">
 					<u-icon name="info-circle-fill" color="#FF991C" size='20'></u-icon>
 					<text style="margin-left: 20rpx;">还有{{inviteStore}}家商户未激活账号</text>
 				</view>
@@ -198,7 +197,9 @@
 	import {
 		getStoreType,
 		inviteCustomerRecord,
+		inviteCustomerRecordPage,
 		districtList,
+		getInactiveListPage,
 		getInactiveList
 	} from '@/api/invite.js'
 	import {
@@ -317,21 +318,44 @@
 						"districtName": "全部商圈"
 					}, ...res.rows]
 				})
-				getInactiveList({
-					inviterId: this.query.inviterId || '',
-					activityId: this.query.activityId || ''
-				}).then(res => {
-					this.inviteStore = res.data.length
-				})
+				if (this.query.activityId) {
+					getInactiveList({
+						inviterId: this.query.inviterId || '',
+						activityId: this.query.activityId || ''
+					}).then(res => {
+						let data = res.data
+						if (data) {
+							this.inviteStore = data.total || 0
+						}
+					})
+				} else {
+					getInactiveListPage({
+						inviterId: this.query.inviterId || '',
+						activityId: this.query.activityId || ''
+					}).then(res => {
+						let data = res.data
+						if (data) {
+							this.inviteStore = data.total || 0
+						}
+					})
+				}
+
 
 			},
 			getList(pageNo, pageSize) {
-				inviteCustomerRecord(this.query).then(res => {
-					console.log(1111);
-					this.$refs.paging.completeByTotal(res.data, res.total);
+				this.query.pageNum = pageNo
+				this.query.pageSize = pageSize
+				if (this.query.activityId) {
+					inviteCustomerRecord(this.query).then(res => {
+						this.$refs.paging.completeByTotal(res.data, res.total);
 
-				})
-
+					})
+				} else {
+					this.query.pageSize = 4,
+						inviteCustomerRecordPage(this.query).then(res => {
+							this.$refs.paging.completeByTotal(res.data.rows, res.data.total);
+						})
+				}
 			},
 			reset() {
 				this.choseIndex = 0
@@ -412,6 +436,16 @@
 					districtName: '全部商圈'
 				}
 				this.region = ['全国']
+			},
+			toTive() {
+				if (this.query.activityId) {
+					this.$jump('/subpkg/center/inviteActivity/inactiveList/inactiveList?activityId=' + this.query
+						.activityId +
+						'&partnerId=' + this.query.inviterId)
+				} else {
+					this.$jump('/subpkg/center/inviteActivity/inactiveList/inactiveList?partnerId=' + this.query.inviterId)
+				}
+
 			}
 		}
 	}
