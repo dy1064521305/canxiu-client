@@ -834,8 +834,8 @@
 
 				.grade {
 					color: #FAC723;
-					font-size: 26rpx;
-					margin-top: 6rpx;
+					font-size: 24rpx;
+					margin-top: 2rpx;
 				}
 			}
 		}

@@ -108,7 +108,7 @@
 								<view class="benren" v-if="item.isSelf">本人</view>
 							</view>
 							<view v-else>
-								完成服务时间：{{item.completeTime}}
+								完成服务时间：{{item.completeTime||'暂无'}}
 							</view>
 						</view>
 						<template v-if="item.status=='已失效'">

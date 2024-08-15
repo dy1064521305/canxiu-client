@@ -483,7 +483,7 @@
 				{
 					"path": "brand/index",
 					"style": {
-						"navigationBarTitleText": "品牌管理",
+						"navigationBarTitleText": "我推广的品牌",
 						"enablePullDownRefresh": false,
 						"navigationStyle": "custom"
 					}
@@ -619,7 +619,7 @@
 				{
 					"path": "inviteActivity/inviteStoreList",
 					"style": {
-						"navigationBarTitleText": "我邀请的商家",
+						"navigationBarTitleText": "我推广的门店",
 						"enablePullDownRefresh": false
 					}
 				},

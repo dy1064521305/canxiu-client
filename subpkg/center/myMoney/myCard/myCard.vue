@@ -119,7 +119,7 @@
 					url: '../addCard/addCard'
 				})
 			},
-		
+
 			//删除银行卡
 			deleteCardHandle(id) {
 				let that = this
@@ -139,8 +139,7 @@
 
 								}
 							})
-						} else if (res.cancel) {
-						}
+						} else if (res.cancel) {}
 					}
 				});
 
@@ -150,11 +149,16 @@
 				// 	url:'/pages/center/index'
 				// })
 				if (this.type == 'cash') {
-					uni.navigateBack()
+					// uni.navigateBack()
+					uni.navigateBack({
+						//关闭当前页面，返回上一页面或多级页面。
+						delta: 2
+					});
 				} else {
-					uni.navigateTo({
-						url: '../myMoney'
-					})
+					// uni.navigateTo({
+					// 	url: '../myMoney'
+					// })
+					this.$jump(-1)
 				}
 
 
@@ -184,7 +188,7 @@
 						this.$refs.paging.reload();
 					}
 				})
-			
+
 
 			},
 		}

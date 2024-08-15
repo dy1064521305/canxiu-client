@@ -70,7 +70,7 @@
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="actionList" :show="showPhone"></u-action-sheet>
 		<u-popup :show="noCardShow" mode="center" :round="10" @close="noCardShow=false">
-			<view class="pop_show acea-row" @click="toCard">
+			<view class="pop_show flex-colum-center" @click="toCard">
 				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/07/32651409c622489ebbfb814a7d488cb2.png"
 					mode=""></image>
 				<view class="pop_show-mess">
@@ -500,12 +500,11 @@
 
 	.pop_show {
 		width: 596rpx;
+		/* #ifndef APP-PLUS */
 		padding-bottom: 20rpx;
-		// padding-bottom: 10rpx;
+		/* #endif */
 		background: #FFFFFF;
 		border-radius: 24rpx;
-		flex-direction: column;
-		align-items: center;
 
 		image {
 			width: 160rpx;

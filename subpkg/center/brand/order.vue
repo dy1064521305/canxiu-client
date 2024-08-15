@@ -100,14 +100,11 @@
 
 <script>
 	import {
-		getOrderList,
-		repairOrder,
-		queryOrderCount,
+		// repairOrder,
+		// queryOrderCount,
 		getPartnerBrandOrderList
 	} from '@/api/order.js'
-	// import {
-	// 	getOrderNum
-	// } from '@/utils/api.js'
+
 	import {
 		queryUnreadNum
 	} from '@/api/invite.js'

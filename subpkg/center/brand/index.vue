@@ -7,8 +7,8 @@
 					<template #back>
 						<u-icon name="arrow-left" size="20" @click="$jump(-1)"></u-icon>
 					</template>
-					<view class="two_change">
-						品牌管理
+					<view class="two_change" style="font-size: 32rpx;">
+						我推广的品牌
 					</view>
 				</Header>
 
