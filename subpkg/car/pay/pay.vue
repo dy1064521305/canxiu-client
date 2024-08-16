@@ -57,27 +57,22 @@
 			};
 		},
 		onLoad(option) {
-			this.info = JSON.parse(decodeURIComponent(option.item))
-			this.isGroupPayHandle()
-			console.log(this.info);
 			// #ifdef MP-WEIXIN
 			this.list.splice(1, 1)
-			let thatt = this
 			wx.login({
-				success(res) {
-					console.log(res);
+				success:(res)=> {
 					if (res.code) {
-						thatt.wxCode = res.code
+						this.wxCode = res.code
 					}
 				}
 			})
 			// #endif
-			let that = this
+			// this.info = JSON.parse(decodeURIComponent(option.item))
+			// this.isGroupPayHandle()
 			uni.getStorage({
 				key: 'code',
-				success: function(res) {
-					console.log(res.data);
-					that.code = res.data
+				success:(res)=>{
+					this.code = res.data
 				}
 			});
 
@@ -131,7 +126,7 @@
 						icon: 'none'
 					});
 				} else if (this.type == '微信支付') {
-					console.log(this.info.orderId, this.code);
+					console.log(this.info.orderId, this.wxCode);
 					let type = storage.get('SYSTEM_INFO').hostName == "WeChat" ? 'JSAPI' : 'APP'
 					if (type == 'JSAPI') {
 						pay.weChatPay({
