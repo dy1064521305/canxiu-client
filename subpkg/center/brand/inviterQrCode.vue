@@ -15,6 +15,10 @@
 
 <script>
 	import {
+		base64ToPath
+	} from '../../../js_sdk/mmmm-image-tools/index.js'
+
+	import {
 		getPartnerQrCode,
 		putImmediate
 	} from "@/api/brand.js"
@@ -28,6 +32,7 @@
 				img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/07/ea26360e3bd7416ab7e6aba1fc036385.png",
 				code: "",
 				partnerInfo: {},
+				imgurl: ''
 			}
 		},
 		onLoad() {
@@ -39,6 +44,17 @@
 				putImmediate(storage.get('ClientId')).then(res => {
 					this.partnerInfo = res.data
 				})
+				uni.request({
+					url: `${environment.baseURL}/partner/partner/getQrCode?userId=${storage.get('ClientId')}`,
+					method: 'GET',
+					responseType: 'arraybuffer',
+
+					success: res => {
+						let datas = res.data;
+						this.imgurl = 'data:image/png;base64,' + uni.arrayBufferToBase64(datas);
+
+					},
+				});
 			},
 			// save() {
 
@@ -52,13 +68,35 @@
 			// },
 			//保存海报
 			save() {
+
+
+				// #ifdef MP-WEIXIN
+				base64ToPath(this.imgurl, '.jpeg').then(function(imgPath) {
+					console.log(imgPath, '57777');
+					//保存到手机相册,你也可以做其他操作上传到自己服务端等
+					uni.saveImageToPhotosAlbum({
+						filePath: imgPath,
+						success: function() {
+							uni.$u.toast('保存成功')
+						}
+					});
+				});
+				// #endif
+
+				// #ifndef MP-WEIXIN
 				uni.saveImageToPhotosAlbum({
 					filePath: this.code,
 					success: function() {
 						uni.$u.toast('保存成功')
 						console.log('save success');
+					},
+					fail(err) {
+						console.log(err);
 					}
 				});
+				// #endif
+
+
 			},
 		}
 
