@@ -18,7 +18,7 @@
 			<view class="bg"></view>
 			<view class="center">
 				<view class="info acea-row row-between-wrapper">
-					<view class="acea-row">
+					<view class="acea-row" @click.stop="goInfo">
 						<view class="info-image">
 							<image v-if="userInfo.storeImg==null||userInfo.storeImg==''"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
@@ -30,7 +30,8 @@
 							<view class="name-left">
 								{{userInfo.phone}}
 							</view>
-							<view class="grade" @click="$jump('/subpkg/car/partner/index')" v-if="partnerInfo==null">
+							<view class="grade" @click.stop="$jump('/subpkg/car/partner/index')"
+								v-if="partnerInfo==null">
 								申请合伙人
 							</view>
 							<view class="grade" v-else>
@@ -536,7 +537,8 @@
 						url: "/subpkg/car/partner/index"
 					},
 				],
-				partnerInfo: {}
+				partnerInfo: {},
+				listAvatar: {}
 			}
 		},
 		onTabItemTap: function(item) {
@@ -563,6 +565,12 @@
 						//	let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 						this.userInfo.phone = this.geTel(this.userInfo.phoneNumber)
 						//	this.fileList.push({url:arr[0]})
+						let userInfo = {}
+						userInfo = res.data
+						this.listAvatar = {
+							userInfo: userInfo,
+							type: 'info'
+						}
 					})
 					//获取订单数量
 					this.orderList.forEach(item => {
@@ -739,7 +747,13 @@
 				} else {
 					this.$jump(i.url)
 				}
-			}
+			},
+			goInfo() {
+				uni.navigateTo({
+					url: '/subpkg/center/personalInfo/personalInfo?item=' + JSON.stringify(this.listAvatar)
+				})
+
+			},
 
 		}
 	}

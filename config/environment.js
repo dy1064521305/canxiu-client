@@ -9,18 +9,18 @@ const environment = {
 		// 后端永奇
 		// baseURL: 'http://192.168.100.123:8080',
 		// 王攀
-		baseURL: 'http://192.168.100.122:8080',
+		// baseURL: 'http://192.168.100.122:8080',
 		// baseURL: 'http://121.40.253.155:8080',
+		baseURL: 'https://www-test.canxiukeji.com/prod-api',
 		// baseURL: 'https://www.canxiukeji.com/prod-api',
-		// baseURL: 'https://www-test.canxiukeji.com/prod-api',
 
 	},
 	// 生产环境配置
 	production: {
 		// baseURL: 'http://121.41.107.68:8080' ,// 发布时需要修改为后端实际地址
 		// baseURL: 'http://121.40.253.155:8080' ,// 发布时需要修改为后端实际地址
-		// baseURL: 'https://www.canxiukeji.com/prod-api',
 		baseURL: 'https://www-test.canxiukeji.com/prod-api',
+		// baseURL: 'https://www.canxiukeji.com/prod-api',
 	}
 }
 
