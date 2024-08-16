@@ -189,7 +189,7 @@
 </style> -->
 <template>
 	<view class="money">
-		<Header listen-scroll :scroll-top="scrollTop" :offset-top="400" title="我的资产" no-blank>
+		<Header listen-scroll bg="#B3D9A3" :scroll-top="scrollTop" :offset-top="400" title="我的资产" no-blank>
 			<template #back>
 				<u-icon name="arrow-left" size="20" color="#fff" @click="$jump('pages/center/index')"></u-icon>
 				<!-- <text class="iconfont icon-zuo" style="font-size: 42rpx;"></text> -->
@@ -234,14 +234,14 @@
 				<text>业务推广收益</text>
 				<view>{{info.orderSharingAmount||0}}</view>
 			</view>
-			<!-- <view class="money-get-item acea-row row-column row-center">
+			<view class="money-get-item acea-row row-column row-center">
 				<text>订单消耗收益</text>
-				<view>{{info.totalRevenueAmount||0}}</view>
+				<view>0</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center">
 				<text>团队育成奖励</text>
-				<view>{{info.totalRevenueAmount||0}}</view>
-			</view> -->
+				<view>0</view>
+			</view>
 			<view class="money-get-item acea-row row-column row-center">
 				<text>区域运营补贴</text>
 				<view>{{info.regionOrderSharingAmount||0}}</view>
@@ -403,6 +403,7 @@
 <style lang="scss" scoped>
 	.money {
 		color: #3D3F3E;
+		padding-bottom: 40rpx;
 
 		&-image {
 			// height: 528rpx;
@@ -598,6 +599,7 @@
 		background-color: #fff;
 		border-radius: 14rpx;
 		margin-top: 22rpx;
+
 
 		&-list {
 			height: 100rpx;

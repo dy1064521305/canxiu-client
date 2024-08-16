@@ -69,3 +69,10 @@ export const clientSmsLogin = (data) => request.post('/client/login/smsLogin', d
 
 //验证师傅
 export const workerSmsLogin = (data) => request.post('/worker/login/smsLogin', data)
+
+// 邀请商家记录(分页)
+export const inviteCustomerRecordPage = (params) => request.get('/worker/friend/invite/client/customerRecord/page',
+	params)
+
+//未激活商家（分页）
+export const getInactiveListPage = (params) => request.get('/worker/friend/invite/client/inactive/page', params)

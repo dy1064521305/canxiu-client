@@ -42,12 +42,12 @@
 				可转出余额：¥{{info.transferableAmount||0}}
 			</view>
 		</view>
-		<view class="pages-money" style="padding-bottom: 60rpx;">
+		<view class="pages-money" style="padding-bottom: 50rpx;">
 			<view>转出金额</view>
 			<view class="value price-font">
-				<text class="value-icon">￥</text>
+				<text class="value-icon" style="margin-top: 14rpx;">￥</text>
 				<input v-model="where.transferAmount" placeholder="请输入转出金额" placeholder-style="color:#999999;"
-					type="digit" :maxlength="10" />
+					type="digit" />
 				<text style="color: #212121; font-size: 28rpx; margin-top: 14rpx;margin-right: 20rpx;"
 					@click="allOut">全部转出</text>
 			</view>
@@ -62,9 +62,11 @@
 		</view>
 		<view class="pages-message">
 			<view>操作须知 </view>
-			<view>1、这里显示预存款转入规则说明这里显示预存款转入规则说明这里显示预存款转入规则说明</view>
-			<view>2、这里显示预存款转入规则说明 </view>
+			<view>1、仅支持将投资款账户中可转出余额申请转出到账户钱包。</view>
+			<view>2、转出申请需工作人员审核通过后才可进行提现，反之将原路退回至投资款账户余额。</view>
+			<view>3、转出审核过程中，该部分金额将无法使用。</view>
 		</view>
+		<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 
@@ -84,7 +86,9 @@
 				info: {}
 			}
 		},
-		onLoad() {
+		// onLoad() {
+		// },
+		onShow() {
 			this.getInfo()
 		},
 		methods: {
@@ -99,9 +103,21 @@
 				if (Number(this.info.transferableAmount) < Number(this.where.transferAmount)) return this.$toast('可转出金额不足')
 				if (Number(this.where.transferAmount) <= 0) return this.$toast('转出金额不能小于0')
 				putTransferOut(this.where).then(res => {
-					this.getInfo()
-					this.where.transferAmount = ''
-					this.$toast('转出成功')
+					// uni.$u.toast('')
+					// this.$refs.uToast.show({
+					// 	type: 'error',
+					// 	message: '转出成功'
+					// });
+					uni.showToast({
+						title: '转出成功',
+						duration: 2000,
+						icon: 'none'
+					});
+					// this.getInfo()
+					setTimeout(() => {
+						this.$jump('/subpkg/center/myMoney/invest/toExamine')
+						this.where.transferAmount = ''
+					}, 1000)
 
 				})
 			},
@@ -154,7 +170,7 @@
 					flex: 1;
 					display: flex;
 					align-items: center;
-					font-size: 48rpx;
+					font-size: 42rpx;
 					margin-left: 24rpx;
 				}
 			}

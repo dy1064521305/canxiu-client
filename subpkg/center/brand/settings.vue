@@ -445,7 +445,7 @@
 <style lang="scss" scoped>
 	.pages {
 		height: 100%;
-		padding: 16rpx 32rpx 180rpx 32rpx;
+		padding: 16rpx 32rpx 50rpx 32rpx;
 		position: relative;
 
 		.card {
@@ -532,7 +532,7 @@
 		margin-top: 30rpx;
 
 		view {
-			width: 622rpx;
+			width: 100%;
 			height: 88rpx;
 			background: #A4D091;
 			border-radius: 8rpx;

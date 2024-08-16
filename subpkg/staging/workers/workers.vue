@@ -61,7 +61,7 @@
 					</view>
 					<view style="display: flex;flex-direction: column;justify-content: space-around;flex: 1;">
 						<view class="" style="font-size: 32rpx;">
-							{{item.workerName}}
+							{{item.workerName||'暂无昵称'}}
 						</view>
 						<view class="" style="font-size: 28rpx; color: #999999;">
 							{{item.regPhone}}
@@ -316,19 +316,27 @@
 				activeProvinceIndex: undefined,
 				activeCityIndex: undefined,
 				activeAreaIndex: undefined,
-				loading: false
+				loading: false,
+				infoRes: ""
 			};
 		},
 		onLoad(options) {
-
 			this.getArea()
+			uni.$on('confirm', res => {
+				if (res) {
+					this.infoRes = res
+					this.getList(1, 10)
+				}
+			})
 		},
-		onBackPress(event) {
-			this.$jump('/pages/center/index')
-			return true;
-		},
-		onShow() {
-			this.getList()
+		// onBackPress(event) {
+		// 	this.$jump('/pages/center/index')
+		// 	return true;
+		// },
+		onHide() {
+			if (this.infoRes) {
+				uni.$off('confirm', this.infoRes)
+			}
 		},
 		methods: {
 			getArea() {
@@ -391,28 +399,28 @@
 				this.info = item
 				this.showModal = true
 			},
-			// confirmHandle() {
-			// 	this.showModal = false
-			// 	customer.removeWorker(this.info).then(res => {
-			// 		uni.showToast({
-			// 			title: '移除成功',
-			// 			duration: 800
-			// 		});
-			// 		console.log(res);
-			// 		this.getList()
-			// 	})
-			// },
-			// handle(item, name) {
-			// 	item.status = name == 'disabled' ? 1 : 0
-			// 	customer.updateWorkerStatus(item).then(res => {
-			// 		console.log(res);
-			// 		uni.showToast({
-			// 			title: name == 'disabled' ? '禁用成功' : '启用成功',
-			// 			duration: 800
-			// 		});
-			// 		this.getList()
-			// 	})
-			// },
+			confirmHandle() {
+				this.showModal = false
+				customer.removeWorker(this.info).then(res => {
+					uni.showToast({
+						title: '移除成功',
+						duration: 800
+					});
+					console.log(res);
+					this.getList()
+				})
+			},
+			handle(item, name) {
+				item.status = name == 'disabled' ? 1 : 0
+				customer.updateWorkerStatus(item).then(res => {
+					console.log(res);
+					uni.showToast({
+						title: name == 'disabled' ? '禁用成功' : '启用成功',
+						duration: 800
+					});
+					this.getList()
+				})
+			},
 			queryList() {
 				this.$refs.paging.reload();
 			},

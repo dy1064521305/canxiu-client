@@ -369,19 +369,25 @@
 						"enablePullDownRefresh": false
 					}
 
-				}
-			    ,{
-                    "path" : "addAddress/map/map",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "选择地址",
-                    "enablePullDownRefresh": false,
+				},
+				{
+					"path": "partner/new",
+					"style": {
+						"navigationBarTitleText": "成为合伙人",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "addAddress/map/map",
+					"style": {
+						"navigationBarTitleText": "选择地址",
+						"enablePullDownRefresh": false,
 						"navigationStyle": "custom"
-                }
-                
-                }
-               
-            ]
+					}
+
+				}
+
+			]
 		},
 		{
 			"root": "subpkg/staging",
@@ -421,9 +427,43 @@
 					"path": "workers/team",
 					"style": {
 						"navigationBarTitleText": "团队管理",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+
+				},
+				{
+					"path": "workers/tie",
+					"style": {
+						"navigationBarTitleText": "师傅工费结算",
 						"enablePullDownRefresh": false
 					}
 
+				}
+			]
+		},
+		{
+			"root": "subpkg/users",
+			"pages": [{
+					"path": "setting/my-setting",
+					"style": {
+						"navigationBarTitleText": "基本资料",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "setting/avatar",
+					"style": {
+						"navigationBarTitleText": "设置头像昵称",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "setting/region",
+					"style": {
+						"navigationBarTitleText": "当前负责区域",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		},
@@ -444,7 +484,7 @@
 				{
 					"path": "brand/index",
 					"style": {
-						"navigationBarTitleText": "品牌管理",
+						"navigationBarTitleText": "我推广的品牌",
 						"enablePullDownRefresh": false,
 						"navigationStyle": "custom"
 					}
@@ -472,10 +512,24 @@
 					}
 				},
 				{
+					"path": "brand/MyinviterQrCode",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "我的邀请码"
+					}
+				},
+				{
 					"path": "brand/settings",
 					"style": {
 						"enablePullDownRefresh": false,
 						"navigationBarTitleText": "签约设置"
+					}
+				},
+				{
+					"path": "brand/cooperateSettings",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "合作签约信息"
 					}
 				},
 				{
@@ -504,6 +558,14 @@
 					"style": {
 						"navigationBarTitleText": "订单",
 						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "myOrder/myOrderAll",
+					"style": {
+						"navigationBarTitleText": "订单管理",
+						// "navigationStyle": "custom",
+						"enablePullDownRefresh": false
 					}
 				},
 				{
@@ -558,7 +620,7 @@
 				{
 					"path": "inviteActivity/inviteStoreList",
 					"style": {
-						"navigationBarTitleText": "我邀请的商家",
+						"navigationBarTitleText": "我推广的门店",
 						"enablePullDownRefresh": false
 					}
 				},
@@ -856,7 +918,8 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#fff",
-		"backgroundColor": "#F8F8F8",
+		// "backgroundColor": "#F8F8F8",
+		"backgroundColor": "#fff",
 		"app-plus": {
 			"softinputMode": "adjustResize"
 		}

@@ -3,9 +3,9 @@
 		<view class="pages-money">
 			<view>转入金额</view>
 			<view class="value price-font">
-				<text class="value-icon">￥</text>
+				<text class="value-icon" style="margin-top: 14rpx;">￥</text>
 				<input v-model="where.transferAmount" placeholder="请输入转入金额" placeholder-style="color:#999999;"
-					type="digit" :maxlength="maxLength" />
+					type="digit" />
 			</view>
 			<view class="wenan">
 				转入后，这部分钱将无法直接提现
@@ -27,8 +27,9 @@
 		</view>
 		<view class="pages-message">
 			<view>操作须知 </view>
-			<view>1、这里显示预存款转入规则说明这里显示预存款转入规则说明这里显示预存款转入规则说明</view>
-			<view>2、这里显示预存款转入规则说明 </view>
+			<view>1、仅支持将账户钱包中可提现余额转入到投资款账户内。</view>
+			<view>2、转入的部分余额将不可提现，需从新转出至账号钱包后才可提现。</view>
+			<view>3、转入的金额不算作“个人投资款”款项，故“个人投资款”金额不会增加，只会增加投资款可用余额。</view>
 		</view>
 	</view>
 </template>
@@ -63,10 +64,11 @@
 				if (Number(this.amount) < Number(this.where.transferAmount)) return this.$toast('可转入金额不足')
 				if (Number(this.where.transferAmount) <= 0) return this.$toast('转入金额不能小于0')
 				putTransferIn(this.where).then(res => {
-					this.getInfo()
+					uni.$u.toast('转入成功')
 					this.where.transferAmount = ''
-					this.$toast('转入成功')
-
+					setTimeout(() => {
+						this.getInfo()
+					}, 1000)
 				})
 			}
 		}
@@ -97,7 +99,7 @@
 					flex: 1;
 					display: flex;
 					align-items: center;
-					font-size: 48rpx;
+					font-size: 42rpx;
 					margin-left: 24rpx;
 				}
 			}

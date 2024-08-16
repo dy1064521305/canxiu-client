@@ -1,5 +1,5 @@
 <template>
-	<view class="center-con">
+	<view class="page">
 		<view v-if="!isLogin" style="padding-top:31vh">
 			<u-empty mode="permission"
 				icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
@@ -16,31 +16,35 @@
 		</view>
 		<view v-else>
 			<view class="bg"></view>
-			<!-- <image class="bg"
-				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png">
-			</image> -->
 			<view class="center">
-				<view class="info">
-					<view class="info-image">
-						<image v-if="userInfo.storeImg==null||userInfo.storeImg==''"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
-						</image>
-						<u--image v-else width='60rpx' height='60rpx' :src="userInfo.storeImg" shape="circle">
-						</u--image>
-					</view>
-					<view class="name  acea-row">
-						<view class="name-left">
-							{{userInfo.phone}}
+				<view class="info acea-row row-between-wrapper">
+					<view class="acea-row" @click.stop="goInfo">
+						<view class="info-image">
+							<image v-if="userInfo.storeImg==null||userInfo.storeImg==''"
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
+							</image>
+							<u--image v-else width='80rpx' height='80rpx' :src="userInfo.storeImg" shape="circle">
+							</u--image>
 						</view>
-						<!-- <view style="font-size: 29rpx;">
-							{{userInfo.phone}}
-						</view> -->
+						<view class="name  flex-colum">
+							<view class="name-left">
+								{{userInfo.phone}}
+							</view>
+							<view class="grade" @click.stop="$jump('/subpkg/car/partner/index')"
+								v-if="partnerInfo==null">
+								申请合伙人
+							</view>
+							<view class="grade" v-else>
+								{{partnerInfo.partnerType==1?'中级':partnerInfo.partnerType==2?'高级':'初级'}}合伙人
+							</view>
+						</view>
 					</view>
 					<!-- <view style="display: flex;align-items: center;">
 						<image style="width: 16rpx;height: 29rpx;"
 							src='http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/6840f46a9289454198777dd3471d456b.png'
 							mode=""></image>
 					</view> -->
+
 				</view>
 				<view class="balance acea-row  row-between-wrapper">
 					<view class="balance-two " @click="$jump('/pages/users/reward/coupon')">
@@ -64,6 +68,23 @@
 							<view class="topValue acea-row row-between-wrapper" v-if="item.num">{{item.num}}</view>
 						</view>
 						<text>{{item.name}}</text>
+					</view>
+				</view>
+				<view class="teamMy acea-row row-between-wrapper" v-if="partnerInfo != null">
+					<view class="teamMy-item flex-colum"
+						@click="$jump('/subpkg/staging/workers/team?partnerId='+partnerInfo.partnerId)">
+						<view class="acea-row row-between-wrapper">
+							<text style="font-size: 32rpx;">团队管理</text>
+							<u-icon name="arrow-right" color="#AEDD94" size="16"></u-icon>
+						</view>
+						<view style="margin-top: 8rpx;">团队人数：{{partnerInfo.teamCount||0}}人</view>
+					</view>
+					<view class="teamMy-item flex-colum" @click="$jump('/subpkg/center/myMoney/invest/account')">
+						<view class="acea-row row-between-wrapper">
+							<text style="font-size: 32rpx;">我的投资款</text>
+							<u-icon name="arrow-right" color="#FD9C2B" size="16"></u-icon>
+						</view>
+						<view style="margin-top: 8rpx;">账户余额：¥{{partnerInfo.investmentBalance||0}}</view>
 					</view>
 				</view>
 				<!-- <view class="counts">
@@ -382,12 +403,6 @@
 					// 	label: "师傅管理",
 					// 	url: "/subpkg/staging/workers/workers"
 					// },
-					{
-						id: 8,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/15/600d6ba6d8314b6e8a444dfea554fa6d.png",
-						label: "团队管理",
-						url: "/subpkg/staging/workers/team"
-					},
 					// 注意，id>3的会提示先申请合伙人
 				],
 				list: [{
@@ -522,7 +537,8 @@
 						url: "/subpkg/car/partner/index"
 					},
 				],
-				partnerInfo: {}
+				partnerInfo: {},
+				listAvatar: {}
 			}
 		},
 		onTabItemTap: function(item) {
@@ -549,6 +565,12 @@
 						//	let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 						this.userInfo.phone = this.geTel(this.userInfo.phoneNumber)
 						//	this.fileList.push({url:arr[0]})
+						let userInfo = {}
+						userInfo = res.data
+						this.listAvatar = {
+							userInfo: userInfo,
+							type: 'info'
+						}
 					})
 					//获取订单数量
 					this.orderList.forEach(item => {
@@ -725,7 +747,13 @@
 				} else {
 					this.$jump(i.url)
 				}
-			}
+			},
+			goInfo() {
+				uni.navigateTo({
+					url: '/subpkg/center/personalInfo/personalInfo?item=' + JSON.stringify(this.listAvatar)
+				})
+
+			},
 
 		}
 	}
@@ -738,7 +766,7 @@
 	}
 </style>
 <style lang="scss" scoped>
-	.center-con {
+	.page {
 		position: relative;
 	}
 
@@ -777,8 +805,11 @@
 
 	.bg {
 		width: 100%;
-		height: 409rpx;
-		background: linear-gradient(181deg, #A4D091 0%, #FFFFFF 100%);
+		// height: 409rpx;
+		height: 566rpx;
+		// background: linear-gradient(181deg, #A4D091 0%, #FFFFFF 100%);
+		background: url('https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/14/621dacc5be8b4f7cb865e63baa7ec2ec.png') no-repeat;
+		background-size: 100% 100%;
 	}
 
 	.center {
@@ -789,13 +820,14 @@
 		top: 10rpx;
 
 		.info {
-			margin-top: 120rpx;
+			margin-top: 186rpx;
 			display: flex;
 
-			&-image {
-				width: 60rpx;
-				height: 60rpx;
+			.info-image {
+				width: 80rpx;
+				height: 80rpx;
 				border-radius: 50%;
+				margin-right: 24rpx;
 
 				image {
 					width: 100%;
@@ -804,16 +836,20 @@
 			}
 
 			.name {
-				margin-left: 8rpx;
-				line-height: 60rpx;
-				color: #000000;
-				font-size: 33rpx;
+				color: #212121;
+				font-size: 32rpx;
 
 				&-left {
 					max-width: 400rpx;
 					overflow: hidden;
 					text-overflow: ellipsis;
 					white-space: nowrap;
+				}
+
+				.grade {
+					color: #FAC723;
+					font-size: 24rpx;
+					margin-top: 2rpx;
 				}
 			}
 		}
@@ -890,6 +926,29 @@
 				text {
 					margin-top: 7rpx;
 				}
+			}
+		}
+
+		.teamMy {
+			margin-top: 20rpx;
+			height: 160rpx;
+			font-family: PingFangSC, PingFang SC;
+			font-weight: 500;
+
+			&-item {
+				width: 340rpx;
+				height: 100%;
+				background: linear-gradient(324deg, #D6F0C6 0%, #f2ffeb 50%, #F3FBEE 100%);
+				color: #ABDC90;
+				border-radius: 16rpx;
+				font-size: 28rpx;
+				padding: 0 16rpx 0 20rpx;
+				box-sizing: border-box;
+			}
+
+			&-item:nth-last-child(1) {
+				background: linear-gradient(141deg, #FDF8F2 0%, #fff7ef 50%, #F7DFD0 100%);
+				color: #FD9C2B;
 			}
 		}
 
