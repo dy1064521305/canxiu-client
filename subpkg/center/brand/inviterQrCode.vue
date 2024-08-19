@@ -23,6 +23,9 @@
 		putImmediate
 	} from "@/api/brand.js"
 	import storage from '@/utils/storage'
+	import {
+		saveImage,
+	} from '@/utils/index.js'
 	const {
 		environment
 	} = require('@/config/environment')
@@ -44,6 +47,7 @@
 				putImmediate(storage.get('ClientId')).then(res => {
 					this.partnerInfo = res.data
 				})
+
 				uni.request({
 					url: `${environment.baseURL}/partner/partner/getQrCode?userId=${storage.get('ClientId')}`,
 					method: 'GET',
@@ -52,24 +56,10 @@
 					success: res => {
 						let datas = res.data;
 						this.imgurl = 'data:image/png;base64,' + uni.arrayBufferToBase64(datas);
-
 					},
 				});
 			},
-			// save() {
-
-			// 	// // #ifdef APP-PLUS
-			// 	// this.$refs['authpup'].open()
-			// 	// // #endif
-			// 	// // #ifndef APP-PLUS
-			// 	// this.changeAuth()
-			// 	// // #endif
-
-			// },
-			//保存海报
 			save() {
-
-
 				// #ifdef MP-WEIXIN
 				base64ToPath(this.imgurl, '.jpeg').then(function(imgPath) {
 					console.log(imgPath, '57777');
@@ -82,8 +72,7 @@
 					});
 				});
 				// #endif
-
-				// #ifndef MP-WEIXIN
+				// #ifdef APP-PLUS
 				uni.saveImageToPhotosAlbum({
 					filePath: this.code,
 					success: function() {
@@ -93,13 +82,18 @@
 					fail(err) {
 						console.log(err);
 					}
-				});
+				})
 				// #endif
-
-
+				// #ifndef APP-PLUS
+				// saveImage(this.code, () => {
+				// 	uni.showToast({
+				// 		title: '成功保存到相册',
+				// 		icon: 'none'
+				// 	})
+				// })
+				// #endif
 			},
 		}
-
 	}
 </script>
 

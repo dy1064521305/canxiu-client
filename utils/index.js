@@ -1,10 +1,14 @@
 import {
 	TABBAR_PATH
 } from '@/config/environment.js'
+import $cache from '@/utils/cache';
 const {
 	environment
 } = require('@/config/environment.js')
 import storage from '@/utils/storage'
+// #ifdef MP-WEIXIN
+import Routine from '@/config/routine.js';
+// #endif
 
 export function numSimpWan(num) {
 	if (!num) return 0;
@@ -286,4 +290,149 @@ export function uploadImageHandler(img, successCallback, errorCallback) {
 			}, (i + 1) * 1000);
 		})(i)
 	}
+}
+
+
+export function saveImage(url, callback, noCache) {
+	if (!url) return;
+	let is_arr = Object.prototype.toString.call(url) === '[object Array]';
+	let is_obj = Object.prototype.toString.call(url) === '[object Object]';
+	if (!is_arr && !is_obj && typeof url != 'string') return;
+	const downImage = (imgs, index) => {
+		let item = imgs[index];
+		console.log(imgs, "imgs");
+		console.log(index, "index");
+		console.log(typeof item == 'string', "item == 'string'");
+		if (typeof item == 'string') {
+			item = {
+				url: item,
+				type: 'image'
+			};
+		}
+		console.log(item, "item1234");
+		// #ifdef H5
+		return window.open(item.url);
+		// #endif
+
+		uni.showLoading({
+			title: '下载中...'
+		});
+
+		downloadFile(item.url, '', !noCache ? 1 : 0).then(temp => {
+			let method = item.type == 'video' ? 'saveVideoToPhotosAlbum' : 'saveImageToPhotosAlbum';
+			console.log(temp, "mptemptemptemptemptemp");
+			uni[method]({
+				filePath: temp,
+				success: (res) => {
+					console.log(res, "res");
+					++index;
+					if (index < imgs.length) {
+						downImage(imgs, index)
+					} else {
+						console.log(222);
+						uni.hideLoading();
+						if (typeof callback != 'function') {
+							Toast('保存成功', 'success');
+						} else {
+							callback();
+						}
+					}
+				},
+				fail: (err) => {
+					uni.hideLoading();
+					if (!err.errMsg || err.errMsg == method + ':fail cancel') return;
+					Alert(err.errMsg);
+				}
+			})
+		}).catch(err => {
+			uni.hideLoading();
+			Alert(err);
+		})
+	}
+
+	// #ifdef MP-WEIXIN
+	return Routine.requestScope('album').then(() => {
+		downImage(is_arr ? url : [url], 0)
+	}).catch(() => {
+		Toast('获取相册权限失败');
+	})
+	// #endif
+	// #ifndef MP-WEIXIN
+	downImage(is_arr ? url : [url], 0)
+	// #endif
+}
+
+
+export function downloadFile(url, tip, cache) {
+
+	tip && uni.showLoading({
+		title: tip
+	});
+	return new Promise((resolve, reject) => {
+		let temp = $cache.get('cache_file_' + url);
+		if (cache && temp) {
+			return hasFile(temp, (isExit) => {
+				if (isExit) {
+					tip && uni.hideLoading();
+					resolve(temp)
+				} else {
+					uni.downloadFile({
+						url,
+						success: (res) => {
+							tip && uni.hideLoading();
+							cache && $cache.set('cache_file_' + url, res.tempFilePath);
+							resolve(res.tempFilePath);
+						},
+						fail: (err) => {
+							tip && uni.hideLoading();
+							if (typeof err == 'object') {
+								err = JSON.stringify(err);
+							}
+							reject('下载失败，Error：' + err);
+						}
+					})
+				}
+			})
+		}
+
+		uni.downloadFile({
+			url,
+			success: (res) => {
+				tip && uni.hideLoading();
+				cache && $cache.set('cache_file_' + url, res.tempFilePath);
+				resolve(res.tempFilePath);
+			},
+			fail: (err) => {
+				tip && uni.hideLoading();
+				if (typeof err == 'object') {
+					err = JSON.stringify(err);
+				}
+				reject('下载失败，Error：' + err);
+			}
+		})
+	});
+}
+
+export function hasFile(url, callback) {
+	// 判断文件/目录是否存在
+	//#ifdef MP-WEIXIN
+	callback && callback(Routine.hasFile(url))
+	//#endif
+	// #ifndef MP-WEIXIN
+	try {
+		uni.getFileInfo({
+			filePath: url,
+			success(res) {
+				callback && callback(true)
+			},
+			fail(err) {
+				console.error(err);
+				callback && callback(false)
+			}
+		})
+	} catch (e) {
+		console.error(e)
+		callback && callback(false)
+	}
+	// #endif	
 }
