@@ -444,6 +444,9 @@
 	const {
 		environment
 	} = require('../../../config/environment')
+	import {
+		saveImage,
+	} from '@/utils/index.js'
 	export default {
 		components: {
 			projectCard,
@@ -508,6 +511,7 @@
 				base64ToPath(data, '.jpeg').then(function(imgPath) {
 					console.log(imgPath);
 					//保存到手机相册,你也可以做其他操作上传到自己服务端等
+					// #ifdef APP-PLUS
 					uni.saveImageToPhotosAlbum({
 						filePath: imgPath,
 						success: function() {
@@ -518,6 +522,16 @@
 							uni.hideLoading()
 						}
 					});
+					// #endif
+					// #ifndef APP-PLUS
+					saveImage(imgPath, () => {
+						uni.showToast({
+							title: '成功保存到相册',
+							icon: 'none'
+						})
+					});
+					// #endif
+
 				});
 			},
 			openLoading() {
@@ -877,7 +891,7 @@
 			width: 100%;
 			justify-content: space-evenly;
 			align-items: end;
-			margin: 20rpx 0;
+			margin: 20rpx 0 40rpx;
 
 			.btn {
 				width: 335rpx;

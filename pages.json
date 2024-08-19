@@ -1,31 +1,33 @@
 {
-	"pages": [{
-			"path": "pages/init/init",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
+	"pages": [
+		// {
+		// 	"path": "pages/init/init",
+		// 	"style": {
+		// 		"navigationBarTitleText": "",
+		// 		"enablePullDownRefresh": false
+		// 	}
 
-		},
-		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/welcome/welcome",
-			"style": {
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+		// },
+		// //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		// {
+		// 	"path": "pages/welcome/welcome",
+		// 	"style": {
+		// 		"navigationStyle": "custom",
+		// 		"enablePullDownRefresh": false,
+		// 		 "disableScroll":true
+		// 	}
 
-			}
+		// },
+		// {
+		// 	"path": "pages/swiper/swiper",
+		// 	"style": {
+		// 		"navigationBarTitleText": "",
+		// 		"enablePullDownRefresh": false,
+		// 		"navigationStyle": "custom",
+		// 		 "disableScroll":true
+		// 	}
 
-		},
-		{
-			"path": "pages/swiper/swiper",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
-			}
-
-		},
+		// },
 
 		{
 			"path": "pages/home/index",
@@ -41,7 +43,9 @@
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "",
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				"disableScroll": true
+
 			}
 		},
 
@@ -93,6 +97,13 @@
 				"navigationBarTitleText": "我的订单",
 				"enablePullDownRefresh": false,
 				"navigationBarBackgroundColor": "#fff"
+			}
+
+		}, {
+			"path": "subpkg/suiyoubao/suiyoubao",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
 			}
 
 		}
@@ -168,7 +179,7 @@
 					"style": {
 						"navigationBarTitleText": "选择服务地址",
 						"enablePullDownRefresh": false
-						
+
 					}
 
 				}
@@ -358,6 +369,101 @@
 						"enablePullDownRefresh": false
 					}
 
+				},
+				{
+					"path": "partner/new",
+					"style": {
+						"navigationBarTitleText": "成为合伙人",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "addAddress/map/map",
+					"style": {
+						"navigationBarTitleText": "选择地址",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+
+				}
+
+			]
+		},
+		{
+			"root": "subpkg/staging",
+			"pages": [{
+					"path": "workers/workers",
+					"style": {
+						"navigationBarTitleText": "师傅管理",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "workers/set",
+					"style": {
+						"navigationBarTitleText": "师傅设置",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "workers/workerInfo/workerInfo",
+					"style": {
+						"navigationBarTitleText": "师傅详情",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "workers/records",
+					"style": {
+						"navigationBarTitleText": "结算记录",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+
+				},
+				{
+					"path": "workers/team",
+					"style": {
+						"navigationBarTitleText": "团队管理",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+
+				},
+				{
+					"path": "workers/tie",
+					"style": {
+						"navigationBarTitleText": "师傅工费结算",
+						"enablePullDownRefresh": false
+					}
+
+				}
+			]
+		},
+		{
+			"root": "subpkg/users",
+			"pages": [{
+					"path": "setting/my-setting",
+					"style": {
+						"navigationBarTitleText": "基本资料",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "setting/avatar",
+					"style": {
+						"navigationBarTitleText": "设置头像昵称",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "setting/region",
+					"style": {
+						"navigationBarTitleText": "当前负责区域",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		},
@@ -376,10 +482,90 @@
 
 				// , 
 				{
+					"path": "brand/index",
+					"style": {
+						"navigationBarTitleText": "我推广的品牌",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "brand/Signing",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "品牌签约管理"
+					}
+				},
+				{
+					"path": "brand/inviter",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "填写资料"
+					}
+				},
+				{
+					"path": "brand/inviterQrCode",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "邀请品牌方入驻"
+					}
+				},
+				{
+					"path": "brand/MyinviterQrCode",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "我的邀请码"
+					}
+				},
+				{
+					"path": "brand/settings",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "签约设置"
+					}
+				},
+				{
+					"path": "brand/cooperateSettings",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "合作签约信息"
+					}
+				},
+				{
+					"path": "brand/order",
+					"style": {
+						"enablePullDownRefresh": true,
+						"navigationBarTitleText": "我的订单"
+					}
+				},
+				{
+					"path": "brand/footRewrad",
+					"style": {
+						"enablePullDownRefresh": true,
+						"navigationBarTitleText": "佣金结算记录"
+					}
+				},
+				{
+					"path": "brand/footDetail",
+					"style": {
+						"enablePullDownRefresh": true,
+						"navigationBarTitleText": "签约记录"
+					}
+				},
+				{
 					"path": "myOrder/myOrder",
 					"style": {
 						"navigationBarTitleText": "订单",
 						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "myOrder/myOrderAll",
+					"style": {
+						"navigationBarTitleText": "订单管理",
+						// "navigationStyle": "custom",
+						"enablePullDownRefresh": false
 					}
 				},
 				{
@@ -423,7 +609,42 @@
 						"navigationBarTitleText": "开票记录",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "inviteActivity/inviteActivity",
+					"style": {
+						"navigationBarTitleText": "邀请门店活动",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "inviteActivity/inviteStoreList",
+					"style": {
+						"navigationBarTitleText": "我推广的门店",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "inviteActivity/inactiveList/inactiveList",
+					"style": {
+						"navigationBarTitleText": "未激活的商家",
+						"enablePullDownRefresh": false
+					}
 
+				},
+				{
+					"path": "acceptInvitation/acceptInvitation",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "shareInvite/shareInvite",
+					"style": {
+						"navigationBarTitleText": "分享邀请",
+						"enablePullDownRefresh": false
+					}
 				}, {
 					"path": "drawBill/drawBill",
 					"style": {
@@ -450,9 +671,56 @@
 				}, {
 					"path": "myMoney/myMoney",
 					"style": {
-						"navigationBarTitleText": "我的余额"
+						"navigationBarTitleText": "我的余额",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": false
 					}
 
+				},
+				{
+					"path": "myMoney/invest/account",
+					"style": {
+						"navigationBarTitleText": "投资客账户",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "myMoney/invest/out",
+					"style": {
+						"navigationBarTitleText": "转出",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "myMoney/invest/into",
+					"style": {
+						"navigationBarTitleText": "转入",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "myMoney/invest/yue",
+					"style": {
+						"navigationBarTitleText": "余额明细",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "myMoney/invest/butie",
+					"style": {
+						"navigationBarTitleText": "资金补贴记录",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "myMoney/invest/toExamine",
+					"style": {
+						"navigationBarTitleText": "审核记录",
+						"enablePullDownRefresh": false
+					}
 				},
 				{
 					"path": "invite/invite",
@@ -468,6 +736,22 @@
 						"enablePullDownRefresh": false
 					}
 
+				},
+				{
+					"path": "inviteWorker/inviteList",
+					"style": {
+						"navigationBarTitleText": "邀请记录",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "inviteWorker/inviteRewards",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
 				}, {
 					"path": "InviteCustomers/InviteCustomers",
 					"style": {
@@ -556,27 +840,36 @@
 						"enablePullDownRefresh": false
 					}
 
-				}
+				}, {
+					"path": "myStore/myStore",
+					"style": {
+						"navigationBarTitleText": "我的门店",
+						"enablePullDownRefresh": false
+					}
 
-			    ,{
-                    "path" : "myStore/myStore",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "我的门店",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "myStore/addStore/addStore",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+				}, {
+					"path": "myStore/addStore/addStore",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "myMoney/paymentInfo/paymentInfo",
+					"style": {
+						"navigationBarTitleText": "提现详情",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "myMoney/paymentInfo/huizhidan/huizhidan",
+					"style": {
+						"navigationBarTitleText": "回执单",
+						"enablePullDownRefresh": false
+					}
+
+				}
+			]
 		}
 
 	],
@@ -625,7 +918,8 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#fff",
-		"backgroundColor": "#F8F8F8",
+		// "backgroundColor": "#F8F8F8",
+		"backgroundColor": "#fff",
 		"app-plus": {
 			"softinputMode": "adjustResize"
 		}

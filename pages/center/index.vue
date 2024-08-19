@@ -1,6 +1,6 @@
 <template>
-	<view class="center-con">
-		<view v-if="!isLogin" style="padding-top: 330rpx;">
+	<view class="page">
+		<view v-if="!isLogin" style="padding-top:31vh">
 			<u-empty mode="permission"
 				icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
 				text="您还未登录">
@@ -16,42 +16,46 @@
 		</view>
 		<view v-else>
 			<view class="bg"></view>
-			<!-- <image class="bg"
-				src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/16/ba173089ad4048dcac236e7fa17675b0.png">
-			</image> -->
 			<view class="center">
-				<view class="info">
-					<view class="info-image">
-						<image v-if="userInfo.storeImg==null||userInfo.storeImg==''"
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
-						</image>
-						<u--image v-else width='60rpx' height='60rpx' :src="userInfo.storeImg" shape="circle">
-						</u--image>
-					</view>
-					<view class="name  acea-row">
-						<view class="name-left">
-							{{userInfo.phone}}
+				<view class="info acea-row row-between-wrapper">
+					<view class="acea-row" @click.stop="goInfo">
+						<view class="info-image">
+							<image v-if="userInfo.storeImg==null||userInfo.storeImg==''"
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
+							</image>
+							<u--image v-else width='80rpx' height='80rpx' :src="userInfo.storeImg" shape="circle">
+							</u--image>
 						</view>
-						<!-- <view style="font-size: 29rpx;">
-							{{userInfo.phone}}
-						</view> -->
+						<view class="name  flex-colum">
+							<view class="name-left">
+								{{userInfo.phone}}
+							</view>
+							<view class="grade" @click.stop="$jump('/subpkg/car/partner/index')"
+								v-if="partnerInfo==null">
+								申请合伙人
+							</view>
+							<view class="grade" v-else>
+								{{partnerInfo.partnerType==1?'中级':partnerInfo.partnerType==2?'高级':'初级'}}合伙人
+							</view>
+						</view>
 					</view>
 					<!-- <view style="display: flex;align-items: center;">
 						<image style="width: 16rpx;height: 29rpx;"
 							src='http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/6840f46a9289454198777dd3471d456b.png'
 							mode=""></image>
 					</view> -->
+
 				</view>
 				<view class="balance acea-row  row-between-wrapper">
-					<view class="balance-two ">
+					<view class="balance-two " @click="$jump('/pages/users/reward/coupon')">
 						<view class="balance-two-num ">
 							{{couponNum}}
 						</view>
 						<text>优惠券</text>
 					</view>
-					<view class="balance-two ">
+					<view class="balance-two " @click="$jump('/subpkg/center/myMoney/myMoney')">
 						<view class="balance-two-num ">
-							{{balance}}
+							{{totalAmount}}
 						</view>
 						<text>钱包余额</text>
 					</view>
@@ -64,6 +68,23 @@
 							<view class="topValue acea-row row-between-wrapper" v-if="item.num">{{item.num}}</view>
 						</view>
 						<text>{{item.name}}</text>
+					</view>
+				</view>
+				<view class="teamMy acea-row row-between-wrapper" v-if="partnerInfo != null">
+					<view class="teamMy-item flex-colum"
+						@click="$jump('/subpkg/staging/workers/team?partnerId='+partnerInfo.partnerId)">
+						<view class="acea-row row-between-wrapper">
+							<text style="font-size: 32rpx;">团队管理</text>
+							<u-icon name="arrow-right" color="#AEDD94" size="16"></u-icon>
+						</view>
+						<view style="margin-top: 8rpx;">团队人数：{{partnerInfo.teamCount||0}}人</view>
+					</view>
+					<view class="teamMy-item flex-colum" @click="$jump('/subpkg/center/myMoney/invest/account')">
+						<view class="acea-row row-between-wrapper">
+							<text style="font-size: 32rpx;">我的投资款</text>
+							<u-icon name="arrow-right" color="#FD9C2B" size="16"></u-icon>
+						</view>
+						<view style="margin-top: 8rpx;">账户余额：¥{{partnerInfo.investmentBalance||0}}</view>
 					</view>
 				</view>
 				<!-- <view class="counts">
@@ -91,8 +112,7 @@
 				<view class="counts">
 					<text class="counts-title">常用功能</text>
 					<view class="counts-type acea-row">
-						<view class="counts-type-all flex-colum-center" @click="$jump(i.url)" v-for="(i) in useList"
-							:key="i.id">
+						<view class="counts-type-all " @click="toDetail(i)" v-for="(i) in useList" :key="i.id">
 							<image :class="'img-'+i.id" :src="i.img" mode=""></image>
 							<view>{{i.label}}</view>
 						</view>
@@ -111,7 +131,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="setUp">
+				<view class="setUp" v-if="partnerInfo==null">
 					<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
 						v-for="(item) in typeList.slice(3,4)" :key="item.id">
 						<view class="setUp-list-left">
@@ -291,7 +311,7 @@
 		<!-- 拨打电话 -->
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="actionList" :show="showPhone"></u-action-sheet>
-	
+
 
 	</view>
 
@@ -315,10 +335,13 @@
 	import {
 		callPhone
 	} from '@/utils/phone.js'
+	import {
+		putImmediate
+	} from "@/api/brand.js"
 	export default {
 		data() {
 			return {
-				balance: 0, //账户余额
+				totalAmount: 0, //账户余额
 				actionList: [{
 						name: '0571-88387761'
 					},
@@ -336,7 +359,7 @@
 				useList: [{
 						id: 0,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/07a80dbb32384b938c78184567842312.png",
-						label: "地址关联",
+						label: "地址管理",
 						url: "/subpkg/car/myAddress/myAddress"
 					},
 					{
@@ -356,7 +379,31 @@
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/0014a1afca2c45f884445a2635df407e.png",
 						label: "钱包余额",
 						url: "/subpkg/center/myMoney/myMoney"
-					}
+					},
+					{
+						id: 4,
+						label: '邀请师傅',
+						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/5356f25f26ec464b929b0d380bead987.png',
+						url: "/subpkg/center/inviteWorker/inviteWorker"
+					}, {
+						id: 5,
+						label: '邀请品牌',
+						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/9e22b888d28e43f9bbec2316ea9c364b.png',
+						url: "/subpkg/center/brand/inviterQrCode"
+					},
+					{
+						id: 6,
+						label: '邀请门店',
+						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/e98f2f8ab0a9476f9ceb030c1b83745a.png',
+						url: "/subpkg/center/inviteActivity/inviteActivity"
+					},
+					// {
+					// 	id: 7,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/10/74c5b5bf7ea94a2f9aa0c6a5e74da786.png",
+					// 	label: "师傅管理",
+					// 	url: "/subpkg/staging/workers/workers"
+					// },
+					// 注意，id>3的会提示先申请合伙人
 				],
 				list: [{
 						name: '待服务',
@@ -489,7 +536,9 @@
 						label: "申请成为合伙人",
 						url: "/subpkg/car/partner/index"
 					},
-				]
+				],
+				partnerInfo: {},
+				listAvatar: {}
 			}
 		},
 		onTabItemTap: function(item) {
@@ -500,10 +549,10 @@
 		onShow() {
 
 			this.isLogin = storage.get('ClientId')
-			console.log(this.isLogin);
 			if (this.isLogin) {
 				this.getList()
 				this.getOrderlistHandle(1, 10)
+				this.getInfo()
 			}
 
 		},
@@ -512,15 +561,19 @@
 				//获取用户信息
 				if (storage.get('ClientId')) {
 					getInfoById(storage.get('ClientId')).then(res => {
-						console.log(res);
 						this.userInfo = res.data
 						//	let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 						this.userInfo.phone = this.geTel(this.userInfo.phoneNumber)
 						//	this.fileList.push({url:arr[0]})
+						let userInfo = {}
+						userInfo = res.data
+						this.listAvatar = {
+							userInfo: userInfo,
+							type: 'info'
+						}
 					})
 					//获取订单数量
 					this.orderList.forEach(item => {
-						console.log(item);
 						getOrderList({
 							clientId: storage.get('ClientId'),
 							orderStatus: item.label,
@@ -534,10 +587,9 @@
 						userId: storage.get('ClientId'),
 						userType: 'c'
 					}).then(res => {
-						this.balance = res.data.balance
+						this.totalAmount = res.data.totalAmount
 					})
 					getOrderStatics(storage.get('ClientId')).then(res => {
-						console.log(res, '5300000000');
 						this.orderList2.forEach(item => {
 							item.num = res.data[item['value']]
 						})
@@ -552,6 +604,11 @@
 				}
 
 
+			},
+			getInfo() {
+				putImmediate(storage.get('ClientId')).then(res => {
+					this.partnerInfo = res.data
+				})
 			},
 			//全部订单
 			allOrder() {
@@ -629,7 +686,6 @@
 				})
 			},
 			actionSelect(e) {
-				console.log(e);
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
@@ -665,6 +721,40 @@
 					})
 				})
 			},
+			toDetail(i) {
+				if (i.id > 3) {
+					if (this.partnerInfo == null) return this.$toast('请先申请合伙人噢')
+					let par = this.partnerInfo
+					switch (i.id) {
+						case 4:
+							this.$jump(i.url + '?partnerId=' + par.partnerId + '&region=' + par.region)
+							break;
+						case 6:
+							this.$jump(i.url + '?partnerId=' + par.partnerId + '&region=' + par.region)
+							break;
+							// case 7:
+							// 	this.$jump(i.url + '?partnerId=' + par.partnerId)
+							// 	break;
+
+							// case 8:
+							// 	this.$jump(i.url + '?partnerId=' + par.partnerId)
+							// 	break;
+						default:
+							this.$jump(i.url + '?partnerId=' + par.partnerId)
+							break;
+					}
+
+				} else {
+					this.$jump(i.url)
+				}
+			},
+			goInfo() {
+				uni.navigateTo({
+					url: '/subpkg/center/personalInfo/personalInfo?item=' + JSON.stringify(this.listAvatar)
+				})
+
+			},
+
 		}
 	}
 </script>
@@ -676,7 +766,7 @@
 	}
 </style>
 <style lang="scss" scoped>
-	.center-con {
+	.page {
 		position: relative;
 	}
 
@@ -715,25 +805,29 @@
 
 	.bg {
 		width: 100%;
-		height: 409rpx;
-		background: linear-gradient(181deg, #A4D091 0%, #FFFFFF 100%);
+		// height: 409rpx;
+		height: 566rpx;
+		// background: linear-gradient(181deg, #A4D091 0%, #FFFFFF 100%);
+		background: url('https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/14/621dacc5be8b4f7cb865e63baa7ec2ec.png') no-repeat;
+		background-size: 100% 100%;
 	}
 
 	.center {
-		padding: 0 30rpx 0;
+		padding: 0 30rpx 100rpx;
 		width: 100%;
 		box-sizing: border-box;
 		position: absolute;
 		top: 10rpx;
 
 		.info {
-			margin-top: 120rpx;
+			margin-top: 186rpx;
 			display: flex;
 
-			&-image {
-				width: 60rpx;
-				height: 60rpx;
+			.info-image {
+				width: 80rpx;
+				height: 80rpx;
 				border-radius: 50%;
+				margin-right: 24rpx;
 
 				image {
 					width: 100%;
@@ -742,16 +836,20 @@
 			}
 
 			.name {
-				margin-left: 8rpx;
-				line-height: 60rpx;
-				color: #000000;
-				font-size: 33rpx;
+				color: #212121;
+				font-size: 32rpx;
 
 				&-left {
 					max-width: 400rpx;
 					overflow: hidden;
 					text-overflow: ellipsis;
 					white-space: nowrap;
+				}
+
+				.grade {
+					color: #FAC723;
+					font-size: 24rpx;
+					margin-top: 2rpx;
 				}
 			}
 		}
@@ -831,6 +929,29 @@
 			}
 		}
 
+		.teamMy {
+			margin-top: 20rpx;
+			height: 160rpx;
+			font-family: PingFangSC, PingFang SC;
+			font-weight: 500;
+
+			&-item {
+				width: 340rpx;
+				height: 100%;
+				background: linear-gradient(324deg, #D6F0C6 0%, #f2ffeb 50%, #F3FBEE 100%);
+				color: #ABDC90;
+				border-radius: 16rpx;
+				font-size: 28rpx;
+				padding: 0 16rpx 0 20rpx;
+				box-sizing: border-box;
+			}
+
+			&-item:nth-last-child(1) {
+				background: linear-gradient(141deg, #FDF8F2 0%, #fff7ef 50%, #F7DFD0 100%);
+				color: #FD9C2B;
+			}
+		}
+
 		.counts {
 			background: #FFFFFF;
 			border-radius: 14rpx;
@@ -898,8 +1019,18 @@
 				padding: 20rpx 0 40rpx;
 				justify-content: space-around;
 				margin-top: 22rpx;
+				display: grid;
+				text-align: center;
+				grid-template-columns: repeat(4, 1fr);
+				grid-column-gap: 0rpx;
+				grid-row-gap: 42rpx;
 
 				&-all {
+					image {
+						width: 58rpx;
+						height: 58rpx;
+					}
+
 					.img-0 {
 						width: 58rpx;
 						height: 58rpx;

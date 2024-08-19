@@ -185,7 +185,7 @@
 						<view style="font-size: 22rpx;color: #A5A7A7;">请简单描述故障或特殊需求备注信息</view>
 						<view style='width: 100%'>
 							<u--textarea height='72' border='none' maxlength='50' confirmType="done"
-								v-model="item.remarks" placeholder="请输入内容" count @input='textareaInput'></u--textarea>
+								v-model="item.remark" placeholder="请输入内容" count @input='textareaInput'></u--textarea>
 						</view>
 					</view>
 				</view>
@@ -293,7 +293,6 @@
 							//	console.log('139......', item);
 							item.projectName = item.serviceProjectName ? item.serviceProjectName : item
 								.projectName
-							item.remarks = item.remark || ''
 						} else {
 							console.log(item, '.......147...');
 							item.shuoming = item.remark

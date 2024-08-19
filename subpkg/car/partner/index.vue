@@ -1,30 +1,32 @@
 <template>
-	<view class="pages">
-		<view class="banner">
-			<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/09/63428c7066d641feba3d0d36e1069896.jpg"
-				mode=""></image>
-		</view>
-		<view class="content">
-			<view class="content-mess">
-				<view class="form-row acea-row row-middle">
-					<text class="form-key">您的姓名</text>
-					<input class="acea-con" v-model="where.realName" style="text-align: right;margin-right: 10rpx;"
-						placeholder="请输入您的真实姓名"></input>
-				</view>
-				<view class="form-row acea-row row-middle">
-					<text class="form-key">联系电话</text>
-					<input class="acea-con" v-model="where.cellPhone" style="text-align: right;margin-right: 10rpx;"
-						placeholder="请输入您的手机号"></input>
-				</view>
-				<view class="form-row acea-row row-middle">
-					<text class="form-key">所在城市</text>
-					<pickers v-if="!isSubmit" @address="addressHandle" style="flex: 1;text-align: right">
-						<view v-if="where.region!=''">{{where.region}}</view>
-						<view v-else class="acea-row row-middle"
-							style="color: rgb(192, 196, 204); justify-content: flex-end;">
-							请选择您当前的城市 <u-icon color=" rgb(192, 196, 204)" name="arrow-right" style="margin-left: 4rpx;"
-								:size="14"></u-icon></view>
-					</pickers>
+	<view class="pages" :style="{height:clientHeight+'px'}">
+		<view>
+			<view class="banner">
+				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/09/63428c7066d641feba3d0d36e1069896.jpg"
+					mode=""></image>
+			</view>
+			<view class="content">
+				<view class="content-mess">
+					<view class="form-row acea-row row-middle">
+						<text class="form-key">您的姓名</text>
+						<input class="acea-con" v-model="where.realName" style="text-align: right;margin-right: 10rpx;"
+							placeholder="请输入您的真实姓名"></input>
+					</view>
+					<view class="form-row acea-row row-middle">
+						<text class="form-key">联系电话</text>
+						<input class="acea-con" v-model="where.cellPhone" style="text-align: right;margin-right: 10rpx;"
+							placeholder="请输入您的手机号"></input>
+					</view>
+					<view class="form-row acea-row row-middle">
+						<text class="form-key">所在城市</text>
+						<pickers v-if="!isSubmit" @address="addressHandle" style="flex: 1;text-align: right">
+							<view v-if="where.region!=''">{{where.region}}</view>
+							<view v-else class="acea-row row-middle"
+								style="color: rgb(192, 196, 204); justify-content: flex-end;">
+								请选择您当前的城市 <u-icon color=" rgb(192, 196, 204)" name="arrow-right"
+									style="margin-left: 4rpx;" :size="14"></u-icon></view>
+						</pickers>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -43,6 +45,7 @@
 		isEmpty,
 		isPhone
 	} from '@/utils/verify.js'
+	import storage from '@/utils/storage'
 	export default {
 		components: {
 			pickers
@@ -54,8 +57,10 @@
 				where: {
 					realName: "",
 					cellPhone: "",
-					region: ""
-				}
+					region: "",
+					clientId: storage.get('ClientId'),
+				},
+				clientHeight: ""
 			}
 		},
 		onLoad() {
@@ -63,11 +68,15 @@
 			this.isSubmit = pages.some(p => {
 				return p.route.includes('submitOrder') || p.route.includes('goosDetails')
 			})
+			this.getClineHeight()
+		},
+		computed: {
+
 		},
 		methods: {
-
 			addressHandle(e) {
 				this.where.region = e.value1.toString().replace(/,/g, "/")
+				console.log(e, "eee");
 			},
 			submit() {
 				if (!this.where.realName) return this.$toast('您的姓名不能为空')
@@ -86,16 +95,38 @@
 						this.$jump(-1)
 					}, 2000)
 				})
-			}
+			},
+			//获取可视区域高度
+			getClineHeight() {
+				const res = uni.getSystemInfo({
+					success: (res => {
+						this.clientHeight = res.windowHeight;
+						// this.clientHeight = res.windowHeight - uni.upx2px(80) - this.getBarHeight();
+					})
+				});
+			},
+			// getBarHeight() {
+			// 	const res = uni.getSystemInfoSync()
+			// 	if (res.platform === 'ios') {
+			// 		return 44 + res.statusBarHeight
+			// 	} else if (res.platform === 'android') {
+			// 		return 48 + res.statusBarHeight
+			// 	} else {
+			// 		return 0;
+			// 	}
+			// },
 		}
+
 	}
 </script>
 
 <style lang="scss" scoped>
 	.pages {
-		min-height: 100vh;
+		// min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 		background-color: #fff;
-		position: relative;
 
 		.banner {
 			height: 390rpx;
@@ -121,9 +152,7 @@
 		}
 
 		.content-btn {
-			position: absolute;
-			left: 64rpx;
-			bottom: 100rpx;
+			margin: 0rpx auto 70rpx;
 			width: 622rpx;
 			height: 88rpx;
 			background: #A4D091;

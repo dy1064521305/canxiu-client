@@ -1,7 +1,8 @@
 import App from './App'
 import Vue from 'vue'
 import uView from 'uni_modules/uview-ui'
-
+//全局分享
+import mixinShare from '@/polyfill/share.js'
 // 全局mixins，用于实现setData等功能';
 import Mixin from './polyfill/mixins';
 import {
@@ -13,7 +14,7 @@ import {
 Vue.mixin(Mixin);
 
 Vue.use(uView)
-
+Vue.mixin(mixinShare)
 // canxiuclientalias
 // canxiu
 Vue.config.productionTip = false
@@ -29,6 +30,14 @@ import store from '@/store';
 // 全局的暂无数据
 import EmptyPage from '@/components/empty/emptyPage.vue'
 Vue.component('empty-page', EmptyPage);
+// 顶部的距离
+import StatusBar from '@/components/StatusBar.vue'
+Vue.component('status-bar', StatusBar);
+
+import LoadingPage from '@/components/Loading/page.vue'
+Vue.component('loading-page', LoadingPage);
+import LoadingMore from '@/components/Loading/more.vue'
+Vue.component('loading-more', LoadingMore);
 
 const app = new Vue({
 	store,

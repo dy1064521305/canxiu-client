@@ -407,6 +407,15 @@
 	justify-content: center;
 	align-items: center;
 }
+.flex-center{
+	display: flex;
+	align-items: center;
+}
+.flex-colum{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
 
 /* 蓝湖common.scss */
 .flex-col {

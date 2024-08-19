@@ -30,9 +30,9 @@
 				</image>
 			</view>
 		</view>
-		
+
 		<!-- -->
-		<view  v-if="info.appointWorkers" class="worker_list bg info">
+		<view v-if="info.appointWorkers" class="worker_list bg info">
 			<view class="name acea-row">
 				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/3dcf64d5acb7412d869844de109a5ec0.png"
 					mode=""></image>
@@ -41,8 +41,9 @@
 			<view class="title">
 				如指派师傅超30分钟未响应，订单将由其他师傅接单服务
 			</view>
-			<view class="listOther acea-row " >
-				<view class="flex-colum-center" v-for="(item) in info.appointWorkers" :key="item.id" style="width: 20%;margin: 20rpx 0;">
+			<view class="listOther acea-row ">
+				<view class="flex-colum-center" v-for="(item) in info.appointWorkers" :key="item.id"
+					style="width: 20%;margin: 20rpx 0;">
 					<image v-if="item.avatarUrl" :src="item.avatarUrl" mode=""></image>
 					<image v-else
 						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
@@ -104,7 +105,7 @@
 					</image>
 					<image v-else style="width:98rpx;height: 98rpx;border-radius: 50%;" :src="workerInfo.avatarUrl">
 					</image>
-				<!-- 	<view class="logo">
+					<!-- 	<view class="logo">
 						{{workerType}}
 					</view> -->
 				</view>
@@ -153,7 +154,7 @@
 						<!-- <upLoadFile :fileListt='item.projectVideo' types='video' :index='index' :isDel='false' /> -->
 					</view>
 				</view>
-				<view v-if="item.remark!=''" class="info-box">
+				<view v-if="item.remark&&item.remark!=null" class="info-box">
 					<view class="font">
 						订单备注
 					</view>
@@ -343,7 +344,7 @@
 						types='image' :isDel='false' :isInfo='true' />
 				</view>
 			</view>
-			<view class="info-box">
+			<view v-if="info.deliveryVo.remark&&info.deliveryVo.remark!=null" class="info-box">
 				<view class="font">
 					订单备注
 				</view>
@@ -742,7 +743,6 @@
 			};
 		},
 		onLoad(option) {
-			console.log(option);
 			this.id = option.id
 			this.getList()
 		},
@@ -792,21 +792,16 @@
 			getList() {
 				//详情
 				order.getOrderInfo(this.id).then(res => {
-						console.log(res);
 						if (res.data.addressVo != null) {
 							this.addressVo = res.data.addressVo
 							this.addressVo.addressRegion = this.addressVo.addressRegion.replace(/\//g, '')
 							var reg = /^(\d{3})\d{4}(\d{4})$/;
 							this.addressVo.showPhone = this.addressVo.phone.replace(reg, "$1****$2");
-
 						}
-
 						this.info = res.data
 						this.isGet = Number(this.info.startingFree) > Number(this.info.preferentialPrice)
-						console.log(this.isGet, '6811111111111111');
 						this.statusInfo.forEach(item => {
 							if (this.info.orderStatus == item.orderStatus) {
-								console.log(this.info.orderStatus == item.orderStatus, item.orderStatus);
 								this.status = item.status
 								this.content = item.content
 							}
@@ -814,7 +809,6 @@
 						if (this.status == '') {
 							this.status = this.info.orderStatus
 							this.content = this.info.orderStatus
-							console.log(this.status, '7066666666666');
 						}
 						//师傅信息
 						this.info.workerId != null && order.getWorkerInfo(this.info.workerId).then(res => {
@@ -837,9 +831,7 @@
 									break;
 							}
 						})
-						console.log(this.info.orderStatus);
 						if (this.info.orderStatus == '已完成') {
-							console.log(1111);
 							//获取评论
 							order.appraiseList({
 								orderId: this.id,
@@ -847,7 +839,6 @@
 								pageSize: 10,
 								appraiseStatus: 1
 							}).then(res => {
-								console.log(res);
 								if (res.rows.length != 0) {
 									res.rows[0].imgs = res.rows[0].appraiseImg != null ? res.rows[0]
 										.appraiseImg
@@ -855,8 +846,6 @@
 											',') : []
 									this.appraise = res.rows[0]
 								}
-
-								console.log(this.appraise);
 							})
 						}
 						//获取追踪列表
@@ -873,22 +862,18 @@
 									content: item.trackContent
 								})
 							})
-							console.log(this.content);
 							this.step.push({
 								name: this.status,
 								content: this.info.orderStatus == '待上门' ? this.content + ',预计时间' + this
 									.info
 									.expectTime : this.content,
 							})
-							console.log(this.step);
 							this.step = this.step.reverse()
 						})
-						console.log(this.status);
 						//算出倒数的时间
 						this.info.orderStatus == '待接单' && this.timeFn(this.info.orderTime)
 
 						//this.timeFn('2023-03-09 11:20:18')
-						console.log(this.info.projectDataVoList[0].workerType, '8000000000000000');
 						this.workerType = this.info.projectDataVoList[0].workerType
 						this.info.projectDataVoList.forEach(item => {
 							item.projectImg = item.projectImg != '' ? item.projectImg.split(',') : []
@@ -899,7 +884,6 @@
 
 					//取消原因
 					getDict('basic_reason_cancellation').then(res => {
-						console.log(res);
 						let arr = []
 						res.data.forEach(item => {
 							arr.push(item.dictLabel)
@@ -908,7 +892,6 @@
 					}),
 					//新维修方案
 					order.getNewProject(this.id).then(res => {
-						console.log(res);
 						res.data.forEach(item => {
 							item.img = item.projectImg != null ? item.projectImg
 								.split(',') : []
@@ -919,15 +902,12 @@
 
 				//新材料
 				order.getNewMaterial(this.id).then(res => {
-					console.log(res);
 					let arr = []
 					arr = res.data
 					const map = new Map()
-					console.log(this.melTotal);
 					this.melTotal = arr.reduce((pre, item) => {
 						return pre + Number(item.materialPrice) * Number(item.materialCount)
 					}, 0)
-					console.log(this.melTotal);
 					arr.forEach((item, index, arr) => {
 						//	console.log( Number(item.materialPrice) * Number(item.materialCount),'？？？？？？？');
 						//	this.melTotal =this.melTotal+ Number(item.materialPrice) * Number(item.materialCount)
@@ -958,7 +938,6 @@
 			},
 			//评价
 			appraiseHandle() {
-				console.log(this.info);
 				this.info.newProject = this.newProject
 				uni.navigateTo({
 					url: '../appraise/appraise?info=' + encodeURIComponent(JSON.stringify(this.info))
@@ -966,7 +945,6 @@
 			},
 			//投诉
 			complaint() {
-				console.log(this.info);
 				this.info.newProject = this.newProject
 				uni.navigateTo({
 					url: '../complaint/complaint?item=' + encodeURIComponent(JSON.stringify(this.info))
@@ -974,7 +952,6 @@
 			},
 			//重新发起
 			reissueOrderHandle() {
-				console.log(this.info);
 				this.info.projectDataVoList.forEach(item => {
 					item.startingFreeDiscount = this.info.startingFree
 					item.startingFree = this.info.beforeStartingFree
@@ -1000,7 +977,6 @@
 			},
 			//取消
 			cancelReason(e) {
-				console.log(e.value[0])
 				order.cancelOrder({
 					cancelReason: e.value[0],
 					orderId: this.info.orderId
@@ -1026,7 +1002,6 @@
 				})
 			},
 			billViewImage(e, list) {
-				console.log(e);
 				uni.previewImage({
 					urls: list,
 					current: e.currentTarget.dataset.url
@@ -1044,7 +1019,6 @@
 
 			//生成维修报告
 			report(type) {
-				console.log(this.newProject);
 				let name = type == '待评价' || type == '待支付' ? '维修报告' : '服务验收'
 				this.info.addressVo = this.addressVo
 
@@ -1057,14 +1031,11 @@
 					showMelList: this.showMelList,
 					isGet: this.isGet
 				}
-				console.log(info);
-
 				uni.navigateTo({
 					url: '../accept/accept?info=' + JSON.stringify(info)
 				})
 			},
 			phoneAuth() {
-				console.log(1111111111);
 				this.$refs['authpup'].open()
 
 			},
@@ -1072,7 +1043,6 @@
 				this.showPhone = true
 			},
 			actionSelect(e) {
-				console.log(e);
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
@@ -1088,9 +1058,7 @@
 			handles(type) {
 				switch (type) {
 					case '返修':
-						console.log(this.info);
 						order.repairOrder(this.info).then(res => {
-							console.log(res);
 							this.$refs.uToast.show({
 								type: 'error',
 								message: res.data.msg
@@ -1113,15 +1081,12 @@
 						this.info.reason = this.reason
 						this.overruleScenarioApi()
 						this.rejectShowModal = false
-						console.log(this.info);
 
 						break;
 				}
 			},
 			//驳回
 			overruleScenarioApi() {
-				console.log(this.info);
-
 				order.overruleScenario(this.info).then(res => {
 					uni.showToast({
 						title: '驳回成功',
@@ -1133,7 +1098,6 @@
 			},
 			//维修结果驳回
 			resultBackHandle() {
-				console.log(this.bohuiUrl.length == 0);
 				if (this.bohuiUrl.length == 0) {
 					uni.showToast({
 						icon: 'error',
@@ -1150,20 +1114,17 @@
 
 			},
 			onSuccesss(reslut) {
-				console.log(reslut)
 				this.bohuiUrl.push(reslut.data.url)
 				//this.url=reslut.data.url
 
 			},
 			onDelete(reslut) {
-				console.log(reslut)
 				this.bohuiUrl = reslut.list
 				//this.url=reslut.data.url
 
 			},
 			//返修订单
 			repairOrder() {
-				console.log(this.newProject);
 				let info = {
 					list: []
 				}
@@ -1201,16 +1162,17 @@
 			padding: 20rpx 30rpx;
 			margin-top: 20rpx;
 		}
-		
-		.worker_list{
+
+		.worker_list {
 			.listOther {
+
 				// height: 203rpx;
 				image {
 					width: 87rpx;
 					height: 87rpx;
 					margin-bottom: 13rpx;
 				}
-			
+
 				text {
 					font-family: PingFangSC, PingFang SC;
 					font-weight: 500;
@@ -1218,23 +1180,26 @@
 					color: #3D3F3E;
 				}
 			}
+
 			.name {
 				padding: 30rpx 0 0 0;
-			
+
 				image {
 					width: 42rpx;
 					height: 42rpx;
 					margin: 0 10rpx 0 10rpx;
 				}
-			
+
 				font-size: 33rpx;
 				color: #3D3F3E;
 			}
+
 			.wenan {
 				font-size: 40rpx;
 				color: #3D3F3E;
 				margin: 34rpx 0 19rpx 6rpx;
 			}
+
 			.list {
 				height: 208rpx;
 				border-top: 1rpx solid #F8F8F8;
@@ -1258,6 +1223,7 @@
 			color: #3D3F3E;
 			font-weight: bold;
 			margin-top: 20rpx;
+
 			.img {
 				align-items: center;
 				display: flex;

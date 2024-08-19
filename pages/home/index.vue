@@ -89,9 +89,11 @@
 							}" itemStyle="padding-left: 15px; padding-right: 15px; height: 45px;" @click="tabClick">
 						</u-tabs>
 					</view>
+					
+				<view style="text-align: center;margin-top: 28rpx;" v-if='loading'>正在加载...</view>
 					<swiper v-if="serviceSymptomsName.length>0"
 						:style="{minHeight:(serviceItemHeight*10)+'px',height:(serviceItemHeight*serviceSymptomsName[currentIndex].list.length)+'px'}"
-						:current="currentIndex" @change="swiper_change">
+						:current="currentIndex" @change="swiper_change" >
 						<swiper-item v-for="(item,index) in serviceSymptomsName" :key="index">
 							<view class="scroll-view" v-if="item.list">
 								<view v-for="(item1,index1) in item.list" :key="index1" class="service-item">
@@ -103,11 +105,12 @@
 									</view> -->
 
 								</view>
-								<u-empty marginTop="200rpx" v-if="item.list.length==0" mode="list"
+
+								<u-empty marginTop="200rpx" v-if="item.list.length==0&&!loading" mode="list"
 									icon="http://cdn.uviewui.com/uview/empty/list.png">
 								</u-empty>
 								<view class='btns'>
-									<view v-if='loading'>正在加载...</view>
+									
 									<view v-if='item.list.length==item.total&&item.list.length!=0'>-已加载全部-</view>
 								</view>
 							</view>
@@ -146,7 +149,7 @@
 
 
 		<view v-if="status" class="index" style="z-index: 999999999999;">
-			<wu-app-update ></wu-app-update>
+			<wu-app-update></wu-app-update>
 		</view>
 
 	</view>
@@ -189,7 +192,7 @@
 		},
 		data() {
 			return {
-				status:true,
+				status: true,
 				serviceTypesList: [],
 				isShowMoney: false, //未登录不显示金额
 				loading: false, //是否展示 “正在加载” 字样
@@ -279,7 +282,8 @@
 			if (this.tabsBg !== '#F5F9FA') this.tabsBg = '#F5F9FA'
 		},
 		onShow() {
-			this.status=true
+			this.status = true
+			// this.getServiceTypesList()
 			if (storage.get('AccessToken')) {
 				this.isShowMoney = true
 				getCarNum().then(res => {
@@ -340,7 +344,7 @@
 			// 	this.getServiceSymptoms()
 			// }
 			this.choseAddress()
-			console.log('335================================>>>>');
+
 			uni.$on('totalUnreadCount', function(data) {
 				getC2cUnreadMsgNum().then(res => {
 					queryUnreadNum().then(ress => {
@@ -365,7 +369,7 @@
 
 		},
 		onHide() {
-			this.status=false
+			this.status = false
 			const apps = getApp()
 			apps.type = undefined
 			// this.getLoction()
@@ -412,7 +416,6 @@
 
 			queryState() {
 				accountQueryState().then(res => {
-					console.log(res.data);
 					if (res.data.QueryResult && res.data.QueryResult[0].State == 'Offline') {
 						getUserSig().then(ress => {
 							uni.$TUIKit.login({
@@ -444,25 +447,42 @@
 				this.serviceSymptomsName[this.currentIndex].params.pageNum++
 				if (!this.serviceSymptomsName[this.currentIndex].params.symptoms) this.serviceSymptomsName[this
 					.currentIndex].params.symptoms = this.serviceSymptomsName[this.currentIndex].name
+				console.log(this.serviceSymptomsName[this.currentIndex].list.length, this.serviceSymptomsName[this
+					.currentIndex].total);
+				if (this.serviceSymptomsName[this.currentIndex].list.length == this.serviceSymptomsName[this.currentIndex]
+					.total) return
+				this.getServiceSymptomsHandle()
+			},
+			refreshHandle() {
+				console.log('454444444444');
+				this.serviceSymptomsName.forEach(service => {
+					if (service.params) {
+						service.params.pageNum = 1
+					}
+					service.list ? service.list.length = 0 : []
+				})
+				this.serviceItemHeight=0
+				// uni.pageScrollTo({
+				// 	selector: '.flag',
+				// 	success: () => {
+				// 		setTimeout(() => {
+				// 			this.tabsBg = '#fff'
+				// 		}, 300)
+				// 	}
+				// });
 				this.getServiceSymptomsHandle()
 			},
 			//下拉刷新函数
 			onPullDownRefresh() {
-				console.log(this.serviceSymptomsName);
 				this.serviceSymptomsName.forEach(service => {
-					service.params.pageNum = 1
+					if (service.params) {
+						service.params.pageNum = 1
+					}
+					service.total=0
+					service.list ? service.list.length = 0 : []
 				})
-				// // #ifdef APP-PLUS
-				// this.$refs['authpup'].open()
-				// // #endif
-				// // #ifdef MP-WEIXIN
-				// this.getLoction()
-				// // #endif
+
 				this.getServiceSymptomsHandle()
-
-
-
-
 			},
 			swiper_change(e) {
 				if (e.detail.current === this.currentIndex) return
@@ -470,45 +490,49 @@
 			},
 
 			getServiceSymptomsHandle() {
-				// if (!this.address) return
-				console.log(this.address, this.serviceSymptomsName,
-					'getServiceSymptomsHandlegetServiceSymptomsHandlegetServiceSymptomsHandle');
+
 				//获取故障现象
 				this.loading = true
 				const params = this.serviceSymptomsName.length < 1 ? {
 					pageSize: 10,
 					pageNum: 1,
-					symptoms: ''
+					symptoms: '',
+					clientId: storage.get('ClientId') || ''
 				} : this.serviceSymptomsName[this.currentIndex].params
 				console.log(params);
 				getServiceSymptoms({
 					...params,
-					address: this.address
+					address: this.address,
+					clientId: storage.get('ClientId') || ''
 				}).then(res => {
 					this.serviceSymptomsName = res.data.map((d, i) => ({
 						...this.serviceSymptomsName[i],
+						total: d.total,
 						name: d.symptomsName,
+
 						params: this.serviceSymptomsName[i]?.params || {
 							pageSize: 10,
 							pageNum: 1,
 							symptoms: '',
+							address: this.address,
+							clientId: storage.get('ClientId') || ''
 						},
 						list: this.serviceSymptomsName[i]?.list || []
 					}))
+
 					const cell = res.data.reduce((p, c) => c.productVoList ? {
 						...c,
 						productVoList: c.productVoList.map(rec => ({
 							...rec,
-							servicePrice: !this.isShowMoney && rec
-								.servicePrice != null ? this.replaceMoney(rec
-									.servicePrice) : rec.servicePrice
+
 						}))
 					} : p, {})
 					const index = this.serviceSymptomsName.findIndex(s => s.name === cell.symptomsName)
 					const arr = params.pageNum === 1 ? cell.productVoList : [...this.serviceSymptomsName[index]
 						.list, ...cell.productVoList
 					];
-					this.serviceSymptomsName.splice(index, 1, {
+
+					index != -1 && this.serviceSymptomsName.splice(index, 1, {
 						...this.serviceSymptomsName[index],
 						list: arr
 					})
@@ -521,29 +545,31 @@
 			getServiceHeight() {
 				uni.createSelectorQuery().in(this).select('.service-item')
 					.boundingClientRect(data1 => {
-						this.serviceItemHeight = data1.height + 10
+						this.serviceItemHeight = data1 != null ? data1.height + 13 : 100
 					}).exec();
 			},
-			getServiceSymptoms() {
-				console.log('5177777777777777', this.address);
-				this.loading = true
-				this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
-					name: d.name,
-					list: d.list.map(rec => ({
-						...rec,
-						servicePrice: !this.isShowMoney && rec.servicePrice != null ? this
-							.replaceMoney(rec
-								.servicePrice) : rec.servicePrice
-					})),
-					total: d.total,
-					params: {
-						pageSize: 10,
-						pageNum: 1,
-						symptoms: '',
-					},
-				}))
-				this.loading = false
-			},
+			// getServiceSymptoms() {
+			// 	console.log('5177777777777777', this.address);
+			// 	this.loading = true
+			// 	this.serviceSymptomsName = this.serviceSymptomsName.map((d, i) => ({
+			// 		name: d.name,
+			// 		list: d.list.map(rec => ({
+			// 			...rec,
+			// 			servicePrice: !this.isShowMoney && rec.servicePrice != null ? this
+			// 				.replaceMoney(rec
+			// 					.servicePrice) : rec.servicePrice
+			// 		})),
+			// 		total: d.total,
+			// 		params: {
+			// 			pageSize: 10,
+			// 			pageNum: 1,
+			// 			symptoms: '',
+			// 			address: this.address,
+			// 			clientId: storage.get('ClientId') || ''
+			// 		},
+			// 	}))
+			// 	this.loading = false
+			// },
 			getList() {
 				//获取一级分类
 				getServiceType().then(res => {
@@ -574,7 +600,6 @@
 
 			},
 			getLoction() {
-				console.log('getLoctiongetLoctiongetLoctiongetLoction');
 				var that = this
 				uni.getLocation({
 					success: (suc) => {
@@ -585,7 +610,6 @@
 							location: suc.latitude + "," + suc.longitude,
 
 							success: function(res) {
-								console.log(res, '588111111111');
 								let result = res.result.address_component
 								that.cityName = result.street_number !=
 									'' ? result.street_number : result
@@ -611,7 +635,6 @@
 						})
 					},
 					fail(err) {
-						console.log(err, '63333333');
 
 
 					}
@@ -627,13 +650,20 @@
 				uni.getStorage({
 					key: `city${storage.get('ClientId')}`,
 					success: (res) => {
-						console.log(res, '623333333');
 						this.cityName = res.data.addressDetailed
 						this.addressName = this.address = uni.getStorageSync(
 							`address_refreash${storage.get('ClientId')}`)
 						this.getList()
 						this.getServiceSymptomsHandle()
 					},
+					fail: (err) => {
+						// #ifdef MP-WEIXIN
+						this.getLoction()
+						// #endif
+					},
+					complete: () => {
+						this.refreshHandle()
+					}
 
 				})
 			},
@@ -697,7 +727,6 @@
 			},
 			//tab栏点击
 			tabClick(item, num) {
-				console.log(this.serviceSymptomsName, item, '<<<<============================672', num);
 				if (item.index === this.currentIndex) return
 				this.currentIndex = item.index
 				this.serviceSymptomsName[item.index].params.symptoms = item.name
@@ -736,12 +765,11 @@
 				uni.getStorage({
 					key: `city${storage.get('ClientId')}`,
 					success: (res) => {
-						console.log(res);
 						this.cityName = res.data.addressDetailed
 						this.addressName = this.address = uni.getStorageSync(
 							`address_refreash${storage.get('ClientId')}`)
-						this.getList()
-						this.getServiceSymptomsHandle()
+						// this.getList()
+						// this.getServiceSymptomsHandle()
 					},
 					fail: () => {
 						this.cityName = '杭州市拱墅区'
@@ -758,9 +786,14 @@
 								type: 'defalut'
 							}
 						})
-						console.log('744444444');
+
+
+					},
+					complete: () => {
+						console.log('77555555555555');
 						this.getList()
 						this.getServiceSymptomsHandle()
+
 					}
 				})
 
@@ -1072,7 +1105,10 @@
 		position: fixed;
 		right: 36.23rpx;
 		bottom: 39.86rpx;
-		z-index: 10000;
+		z-index: 1000;
+		/* #ifdef H5 */
+		bottom: 120.86rpx;
+		/* #endif */
 
 		.dot {
 			z-index: 10;

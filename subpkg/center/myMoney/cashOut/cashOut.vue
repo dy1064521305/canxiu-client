@@ -1,16 +1,16 @@
 <template>
 	<view class="cash-out">
-		<view class="one">
+		<view class="one" @click="goCard">
 			<view class="fonts" style="font-weight: bold;margin-bottom: 20rpx;">
 				提现到
 			</view>
 			<view class="cardInfo">
 				<view class="fonts">
-					<text v-if="bankName!=''">{{bankName}}（{{card}}）</text>
+					<text v-if="card">{{bankName||''}}（{{card}}）</text>
 					<text v-else>选择银行卡</text>
 					<text style="color: #A5A7A7;margin-left: 10rpx;">快捷</text>
 				</view>
-				<view @click="goCard">
+				<view>
 					<image style="width:16rpx;height: 32rpx;"
 						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png">
 					</image>
@@ -57,6 +57,9 @@
 		getUserWallet
 	} from '@/api/money.js'
 	import storage from '@/utils/storage'
+	import {
+		getBankCardList
+	} from '@/api/bankCard.js'
 	export default {
 		data() {
 			return {
@@ -68,16 +71,30 @@
 			};
 		},
 		onLoad() {
-			getUserWallet({
-				userId: storage.get('ClientId'),
-				userType: 'c'
-			}).then(res => {
-				console.log(res);
-				this.withdrawal = res.data.withdrawal
-			})
+			this.getLoad()
 
 		},
 		methods: {
+			getLoad() {
+				getUserWallet({
+					userId: storage.get('ClientId'),
+					userType: 'c'
+				}).then(res => {
+					console.log(res);
+					this.withdrawal = res.data.withdrawal
+				})
+				getBankCardList({
+					pageSize: 10,
+					pageNum: 1,
+					isDefault: 'Y',
+					userId: storage.get('ClientId'),
+				}).then(res => {
+					console.log(res.rows[0]);
+					this.bankName = res.rows[0].bankName
+					this.card = res.rows[0].cardNumber.substr(-4)
+					this.bankId = res.rows[0].cardId
+				})
+			},
 			//获取银行卡信息
 			getCardInfo(item) {
 				console.log(item);
@@ -86,8 +103,12 @@
 				this.bankId = item.cardId
 			},
 			goCard() {
+				let info = {
+					type: 'cash',
+					bankId: this.bankId
+				}
 				uni.navigateTo({
-					url: '../myCard/myCard?type=' + 'cash'
+					url: '../myCard/myCard?info=' + JSON.stringify(info)
 				})
 			},
 			//提现记录
@@ -97,6 +118,7 @@
 				})
 			},
 			cashOut() {
+
 				if (this.amount == '') {
 					this.$refs.uToast.show({
 						type: 'error',
@@ -118,6 +140,12 @@
 					bankId: this.bankId
 				}).then(res => {
 					console.log(res);
+					if (res.data.msg == '申请提现成功') {
+						uni.navigateTo({
+							url: '../cashOutDetailed/cashOutDetailed'
+						})
+						this.withdrawal = 0
+					}
 					this.$refs.uToast.show({
 						type: 'default',
 						message: res.data.msg
@@ -129,8 +157,8 @@
 				this.card = '',
 					this.bankName = '',
 					this.amount = '',
-					this.bankId = '',
-					this.withdrawal = 0
+					this.bankId = ''
+
 			},
 			//全部
 			getAllMoney() {

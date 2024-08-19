@@ -2,8 +2,8 @@
 	<view class="good-detail-page">
 		<view class="navbar"
 			:style="{padding:(statusHeight*2)+'rpx 0px 24rpx 16rpx',backgroundColor:'rgba(255,255,255,'+navbarColorOpacity+')'}">
-			<u-icon name="arrow-left" size="19" @click="goBack()"></u-icon>
-			<text>{{city}}</text>
+		
+			<view @click="goBack()">	<u-icon color="#fff" name="arrow-left" size="19" ></u-icon>{{city}}</view>
 		</view>
 
 		<scroll-view class="serviceInfo" ref="target" :scroll-y="true" :scroll-into-view="scrollIntoView"
@@ -30,13 +30,17 @@
 					<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/0616977a744749ac86c5b97a1728f654.png"
 					mode=""></image> -->
 					<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
-					<view :style="{'background':Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)?`url(${goodInfo.imgUrl}) no-repeat`:''}" :class="['prices',Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)?'price-img':'']">
+					<view
+						:style="{'background':Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)?`url(${goodInfo.imgUrl}) no-repeat`:''}"
+						:class="['prices',Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)?'price-img':'']">
 						<view class="top">
 							<text style="font-size: 43rpx;">{{goodInfo.discountPrice}}</text>
 							<text style="font-size: 27rpx;">元</text>
-							<text v-if="Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)">已补贴￥{{goodInfo.preferentialPrice}}</text>
+							<text
+								v-if="Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)">已补贴￥{{goodInfo.preferentialPrice}}</text>
 						</view>
-						<view v-if="Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)" style="font-size: 22rpx;">
+						<view v-if="Number(goodInfo.discountPrice)<Number(goodInfo.projectAmount)"
+							style="font-size: 22rpx;">
 							日常价：{{goodInfo.projectAmount}}元
 						</view>
 
@@ -188,7 +192,9 @@
 								name="Docs guide">
 								<view v-for="(ch,chindex) in item.list" :key='chindex'
 									style="display: flex;justify-content: space-between;margin-bottom: 20rpx;">
-									<text v-for="(s,si) in ( ch.materialSpecs!=null?Object.values(JSON.parse(ch.materialSpecs)):'')" :key="si">
+									<text
+										v-for="(s,si) in ( ch.materialSpecs!=null?Object.values(JSON.parse(ch.materialSpecs)):'')"
+										:key="si">
 										{{s}}
 									</text>
 									<text>{{ch.salePrice}}元/{{ch.materialUnit}}</text>
@@ -200,7 +206,7 @@
 				</view>
 			</view>
 
-			<view v-if="goodInfo.standard" class="bgf" style="margin-top: 20rpx;padding: 20rpx;" >
+			<view v-if="goodInfo.standard" class="bgf" style="margin-top: 20rpx;padding: 20rpx;">
 				<view style="font-size: 30rpx;">
 					维修小百科
 				</view>
@@ -372,7 +378,7 @@
 				serviceImgList: [],
 				currentNum: 0,
 				query: {},
-				isLogin: storage.get('AccessToken'),
+				isLogin: uni.getStorageSync(`isLogin${storage.get('ClientId')}`),
 				isJoinCar: 0, //是否加入维修车
 				chargeList: [], //收费标准
 				melList: [],
@@ -409,14 +415,49 @@
 				navbarHeight: 0,
 				navbarColorOpacity: 0,
 				mainFlagTop: 0,
-				city: undefined
+				city: undefined,
+				type: ''
 			}
 		},
+		//#ifdef MP-WEIXIN
+		onShareAppMessage() {
+			return new Promise((resolve, reject) => {
+				let data = {
+					title: this.goodInfo.serviceName,
+					path: '',
+					imageUrl: this.serviceImgList[0],
+				}
+				let id = this.query.typeId ? this.query.typeId : this.query.serviceId
+				data.path = '/subpkg/car/goodDetails/goodDetails?typeId=' + id + '&type=share';
+				resolve(data)
+			})
+		},
+		onShareTimeline(res) { //分享到朋友圈
+			// return new Promise((resolve, reject) => {
+			// 	let data = {
+			// 		title: this.goodInfo.serviceName,
+			// 		path: '',
+			// 		imageUrl: this.serviceImgList[0],
+			// 	}
+			// 	let id = this.query.typeId ? this.query.typeId : this.query.serviceId
+			// 	data.path = '/subpkg/car/goodDetails/goodDetails?typeId=' + id + '&type=share';
+			// 	resolve(data)
+			// })
+			let id=this.query.typeId?this.query.typeId:this.query.serviceId
+			return {
+				query:`typeId=${id}&type=share&address=${this.query.address}`,
+				title: this.goodInfo.serviceName,
+				path: '/subpkg/car/goodDetails/goodDetails',
+				imageUrl: this.serviceImgList[0],
+			}
+		},
+		//#endif
 		onLoad(options) {
 			// console.log(this.isLogin);
-			// console.log(options);
+			console.log(options);
 			let name = uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
-			this.query.address = name
+			this.query.address = name?name:options.address
+			this.type = options.type
 			this.city = this.query.address.split('-')[2]
 			this.query.clientId = !storage.get('ClientId') ? '' : storage.get('ClientId')
 			// console.log(this.query);
@@ -443,9 +484,10 @@
 					})
 				}
 			});
-		
+
 		},
 		onShow() {
+			this.isLogin = uni.getStorageSync(`isLogin${storage.get('ClientId')}`)
 			this.$nextTick(() => {
 				uni.createSelectorQuery().in(this)
 					.select(".navbar")
@@ -477,7 +519,7 @@
 			});
 			// #endif
 			console.log(this.statusHeight, '448888888');
-			this.isLogin = storage.get('AccessToken')
+			// this.isLogin = storage.get('AccessToken')
 			//获取购物车数量
 			if (this.isLogin) {
 				this.getCarList()
@@ -517,7 +559,7 @@
 					clientId: storage.get('ClientId'),
 					type: this.goodInfo.workerType,
 					name: this.searchName,
-					address:uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
+					address: uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 				}).then(res => {
 					this.coudanList = res.data
 				})
@@ -527,10 +569,13 @@
 
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
-
-					// uni.setNavigationBarTitle({
-					// 	title: this.goodInfo.serviceName
-					// })
+					
+					// if (this.type=='share') {
+					// 	uni.setNavigationBarTitle({
+					// 		title: this.goodInfo.serviceName
+					// 	})
+					// }
+					
 
 					for (let key in this.goodInfo.materialVoMap) {
 						this.melList.push({
@@ -538,7 +583,7 @@
 							list: this.goodInfo.materialVoMap[key]
 						})
 					}
-					console.log(this.melList,'5566666666');
+					console.log(this.melList, '5566666666');
 					//收费标准
 					this.priceList = [{
 							name: '服务起步价',
@@ -565,12 +610,13 @@
 					if (this.isLogin) {
 						// this.getCarList()
 						this.getListByWorkerType()
-					} else {
-						this.goodInfo.serviceStartingFree = this.replaceMoney(this.goodInfo.serviceStartingFree)
-						this.goodInfo.discountPrice = this.replaceMoney(this.goodInfo.discountPrice)
-						this.goodInfo.projectAmount = this.replaceMoney(this.goodInfo.projectAmount)
-						this.goodInfo.preferentialPrice = this.replaceMoney(this.goodInfo.preferentialPrice)
 					}
+					// else {
+					// 	this.goodInfo.serviceStartingFree = this.replaceMoney(this.goodInfo.serviceStartingFree)
+					// 	this.goodInfo.discountPrice = this.replaceMoney(this.goodInfo.discountPrice)
+					// 	this.goodInfo.projectAmount = this.replaceMoney(this.goodInfo.projectAmount)
+					// 	this.goodInfo.preferentialPrice = this.replaceMoney(this.goodInfo.preferentialPrice)
+					// }
 
 					//获取评论
 					order.appraiseList({
@@ -607,6 +653,17 @@
 					this.serviceImgList = this.goodInfo.serviceImg !== null && this.goodInfo.serviceImg !== "" ?
 						this.goodInfo.serviceImg.split(',') : []
 
+				}).catch((err)=>{
+					// #ifdef MP-WEIXIN
+					this.$refs.uToast.show({
+						type: 'error',
+						message: err.msg
+					});
+					// #endif
+					setTimeout(()=>{
+						uni.navigateBack()
+					},800)
+					
 				})
 
 
@@ -640,7 +697,7 @@
 				})
 			},
 
-		
+
 			//维修车
 			goCar() {
 				let type = 'goCar'
@@ -650,7 +707,10 @@
 
 			},
 			goBack() {
-				uni.navigateBack()
+				this.type == 'share' ? uni.switchTab({
+					url: '/pages/home/index'
+				}) : uni.navigateBack()
+
 			},
 			//去登录
 			confirm() {
@@ -749,11 +809,13 @@
 				// 	return
 				// }
 				let newSetArray = [] //新数组
-
+				console.log(this.projectForm,'80111111111');
+				this.goodInfo.remark=''
 				newSetArray.push({
 					clientId: storage.get('ClientId'),
 					...this.goodInfo,
 					...this.projectForm,
+					remark: this.projectForm.remarks,
 					serviceProjectImg: this.goodInfo.serviceImg,
 					serviceProductName: this.goodInfo.serviceName,
 					projectPrice: this.goodInfo.projectAmount
@@ -770,9 +832,10 @@
 
 			},
 			//查看维修规范
-			goStandard(){
+			goStandard() {
 				uni.navigateTo({
-					url:'./standardContent/standardContent?info='+encodeURIComponent(JSON.stringify(this.goodInfo.standard))
+					url: './standardContent/standardContent?info=' + encodeURIComponent(JSON.stringify(this
+						.goodInfo.standard))
 				})
 			}
 
@@ -842,7 +905,7 @@
 					background-size: 100% auto !important;
 					height: 175rpx;
 					padding-left: 24rpx;
-					
+
 				}
 
 				.prices {
@@ -1070,10 +1133,10 @@
 			padding-left: 16rpx;
 			z-index: 10;
 
-			text {
-				display: inline-block;
+			view {
+				display: flex;
 				background: rgba(0, 0, 0, 0.45);
-				padding: 10rpx 20rpx;
+				padding: 10rpx 20rpx 10rpx 7rpx;
 				border-radius: 7rpx;
 				font-size: 29rpx;
 				color: #FFFFFF;

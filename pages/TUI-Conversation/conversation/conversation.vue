@@ -46,14 +46,14 @@
 
 
 
-			<view class="scroll-box">
+			<!-- 		<view class="scroll-box">
 				<view class="uni-list margintop-bar" style="margin-top: 5px;">
 					<view v-for="item in conversationList" :key="item.conversationID"
 						@tap="handleRoute(item.conversationID)">
 						<TUI-conversation-item :data-type="item.type" :conversation="item"></TUI-conversation-item>
 					</view>
 				</view>
-			</view>
+			</view> -->
 			<!-- <view class="bottom-back">
 				<view class="bottom-area">
 					<view v-if="showSelectTag" class="conversation-bubble" @tap.stop="handleEditToggle">
@@ -64,15 +64,15 @@
 				</view>
 			</view> -->
 		</view>
-	
+
 	</view>
 </template>
 <!-- 这里有个加载的补丁逻辑待优化，页面向SDK请求conversationList的时候会有时延，
 造成页面的一个抖动，这里加一个if逻辑打一个补丁，后续继续优化 -->
 <script>
 	import logger from '../../../utils/logger';
-	import TUIConversationItem from '../../../components/tui-conversation/conversation-item/index';
-	import TUIMessageList from '../../../components/tui-chat/message-list/index';
+	// import TUIConversationItem from '../../../components/tui-conversation/conversation-item/index';
+	// import TUIMessageList from '../../../components/tui-chat/message-list/index';
 
 
 	import {
@@ -117,10 +117,10 @@
 			};
 		},
 
-		components: {
-			TUIConversationItem,
-			TUIMessageList
-		},
+		// components: {
+		// 	TUIConversationItem,
+		// 	TUIMessageList
+		// },
 		props: {},
 
 		/**
@@ -222,12 +222,13 @@
 				let totalUnreadCount = event.data;
 				console.info(event)
 				queryUnreadNum().then(ress => {
-					 this.num = (parseInt(totalUnreadCount) + parseInt(ress.data.num))>99?'99+': parseInt(totalUnreadCount) + parseInt(ress.data.num)
-					
+					this.num = (parseInt(totalUnreadCount) + parseInt(ress.data.num)) > 99 ? '99+' : parseInt(
+						totalUnreadCount) + parseInt(ress.data.num)
+
 					if (this.num > 0) {
 						uni.setTabBarBadge({
 							index: 2,
-							text: this.num+ ''
+							text: this.num + ''
 						})
 					} else {
 						uni.removeTabBarBadge({
@@ -326,16 +327,18 @@
 </script>
 <style scoped lang="scss">
 	@import './conversation.css';
-	.container-conversation{
+
+	.container-conversation {
 		::v-deep.u-navbar__content__left {
 			display: none !important;
 		}
+
 		.center-con {
 			position: relative;
 		}
-	
+
 		.grid-item-box {
-		
+
 			/* position: relative; */
 			/* #ifndef APP-NVUE */
 			display: flex;
@@ -345,13 +348,13 @@
 			justify-content: center;
 			padding: 35rpx 0 28rpx;
 		}
-		
+
 		.btns {
 			display: flex;
 			justify-content: space-evenly;
 			margin: 50rpx auto;
 			width: 63%;
-		
+
 			view {
 				width: 180rpx;
 				height: 60rpx;
@@ -360,12 +363,12 @@
 				line-height: 60rpx;
 				font-size: 28rpx;
 			}
-		
+
 			view:first-child {
 				background: #A4D091;
 				color: #fff;
 			}
-		
+
 			view:nth-child(2) {
 				background: #FFFFFF;
 				border: 4rpx solid #A4D091;
@@ -373,6 +376,4 @@
 			}
 		}
 	}
-	
-	
 </style>

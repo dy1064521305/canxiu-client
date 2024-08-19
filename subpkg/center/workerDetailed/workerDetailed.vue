@@ -18,14 +18,15 @@
 								{{workerInfo.workerName}}
 							</view>
 							<view style="margin-left: -9rpx;">
-									<u-rate  count="5" v-model="workerInfo.value" inactiveColor='#fff' activeColor='#ec9322' size='50rpx' readonly > </u-rate>
+								<u-rate count="5" v-model="workerInfo.value" inactiveColor='#fff' activeColor='#ec9322'
+									size='50rpx' readonly> </u-rate>
 							</view>
-						
+
 						</view>
 					</view>
 
 					<!-- 专业技能 technical-->
-				<!-- 	<view class="skill box-bg">
+					<!-- 	<view class="skill box-bg">
 						<view class="title">
 							专业技能
 						</view>
@@ -45,24 +46,21 @@
 					<view class="mains" v-for="(item,index1) in appraiseList" :key='index1'>
 						<view style="display: flex;margin-bottom: 10rpx;align-items: center;">
 							<view v-if="item.avatarUrl!=null">
-							<!-- 	<u-avatar :src="item.avatarUrl" size="34"></u-avatar> -->
-								<image  style="width: 72rpx;height: 72rpx;border-radius: 50%;"
-									:src="item.avatarUrl">
+								<!-- 	<u-avatar :src="item.avatarUrl" size="34"></u-avatar> -->
+								<image style="width: 72rpx;height: 72rpx;border-radius: 50%;" :src="item.avatarUrl">
 								</image>
 							</view>
 							<image v-else style="width: 72rpx;height: 72rpx;border-radius: 50%;"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
 							</image>
-							<view
-								style="font-size: 29rpx;color: #3D3F3E;margin:0 20rpx;">
+							<view style="font-size: 29rpx;color: #3D3F3E;margin:0 20rpx;">
 								哈*</view>
-							<u-rate :count="count" v-model="item.num" allowHalf activeColor='#ec9322' size='35rpx' readonly></u-rate>
+							<u-rate :count="count" v-model="item.num" allowHalf activeColor='#ec9322' size='35rpx'
+								readonly></u-rate>
 							<view class="time" :style="{'width':isshow?'43%':'50%'}">
 								{{item.time}}
 							</view>
-							<image 
-							  class="isWonderful"
-							  v-if="item.isWonderful=='Y'&&item.isWonderful!=null"
+							<image class="isWonderful" v-if="item.isWonderful=='Y'&&item.isWonderful!=null"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/14/b58459dc35794691a6953855e24f1c93.png"
 								mode=""></image>
 						</view>
@@ -100,7 +98,7 @@
 				queryParams: {
 					pageSize: 10,
 					pageNum: 1,
-					appraiseStatus:1
+					appraiseStatus: 1
 				},
 				appraiseList: [],
 				workerInfo: {}
@@ -108,8 +106,8 @@
 		},
 		onLoad(option) {
 			console.log(JSON.parse(option.info));
-			this.workerInfo = JSON.parse(option.info).info
 			this.queryParams.workerId = JSON.parse(option.info).workerId
+			this.workerInfo = JSON.parse(option.info).info
 		},
 		methods: {
 			getList(pageNo, pageSize) {
