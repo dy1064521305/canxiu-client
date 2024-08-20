@@ -8,7 +8,7 @@
 						<slot name="title">
 							<text>{{title}}</text>
 						</slot>
-						<text class="iconfont icon-x" @click="$emit('close')"></text>
+						<text v-if="iconX" class="iconfont icon-x" @click="$emit('close')"></text>
 					</view>
 					<slot name="content">
 						<view class="content">
@@ -17,7 +17,9 @@
 					</slot>
 					<view v-if="cancelText || confirmText" class="btns acea-row">
 						<view v-if="cancelText" class="btn acea-con" @click="$emit('cancel')">{{cancelText}}</view>
-						<view v-if="confirmText" class="btn confirm acea-con" @click="$emit('confirm')">{{confirmText}}</view>
+						<view v-if="confirmText" :style="{color: sizeColor}" class="btn confirm acea-con"
+							@click="$emit('confirm')">{{confirmText}}
+						</view>
 					</view>
 				</view>
 			</slot>
@@ -45,7 +47,15 @@
 			},
 			confirmText: {
 				type: String
-			}
+			},
+			iconX: {
+				type: Boolean,
+				default: true
+			},
+			sizeColor: {
+				type: String,
+				default: '',
+			},
 		},
 		methods: {
 
@@ -101,18 +111,18 @@
 			}
 
 			.btn {
-				height: 120rpx;
+				height: 100rpx;
 				font-size: 32rpx;
-				line-height: 120rpx;
+				line-height: 100rpx;
 				text-align: center;
 				color: #333;
-				font-weight: bold;
+				// font-weight: bold;
 				border-left: 2rpx solid #e8e8e8;
 
 				&:first-of-type {
 					border-left: 0;
 				}
-				
+
 				&.confirm {
 					color: $color-theme;
 				}

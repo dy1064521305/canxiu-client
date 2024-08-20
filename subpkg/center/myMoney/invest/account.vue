@@ -49,7 +49,7 @@
 			</view>
 		</view>
 		<PopupBottom title="投资详情" :show="accountShow" @close="accountShow=false;" @confirm="confirmSelect">
-			<view class="pages-money acea-row row-column row-center">
+			<view class="pages-money acea-row row-column row-center" style="margin-top: 30rpx;">
 				<text>总投资款（元）</text>
 				<view class="">{{info.totalInvestmentBalance||0}}</view>
 			</view>

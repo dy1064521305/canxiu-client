@@ -138,7 +138,7 @@
 			:actions="showTypeChange" :show="showAction_two"></u-action-sheet>
 		<PopupBottom :title="popTitle==1?'支付订单结算金额':'调整金额'" :show="accountShow" @close="accountShow=false;"
 			@confirm="confirmSelect">
-			<view class="popMent" v-if="popTitle">
+			<view class="popMent" v-if="popTitle" style="margin-top: 30rpx;">
 				<view class="error acea-row row-between-wrapper"
 					v-show="Number(investmentBalance)<Number(info.orderCost)">
 					<view class="error-left acea-row row-middle">
@@ -178,7 +178,7 @@
 					<view class="btn" @click="surePay()">确认支付</view>
 				</view>
 			</view>
-			<view class="popMoney" v-else>
+			<view class="popMoney" v-else style="margin-top: 30rpx;">
 				<view class="popMoney-set acea-row row-middle">
 					<text style="color:#FB2323; margin:6rpx 10rpx 0 0 ;">*</text>调整金额
 					<input v-model="adjustDetailAmount" type="number" style=" margin-left: 22rpx; padding-left: 20rpx;"

@@ -10,6 +10,62 @@ import storage from '@/utils/storage'
 import Routine from '@/config/routine.js';
 // #endif
 
+export function toLogin(logout, other) {
+	if (logout == 1) {
+		$store.commit('LOGOUT');
+	}
+	let url = '/pages/login/index';
+	// #ifdef MP
+	url = '/pages/login/login';
+	// #endif
+	// #ifdef APP-PLUS
+	url = '/pages/login/login';
+	// #endif
+	// #ifdef H5
+	if (isWeixin()) {
+		url = '/pages/login/login';
+	}
+	// #endif
+	toAuthPage(url);
+}
+
+export function toAuthPage(toUrl) {
+	const curPage = getCurrentPages();
+	if (curPage && curPage.length) {
+		const itemPage = curPage[curPage.length - 1]
+		const {
+			route,
+			options
+		} = itemPage;
+		let path = '/' + route;
+		if (toUrl.indexOf(path) === 0) return;
+
+		let url = itemPage.$page.fullPath || urlJoin(path, options);
+		$cache.set('authBackUrl', url);
+		if (!isTabber(url)) {
+			return uni.redirectTo({
+				url: toUrl
+			})
+		}
+	}
+	uni.navigateTo({
+		url: toUrl
+	});
+}
+export function parseQuery(url, key) {
+	let data = {};
+	if (!url) return key ? null : data;
+	let qs = (url.indexOf('?') > -1 ? url.split("?")[1] : url).split('&');
+	if (!qs || !qs.length) return key ? null : data;
+	for (let i = 0; i < qs.length; i++) {
+		let arr = qs[i].split('=');
+		if (key && key == arr[0]) return arr[1];
+		data[arr[0]] = arr[1];
+	}
+	return data;
+}
+
+
 export function numSimpWan(num) {
 	if (!num) return 0;
 	if (isNaN(num)) return num;
@@ -241,55 +297,96 @@ export function uploadImageHandler(img, successCallback, errorCallback) {
 	uni.showLoading({
 		title: '图片上传中',
 	});
-	for (let i = 0; i < img.length; i++) {
-		const path = img[i];
-		console.log(path, 'path');
-		(function(i) {
-			setTimeout(function() {
-				uni.uploadFile({
-					url: environment.baseURL + '/system/oss/upload',
-					filePath: path,
-					fileType: 'image',
-					name: 'file',
-					formData: {
-						'filename': 'pics'
-					},
-					header: {
-						// #ifdef MP
-						"Content-Type": "multipart/form-data",
-						// #endif
-						Authorization: 'Bearer ' + storage.get('AccessToken')
-					},
-					success: function(res) {
-						uni.hideLoading();
-						if (res.statusCode == 403) {
-							Toast(res.data)
-						} else {
-							let data = res.data ? JSON.parse(res.data) : {};
-							console.log(data, "data");;
-							if (data.code == 200) {
-								console.log(data, "@");
-								let list = []
-								list.push(data.data
-									.url)
-								successCallback && successCallback(list)
+	if (Object.prototype.toString.call(img) === '[object Array]') {
+		for (let i = 0; i < img.length; i++) {
+			const path = img[i];
+			console.log(path, 'path');
+			(function(i) {
+				setTimeout(function() {
+					uni.uploadFile({
+						url: environment.baseURL + '/system/oss/upload',
+						filePath: path,
+						fileType: 'image',
+						name: 'file',
+						formData: {
+							'filename': 'pics'
+						},
+						header: {
+							// #ifdef MP
+							"Content-Type": "multipart/form-data",
+							// #endif
+							Authorization: 'Bearer ' + storage.get('AccessToken')
+						},
+						success: function(res) {
+							uni.hideLoading();
+							if (res.statusCode == 403) {
+								Toast(res.data)
 							} else {
-								errorCallback && errorCallback(data);
-								Toast(data.msg)
+								let data = res.data ? JSON.parse(res.data) : {};
+								console.log(data, "data");;
+								if (data.code == 200) {
+									console.log(data, "@");
+									let list = []
+									list.push(data.data
+										.url)
+									successCallback && successCallback(list)
+								} else {
+									errorCallback && errorCallback(data);
+									Toast(data.msg)
+								}
 							}
+						},
+						fail: function(res) {
+							uni.hideLoading();
+							Toast('上传图片失败');
 						}
-					},
-					fail: function(res) {
+					});
+					if (i == res.tempFiles.length - 1) {
 						uni.hideLoading();
-						Toast('上传图片失败');
 					}
-				});
-				if (i == res.tempFiles.length - 1) {
-					uni.hideLoading();
+				}, (i + 1) * 1000);
+			})(i)
+		}
+	} else {
+		uni.uploadFile({
+			url: environment.baseURL + '/system/oss/upload',
+			filePath: img,
+			fileType: 'image',
+			name: 'file',
+			formData: {
+				'filename': 'pics'
+			},
+			header: {
+				// #ifdef MP
+				"Content-Type": "multipart/form-data",
+				// #endif
+				Authorization: 'Bearer ' + storage.get('AccessToken')
+			},
+			success: function(res) {
+				uni.hideLoading();
+				if (res.statusCode == 403) {
+					Toast(res.data)
+				} else {
+					let data = res.data ? JSON.parse(res.data) : {};
+					console.log(data, "data");;
+					if (data.code == 200) {
+						console.log(data, "@");
+						let list = {}
+						list = data
+						successCallback && successCallback(list)
+					} else {
+						errorCallback && errorCallback(data);
+						Toast(data.msg)
+					}
 				}
-			}, (i + 1) * 1000);
-		})(i)
+			},
+			fail: function(res) {
+				uni.hideLoading();
+				Toast('上传图片失败');
+			}
+		});
 	}
+
 }
 
 
