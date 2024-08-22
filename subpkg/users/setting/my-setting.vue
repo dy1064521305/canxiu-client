@@ -4,7 +4,7 @@
 			<div class="title">账户信息</div>
 			<view class="cell">
 				<view class="item">
-					<view class="label" @click="$jump('/subpkg/users/setting/avatar')">头像</view>
+					<view class="label">头像</view>
 					<view class="value acea-row row-middle" @click="uploadAvatar">
 						<image v-if="avatar" class="avatar" :src="avatar" mode="aspectFill"></image>
 						<image v-else
@@ -28,24 +28,30 @@
 									placeholder="请输入昵称" placeholder-class="font-normal " v-model="nickname">
 								<text class="iconfont icon" style="margin:0 -14rpx 0 -12rpx;">&#xe604;</text>
 							</view>
-							<!-- <view class="btns">
-								<button class="form-btn" type="primary" form-type="submit">保存</button>
-							</view> -->
+							<!-- #ifdef MP-WEIXIN -->
+							<view class=" btns">
+								<button class="view" type="primary" form-type="submit">保存编辑</button>
+							</view>
+							<!-- #endif -->
+
 						</form>
 					</view>
 				</view>
-				<view class="item">
+				<!-- <view class="item">
 					<view class="label">绑定手机号</view>
 					<view class="value">
 						<text class="text">名字</text><text class="iconfont icon"
 							style="margin:0 -14rpx 0 -12rpx;">&#xe604;</text>
 					</view>
-				</view>
+				</view> -->
 			</view>
 		</view>
+		<!-- #ifndef MP-WEIXIN -->
 		<view class="btn">
-			<view class="view" @click="sureSet" type="primary" form-type="submit"> 保存编辑</view>
+			<button class="view" @click="sureSet" type="primary" form-type="submit"> 保存编辑</button>
 		</view>
+		<!-- #endif -->
+
 		<!-- <div class="title">合作签约信息</div>
 		<view class="cell">
 			<view class="item" v-for="item in messList" :key="item.id">
@@ -70,9 +76,10 @@
 	// } from "vuex";
 	import {
 		uploadImageHandler,
-		// toPhoneVerify,
-		// checkAuth
 	} from '@/utils/index.js'
+	import {
+		putEditInfo
+	} from '@/api/user.js'
 	// import {
 	// 	HTTP_REQUEST_URL,
 	// 	TOKENNAME
@@ -153,7 +160,13 @@
 			}
 		},
 		computed: {},
-		onLoad() {
+		onLoad(options) {
+			if (options && options.avatarUrl) {
+				this.avatar = options.avatarUrl || ''
+			}
+			if (options && options.clientName) {
+				this.nickname = options.clientName || ''
+			}
 			this.getClineHeight()
 		},
 		methods: {
@@ -185,10 +198,34 @@
 					this.avatar = res.data.url;
 				})
 			},
+			sureSet() {
+				if (!this.nickname) {
+					return this.$toast('请先输入昵称');
+				}
+				putEditInfo({
+					avatarUrl: this.avatar,
+					clientName: this.nickname
+				}).then(res => {
+					this.$toast('保存成功！', 'success').then(() => {
+						this.$jump(-1);
+					});
+				})
+			},
+			submit(e) {
+				let {
+					nickname
+				} = e.detail.value;
+				if (!nickname) {
+					uni.hideLoading();
+					return this.$toast('请先输入昵称');
+				}
+				this.nickname = nickname
+				this.sureSet()
+			},
 			avatarEdit(url) {
 				console.log('修改头像成功');
 				this.avatar = url
-				this.$toast('修改头像成功!', 'success')
+				// this.$toast('修改头像成功!', 'success')
 				// userEdit({
 				// 	avatar: url
 				// }).then(res => {
@@ -438,6 +475,29 @@
 
 					.text {
 						font-size: 28rpx;
+					}
+				}
+
+				.btns {
+					position: fixed;
+					bottom: 0;
+					left: 0;
+					width: 100%;
+					background: #fff;
+					border-radius: 8rpx 8rpx 0 0;
+					font-size: 32rpx;
+					padding: 26rpx 0 40rpx;
+
+					.view {
+						width: 686rpx;
+						height: 88rpx;
+						background: #F3B23E;
+						line-height: 88rpx;
+						border-radius: 8rpx;
+						color: #FFFFFF;
+						text-align: center;
+						font-size: 28rpx;
+						margin: 0 auto;
 					}
 				}
 

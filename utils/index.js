@@ -533,3 +533,66 @@ export function hasFile(url, callback) {
 	}
 	// #endif	
 }
+
+/**
+ * app分享卡片到好友列表
+ * @param {String} params.imageUrl
+ * @param {String} params.title
+ * @param {String} params.path  跳转路径
+ * @param {String} params.type //小程序版本  0-正式版； 1-测试版； 2-体验版。
+ */
+export function appOpenWeixin(params) {
+	// #ifdef APP-PLUS
+	plus.share.getServices(
+		res => {
+			let sweixin = null;
+			for (let i in res) {
+				if (res[i].id == 'weixin') {
+					sweixin = res[i];
+				}
+			}
+			//唤醒微信小程序
+			if (sweixin) {
+				uni.share({
+					provider: 'weixin',
+					scene: "WXSceneSession",
+					type: 5,
+					imageUrl: params.imageUrl,
+					title: params.title,
+					miniProgram: {
+						id: 'gh_06220a7bf72f',
+						path: params.path,
+						type: params.type || 0,
+						// webUrl: 'https://m.reduxingke.com/down/app.html'
+					},
+					success: ret => {
+						console.log(JSON.stringify(ret));
+					}
+				});
+			} else {
+				return Toast('未检测到微信')
+			}
+		}
+	);
+	// #endif
+	// #ifndef APP-PLUS
+	Toast('请在app或小程序中打开分享')
+	// #endif
+}
+
+export function shareImage(img) {
+	// #ifdef MP-WEIXIN
+	Routine.shareImage(img);
+	// #endif
+	// #ifdef APP-PLUS
+	uni.share({
+		provider: "weixin",
+		scene: "WXSceneSession",
+		type: 2,
+		imageUrl: img
+	});
+	// #endif
+	// #ifdef H5
+	return window.open(img);
+	// #endif
+}

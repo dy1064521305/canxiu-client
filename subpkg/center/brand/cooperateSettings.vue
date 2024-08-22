@@ -13,14 +13,14 @@
 			</view>
 
 		</view>
-		<div class="title">推广收益比</div>
+		<div class="title">推广收益</div>
 		<view class="cell">
 			<view class="item">
 				<view class="label acea-row row-middle">
 					<text style="margin-right: 6rpx;">业务推广分成比</text>
 					<view style="position: relative;" @click.stop="showBubble = !showBubble">
 						<u-icon name="question-circle" color="#F3B23E" size="18"></u-icon>
-						<view v-show="showBubble" class="bubble">自己所推广的品牌下单时间，你获得的销售业绩分成收益<br />
+						<view v-show="showBubble" class="bubble">该合伙人所推广的品牌下单时，可额外获得的订单利润分成；<br />
 							计算公式：业务推广奖励=订单利润*业务推广分成比<br />结算时间：当品牌方验收并支付后30日解冻发放
 						</view>
 					</view>
@@ -34,38 +34,50 @@
 					<text style="margin-right: 6rpx;">订单消耗分成比</text>
 					<view style="position: relative;" @click.stop="showBubble1 = !showBubble1">
 						<u-icon name="question-circle" color="#F3B23E" size="18"></u-icon>
-						<view v-show="showBubble1" class="bubble">自己所推广的品牌下单时间，你获得的销售业绩分成收益<br />
-							计算公式：业务推广奖励=订单利润*业务推广分成比<br />结算时间：当品牌方验收并支付后30日解冻发放
+						<view v-show="showBubble1" class="bubble">该合伙人自己接单并完成服务时，可额外获得的订单利润分成<br />
+							计算公式：订单消耗奖励=订单利润*订单消费分成比<br />结算时间：当品牌方验收并支付后30日解冻发放
 						</view>
 					</view>
 				</view>
 				<view class="value">
-					<text class="text"> {{partnerInfo.profitSharing||0}}%</text>
+					<text class="text"> {{partnerInfo.orderConsumeSharing||0}}%</text>
 				</view>
 			</view>
 
 		</view>
 		<view>
 			<div class="title">运营分红</div>
-			<view class="kefu">联系客服，申请开通区域运营权限</view>
+			<view class="kefu" v-if="!partnerInfo.isBonus">联系客服，申请开通区域运营权限</view>
 			<view class="cell">
 				<view class="item">
 					<view class="label acea-row row-middle">
 						<text style="margin-right: 6rpx;">团队育成奖励</text>
-						<u-icon name="question-circle" color="#F3B23E" size="18"></u-icon>
+						<view style="position: relative;" @click.stop="showBubble2 = !showBubble2">
+							<u-icon name="question-circle" color="#F3B23E" size="18"></u-icon>
+							<view v-show="showBubble2" class="bubble">享受团队中“直属成员”的每月分成收益的育成奖励<br />
+								计算公式：奖励金额=直属成员T月推广+消耗分成收益总合*团队育成奖励分成比<br />结算时间：月结，每月1号发放上一月的团队育成奖励
+							</view>
+						</view>
 					</view>
 					<view class="value">
-						<text class="text">暂不享受该收益</text>
+						<text
+							v-if="partnerInfo.isTeamBonus&&partnerInfo.teamBonusRatio">{{partnerInfo.teamBonusRatio}}</text>
+						<text class="text" v-else>暂不享受该收益</text>
 					</view>
 				</view>
 				<view class="item">
 					<view class="label acea-row row-middle">
 						<text style="margin-right: 6rpx;">区域运营补贴</text>
-						<u-icon name="question-circle" color="#F3B23E" size="18"></u-icon>
+						<view style="position: relative;" @click.stop="showBubble3 = !showBubble3">
+							<u-icon name="question-circle" color="#F3B23E" size="18"></u-icon>
+							<view v-show="showBubble3" class="bubble">自己所推广的品牌订单由您自己接单服务时，你获得的额外分成收益<br />
+								计算公式：区域运营补贴金额=区域内每笔订单利润*区域运营补贴比例<br />结算时间：当品牌方验收并支付后30日解冻发放
+							</view>
+						</view>
 					</view>
 					<view class="value">
-						<text class="text">11%</text>
-						<view class="text acea-row" @click="$jump('/subpkg/users/setting/region')">
+						<text class="text" v-if="!partnerInfo.isBonus">暂不享受该收益</text>
+						<view class="text acea-row" v-else @click="$jump('/subpkg/users/setting/region')">
 							<text>共{{partnerInfo.regionCount}}个区域</text><u-icon name="arrow-right"
 								style="position: relative; top: 2rpx;  right: -8rpx;" color="#212121"
 								size="14"></u-icon>
@@ -90,6 +102,8 @@
 			return {
 				showBubble: false,
 				showBubble1: false,
+				showBubble2: false,
+				showBubble3: false,
 				messList: [{
 						id: 1,
 						label: "真实姓名",

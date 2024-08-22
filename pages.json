@@ -48,9 +48,13 @@
 
 			}
 		},
-
-
-
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "一键授权"
+			}
+		},
 		{
 			"path": "pages/center/index",
 			"style": {

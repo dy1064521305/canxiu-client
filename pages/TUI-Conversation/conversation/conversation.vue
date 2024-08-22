@@ -199,9 +199,16 @@
 			},
 			//去登录
 			login() {
+				// #ifdef H5
 				uni.navigateTo({
 					url: '/pages/login/index'
 				})
+				// #endif
+				// #ifndef H5
+				uni.navigateTo({
+					url: '/pages/login/login'
+				})
+				// #endif
 			},
 
 

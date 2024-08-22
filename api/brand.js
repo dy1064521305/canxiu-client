@@ -12,6 +12,8 @@ export const getListOrder = (params) => request.get('/terrace/customerManager/li
 // 合伙人
 // 获取邀请品牌入驻的二维码
 export const getPartnerQrCode = (params) => request.get('/partner/partner/getQrCode', params)
+// 获取邀请合伙人二维码
+export const getInvitePartnerQrCode = (params) => request.get('/partner/partner/invite/partner/getQrCode', params)
 
 // 品牌签约信息设置
 export const putUpdateContractInfoOfT = (data) => request.put('/basic/partnerBrand/updateContractInfoOfT', data)

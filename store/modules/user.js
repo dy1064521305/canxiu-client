@@ -5,6 +5,7 @@ import {
 import storage from '@/utils/storage'
 import * as LoginApi from '@/api/login'
 import * as UserApi from '@/api/user'
+import $cache from '@/utils/cache.js';
 // 登陆成功后执行
 const loginSuccess = (commit, result) => {
 	// 过期时间30天
@@ -22,7 +23,8 @@ export const state = {
 	token: '',
 	// 用户信息
 	userInfo: null,
-	clientId: ''}
+	clientId: ''
+}
 
 export const mutations = {
 	SET_TOKEN: (state, value) => {
@@ -33,6 +35,11 @@ export const mutations = {
 	},
 	SET_USER: (state, value) => {
 		state.userInfo = value
+		$cache.set('userInfo', userInfo);
+	},
+	LOGOUT(state) {
+		state.userInfo = null;
+		$cache.clear('userInfo');
 	},
 }
 
@@ -49,7 +56,7 @@ export const actions = {
 				}
 			}).then(response => {
 				const result = response.data;
-			
+
 				loginSuccess(commit, result)
 				resolve(response)
 			}).catch(reject)
@@ -78,15 +85,16 @@ export const actions = {
 		commit
 	}, data) {
 		return new Promise((resolve, reject) => {
-				uni.removeStorageSync(`isLogin${storage.get('ClientId')}`)
+			uni.removeStorageSync(`isLogin${storage.get('ClientId')}`)
 			//  LoginApi.logout(data, { custom: { catch: true } }).then(response => {
 			storage.remove(ACCESS_TOKEN)
 			storage.remove(CLIENID)
-		
+
 			commit('SET_TOKEN', '')
 			commit('SET_CLIENTID', '')
 			// resolve(response)
 			//  }).catch(reject)
+			$cache.clear('userInfo');
 		})
 	}
 }
