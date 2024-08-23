@@ -62,13 +62,6 @@
 		appOpenWeixin
 	} from '@/utils/index.js'
 	export default {
-		metaInfo: {
-			title: '页面标题',
-			//隐藏顶部导航栏
-			plus: {
-				navigationBarHidden: true
-			}
-		},
 		components: {
 			PopupShareActivity,
 			Popup
@@ -142,64 +135,6 @@
 					this.$refs.share.open(this.inviteCode);
 				}
 			},
-			shareOther(type) {
-				switch (type) {
-					case '复制链接':
-						uni.setClipboardData({
-							data: this.link,
-							success: function() {
-
-							}
-						});
-						break;
-					case '保存海报':
-						// #ifdef APP-PLUS
-						this.$refs['authpup'].open()
-						// #endif 
-						// #ifdef MP-WEIXIN
-						this.changeAuth()
-						// #endif 
-						break;
-					case '朋友圈':
-						this.activityDataHandle()
-						// #ifdef APP-PLUS
-						uni.share({
-							provider: "weixin",
-							scene: "WXSceneTimeline",
-							type: 0,
-							href: this.link,
-							title: this.activeInfo.shareTitle,
-							summary: this.activeInfo.shareContent,
-							imageUrl: this.activeInfo.shareImg,
-
-							success: (res) => {
-								console.log("success:" + JSON.stringify(res));
-
-							},
-							fail: (err) => {
-								console.log("fail:" + JSON.stringify(err));
-								err.errCode == '-8' && this.goUrl()
-
-
-							}
-						});
-						// #endif 
-						break;
-					case '分享好友':
-						// #ifdef APP-PLUS
-						let params = {
-							imageUrl: 'https://img.reduxingke.com/2024/02/01/02bff202402011509146214.png',
-							title: '餐修百万合伙人招募计划',
-							path: 'pages/activity/luckyBag/luckybagOther?uid=' + this.userInfo.uid,
-							// 分享的app体验版
-							// type: 2
-						}
-						params.path = params.path + '&spread=' + uid + '&incode=' + incode + '&noAuth=1';
-						appOpenWeixin(params);
-						// #endif
-						break;
-				}
-			},
 			// save() {
 
 			// 	// // #ifdef APP-PLUS
@@ -216,7 +151,6 @@
 					filePath: this.code,
 					success: function() {
 						uni.$u.toast('保存成功')
-						console.log('save success');
 					}
 				});
 			},
@@ -230,7 +164,7 @@
 		//#ifdef MP-WEIXIN
 		onShareAppMessage() {
 			return new Promise((resolve, reject) => {
-				let url = '/subpkg/center/brand/MyinviterQrCode'
+				let url = '/subpkg/car/partner/new'
 				let data = {
 					title: '餐修百万合伙人招募计划！',
 					path: url,

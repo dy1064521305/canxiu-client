@@ -6,7 +6,7 @@
 				<view class="item">
 					<view class="label">头像</view>
 					<view class="value acea-row row-middle" @click="uploadAvatar">
-						<image v-if="avatar" class="avatar" :src="avatar" mode="aspectFill"></image>
+						<image v-if="avatar&&avatar!= 'null'" class="avatar" :src="avatar" mode="aspectFill"></image>
 						<image v-else
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/09/6a266da84dbb4e9f8a4148ded10e2c3a.png"
 							mode="aspectFill">

@@ -135,13 +135,13 @@
 
 				// 在(0,0)位置绘制图片1，图一宽高分别为345px和334px
 				console.log(this.powerW, "this.powerWthis.powerWthis.powerW");
-				ctx.drawImage(image1, 0, 0, 314 * this.powerW, 480 * this.powerW);
+				ctx.drawImage(image1, 0, 0, 310 * this.powerW, 460 * this.powerW);
 
 				// 加载第二张图片到canvas上，并设置位置和大小（根据需要调整）
 				const image2 = await this.loadImage(this.poster);
 
 				// 在(10,209)位置绘制图片2,图片二宽高75px，可以根据需要调整位置和大小
-				ctx.drawImage(image2, 120 * this.powerW, 284 * this.powerW, 76 * this.powerW, 76 * this.powerW);
+				ctx.drawImage(image2, 120 * this.powerW, 270 * this.powerW, 76 * this.powerW, 76 * this.powerW);
 
 				// 设置字体样式
 				// this.ctx.font = '8px Arial';

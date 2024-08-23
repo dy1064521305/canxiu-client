@@ -443,7 +443,40 @@
 						"enablePullDownRefresh": false
 					}
 
+				},
+				{
+					"path": "team/index",
+					"style": {
+						"navigationBarTitleText": "团队管理",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+
+				},
+				{
+					"path": "team/people",
+					"style": {
+						"navigationBarTitleText": "团队成员",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "team/setMessage",
+					"style": {
+						"navigationBarTitleText": "信息编辑",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "team/process",
+					"style": {
+						"navigationBarTitleText": "审核管理",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
 				}
+
+
 			]
 		},
 		{

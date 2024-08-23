@@ -48,3 +48,18 @@ export const getSettlementRecordsList = (data) => request.get('/finance/partnerW
 
 // 管理端-获取用户列表
 export const getUserList = () => request.get('/system/user/userList')
+
+// 获取合伙人团队列表
+export const getTeamList = (data) => request.get('/partner/team/teamList', data)
+
+// 下级合伙人分成比审核状态(下级合伙人分成比详情页)
+export const getTeamSharing = (partnerId) => request.get('/partner/team/getTeamSharing/' + partnerId)
+
+// 修改下级合伙人分成比
+export const postEditSharing = (data) => request.post('/partner/team/editSharing', data)
+
+// 合伙人审核列表
+export const getAuditList = (data) => request.get('/partner/team/auditList', data)
+
+// 合伙人审核
+export const putTeamAudit = (data) => request.put('/partner/team/audit', data)

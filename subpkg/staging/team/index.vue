@@ -20,16 +20,16 @@
 						<view class="line1">{{baseInfo.realName||'暂无昵称'}}</view>
 						<view class="color">{{baseInfo.partnerType==1?'中级':baseInfo.partnerType==2?'高级':'初级'}}合伙人</view>
 					</view>
-					<view @click.stop="workerAccountShow=true">+师傅账号</view>
+					<!-- <view @click.stop="workerAccountShow=true">+师傅账号</view> -->
 
 				</view>
 			</view>
 			<view class="topBg-team acea-row row-between-wrapper">
-				<view class="topBg-team-items acea-row flex-colum-center">
+				<view class="topBg-team-items acea-row flex-colum-center" @click="$jump('/subpkg/staging/team/people')">
 					<view>{{baseInfo.teamCount||0}}</view>
 					<text>团队成员</text>
 				</view>
-				<view class="topBg-team-items acea-row flex-colum-center"
+				<view class=" topBg-team-items acea-row flex-colum-center"
 					@click="$jump('/subpkg/staging/workers/workers?partnerId='+baseInfo.partnerId)">
 					<view>{{baseInfo.teamWorkerCount||0}}</view>
 					<text>团队师傅</text>
@@ -193,12 +193,12 @@
 						label: "品牌签约",
 						url: "/subpkg/center/brand/Signing"
 					},
-					// {
-					// 	id: 4,
-					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/13/8c74d382d08347e9b75de3dfbb86bcb6.png",
-					// 	label: "审核管理",
-					// 	url: "/subpkg/center/brand/cooperateSettings"
-					// },
+					{
+						id: 4,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/13/8c74d382d08347e9b75de3dfbb86bcb6.png",
+						label: "审核管理",
+						url: "/subpkg/staging/team/process"
+					},
 					{
 						id: 5,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/13/d8d131e2f98345b6bcd6107c1e0539be.png",
@@ -410,7 +410,7 @@
 			},
 			// 跳转
 			toUrl(item) {
-				console.log(item);
+
 				if (item.id == 2 || item.id == 3) {
 					this.$jump(item.url + '?partnerId=' + this.partnerId)
 				} else {

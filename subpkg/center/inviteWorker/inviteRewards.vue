@@ -58,7 +58,7 @@
 					</u-search> -->
 
 				</view>
-				<view class="data-box acea-row row-middle" v-else :class="{on:type=='推广奖励'}">
+				<view class="data-box acea-row row-middle" v-else-if="type=='推广奖励'" :class="{on:type=='推广奖励'}">
 					<view class="input acea-row row-middle">
 						<view style="display: flex;align-items: center; font-size: 28rpx;" @click="showAction_two=true">
 							{{whereType}}
@@ -85,7 +85,24 @@
 					</u-search> -->
 
 				</view>
-				<view style='display: flex;margin: 10rpx 0 10rpx 20rpx;'>
+				<view class="header" v-else>
+					<view class="input">
+						<u-search :showAction="false" placeholder="搜索品牌名称" @clear='queryList' v-model="whereM.brandName"
+							@search="queryList">
+						</u-search>
+					</view>
+
+					<view class="input-s"></view></input>
+					<view class="header-type">
+						<view class="filter-row acea-row row-between-wrapper">
+							<view v-for="(item, index) in searchTypes" :key="index" class="filter-row-item acea-row"
+								:class="{on: whereM.approvalStatus === item.type}" @click="productSort(item.type)">
+								{{item.label}}
+							</view>
+						</view>
+					</view>
+				</view>
+				<view v-if="type!='推广佣金'" style='display: flex;margin: 10rpx 0 10rpx 20rpx;'>
 					<view style='margin-top: 20rpx;display: flex;'>
 						<view class="select-left acea-row">
 							<picker @change="dateChange" mode="date" fields="month" :value="where.date">
@@ -156,6 +173,30 @@
 
 				</view>
 			</view>
+			<view class="invite_list" v-show="type=='推广佣金'">
+				<view class="invite_list-it" v-for="item in dataList" :key="item.id">
+					<view class="invite_list-it-top">
+						<view class="acea-row row-between-wrapper">
+							<view class="acea-row row-middle">
+								<image :src="item.brandLog" mode=""></image>{{item.brandName||'暂无名称'}}
+							</view>
+							<text>{{item.approvalStatus==2?'已打款':item.approvalStatus==1?'转账中':item.approvalStatus==-1?'已作废':'待处理'}}</text>
+						</view>
+						<view class="yuany acea-row row-middle " v-if="item.approvalStatus==-1">
+							原因:{{item.approvalRemark||'暂无'}}
+						</view>
+						<view class="acea-row row-middle row-between-wrapper" style="margin-top: 20rpx;	">
+							<view class="prices">¥{{item.commission||0}}</view>
+							<view class="details" @click="$jump('/subpkg/center/brand/footDetail?id='+item.id)">签约详情>
+							</view>
+						</view>
+					</view>
+					<view class="invite_list-it-bottom">
+						<view>合同编号：{{item.contractNo||'-'}}</view>
+						<text>签约时间：{{item.signTime||'-'}}</text>
+					</view>
+				</view>
+			</view>
 
 		</z-paging>
 		<!-- <u-popup :show="showsDate" @close="showsDate=false" closeable>
@@ -199,9 +240,12 @@
 	import {
 		inviteReward,
 		getPartnerReward,
-		getPromotionalRewardsList
+		getPromotionalRewardsList,
 	} from '@/api/invite.js'
 	import storage from '@/utils/storage'
+	import {
+		getSettlementRecordsList
+	} from "@/api/brand.js"
 
 	export default {
 		data() {
@@ -214,6 +258,27 @@
 				showAction_three: false,
 				whereType: "订单编号",
 				whereActType: "师傅名称",
+				searchTypes: [{
+						type: '',
+						label: '全部',
+					},
+					{
+						type: 0,
+						label: '待处理',
+					},
+					{
+						type: 1,
+						label: '转账中',
+					},
+					{
+						type: 2,
+						label: '已打款',
+					},
+					{
+						type: -1,
+						label: '已作废',
+					}
+				],
 				typeTab: [{
 						id: 0,
 						label: "推广奖励"
@@ -221,6 +286,10 @@
 					{
 						id: 1,
 						label: "活动奖励"
+					},
+					{
+						id: 2,
+						label: "推广佣金"
 					},
 				],
 
@@ -275,6 +344,14 @@
 					pageNum: 1,
 					date: this.getCurrentMonth()
 				},
+				whereM: {
+					userId: storage.get('ClientId'),
+					brandName: "",
+					// 发放状态；-1-已驳回，0-待处理，1-转账中，2已打款
+					approvalStatus: "",
+					pageNum: 1,
+					pageSize: 10,
+				},
 				value1: Number(new Date()),
 				beginTime: '',
 				endTime: '',
@@ -300,11 +377,11 @@
 					},
 					{
 						id: 3,
-						name: '销售业绩奖励'
+						name: '业务推广分成奖励'
 					},
 					{
 						id: 5,
-						name: '区域分红'
+						name: '区域运营补贴'
 					},
 					{
 						name: '取消'
@@ -407,7 +484,7 @@
 				this.type = info.type == 'customer' ? '活动奖励' : '推广奖励'
 			}
 			if (option && option.type) {
-				this.type = '推广奖励'
+				this.type = option.type
 			}
 			console.log(this.type, '122');
 
@@ -451,6 +528,13 @@
 						}
 						this.$refs.paging.completeByTotal(res.data.rows, res.data.total);
 					})
+				} else if (this.type == '推广佣金') {
+					getSettlementRecordsList(this.whereM).then(res => {
+						if (!res.rows) {
+							this.dataList = []
+						}
+						this.$refs.paging.completeByTotal(res.rows, res.total);
+					})
 				} else {
 					getPromotionalRewardsList(this.where).then(res => {
 						if (!res.rows) {
@@ -461,8 +545,13 @@
 
 				}
 			},
-			getListWhere() {
-
+			productSort(status) {
+				this.whereM.approvalStatus = status;
+				this.$refs.paging.reload();
+			},
+			queryList() {
+				this.$refs.paging.reload();
+				// this.getList()
 			},
 			search(i) {
 				if (i) {
@@ -529,32 +618,6 @@
 				this.query.type = e.value
 				this.$refs.paging.reload();
 			},
-			// dateChange(e) {
-			// 	this.timestampToYMD(e.value)
-
-			// },
-			// timestampToYMD(timestamp, type) {
-			// 	var date = new Date(timestamp);
-			// 	this.registerDate = formatter.formatDate(date, 'yyyy-MM') + '-01'
-			// 	this.registerDate_2 = formatter.formatDate(date, 'yyyy-MM')
-			// 	this.month = formatter.formatDate(date, 'yyyy年M月')
-			// 	console.log(this.month);
-			// 	if (type == 'init') {
-			// 		this.query.registerDate = formatter.formatDate(date, 'yyyy-MM') + '-01'
-			// 		this.showMonth = this.month
-			// 	}
-			// },
-
-			// dateSubmit(type) {
-			// 	if (type == '推广奖励') {
-			// 		this.where.date = this.registerDate_2
-			// 	} else {
-			// 		this.query.registerDate = this.registerDate
-			// 	}
-			// 	this.showMonth = this.month
-			// 	this.showsDate = false
-			// 	this.getList(1, 10)
-			// },
 			back() {
 				uni.navigateBack()
 			},
@@ -652,6 +715,7 @@
 			position: relative;
 			margin-right: 15rpx;
 
+
 			&.on {
 				position: relative;
 			}
@@ -669,6 +733,10 @@
 			}
 		}
 
+		text:nth-child(2) {
+			margin-left: 15rpx;
+		}
+
 		text:nth-last-child(1) {
 			margin-right: 0rpx;
 			margin-left: 15rpx;
@@ -684,6 +752,119 @@
 				padding: 22rpx 22rpx 22rpx 22rpx;
 			}
 
+			.input {
+				// width: 563rpx;
+				flex: 1;
+				padding: 0 30rpx;
+				background-color: rgb(242, 242, 242);
+				border-radius: 50rpx;
+				height: 62rpx;
+				position: relative;
+
+				input {
+					width: 340rpx;
+					height: 62rpx;
+					margin-left: 20rpx;
+					font-size: 26rpx;
+				}
+
+				.input-s {
+					position: absolute;
+					top: 19rpx;
+					right: 30rpx;
+					width: 25rpx;
+					height: 25rpx;
+					background: url("https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/31fd266c68a248babb495e4aa76f9408.png") no-repeat;
+					background-size: 100% 100%;
+				}
+
+			}
+
+
+		}
+
+		.header {
+			width: 100%;
+			box-sizing: border-box;
+
+			background-color: #FFFFFF;
+			// position: fixed;
+			// top: 88rpx;
+			// left: 0;
+			// z-index: 10;
+
+			.input {
+				padding: 20rpx 30rpx 0;
+
+				// &-s {
+				// 	position: absolute;
+				// 	top: 15rpx;
+				// 	left: 40rpx;
+				// 	width: 25rpx;
+				// 	height: 25rpx;
+				// 	background: url("https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/31fd266c68a248babb495e4aa76f9408.png") no-repeat;
+				// 	background-size: 100% 100%;
+				// }
+			}
+
+			&-type {
+				font-size: 26rpx;
+				justify-content: space-between;
+
+				.filter-row {
+					box-sizing: border-box;
+					height: 88rpx;
+					margin-top: 20rpx;
+					border-top: 1rpx solid #ececec;
+					padding: 0 30rpx;
+
+					.filter-row-item {
+						color: #969799;
+						font-size: 28rpx;
+						margin-right: 30rpx;
+
+						&:last-of-type {
+							margin-right: 0;
+						}
+
+						&.on {
+							color: #323233;
+							position: relative;
+
+							&.on::after {
+								content: "";
+								position: absolute;
+								height: 6rpx;
+								background: #A4D091;
+								border-radius: 3rpx;
+								width: 100%;
+								bottom: -24rpx;
+								left: 0;
+
+							}
+						}
+
+
+
+						image {
+							display: inline-block;
+							width: 16rpx;
+							height: 20rpx;
+							margin: 8rpx 6rpx 0;
+						}
+
+						.sort {
+							width: 14rpx;
+							height: 20rpx;
+							color: #999999;
+						}
+
+						.bottomsort {
+							transform: rotate(180deg)
+						}
+					}
+				}
+			}
 		}
 
 		.monthClass {
@@ -781,35 +962,78 @@
 			}
 		}
 
-	}
+		.invite_list {
+			// margin: 270rpx 0 0 0;
+			margin-top: 20rpx;
+			padding: 0 30rpx 60rpx;
 
-	.input {
-		// width: 563rpx;
-		flex: 1;
-		padding: 0 30rpx;
-		background-color: rgb(242, 242, 242);
-		border-radius: 50rpx;
-		height: 62rpx;
-		position: relative;
 
-		input {
-			width: 340rpx;
-			height: 62rpx;
-			margin-left: 20rpx;
-			font-size: 26rpx;
+			.invite_list-it {
+				background: #FFFFFF;
+				border-radius: 16rpx;
+				margin-bottom: 20rpx;
+
+				&-top {
+					font-size: 28rpx;
+					padding: 26rpx 22rpx 26rpx 22rpx;
+					box-sizing: border-box;
+
+					view {
+						color: #999999;
+
+						image {
+							width: 64rpx;
+							height: 64rpx;
+							margin-right: 12rpx;
+							border-radius: 10rpx;
+						}
+					}
+
+					text {
+						color: #404040;
+					}
+
+					.yuany {
+						height: 72rpx;
+						background: rgba(164, 208, 145, 0.16);
+						color: #A4D091;
+						padding: 0 32rpx;
+						margin: 20rpx 0 0rpx;
+						border-radius: 10rpx;
+					}
+
+					.prices {
+						font-family: PingFangSC, PingFang SC;
+						font-weight: 500;
+						font-size: 48rpx;
+						color: #212121;
+						margin-top: 16rpx;
+					}
+
+					.details {
+						color: #A4D091;
+					}
+
+				}
+
+				&-bottom {
+					// height: 164rpx;
+					border-top: 1rpx solid #E5E5E5;
+					font-size: 28rpx;
+					color: #999999;
+					padding: 22rpx;
+
+					view {
+						margin: 0rpx 0 8rpx;
+					}
+				}
+			}
+
+
 		}
 
-		.input-s {
-			position: absolute;
-			top: 19rpx;
-			right: 30rpx;
-			width: 25rpx;
-			height: 25rpx;
-			background: url("https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/31fd266c68a248babb495e4aa76f9408.png") no-repeat;
-			background-size: 100% 100%;
-		}
-
 	}
+
 
 	.shaixuan {
 		margin: 0 10rpx 0 16rpx;

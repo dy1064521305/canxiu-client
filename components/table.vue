@@ -14,10 +14,18 @@
 					v-for="(context, i) in option.column" :key="i">{{ item[context.prop] }}</td>
 			</tr>
 		</table>
+		<!-- <view class="table_page">
+			<Pagination :pageNo="where.pageNo" :pageSize="where.pageSize" :total="total" :continues="4"
+				@getPageNo="getPageNo" />
+		</view> -->
 	</view>
 </template>
 <script>
+	import Pagination from "@/components/pagination.vue"
 	export default {
+		components: {
+			Pagination
+		},
 		naem: "Table",
 		props: {
 			tableData: Array,
@@ -57,12 +65,22 @@
 			align: {
 				type: String,
 				default: 'center',
-			}
+			},
+			where: Object,
+			total: {
+				type: Number,
+				default: 0,
+			},
 
 		},
 		created() {
 			console.log(this.tableData, "tableData");
-		}
+		},
+		getPageNo(pageNo) {
+			//再次发请求
+			this.$emit('changeTable', pageNo)
+			// this.getData();
+		},
 	};
 </script>
 

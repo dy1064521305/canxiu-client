@@ -72,7 +72,7 @@
 				</view>
 				<view class="teamMy acea-row row-between-wrapper" v-if="partnerInfo != null">
 					<view class="teamMy-item flex-colum"
-						@click="$jump('/subpkg/staging/workers/team?partnerId='+partnerInfo.partnerId)">
+						@click="$jump('/subpkg/staging/team/index?partnerId='+partnerInfo.partnerId)">
 						<view class="acea-row row-between-wrapper">
 							<text style="font-size: 32rpx;">团队管理</text>
 							<u-icon name="arrow-right" color="#AEDD94" size="16"></u-icon>
