@@ -13,6 +13,10 @@ export const orderTrackList = (params) => request.get('/basic/orderTrack/list', 
 //订单详情中新材料
 export const getNewMaterial = (orderId) => request.get('/client/order/getNewMaterial/' + orderId)
 
+//订单详情中新配件
+export const getNewParts = (orderId) => request.get('/client/order/getNewParts/'+orderId)
+
+
 //订单详情中新维修方案
 export const getNewProject = (orderId) => request.get('/worker/order/getNewProject/' + orderId)
 
