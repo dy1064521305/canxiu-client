@@ -48,7 +48,7 @@
 				<loading-more v-show="loading && list.length"></loading-more>
 			</view>
 		</view>
-		<PopupBottom title="投资详情" :show="accountShow" @close="accountShow=false;" @confirm="confirmSelect">
+		<PopupBottom title="投资详情" :show="accountShow" @close="accountShow=false;">
 			<view class="pages-money acea-row row-column row-center">
 				<text>总投资款（元）</text>
 				<view class="">{{info.totalInvestmentBalance||0}}</view>
