@@ -499,16 +499,9 @@
 			},
 			//去登录
 			confirm() {
-				// #ifdef H5
 				uni.navigateTo({
 					url: '/pages/login/index'
 				})
-				// #endif
-				// #ifndef H5
-				uni.navigateTo({
-					url: '/pages/login/login'
-				})
-				// #endif
 				this.isShowLogin = false
 			},
 			// //是否是加入维修车

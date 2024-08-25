@@ -6,7 +6,7 @@
 			<view slot='top'>
 				<u-navbar placeholder>
 					<view class="u-nav-slot" slot="left">
-						<u-icon name="arrow-left" size="19" @click="back"></u-icon>
+						<u-icon name="arrow-left" size="19" @click="$jump(-1)"></u-icon>
 					</view>
 					<!-- 	<view style="display: flex; align-items: center;" slot="center" @click="showAction=true">
 						{{type}}<u-icon style="margin-left: 10rpx;" name="arrow-down-fill" size="10"></u-icon>
@@ -35,7 +35,7 @@
 						<view class="input-s" @click="searchActivity(1)"></view>
 
 					</view>
-					<view class="shaixuan" @click="showAction=true">
+					<view class="shaixuan" @click="toSet()">
 						<image
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/eb78f3eb65ec46fc92b1245b17c64838.png"
 							mode=""></image>
@@ -57,7 +57,7 @@
 			<view class="invite_list">
 				<view class="invite_list-item" v-for="item in dataList" :key="item.id">
 					<view class="invite_list-item-top acea-row row-between-wrapper">
-						<text>申请人：周微</text>
+						<text>申请人：{{item.applyName}}</text>
 						<view class="invite_list-item-top-status">
 							待审核
 						</view>
@@ -65,26 +65,26 @@
 					<view class="invite_list-item-mess">
 						<view class="invite_list-item-mess-evey acea-row">
 							<text>审核类型：</text>
-							<view class="">申请加入团队</view>
+							<view>{{item.type==1?'修改业务推广分成比例':item.type==2?"修改订单消耗分成比例":'品牌入驻审核'}}</view>
 						</view>
 						<view class="invite_list-item-mess-evey acea-row">
 							<text>申请内容：</text>
-							<view class="">加入原因</view>
+							<view class="">{{item.content||'-'}}</view>
 						</view>
 						<view class="invite_list-item-mess-evey acea-row">
 							<text>提交时间：</text>
-							<view class="">2024-12-12 12:12</view>
+							<view class="">{{item.updateTime||'-'}}</view>
 						</view>
 						<view class="invite_list-item-mess-evey acea-row">
 							<text>审核备注：</text>
-							<view class="">这里显示审核备注内容，没有填写则显示空</view>
+							<view class="">{{item.remark||'-'}}</view>
 						</view>
 					</view>
 					<view class="invite_list-item-time acea-row">
 						<!-- 	{{item.createTime}} 提交 -->
 						<view class="invite_list-item-time-btn acea-row">
-							<view @click.stop="showPhoneHandle(item.personPhone)">联系ta</view>
-							<view v-if="item.reviewStatus==1" @click="toSet(item)">信息审核</view>
+							<view @click.stop="showPhoneHandle(item.cellPhone)">联系ta</view>
+							<view v-if="item.status==0" @click="toSet(item,1)">信息审核</view>
 						</view>
 					</view>
 				</view>
@@ -107,22 +107,32 @@
 		</u-popup>
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect_three' :closeOnClickOverlay='false'
 			:actions="showActTypeChange" :show="showAction_three"></u-action-sheet>
-		<PopupBottom title="立即审核" :show="accountShow" @close="accountShow=false;" @confirm="confirmSelect">
-			<view class="popMoney" style="margin-top: 30rpx;">
+		<PopupBottom :title="shenheTitle" :show="accountShow" @close="accountShow=false;" @confirm="confirmSelect">
+			<view class="popMoney" style="margin-top: 30rpx;" v-if="shenheTitle=='立即审核'">
 				<view class="popMoney-set acea-row row-middle">
-					<!-- <text style="color:#FB2323; margin:6rpx 10rpx 0 0 ;">*</text> -->
 					审核结果
-					<u-radio-group v-model="value" placement="row" style="margin-left: 50rpx;">
-						<u-radio style="margin-right: 60rpx;" activeColor="#F3B23E" name="1" label="审核通过"></u-radio>
-						<u-radio activeColor="#F3B23E" name="2" label="审核驳回"></u-radio>
+					<u-radio-group v-model="whereSh.status" placement="row" style="margin-left: 50rpx;">
+						<u-radio style="margin-right: 60rpx;" activeColor="#F3B23E" :name="1" label="审核通过"></u-radio>
+						<u-radio activeColor="#F3B23E" :name="2" label="审核驳回"></u-radio>
 					</u-radio-group>
 				</view>
 				<view class="popMoney-mess">
 					<text>信息备注</text>
-					<textarea maxlength="1000" v-model="remark" placeholder="请输入备注信息（非必填）"
+					<textarea maxlength="1000" v-model="whereSh.remark" placeholder="请输入备注信息（非必填）"
 						placeholder-style="color:#CCCCCC;"></textarea>
 				</view>
 				<view class="btn" @click="edit()">保存编辑</view>
+			</view>
+			<view class="popContent" v-else>
+				<view class="popContent-title">
+					审核类型
+				</view>
+				<view class="popContent-con">
+					<view class="popContent-con-item acea-row row-middle row-center" :class="{on:value==item.value}"
+						v-for="(item,index) in shenheType" :key="index">
+						{{item.label}}
+					</view>
+				</view>
 			</view>
 		</PopupBottom>
 	</view>
@@ -134,7 +144,9 @@
 	import {
 		putQueryList,
 		postVerifyBankCard,
-		putImmediate
+		putImmediate,
+		getAuditList,
+		putTeamAudit
 	} from "@/api/brand.js"
 	import {
 		callPhone
@@ -147,6 +159,11 @@
 		},
 		data() {
 			return {
+				shenheTitle: "立即审核",
+				shenheType: [{
+					label: "全部类型",
+					value: ""
+				}],
 				value: "",
 				accountShow: false,
 				showAction_three: false,
@@ -202,9 +219,13 @@
 					realName: "",
 					cellphone: "",
 					typeList: "",
-					auditSource: "",
+					auditSource: 0,
 					pageNum: 1,
 					pageSize: 10,
+				},
+				whereSh: {
+					status: 1,
+					remark: ""
 				},
 				actionList: [{
 						name: ''
@@ -246,7 +267,7 @@
 				uni.showLoading({
 					mask: true
 				});
-				putQueryList(this.where).then(res => {
+				getAuditList(this.where).then(res => {
 					uni.hideLoading();
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				}).catch(err => {
@@ -264,6 +285,7 @@
 			},
 			typeClick(item) {
 				this.where.auditSource = item.id
+				this.$refs.paging.reload();
 			},
 			showPhoneHandle(phone) {
 				this.showPhone = true
@@ -287,9 +309,17 @@
 					this.showPhone = false
 				}
 			},
-			toSet(item) {
+			toSet(item, id) {
+				if (id) {
+					this.shenheTitle = '立即审核'
+					this.whereSh.auditId = item.auditId
+					this.accountShow = true
+				} else {
+					this.shenheTitle = '设置筛选条件'
+					this.accountShow = true
+				}
 				// return
-				this.accountShow = true
+
 			},
 			toCard() {
 				this.noCardShow = false
@@ -311,6 +341,13 @@
 					this.showAction_three = false
 				}
 			},
+			edit() {
+				putTeamAudit(this.whereSh).then(res => {
+					this.$toast('操作成功')
+					this.noCardShow = false
+					this.$refs.paging.reload();
+				})
+			}
 		}
 	}
 </script>
@@ -616,5 +653,36 @@
 			margin-top: 42rpx;
 		}
 
+	}
+
+	.popContent {
+		&-title {
+			height: 96rpx;
+			font-size: 32rpx;
+			color: #212121;
+			line-height: 96rpx;
+			text-align: left;
+			font-style: normal;
+			border-bottom: 1rpx solid #f5f5f5;
+			padding-left: 30rpx;
+		}
+
+		&-con {
+			padding: 32rpx 24rpx;
+			font-size: 24rpx;
+			color: #212121;
+
+			&-item {
+				width: 212rpx;
+				height: 56rpx;
+				background: #F2F2F2;
+				border-radius: 8rpx;
+
+				&.on {
+					background: #F3B23E;
+					color: #FFFFFF;
+				}
+			}
+		}
 	}
 </style>

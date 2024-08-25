@@ -20,12 +20,15 @@ const loginSuccess = (commit, result) => {
 
 export const state = {
 	// 用户认证token
-	token: '',
+	token: $cache.get('AccessToken') || '',
 	// 用户信息
 	userInfo: null,
-	clientId: ''
+	clientId: '',
+	loginPopShow: ""
 }
-
+export const getters = {
+	isLogin: state => !!state.token,
+}
 export const mutations = {
 	SET_TOKEN: (state, value) => {
 		state.token = value
@@ -37,7 +40,15 @@ export const mutations = {
 		state.userInfo = value
 		$cache.set('userInfo', userInfo);
 	},
+	CLOSE_LOGIN_POP(state) {
+		state.loginPopShow = false;
+	},
+	OPEN_LOGIN_POP(state, info) {
+		state.loginPopShow = true;
+	},
 	LOGOUT(state) {
+		state.token = '';
+		$cache.clear('AccessToken');
 		state.userInfo = null;
 		$cache.clear('userInfo');
 	},
@@ -56,7 +67,6 @@ export const actions = {
 				}
 			}).then(response => {
 				const result = response.data;
-
 				loginSuccess(commit, result)
 				resolve(response)
 			}).catch(reject)

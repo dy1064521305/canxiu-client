@@ -56,6 +56,13 @@
 			}
 		},
 		{
+			"path": "pages/login/phone",
+			"style": {
+				// "navigationStyle": "custom",
+				"navigationBarTitleText": "短信验证码登录"
+			}
+		},
+		{
 			"path": "pages/center/index",
 			"style": {
 				"navigationBarTitleText": "我的",

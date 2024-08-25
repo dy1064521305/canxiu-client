@@ -47,7 +47,10 @@
 		</view>
 		<view>
 			<div class="title">运营分红</div>
-			<view class="kefu" v-if="!partnerInfo.isBonus">联系客服，申请开通区域运营权限</view>
+			<view class="kefu acea-row row-between-wrapper" @click="phoneAuth" v-if="!partnerInfo.isBonus">
+				<text>联系客服，申请开通区域运营权限</text>
+				<view>联系客服</view>
+			</view>
 			<view class="cell">
 				<view class="item">
 					<view class="label acea-row row-middle">
@@ -87,7 +90,9 @@
 				</view>
 			</view>
 		</view>
-
+		<!-- 拨打电话 -->
+		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
+			:actions="actionList" :show="showPhone"></u-action-sheet>
 		<!-- <div class="title">关联师傅账号</div> -->
 	</view>
 </template>
@@ -104,6 +109,17 @@
 				showBubble1: false,
 				showBubble2: false,
 				showBubble3: false,
+				showPhone: false,
+				actionList: [{
+						name: '0571-88387761'
+					},
+					{
+						name: '呼叫'
+					},
+					{
+						name: '取消'
+					},
+				], //拨打电话
 				messList: [{
 						id: 1,
 						label: "真实姓名",
@@ -190,6 +206,22 @@
 					}
 				})
 			},
+			phoneAuth() {
+				this.showPhone = true
+			},
+			actionSelect(e) {
+				if (e.name == '取消') {
+					this.showPhone = false
+				} else {
+					// #ifdef APP-PLUS
+					callPhone(e.name, 'app')
+					// #endif
+					// #ifdef MP-WEIXIN
+					callPhone(e.name, 'wx')
+					// #endif
+					this.showPhone = false
+				}
+			},
 		}
 	}
 </script>
@@ -216,7 +248,21 @@
 			margin-bottom: -10rpx;
 			font-size: 28rpx;
 			color: #FFFFFF;
-			padding-left: 34rpx;
+			padding: 0 24rpx 0 30rpx;
+
+			view {
+				width: 144rpx;
+				height: 60rpx;
+				background: #FFFFFF;
+				border-radius: 16rpx;
+				border: 2rpx solid #F3B23E;
+				margin-bottom: 10rpx;
+				font-size: 28rpx;
+				color: #F3B23E;
+				line-height: 60rpx;
+				text-align: center;
+
+			}
 		}
 
 		.cell {

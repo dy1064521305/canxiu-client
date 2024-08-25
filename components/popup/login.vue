@@ -1,0 +1,275 @@
+<template>
+	<view>
+		<view v-show="loginPopShow">
+			<view class="popLogin">
+				<view class="mask" v-on:click="$store.commit('CLOSE_LOGIN_POP')"></view>
+				<slot name="wrapper">
+					<view class="wrapper acea-row row-column">
+						<view class="title flex-colum">
+							<text>欢迎登录，</text>
+							<text>餐修让维修更快捷、更标准！</text>
+							<view class="">
+								未注册手机号验证后即完成注册
+							</view>
+							<!-- <view class="acea-row row-middle"
+								style="width: 70rpx;height: 40rpx;justify-content: flex-end;" @click="$emit('close')">
+								<u-icon name="close"></u-icon>
+							</view> -->
+						</view>
+						<view class="content acea-con">
+							<button class="btn" type="primary" open-type="getPhoneNumber"
+								@getphonenumber="getphonenumber">手机号快捷登录</button>
+							</button>
+							<!-- 						<view class="btn acea-row row-center row-middle" @click="toPhone">手机号快捷登录</view> -->
+							<view class="btn btn2 acea-row row-center row-middle" @click="toPhone(1)">短信验证码登录</view>
+							<view class="agreement">
+								<view class="fonts acea-row row-middle" @click="checkedLogin = !checkedLogin">
+									<view style="margin:3rpx 10rpx 0 0;">
+										<view v-if="!checkedLogin" class="check"></view>
+										<view v-else>
+											<u-icon name="checkmark-circle-fill" color="#A4D091" size="27rpx"></u-icon>
+										</view>
+
+									</view>
+									我已阅读并同意
+									<!-- <text v-for="(item,index) in agreementListLogin" :key="index"
+								@click.stop="goAgreementLogin(item)">《{{item.agreementName}}》<text
+									v-if="index!=agreementListLogin.length-1">和</text></text> -->
+									<text @click.stop="goAgreementLogin(0)">《注册协议》</text><text>和</text><text
+										@click.stop="goAgreementLogin(1)">《隐私协议》</text>
+								</view>
+							</view>
+
+
+						</view>
+
+					</view>
+				</slot>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState
+	} from 'vuex'
+	import {
+		getAgreement,
+	} from '@/api/login.js'
+	import Routine from '@/config/routine.js';
+	import WXBizDataCrypt from "@/static/wx/WXBizDataCrypt.js"
+	export default {
+		name: 'LoginPop',
+		// props: {
+		// 	_specia: String
+		// },
+		data() {
+			return {
+				checkedLogin: false,
+				agreementListLogin: []
+			}
+		},
+		computed: {
+			...mapState(['loginPopShow'])
+		},
+		created() {
+			this.getListLogin()
+		},
+		mounted() {
+			// console.log('this.specia', this._specia);
+		},
+		methods: {
+			//#ifdef MP
+			// 小程序获取手机号码
+			getphonenumber(e) {
+				uni.showLoading({
+					title: '加载中'
+				});
+				Routine.getCode(1)
+					.then(code => {
+						console.log(e, "@2");
+						this.getUserPhoneNumber(e.detail.encryptedData, e.detail.iv, code);
+						// let pc = new WXBizDataCrypt('wx365a28a668734937', session_key);
+						// console.log(pc, "pcpc") //data就是最终解密的用户信息
+						// let data = pc.decryptData(e.detail.encryptedData, e.detail.iv);
+						// console.log(data, "data258") //data就是最终解密的用户信息  
+						// this.phone = data.phoneNumber // 手机号
+					})
+					.catch(error => {
+						uni.hideLoading();
+					});
+			},
+			// 小程序获取手机号码回调
+			getUserPhoneNumber(encryptedData, iv, code) {
+				let data = {
+					encryptedData: encryptedData,
+					iv: iv,
+					code: code,
+				}
+				uni.hideLoading();
+				this.$store.commit('CLOSE_LOGIN_POP')
+				console.log(data, "data1234");
+				// getUserPhone(data)
+				// 	.then(res => {
+				// 		uni.hideLoading();
+				// 		this.loginHandler(res.data);
+				// 	})
+				// 	.catch(err => {
+				// 		uni.hideLoading();
+				// 		this.$alert(err);
+				// 	}).finally(() => {
+				// 		Routine.refreshCode()
+				// 	});
+			},
+			//#endif
+			getListLogin() {
+				getAgreement({
+					type: '用户端'
+				}).then(res => {
+					this.agreementListLogin = res.data
+				})
+			},
+			toPhone(i) {
+				if (!this.checkedLogin) return this.$toast('请勾选相关协议')
+				if (i) {
+					this.$jump('/pages/login/phone')
+				}
+				this.$store.commit('CLOSE_LOGIN_POP')
+			},
+			//查协议内容
+			goAgreementLogin(index) {
+				let remark = this.agreementListLogin[index].remark
+				uni.navigateTo({
+					url: '/subpkg/login/agreementDetailed/agreementDetailed?remark=' + encodeURIComponent(JSON
+						.stringify(remark))
+				})
+				this.$store.commit('CLOSE_LOGIN_POP')
+			},
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	.popLogin {
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 200;
+
+		.mask {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			background-color: $uni-bg-color-mask;
+		}
+
+		.wrapper {
+			width: 100%;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			background: linear-gradient(to bottom right, #FDF2E0, #FFFEFE 50%, #FFFEFE);
+			// background-color: $uni-text-color-inverse;
+			background-color: $uni-text-color-inverse;
+			border-radius: 24rpx 24rpx 0 0;
+			overflow: hidden;
+			box-sizing: border-box;
+			padding: 56rpx 56rpx 0 56rpx;
+
+			.title {
+				font-size: 32rpx;
+				position: relative;
+				width: 100%;
+				font-size: #212121;
+				box-sizing: border-box;
+
+				text {
+					margin-bottom: 10rpx;
+				}
+
+				view {
+					font-size: 32rpx;
+					color: #999999;
+				}
+			}
+
+			.content {
+				// padding: 30rpx;
+				padding-bottom: 50rpx;
+				padding-bottom: calc(30rpx+ constant(safe-area-inset-bottom)); ///兼容 IOS<11.2/
+				padding-bottom: calc(30rpx + env(safe-area-inset-bottom)); ///兼容 IOS>11.2/				
+				box-sizing: border-box;
+				overflow: scroll;
+				margin-top: 50rpx;
+
+				uni-button {
+					margin-right: 0;
+					margin-left: 0;
+				}
+
+				/* #ifdef MP-WEIXIN */
+				button {
+					margin-right: 0;
+					margin-left: 0;
+				}
+
+				/* #endif */
+
+				.btn {
+					width: 638rpx;
+					height: 96rpx;
+					background: #2F2F2F;
+					margin-bottom: 16rpx;
+					border-radius: 16rpx;
+					color: #FFFEFE;
+
+				}
+
+				.btn2 {
+					height: 94rpx;
+					background: #FFFFFF;
+					border: 2rpx solid #666666;
+					color: #666666;
+				}
+
+				.agreement {
+					font-size: 24rpx;
+					color: #999999;
+					margin: 32rpx 0;
+
+					.fonts {
+						display: flex;
+						width: 686rpx;
+						height: 65rpx;
+						font-size: 22rpx;
+						color: #A5A7A7;
+						line-height: 30rpx;
+						margin-left: 70rpx;
+
+						.check {
+							width: 22rpx;
+							height: 22rpx;
+							border: 2rpx solid #A5A7A7;
+							border-radius: 50%;
+						}
+
+						text {
+							color: #666666;
+						}
+					}
+				}
+
+				&.on {
+					padding: 6rpx 0 0 0;
+					margin: 0 40rpx 30rpx 30rpx;
+					border-top: 1rpx solid #E8E8E8;
+				}
+			}
+		}
+	}
+</style>

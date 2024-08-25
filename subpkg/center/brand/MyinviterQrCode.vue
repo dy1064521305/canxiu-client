@@ -9,20 +9,20 @@
 			<image :src="code" mode=""></image>
 			</image>
 		</view>
-		<view class="qr qr2" v-show="typeIndex==2">
+		<view class="qr" v-show="typeIndex==2">
 			<image :src="inviteCode" mode=""></text>
 			</image>
 		</view>
 		<view class="qr_mess">保存至本地，直接分享或面对面扫码注册</view>
 		<view class="qr_saveImg" @click="toInvite">保存到相册</view>
-		<view v-show="typeIndex==1">
+		<!-- <view v-show="typeIndex==1">
 			<view style="text-align: center;">
 				- 或 -
 			</view>
 			<view class="qr_saveImg addPp" @click="$jump('/subpkg/center/brand/inviter?id='+partnerInfo.partnerId)">
 				添加品牌信息
 			</view>
-		</view>
+		</view> -->
 
 		<!-- <view class="qr_share" v-show="typeIndex==2">
 			<view class="tit">分享至</view>
@@ -48,7 +48,7 @@
 
 <script>
 	import Popup from '@/components/popup/center.vue'
-	import PopupShareActivity from '@/components/popup/shareActivity.vue'
+	import PopupShareActivity from './components/shareActivity.vue'
 	import {
 		getPartnerQrCode,
 		getInvitePartnerQrCode,
@@ -113,9 +113,13 @@
 			}
 		},
 		onLoad() {
-			this.code = `${environment.baseURL}/partner/partner/getQrCode?userId=${storage.get('ClientId')}`
+			// this.code = `${environment.baseURL}/partner/partner/getQrCode?userId=${storage.get('ClientId')}`
+			// this.inviteCode =
+			// 	`${environment.baseURL}/partner/partner/invite/partner/getQrCode?userId=${storage.get('ClientId')}`
+			this.code =
+				`${environment.baseURL}/partner/partner/invite/brand/getAppletQrCode?userId=${storage.get('ClientId')}`
 			this.inviteCode =
-				`${environment.baseURL}/partner/partner/invite/partner/getQrCode?userId=${storage.get('ClientId')}`
+				`${environment.baseURL}/partner/partner/invite/partner/getAppletQrCode?userId=${storage.get('ClientId')}`
 			this.getInfo()
 		},
 
@@ -130,9 +134,21 @@
 			},
 			toInvite() {
 				if (this.typeIndex == 1) {
-
+					this.paramsInfo = {
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/24/483f2847677542139642e508c856d024.png",
+						name: this.partnerInfo.realName,
+						avatar: this.partnerInfo.avatarUrl,
+						index: this.typeIndex
+					}
+					this.$refs.share.open(this.code, this.paramsInfo);
 				} else {
-					this.$refs.share.open(this.inviteCode);
+					this.paramsInfo = {
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/24/a33ff0feed504c7897f0a1ff86a358b7.png",
+						name: this.partnerInfo.realName,
+						avatar: this.partnerInfo.avatarUrl,
+						index: this.typeIndex
+					}
+					this.$refs.share.open(this.inviteCode, this.paramsInfo);
 				}
 			},
 			// save() {
@@ -163,15 +179,27 @@
 		},
 		//#ifdef MP-WEIXIN
 		onShareAppMessage() {
+
 			return new Promise((resolve, reject) => {
-				let url = '/subpkg/car/partner/new'
-				let data = {
-					title: '餐修百万合伙人招募计划！',
-					path: url,
-					imageUrl: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/22/d6ba47b337714a0e8ffad99d0fb9fe2d.png',
+				if (this.typeIndex == 1) {
+					let url = '/subpkg/center/brand/inviter?id=' + this.partnerInfo.partnerId
+					let data = {
+						title: '餐修专注智能报修服务，提升故障报修效率！',
+						path: url,
+						imageUrl: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/24/899f507562e247549ee0bddb40b62348.png',
+					}
+					resolve(data)
+				} else {
+					let url = '/subpkg/car/partner/new?userId=' + storage.get('ClientId')
+					let data = {
+						title: '餐修百万合伙人招募计划！',
+						path: url,
+						imageUrl: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/22/d6ba47b337714a0e8ffad99d0fb9fe2d.png',
+					}
+					// data.path = url + '&spread=' + uid + '&incode=' + incode + '&noAuth=1';
+					resolve(data)
 				}
 				// data.path = url + '&spread=' + uid + '&incode=' + incode + '&noAuth=1';
-				resolve(data)
 
 			})
 		},
@@ -229,19 +257,19 @@
 			margin: 20rpx 0 40rpx;
 
 			image {
-				width: 514rpx;
-				height: 514rpx;
+				width: 472rpx;
+				height: 472rpx;
 				margin: 0 auto;
 			}
 		}
 
-		.qr2 {
-			image {
-				width: 472rpx;
-				height: 472rpx;
-				margin-top: 20rpx;
-			}
-		}
+		// .qr2 {
+		// 	image {
+		// 		width: 472rpx;
+		// 		height: 472rpx;
+		// 		margin-top: 20rpx;
+		// 	}
+		// }
 
 		.qr_mess {
 			font-size: 32rpx;
