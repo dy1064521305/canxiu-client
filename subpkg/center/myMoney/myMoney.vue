@@ -235,7 +235,7 @@
 				<view>{{info.orderSharingAmount||0}}</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center">
-				<text>订单消耗收益</text>
+				<text>订单消化收益</text>
 				<view>0</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center">

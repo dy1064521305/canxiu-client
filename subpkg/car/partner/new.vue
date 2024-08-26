@@ -1,5 +1,5 @@
 <template>
-	<common-page>
+	<common-page :inviteType="1">
 		<view class="pages" :style="{height:clientHeight+'px'}">
 			<view>
 				<view class="banner">
@@ -110,7 +110,7 @@
 					},
 				],
 				clientId: "",
-				userInfo: {}
+				userInfo: {},
 			}
 		},
 		onLoad(options) {
@@ -118,7 +118,6 @@
 
 			// console.log(this.$store.commit('OPEN_LOGIN_POP'), 'this.this.$store');
 			// // if (this.isLogin) return this.$store.commit('OPEN_LOGIN_POP');
-
 			if (options) {
 				if (options.userId) {
 					this.where.clientId = options.userId
@@ -131,19 +130,36 @@
 					this.getInfo(this.clientId)
 				}
 			}
+
 			const pages = uni.$u.pages();
 			this.isSubmit = pages.some(p => {
 				return p.route.includes('submitOrder') || p.route.includes('goosDetails')
 			})
+
 			this.getClineHeight()
+
 		},
 		computed: {
 			...mapGetters(['isLogin'])
 		},
 		onShow() {
-			// #ifndef APP-PLUS
-			if (!this.isLogin) return this.$store.commit('OPEN_LOGIN_POP')
-			// #endif
+			if (this.isLogin) {
+				let id = storage.get('ClientId')
+				console.log(id, "this.userId");
+				putImmediate(id).then(res => {
+					if (res.data) {
+						this.$toast('您已是合伙人!', 'success').then(() => {
+							uni.redirectTo({
+								url: '../../staging/team/index',
+							})
+						});
+					} else {
+						console.log(11, "不存在123");
+					}
+				})
+			} else {
+				this.$store.commit('OPEN_LOGIN_POP')
+			}
 		},
 		methods: {
 			getInfo(id) {
@@ -151,7 +167,11 @@
 					if (res.data) {
 						this.userInfo = res.data || {}
 						this.where.superiorId = res.data.partnerId
+					} else {
+						console.log(11, "不存在");
 					}
+					console.log(res.data, "res.data");
+					// if(!res.data)
 				})
 			},
 			addressHandle(e) {
@@ -159,9 +179,8 @@
 				console.log(e, "eee");
 			},
 			submit() {
-				console.log(this.where, "2222");
-				return
-				if (this.isLogin) return this.$store.commit('OPEN_LOGIN_POP')
+				console.log(this.where, "where");
+				if (!this.isLogin) return this.$store.commit('OPEN_LOGIN_POP')
 				if (!this.where.realName) return this.$toast('您的姓名不能为空')
 				if (isEmpty(this.where.cellPhone)) {
 					uni.$u.toast('请输入手机号')

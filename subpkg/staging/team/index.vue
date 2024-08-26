@@ -364,9 +364,6 @@
 			this.scrollTop = e.scrollTop;
 		},
 		onLoad(options) {
-			if (options && options.partnerId) {
-				this.partnerId = options.partnerId
-			}
 			this.getSaleInfo()
 			this.getOrderInfo()
 			this.getBaseInfo()
@@ -377,6 +374,7 @@
 					let data = res.data
 					if (data) {
 						this.baseInfo = data
+						this.partnerId = data.partnerId
 					}
 				})
 			},
@@ -413,6 +411,8 @@
 
 				if (item.id == 2 || item.id == 3) {
 					this.$jump(item.url + '?partnerId=' + this.partnerId)
+				} else if (item.id == 8) {
+					this.$jump(item.url + '?userId=' + this.userId)
 				} else {
 					this.$jump(item.url)
 				}

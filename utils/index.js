@@ -87,6 +87,7 @@ export function jumpUrl(url) {
 		let arr = url.split(methodsKey);
 		methods = arr[0];
 		url = arr[1];
+		console.log(arr, "3arr")
 	} else {
 		if (!isTabber(url)) {
 			methods = 'navigateTo'
@@ -125,6 +126,7 @@ export function jumpUrl(url) {
 			uni[methods]({
 				url
 			});
+			console.log(url, "url222222222222")
 			break;
 		case 'mp':
 			openMiniProgram(parseQuery(url));
@@ -146,7 +148,21 @@ export function jumpUrl(url) {
 			break;
 	}
 };
-
+export function backToIndex() {
+	const routes = getCurrentPages();
+	if (routes.length > 1) {
+		let url = '/' + routes[0].route;
+		if (url == TABBAR_PATH[0]) {
+			let delta = routes.length - 1;
+			return uni.navigateBack({
+				delta: delta
+			})
+		}
+	}
+	uni.switchTab({
+		url: TABBAR_PATH[0]
+	})
+}
 export function Toast(title, icon = 'none', duration = 1500) {
 	icon = ['none', 'success', 'fail'].indexOf(icon) > -1 ? icon : 'none';
 	return new Promise((resolve, reject) => {

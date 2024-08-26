@@ -31,11 +31,11 @@
 			</view>
 			<view class="item">
 				<view class="label acea-row row-middle">
-					<text style="margin-right: 6rpx;">订单消耗分成比</text>
+					<text style="margin-right: 6rpx;">订单消化分成比</text>
 					<view style="position: relative;" @click.stop="showBubble1 = !showBubble1">
 						<u-icon name="question-circle" color="#F3B23E" size="18"></u-icon>
 						<view v-show="showBubble1" class="bubble">该合伙人自己接单并完成服务时，可额外获得的订单利润分成<br />
-							计算公式：订单消耗奖励=订单利润*订单消费分成比<br />结算时间：当品牌方验收并支付后30日解冻发放
+							计算公式：订单消化奖励=订单利润*订单消费分成比<br />结算时间：当品牌方验收并支付后30日解冻发放
 						</view>
 					</view>
 				</view>
@@ -156,7 +156,7 @@
 						key: ""
 					},
 					{
-						label: "订单消耗分成比",
+						label: "订单消化分成比",
 						tip: "",
 						ratio: "0.06",
 						active: false,

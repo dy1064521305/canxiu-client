@@ -11,20 +11,22 @@
 				</view>
 				<view class="value">
 					<view class="text acea-row row-middle"> {{partnerInfo.profitSharing||0}}%
-						<view class="acea-row" style="color:#3882F1 ; margin-left: 12rpx;" @click="editR(1)">修改 <u-icon
-								name="arrow-right" color="#3882F1" style="margin-top: 4rpx;" size="13"></u-icon></view>
+						<view class="acea-row" v-if="!partnerInfo.profitSharingAuditStatus"
+							style="color:#3882F1 ; margin-left: 12rpx;" @click="editR(1)">修改 <u-icon name="arrow-right"
+								color="#3882F1" style="margin-top: 4rpx;" size="13"></u-icon></view>
 					</view>
 				</view>
 			</view>
 			<view class="item">
 				<view class="label acea-row row-middle">
-					<text style="margin-right: 6rpx;">订单消耗分成比<text class="shenhe"
+					<text style="margin-right: 6rpx;">订单消化分成比<text class="shenhe"
 							v-if="partnerInfo.orderConsumeSharingAuditStatus">审核中</text></text>
 				</view>
 				<view class="value">
 					<view class="text  acea-row row-middle"> {{partnerInfo.orderConsumeSharing||0}}%
-						<view class="acea-row" style="color:#3882F1 ; margin-left: 12rpx;" @click="editR()">修改 <u-icon
-								name="arrow-right" color="#3882F1" style="margin-top: 4rpx;" size="13"></u-icon></view>
+						<view v-if="!partnerInfo.orderConsumeSharingAuditStatus" class="acea-row"
+							style="color:#3882F1 ; margin-left: 12rpx;" @click="editR()">修改 <u-icon name="arrow-right"
+								color="#3882F1" style="margin-top: 4rpx;" size="13"></u-icon></view>
 					</view>
 				</view>
 			</view>
@@ -100,7 +102,7 @@
 						key: ""
 					},
 					{
-						label: "订单消耗分成比",
+						label: "订单消化分成比",
 						tip: "",
 						ratio: "0.06",
 						active: false,
@@ -141,7 +143,7 @@
 				if (i) {
 					this.radioTitle = '修改业务推广分成比例'
 				} else {
-					this.radioTitle = '修改订单消耗分成比例 '
+					this.radioTitle = '修改订单消化分成比例 '
 				}
 				this.editRatioShow = true
 			},

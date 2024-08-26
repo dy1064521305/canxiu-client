@@ -17,10 +17,10 @@
 							</view> -->
 						</view>
 						<view class="content acea-con">
-							<button class="btn" type="primary" open-type="getPhoneNumber"
+							<button v-if="checkedLogin" class="btn" type="primary" open-type="getPhoneNumber"
 								@getphonenumber="getphonenumber">手机号快捷登录</button>
 							</button>
-							<!-- 						<view class="btn acea-row row-center row-middle" @click="toPhone">手机号快捷登录</view> -->
+							<view v-else class="btn acea-row row-center row-middle" @click="toPhone">手机号快捷登录</view>
 							<view class="btn btn2 acea-row row-center row-middle" @click="toPhone(1)">短信验证码登录</view>
 							<view class="agreement">
 								<view class="fonts acea-row row-middle" @click="checkedLogin = !checkedLogin">
@@ -55,15 +55,24 @@
 		mapState
 	} from 'vuex'
 	import {
+		TABBAR_PATH
+	} from '@/config/environment.js'
+	import $cache from '@/utils/cache.js';
+	import {
 		getAgreement,
+		postLoginPartner
 	} from '@/api/login.js'
 	import Routine from '@/config/routine.js';
-	import WXBizDataCrypt from "@/static/wx/WXBizDataCrypt.js"
+	// 解密获取手机号
+	// import WXBizDataCrypt from "@/static/wx/WXBizDataCrypt.js"
 	export default {
 		name: 'LoginPop',
-		// props: {
-		// 	_specia: String
-		// },
+		props: {
+			inviteType: {
+				type: Number,
+				default: 0,
+			},
+		},
 		data() {
 			return {
 				checkedLogin: false,
@@ -74,6 +83,7 @@
 			...mapState(['loginPopShow'])
 		},
 		created() {
+			console.log(this.inviteType, "inviteTypeinviteType");
 			this.getListLogin()
 		},
 		mounted() {
@@ -83,13 +93,16 @@
 			//#ifdef MP
 			// 小程序获取手机号码
 			getphonenumber(e) {
+
+				if (!this.checkedLogin) return this.$toast('请勾选相关协议')
 				uni.showLoading({
 					title: '加载中'
 				});
 				Routine.getCode(1)
 					.then(code => {
 						console.log(e, "@2");
-						this.getUserPhoneNumber(e.detail.encryptedData, e.detail.iv, code);
+						// this.getUserPhoneNumber(e.detail.encryptedData, e.detail.iv, code);
+						this.getUserPhoneNumber(e.detail.code, code);
 						// let pc = new WXBizDataCrypt('wx365a28a668734937', session_key);
 						// console.log(pc, "pcpc") //data就是最终解密的用户信息
 						// let data = pc.decryptData(e.detail.encryptedData, e.detail.iv);
@@ -101,19 +114,17 @@
 					});
 			},
 			// 小程序获取手机号码回调
-			getUserPhoneNumber(encryptedData, iv, code) {
+			getUserPhoneNumber(phoneCode, code) {
 				let data = {
-					encryptedData: encryptedData,
-					iv: iv,
-					code: code,
+					loginCode: code,
+					phoneNumberCode: phoneCode,
 				}
-				uni.hideLoading();
-				this.$store.commit('CLOSE_LOGIN_POP')
-				console.log(data, "data1234");
-				// getUserPhone(data)
+
+				this.loginHandler(data);
+				// postLoginPartner(data)
 				// 	.then(res => {
 				// 		uni.hideLoading();
-				// 		this.loginHandler(res.data);
+
 				// 	})
 				// 	.catch(err => {
 				// 		uni.hideLoading();
@@ -123,6 +134,42 @@
 				// 	});
 			},
 			//#endif
+			loginHandler(data) {
+				// data.expires_time = data.expires_time - $cache.time();
+				this.$store.dispatch('LOGIN', data).then(user => {
+					console.log(user, "back_url");
+					uni.hideLoading();
+					if (this.inviteType && user.isPartner && user.type == 'Success') {
+						putImmediate(user.clientId).then(res => {
+							if (res.data) {
+								this.$toast('登录成功!您已是合伙人', 'success').then(() => {
+									uni.redirectTo({
+										url: '../../staging/team/index',
+									})
+								});
+
+							}
+						}).catch(err => {
+							// this.$jump(-1)
+						})
+					} else {
+						// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
+						this.$toast('登录成功!', 'success').then(() => {
+
+							// $cache.clear('authBackUrl');
+							// this.$jump('redirectTo:/' + back_url);
+						});
+					}
+
+				}).catch(err => {
+					uni.hideLoading();
+					this.$alert(err);
+				}).finally(() => {
+					Routine.refreshCode()
+					uni.hideLoading();
+					this.$store.commit('CLOSE_LOGIN_POP')
+				});
+			},
 			getListLogin() {
 				getAgreement({
 					type: '用户端'
@@ -141,8 +188,9 @@
 			goAgreementLogin(index) {
 				let remark = this.agreementListLogin[index].remark
 				uni.navigateTo({
-					url: '/subpkg/login/agreementDetailed/agreementDetailed?remark=' + encodeURIComponent(JSON
-						.stringify(remark))
+					url: '/subpkg/login/agreementDetailed/agreementDetailed?remark=' +
+						encodeURIComponent(JSON
+							.stringify(remark))
 				})
 				this.$store.commit('CLOSE_LOGIN_POP')
 			},

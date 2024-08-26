@@ -1,7 +1,5 @@
 <template>
 	<view class="pages">
-
-		<!-- 邀请的门店 -->
 		<z-paging ref="paging" v-model="dataList" @query="getList">
 			<view slot='top'>
 				<u-navbar placeholder>
@@ -65,7 +63,7 @@
 					<view class="invite_list-item-mess">
 						<view class="invite_list-item-mess-evey acea-row">
 							<text>审核类型：</text>
-							<view>{{item.type==1?'修改业务推广分成比例':item.type==2?"修改订单消耗分成比例":'品牌入驻审核'}}</view>
+							<view>{{item.type==1?'修改业务推广分成比例':item.type==2?"修改订单消化分成比例":'品牌入驻审核'}}</view>
 						</view>
 						<view class="invite_list-item-mess-evey acea-row">
 							<text>申请内容：</text>

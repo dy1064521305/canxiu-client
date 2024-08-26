@@ -14,7 +14,7 @@
 							<input type="text" @confirm="search()" v-model="searchValue" @input="seachValue"
 								:placeholder="'请输入'+whereType">
 							<view class="" style="position: absolute; top: 17rpx; right: 70rpx;">
-								<u-icon v-if="searchValue" @click="search()" color="#D8DCDB"
+								<u-icon v-if="searchValue" @click="search(1)" color="#D8DCDB"
 									name="close-circle"></u-icon>
 							</view>
 							<view class="input-s" @click="search()"></view>
@@ -321,14 +321,21 @@
 				}
 				this.$refs.paging.reload()
 			},
-			search() {
-				if (this.whereType == '姓名') {
-					this.where.realName = this.searchValue
+			search(i) {
+				if (i) {
+					this.searchValue = ''
+					this.where.realName = ''
 					this.where.cellPhone = ""
 				} else {
-					this.where.cellPhone = this.searchValue
-					this.where.realName = ""
+					if (this.whereType == '姓名') {
+						this.where.realName = this.searchValue
+						this.where.cellPhone = ""
+					} else {
+						this.where.cellPhone = this.searchValue
+						this.where.realName = ""
+					}
 				}
+
 				this.$refs.paging.reload()
 			},
 			tabClick(e) {

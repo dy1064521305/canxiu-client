@@ -1,86 +1,84 @@
 <template>
-	<common-page>
-		<view class="pages" :style="{height:clientHeight+'px'}">
-			<view class="">
-				<view class="banner">
-					<!-- <view class="fix acea-row row-middle" v-if="!id">
+	<!-- <common-page :inviteType="1"> -->
+	<view class="pages" :style="{height:clientHeight+'px'}">
+		<view class="">
+			<view class="banner">
+				<!-- <view class="fix acea-row row-middle" v-if="!id">
 					<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/05/0a9054f532eb4c39a75880bece1a8555.png"
 						mode=""></image>
 					${合伙人真实姓名}邀请你入驻餐修平台！
 				</view> -->
-				</view>
-				<view class="content">
-					<view class="content-mess">
-						<view class="form-row acea-row row-middle">
-							<text class="form-key">集团公司</text>
-							<view class="acea-row">
-								<radio-group @change="radioChange" class="acea-row">
-									<label style="width: 180rpx;" class="acea-row" v-for="(item, index) in radio"
-										:key="item.value">
-										<view>
-											<radio :value="item.value" style="transform:scale(0.7)" color="#A4D091"
-												:checked="item.value == where.isGroup" />
-										</view>
-										<view>{{item.label}}</view>
-									</label>
-								</radio-group>
-								<!-- <label class="radio">
+			</view>
+			<view class="content">
+				<view class="content-mess">
+					<view class="form-row acea-row row-middle">
+						<text class="form-key">集团公司</text>
+						<view class="acea-row">
+							<radio-group @change="radioChange" class="acea-row">
+								<label style="width: 180rpx;" class="acea-row" v-for="(item, index) in radio"
+									:key="item.value">
+									<view>
+										<radio :value="item.value" style="transform:scale(0.7)" color="#A4D091"
+											:checked="item.value == where.isGroup" />
+									</view>
+									<view>{{item.label}}</view>
+								</label>
+							</radio-group>
+							<!-- <label class="radio">
 								<radio value="r1" style="transform:scale(0.7)" color="#A4D091" checked="true" />选中
 							</label>
 							<label class="radio">
 								<radio value="r2" style="transform:scale(0.7)" color="#A4D091" />未选中
 							</label> -->
-							</view>
 						</view>
-						<view class="form-row acea-row row-middle" v-if="where.isGroup=='y'">
-							<text class="form-key">集团名称</text>
-							<input class="acea-con" v-model="where.groupName"
-								style="text-align: right;margin-right: 10rpx;" placeholder="请输入"></input>
-						</view>
-						<view class="form-row acea-row row-middle">
-							<text class="form-key">联系人</text>
-							<input class="acea-con" v-model="where.personName"
-								style="text-align: right;margin-right: 10rpx;" placeholder="请输入"></input>
-						</view>
-						<view class="form-row acea-row row-middle">
-							<text class="form-key">联系电话</text>
-							<input class="acea-con" v-model="where.personPhone"
-								style="text-align: right;margin-right: 10rpx;" placeholder="请输入"></input>
-						</view>
-						<view class="form-row acea-row row-middle" style="border-bottom: none;">
-							<text class="form-key">公司信息</text>
+					</view>
+					<view class="form-row acea-row row-middle" v-if="where.isGroup=='y'">
+						<text class="form-key">集团名称</text>
+						<input class="acea-con" v-model="where.groupName" style="text-align: right;margin-right: 10rpx;"
+							placeholder="请输入"></input>
+					</view>
+					<view class="form-row acea-row row-middle">
+						<text class="form-key">联系人</text>
+						<input class="acea-con" v-model="where.personName"
+							style="text-align: right;margin-right: 10rpx;" placeholder="请输入"></input>
+					</view>
+					<view class="form-row acea-row row-middle">
+						<text class="form-key">联系电话</text>
+						<input class="acea-con" v-model="where.personPhone"
+							style="text-align: right;margin-right: 10rpx;" placeholder="请输入"></input>
+					</view>
+					<view class="form-row acea-row row-middle" style="border-bottom: none;">
+						<text class="form-key">公司信息</text>
 
-							<text class="acea-con" style="color: #A4D091; text-align: right;font-size: 28rpx;"
-								@click="add" v-if="where.companyList.length<=0">+添加公司</text>
+						<text class="acea-con" style="color: #A4D091; text-align: right;font-size: 28rpx;" @click="add"
+							v-if="where.companyList.length<=0">+添加公司</text>
+					</view>
+					<view class="addCompany" v-for="(item,index) in where.companyList">
+						<view class="form-row acea-row row-middle" style="background: rgba(164,208,145,0.08);">
+							<text class="form-key">公司名称</text>
+							<input class="acea-con" style="text-align: right;margin-right: 10rpx;" placeholder="请输入"
+								v-model="item.companyName"></input>
 						</view>
-						<view class="addCompany" v-for="(item,index) in where.companyList">
-							<view class="form-row acea-row row-middle" style="background: rgba(164,208,145,0.08);">
-								<text class="form-key">公司名称</text>
-								<input class="acea-con" style="text-align: right;margin-right: 10rpx;" placeholder="请输入"
-									v-model="item.companyName"></input>
-							</view>
-							<view class="form-row acea-row row-middle">
-								<text class="form-key">品牌名称</text>
-								<input class="acea-con" style="text-align: right;margin-right: 10rpx;" placeholder="请输入"
-									v-model="item.brandName"></input>
-							</view>
-							<view class="form-row acea-row row-middle" style="height: 160rpx;">
-								<text class="form-key" style="margin-bottom: 100rpx;">品牌logo</text>
-								<view class=" acea-con upImg " style="justify-content: flex-end;">
-									<view class="acea-row row-middle" style="display: flex; flex-wrap: wrap;">
-										<view class="tap_image" v-for="(i,index_1) in invoice_img" :key="index_1">
-											<image :src="i" mode="aspectFill"></image>
-											<view class="iconfont" @click="del_img(index_1)">
-												<u-icon name="close-circle" color="#ccc" size="22"></u-icon>
-											</view>
+						<view class="form-row acea-row row-middle">
+							<text class="form-key">品牌名称</text>
+							<input class="acea-con" style="text-align: right;margin-right: 10rpx;" placeholder="请输入"
+								v-model="item.brandName"></input>
+						</view>
+						<view class="form-row acea-row row-middle" style="height: 160rpx;">
+							<text class="form-key" style="margin-bottom: 100rpx;">品牌logo</text>
+							<view class=" acea-con upImg " style="justify-content: flex-end;">
+								<view class="acea-row row-middle" style="display: flex; flex-wrap: wrap;">
+									<view class="tap_image" v-for="(i,index_1) in invoice_img" :key="index_1">
+										<image :src="i" mode="aspectFill"></image>
+										<view class="iconfont" @click="del_img(index_1)">
+											<u-icon name="close-circle" color="#ccc" size="22"></u-icon>
 										</view>
-										<view class="tap_images" v-if="invoice_img.length<1" @tap="chooseImage">
-											<image
-												src="https://img.reduxingke.com/2023/05/22/e303d202305221431166432.png"
-												mode="">
-											</image>
-											<view>上传图片</view>
-										</view>
+									</view>
+									<view class="tap_images" v-if="invoice_img.length<1" @tap="chooseImage">
+										<image src="https://img.reduxingke.com/2023/05/22/e303d202305221431166432.png"
+											mode="">
+										</image>
+										<view>上传图片</view>
 									</view>
 								</view>
 							</view>
@@ -88,12 +86,13 @@
 					</view>
 				</view>
 			</view>
-
-			<view class="content-btn acea-row row-center row-middle" @click="submit">
-				确认提交
-			</view>
 		</view>
-	</common-page>
+
+		<view class="content-btn acea-row row-center row-middle" @click="submit">
+			确认提交
+		</view>
+	</view>
+	<!-- </common-page> -->
 </template>
 
 <script>
@@ -168,9 +167,9 @@
 			...mapGetters(['isLogin'])
 		},
 		onShow() {
-			// #ifndef APP-PLUS
-			if (!this.isLogin) return this.$store.commit('OPEN_LOGIN_POP')
-			// #endif
+			// // #ifndef APP-PLUS
+			// if (!this.isLogin) return this.$store.commit('OPEN_LOGIN_POP')
+			// // #endif
 		},
 		methods: {
 			getInfo(id) {

@@ -6,6 +6,10 @@ import storage from '@/utils/storage'
 import * as LoginApi from '@/api/login'
 import * as UserApi from '@/api/user'
 import $cache from '@/utils/cache.js';
+import {
+	Toast
+} from '@/utils/index'
+
 // 登陆成功后执行
 const loginSuccess = (commit, result) => {
 	// 过期时间30天
@@ -70,6 +74,35 @@ export const actions = {
 				loginSuccess(commit, result)
 				resolve(response)
 			}).catch(reject)
+		})
+	},
+	// 用户登录快捷登录
+	LOGIN({
+		commit
+	}, data) {
+		// commit('UPDATE_TOKEN', data.token, data.expires_time);
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				LoginApi.postLoginPartner(data, {
+					custom: {
+						catch: true
+					}
+				}).then(res => {
+					const result = res.data;
+					loginSuccess(commit, result)
+					resolve(res.data);
+					// type： 新用户：Register  老用户：Success
+					// token
+					// clientId，
+					// isPartner: true 是否是合伙人
+
+				}).catch(err => {
+					Toast(err);
+					reject(err);
+				}).finally(() => {
+					uni.$emit('LOGIN');
+				})
+			}, 300)
 		})
 	},
 
