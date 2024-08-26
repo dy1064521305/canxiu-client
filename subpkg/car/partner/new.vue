@@ -1,65 +1,85 @@
 <template>
-	<view class="pages" :style="{height:clientHeight+'px'}">
-		<view>
-			<view class="banner">
-				<!-- <image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/09/63428c7066d641feba3d0d36e1069896.jpg"
+	<common-page :inviteType="1">
+		<view class="pages" :style="{height:clientHeight+'px'}">
+			<view>
+				<view class="banner">
+					<!-- <image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/09/63428c7066d641feba3d0d36e1069896.jpg"
 					mode=""></image> -->
-			</view>
-			<view class="content">
-				<view class="content-mess">
-					<view class="content-mess-title">
-						填写申请信息
-					</view>
-					<view class="form-row acea-row row-middle">
-						<text class="form-key">您的姓名</text>
-						<input class="acea-con" v-model="where.realName" style="text-align: right;margin-right: 10rpx;"
-							placeholder="请输入您的真实姓名"></input>
-					</view>
-					<view class="form-row acea-row row-middle">
-						<text class="form-key">联系电话</text>
-						<input class="acea-con" v-model="where.cellPhone" style="text-align: right;margin-right: 10rpx;"
-							placeholder="请输入您的手机号"></input>
-					</view>
-					<view class="form-row acea-row row-middle">
-						<text class="form-key">所在城市</text>
-						<pickers v-if="!isSubmit" @address="addressHandle" style="flex: 1;text-align: right">
-							<view v-if="where.region!=''">{{where.region}}</view>
-							<view v-else class="acea-row row-middle"
-								style="color: rgb(192, 196, 204); justify-content: flex-end;">
-								请选择您当前的城市 <u-icon color=" rgb(192, 196, 204)" name="arrow-right"
-									style="margin-left: 4rpx;" :size="14"></u-icon></view>
-						</pickers>
-					</view>
-					<view class="content-btn acea-row row-middle row-center" @click="submit">
-						申请成为合伙人
+				</view>
+				<view class="content">
+					<view class="content-mess">
+						<view class="content-mess-title">
+							填写申请信息
+						</view>
+						<view class="form-row acea-row row-middle row-between-wrapper"
+							v-if="userInfo&&userInfo.partnerId">
+							<text class="form-key">邀请人</text>
+							<view class="people acea-row row-middle">
+								<image :src="userInfo.avatarUrl" mode=""></image>
+								{{userInfo.realName}}
+							</view>
+						</view>
+						<view class="form-row acea-row row-middle">
+							<text class="form-key">您的姓名</text>
+							<input class="acea-con" v-model="where.realName"
+								style="text-align: right;margin-right: 10rpx;" placeholder="请输入您的真实姓名"></input>
+						</view>
+						<view class="form-row acea-row row-middle">
+							<text class="form-key">联系电话</text>
+							<input class="acea-con" v-model="where.cellPhone"
+								style="text-align: right;margin-right: 10rpx;" placeholder="请输入您的手机号"></input>
+						</view>
+						<view class="form-row acea-row row-middle">
+							<text class="form-key">所在城市</text>
+							<pickers v-if="!isSubmit" @address="addressHandle" style="flex: 1;text-align: right">
+								<view v-if="where.region!=''">{{where.region}}</view>
+								<view v-else class="acea-row row-middle"
+									style="color: rgb(192, 196, 204); justify-content: flex-end;">
+									请选择您当前的城市 <u-icon color=" rgb(192, 196, 204)" name="arrow-right"
+										style="margin-left: 4rpx;" :size="14"></u-icon></view>
+							</pickers>
+						</view>
+						<view class="content-btn acea-row row-middle row-center" @click="submit">
+							申请成为合伙人
+						</view>
 					</view>
 				</view>
-			</view>
-			<view class="content" style="margin-top: 20rpx;">
-				<view class="content-mess">
-					<view class="content-mess-title" style="border-bottom: none;">
-						合伙人特权
-					</view>
-					<view class="content-mess-card" v-for="(item ) in mess">
-						<view class="">{{item.title}}</view>
-						<text>{{item.tit}}</text>
+				<view class="content" style="margin-top: 20rpx;">
+					<view class="content-mess">
+						<view class="content-mess-title" style="border-bottom: none;">
+							合伙人特权
+						</view>
+						<view class="content-mess-card" v-for="(item ) in mess">
+							<view class="">{{item.title}}</view>
+							<text>{{item.tit}}</text>
+						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-	</view>
+	</common-page>
 </template>
 
 <script>
+	import {
+		mapGetters
+	} from 'vuex'
 	import pickers from "@/components/ming-picker/ming-picker.vue"
 	import {
 		postPartnerApply
 	} from "@/api/appUpdate.js"
 	import {
+		putImmediate
+	} from "@/api/brand.js"
+	import {
 		isEmpty,
 		isPhone
 	} from '@/utils/verify.js'
 	import storage from '@/utils/storage'
+
+	import {
+		parseQuery
+	} from '@/utils/index.js'
 	export default {
 		components: {
 			pickers
@@ -72,7 +92,8 @@
 					realName: "",
 					cellPhone: "",
 					region: "",
-					clientId: storage.get('ClientId'),
+					clientId: '',
+					superiorId: ''
 				},
 				clientHeight: "",
 				mess: [{
@@ -87,25 +108,79 @@
 						title: "邀请品牌/师傅入驻奖励",
 						tit: "合伙人特权"
 					},
-				]
+				],
+				clientId: "",
+				userInfo: {},
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			// console.log(this.isLogin, 'this.isLogin');
+
+			// console.log(this.$store.commit('OPEN_LOGIN_POP'), 'this.this.$store');
+			// // if (this.isLogin) return this.$store.commit('OPEN_LOGIN_POP');
+			if (options) {
+				if (options.userId) {
+					this.where.clientId = options.userId
+					this.getInfo(options.userId)
+				}
+				let scene = parseQuery(decodeURIComponent(options.scene)) || null
+				if (options.scene) {
+					this.clientId = scene.userId || ''
+					this.where.clientId = this.clientId
+					this.getInfo(this.clientId)
+				}
+			}
+
 			const pages = uni.$u.pages();
 			this.isSubmit = pages.some(p => {
 				return p.route.includes('submitOrder') || p.route.includes('goosDetails')
 			})
+
 			this.getClineHeight()
-		},
-		computed: {
 
 		},
+		computed: {
+			...mapGetters(['isLogin'])
+		},
+		onShow() {
+			if (this.isLogin) {
+				let id = storage.get('ClientId')
+				console.log(id, "this.userId");
+				putImmediate(id).then(res => {
+					if (res.data) {
+						this.$toast('您已是合伙人!', 'success').then(() => {
+							uni.redirectTo({
+								url: '../../staging/team/index',
+							})
+						});
+					} else {
+						console.log(11, "不存在123");
+					}
+				})
+			} else {
+				this.$store.commit('OPEN_LOGIN_POP')
+			}
+		},
 		methods: {
+			getInfo(id) {
+				putImmediate(id).then(res => {
+					if (res.data) {
+						this.userInfo = res.data || {}
+						this.where.superiorId = res.data.partnerId
+					} else {
+						console.log(11, "不存在");
+					}
+					console.log(res.data, "res.data");
+					// if(!res.data)
+				})
+			},
 			addressHandle(e) {
 				this.where.region = e.value1.toString().replace(/,/g, "/")
 				console.log(e, "eee");
 			},
 			submit() {
+				console.log(this.where, "where");
+				if (!this.isLogin) return this.$store.commit('OPEN_LOGIN_POP')
 				if (!this.where.realName) return this.$toast('您的姓名不能为空')
 				if (isEmpty(this.where.cellPhone)) {
 					uni.$u.toast('请输入手机号')
@@ -183,6 +258,17 @@
 
 				.form-row:nth-last-child(1) {
 					border-bottom: none;
+				}
+
+				.people {
+					text-align: right;
+
+					image {
+						width: 60rpx;
+						height: 60rpx;
+						border-radius: 50%;
+						margin-right: 20rpx;
+					}
 				}
 
 				&-card {

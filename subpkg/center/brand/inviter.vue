@@ -1,4 +1,5 @@
 <template>
+	<!-- <common-page :inviteType="1"> -->
 	<view class="pages" :style="{height:clientHeight+'px'}">
 		<view class="">
 			<view class="banner">
@@ -91,26 +92,29 @@
 			确认提交
 		</view>
 	</view>
+	<!-- </common-page> -->
 </template>
 
 <script>
-	import pickers from "@/components/ming-picker/ming-picker.vue"
-	import upLoadFile from '../../../components/uploadFile/uploadFile.vue'
 	import {
-		postPartnerBrand
+		mapGetters
+	} from 'vuex'
+	import pickers from "@/components/ming-picker/ming-picker.vue"
+	import {
+		postPartnerBrand,
+		putImmediate
 	} from "@/api/brand.js"
-
 	import {
 		isEmpty,
 		isPhone
 	} from '@/utils/verify.js'
 	import {
-		uploadImageHandler
+		uploadImageHandler,
+		parseQuery
 	} from '@/utils/index.js'
 	export default {
 		components: {
 			pickers,
-			upLoadFile
 		},
 		data() {
 			return {
@@ -144,6 +148,14 @@
 		onLoad(options) {
 			if (options && options.id) {
 				this.where.partnerId = options.id
+				console.log(options.id, 'options.id');
+			}
+			if (options.scene) {
+				let scene = parseQuery(decodeURIComponent(options.scene)) || null
+				console.log(scene, 'scene');
+
+				let id = scene.userId || ''
+				this.getInfo(id)
 			}
 			const pages = uni.$u.pages();
 			this.isSubmit = pages.some(p => {
@@ -151,7 +163,23 @@
 			})
 			this.getClineHeight()
 		},
+		computed: {
+			...mapGetters(['isLogin'])
+		},
+		onShow() {
+			// // #ifndef APP-PLUS
+			// if (!this.isLogin) return this.$store.commit('OPEN_LOGIN_POP')
+			// // #endif
+		},
 		methods: {
+			getInfo(id) {
+				putImmediate(id).then(res => {
+					if (res.data) {
+						this.userInfo = res.data || {}
+						this.where.partnerId = res.data.partnerId
+					}
+				})
+			},
 			addressHandle(e) {
 				this.city = e.value1.toString().replace(/,/g, "/")
 			},
@@ -190,6 +218,7 @@
 			},
 			submit() {
 				let where = this.where
+				console.log(where, "where");
 				if (!where.personName) return this.$toast('联系人不能为空')
 				if (isEmpty(where.personPhone)) {
 					uni.$u.toast('请输入手机号')

@@ -12,19 +12,14 @@
 		getPartnerRegion
 	} from "@/api/appUpdate.js"
 	import storage from '@/utils/storage'
+	import formatter from '@/utils/formatter.js'
 	export default {
 		components: {
 			Table
 		},
 		data() {
 			return {
-				tableData: [{
-					closedAccount: 0,
-					givePrice: 0,
-					noAccount: 0,
-					region: "浙江省-杭州市-拱墅区",
-					totalPrice: 0,
-				}],
+				tableData: [],
 				//th
 				option: {
 					column: [{
@@ -34,12 +29,12 @@
 						},
 						{
 							label: '补贴比例',
-							prop: 'closedAccount',
+							prop: 'bonusRatio',
 							width: "30%"
 						},
 						{
 							label: '添加时间',
-							prop: 'noAccount',
+							prop: 'createTime',
 							width: "30%"
 						}
 
@@ -54,7 +49,11 @@
 		methods: {
 			getTable() {
 				getPartnerRegion(storage.get('ClientId')).then(res => {
-					this.list = res.data
+					this.tableData = res.rows
+					this.tableData.forEach((item) => {
+						item.bonusRatio = item.bonusRatio + '%'
+						item.createTime = formatter.formatDate(item.createTime, 'yyyy-MM-dd')
+					})
 				})
 			}
 		}

@@ -107,14 +107,17 @@
 			// #ifdef MP
 			const app = getApp();
 			const m = app.globalData.menuRect;
-			this.mwith = m.width + 'px';
-			this.mBtnWith = m.width / 2 + 'px';
-			this.mheight = m.height + 'px';
-			let sTop = this.$store.state.safeAreaTop;
-			let top = m.top - sTop;
-			this.mtop = top + 'px';
-			this.hearderH = m.top + m.height + top;
-			this.wrapH = m.height + top * 2;
+			if (m) {
+				this.mwith = m?.width + 'px';
+				this.mBtnWith = m?.width / 2 + 'px';
+				this.mheight = m?.height + 'px';
+				let sTop = this.$store.state.safeAreaTop;
+				let top = m.top - sTop;
+				this.mtop = top + 'px';
+				this.hearderH = m.top + m.height + top;
+				this.wrapH = m.height + top * 2;
+			}
+
 			// #endif
 		}
 	}

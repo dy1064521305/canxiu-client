@@ -3,21 +3,29 @@
 		<table cellspacing="0" style="width:100%" class="table">
 			<tr>
 				<th class="th"
-					:style="{backgroundColor: thBg,color:thColor,height: thHeight,fontSize:thSize,width:item.width}"
+					:style="{backgroundColor: thBg,color:thColor,height: thHeight+'rpx',fontSize:thSize+'rpx',width:item.width}"
 					v-for="(item, index) in option.column" :key="index">
 					{{ item.label }}
 				</th>
 			</tr>
 			<tr v-for="(item, index) in tableData" :key="index" class="list-tr">
 				<td class="td"
-					:style="{backgroundColor: tdBg,color:tdColor,height: tdHeight,textAlign: align,fontSize:tdSize}"
+					:style="{backgroundColor: tdBg,color:tdColor,height: tdHeight+'rpx',textAlign: align,fontSize:tdSize+'rpx'}"
 					v-for="(context, i) in option.column" :key="i">{{ item[context.prop] }}</td>
 			</tr>
 		</table>
+		<!-- <view class="table_page">
+			<Pagination :pageNo="where.pageNo" :pageSize="where.pageSize" :total="total" :continues="4"
+				@getPageNo="getPageNo" />
+		</view> -->
 	</view>
 </template>
 <script>
+	import Pagination from "@/components/pagination.vue"
 	export default {
+		components: {
+			Pagination
+		},
 		naem: "Table",
 		props: {
 			tableData: Array,
@@ -32,11 +40,11 @@
 			},
 			thHeight: {
 				type: Number,
-				default: 64 + 'rpx',
+				default: 64,
 			},
 			thSize: {
 				type: Number,
-				default: 28 + 'rpx',
+				default: 28,
 			},
 			tdBg: {
 				type: String,
@@ -48,21 +56,31 @@
 			},
 			tdHeight: {
 				type: Number,
-				default: 64 + 'rpx',
+				default: 64,
 			},
 			tdSize: {
 				type: Number,
-				default: 24 + 'rpx',
+				default: 24,
 			},
 			align: {
 				type: String,
 				default: 'center',
-			}
+			},
+			where: Object,
+			total: {
+				type: Number,
+				default: 0,
+			},
 
 		},
 		created() {
 			console.log(this.tableData, "tableData");
-		}
+		},
+		getPageNo(pageNo) {
+			//再次发请求
+			this.$emit('changeTable', pageNo)
+			// this.getData();
+		},
 	};
 </script>
 

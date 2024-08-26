@@ -202,6 +202,7 @@
 				uni.navigateTo({
 					url: '/pages/login/index'
 				})
+
 			},
 
 

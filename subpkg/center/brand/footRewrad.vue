@@ -65,8 +65,6 @@
 	export default {
 		data() {
 			return {
-				noCardShow: false,
-				showPhone: false,
 				dataList: [],
 				searchTypes: [{
 						type: '',

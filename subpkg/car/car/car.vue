@@ -73,8 +73,8 @@
 							<!-- 	<view > -->
 
 							<view style="display: flex;align-items: center;">
-								<u-checkbox v-if="!item.isStatus" shape="circle" :name="item.workerType" activeColor='#A4D091'
-									@change='val=>typeCheckChange(val,item,index)'>
+								<u-checkbox v-if="!item.isStatus" shape="circle" :name="item.workerType"
+									activeColor='#A4D091' @change='val=>typeCheckChange(val,item,index)'>
 								</u-checkbox>
 								<text
 									style="font-size:34rpx;font-weight: bold;color: #3D3F3E;">{{item.workerType}}</text>
@@ -111,7 +111,7 @@
 					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/125e056702434056b9b3bc5f7768eb0a.png"
 					text='维修车为空' marginTop='100' width="210px">
 				</u-empty>
-				
+
 
 			</view>
 
@@ -269,7 +269,7 @@
 			this.coudanShow = false
 			this.workerType = undefined,
 				this.searchName = ''
-			
+
 		},
 		methods: {
 
@@ -291,8 +291,8 @@
 			getDeleteUrlList(data) {
 				console.log(this.dataList);
 				this.dataList.forEach((fu, index) => {
-				
-				
+
+
 					fu.children.forEach((son, ind) => {
 						data.forEach(d => {
 							if (d.id === son.id) {
@@ -360,9 +360,11 @@
 				this.checkedList = this.dataList.map(c => c.children.filter(c1 => c1.checked)).flatMap(c2 => c2)
 			},
 			getAllNum() {
-			
-				this.allNum = this.dataList.reduce((p, c) => p +(c.children.filter(f=>{return f.projectStatus==0})).length, 0)
-				console.log(this.allNum,'364444444444');
+
+				this.allNum = this.dataList.reduce((p, c) => p + (c.children.filter(f => {
+					return f.projectStatus == 0
+				})).length, 0)
+				console.log(this.allNum, '364444444444');
 			},
 			//其他页面改变数据
 			changeData(data) {
@@ -426,7 +428,7 @@
 						if (this.addressList.length == 0) {
 							uni.removeStorage({
 								key: `address_info${storage.get('ClientId')}`,
-								
+
 							})
 						} else {
 							try {
@@ -446,7 +448,7 @@
 											this.addressInfo = item
 											console.log(111, '118111111111111111111');
 											uni.setStorage({
-												key:`address_info${storage.get('ClientId')}`,
+												key: `address_info${storage.get('ClientId')}`,
 												data: item,
 											})
 										}
@@ -491,9 +493,15 @@
 					this.checkboxValue1 = []
 					this.totalMoney = 0
 					this.dataList.forEach(item => {
-						this.allNum += (item.children.filter(f=>{return f.projectStatus==0})).length
-							item['isStatus']=item.children.every(ch=>{return ch.projectStatus==1})
-								console.log(item.children.every(ch=>{return ch.projectStatus==0}),'299444444');
+						this.allNum += (item.children.filter(f => {
+							return f.projectStatus == 0
+						})).length
+						item['isStatus'] = item.children.every(ch => {
+							return ch.projectStatus == 1
+						})
+						console.log(item.children.every(ch => {
+							return ch.projectStatus == 0
+						}), '299444444');
 						item.children.forEach(chil => {
 							chil.startingFreeDiscount = item.startingFreeDiscount
 						})
@@ -525,7 +533,9 @@
 				if (bool) {
 					console.log(this.dataList);
 					this.checkedList = this.dataList.map(c => c.children).flatMap(c1 => c1)
-					this.checkedList=this.checkedList.filter(c=>{return c.projectStatus=='0'})
+					this.checkedList = this.checkedList.filter(c => {
+						return c.projectStatus == '0'
+					})
 					console.log('277,.', this.checkedList);
 					this.getTotalMoney()
 				} else {
@@ -536,7 +546,7 @@
 					car.children.forEach((car1, index1) => {
 						this.$set(this.dataList[index].children, index1, {
 							...car1,
-							checked: car1.projectStatus==1?false:bool
+							checked: car1.projectStatus == 1 ? false : bool
 						})
 					})
 				})
@@ -631,15 +641,17 @@
 			deleteList(arr) {
 				console.log(arr);
 				console.log(this.dataList, '409409409409');
-			
+
 				this.dataList = this.dataList.map(d => ({
 					...d,
 					children: d.children.filter(d1 => !arr.includes(d1.id))
 				}))
 				console.log(this.dataList, '417417417');
 				this.dataList = this.dataList.filter(d => d.children && d.children.length > 0)
-				this.dataList.forEach(item=>{
-						item['isStatus']=item.children.every(ch=>{return ch.projectStatus==1})
+				this.dataList.forEach(item => {
+					item['isStatus'] = item.children.every(ch => {
+						return ch.projectStatus == 1
+					})
 				})
 				this.getCheckList()
 				this.getTotalMoney()
@@ -677,7 +689,7 @@
 				this.dataList[i].children.forEach((car1, index1) => {
 					this.$set(this.dataList[i].children, index1, {
 						...car1,
-						checked: car1.projectStatus==1?false:val
+						checked: car1.projectStatus == 1 ? false : val
 					})
 				})
 				this.getCheckList()
@@ -697,7 +709,7 @@
 					clientId: storage.get('ClientId'),
 					type: this.workerType,
 					name: this.searchName,
-					address:uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
+					address: uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 				}).then(res => {
 					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
 					this.coudanList = res.data

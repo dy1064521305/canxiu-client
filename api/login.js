@@ -6,7 +6,16 @@ export const login = (data) => request.post('/client/login/smsLogin', data, {
 		auth: false
 	}
 })
-
+/**
+ * 小程序快捷登录接口
+ * @param {String} loginCode 
+ * @param {String} phoneNumberCode
+ */
+export const postLoginPartner = (data) => request.post('/client/login/verifyPartner', data, {
+	custom: {
+		auth: false
+	}
+})
 
 
 //获取验证码

@@ -48,9 +48,20 @@
 
 			}
 		},
-
-
-
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "一键授权"
+			}
+		},
+		{
+			"path": "pages/login/phone",
+			"style": {
+				// "navigationStyle": "custom",
+				"navigationBarTitleText": "短信验证码登录"
+			}
+		},
 		{
 			"path": "pages/center/index",
 			"style": {
@@ -439,7 +450,40 @@
 						"enablePullDownRefresh": false
 					}
 
+				},
+				{
+					"path": "team/index",
+					"style": {
+						"navigationBarTitleText": "团队管理",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+
+				},
+				{
+					"path": "team/people",
+					"style": {
+						"navigationBarTitleText": "团队成员",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "team/setMessage",
+					"style": {
+						"navigationBarTitleText": "信息编辑",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "team/process",
+					"style": {
+						"navigationBarTitleText": "审核管理",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
 				}
+
+
 			]
 		},
 		{

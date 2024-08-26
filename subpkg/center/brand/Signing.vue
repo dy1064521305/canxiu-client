@@ -65,6 +65,20 @@
 				</view>
 				<!-- <empty-page v-if="!list.length" msg="暂无数据"></empty-page> -->
 			</view>
+			<view slot='bottom' class="bottom acea-row">
+				<view class="acea-row row-middle row-center" style="border-right: 1rpx solid #D8D8D8;"
+					@click=" toAdd()">
+					<image
+						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/23/ce1a3b6f81e841ff83fda6e513a86046.png"
+						mode=""></image>手动添品牌信息
+				</view>
+				<view class="acea-row row-middle row-center"
+					@click="$jump('/subpkg/center/inviteWorker/inviteRewards?type=推广佣金')">
+					<image
+						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/23/b2169317f7d044f8bf3debc9acd18f01.png"
+						mode=""></image>品牌签约佣金
+				</view>
+			</view>
 		</z-paging>
 		<!-- 拨打电话 -->
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
@@ -92,7 +106,8 @@
 	import Header from '@/components/header/index.vue';
 	import {
 		putQueryList,
-		postVerifyBankCard
+		postVerifyBankCard,
+		putImmediate
 	} from "@/api/brand.js"
 	import {
 		callPhone
@@ -242,6 +257,12 @@
 				this.noCardShow = false
 				this.$jump('/subpkg/center/myMoney/addCard/addCard?noCard=1')
 			},
+			toAdd() {
+				putImmediate(storage.get('ClientId')).then(res => {
+					let data = res.data
+					this.$jump('/subpkg/center/brand/inviter?id=' + data.partnerId)
+				})
+			}
 		}
 	}
 </script>
@@ -540,6 +561,24 @@
 		image {
 			width: 180rpx;
 			height: 194rpx;
+		}
+	}
+
+	.bottom {
+		padding: 36rpx 0;
+		background-color: #fff;
+		color: #999999;
+		font-size: 28rpx;
+
+		view {
+			height: 70rpx;
+			width: 49%;
+
+			image {
+				width: 46rpx;
+				height: 48rpx;
+				margin-right: 16rpx;
+			}
 		}
 	}
 </style>

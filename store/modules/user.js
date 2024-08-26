@@ -5,6 +5,11 @@ import {
 import storage from '@/utils/storage'
 import * as LoginApi from '@/api/login'
 import * as UserApi from '@/api/user'
+import $cache from '@/utils/cache.js';
+import {
+	Toast
+} from '@/utils/index'
+
 // 登陆成功后执行
 const loginSuccess = (commit, result) => {
 	// 过期时间30天
@@ -19,11 +24,15 @@ const loginSuccess = (commit, result) => {
 
 export const state = {
 	// 用户认证token
-	token: '',
+	token: $cache.get('AccessToken') || '',
 	// 用户信息
 	userInfo: null,
-	clientId: ''}
-
+	clientId: '',
+	loginPopShow: ""
+}
+export const getters = {
+	isLogin: state => !!state.token,
+}
 export const mutations = {
 	SET_TOKEN: (state, value) => {
 		state.token = value
@@ -33,6 +42,19 @@ export const mutations = {
 	},
 	SET_USER: (state, value) => {
 		state.userInfo = value
+		$cache.set('userInfo', userInfo);
+	},
+	CLOSE_LOGIN_POP(state) {
+		state.loginPopShow = false;
+	},
+	OPEN_LOGIN_POP(state, info) {
+		state.loginPopShow = true;
+	},
+	LOGOUT(state) {
+		state.token = '';
+		$cache.clear('AccessToken');
+		state.userInfo = null;
+		$cache.clear('userInfo');
 	},
 }
 
@@ -49,10 +71,38 @@ export const actions = {
 				}
 			}).then(response => {
 				const result = response.data;
-			
 				loginSuccess(commit, result)
 				resolve(response)
 			}).catch(reject)
+		})
+	},
+	// 用户登录快捷登录
+	LOGIN({
+		commit
+	}, data) {
+		// commit('UPDATE_TOKEN', data.token, data.expires_time);
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				LoginApi.postLoginPartner(data, {
+					custom: {
+						catch: true
+					}
+				}).then(res => {
+					const result = res.data;
+					loginSuccess(commit, result)
+					resolve(res.data);
+					// type： 新用户：Register  老用户：Success
+					// token
+					// clientId，
+					// isPartner: true 是否是合伙人
+
+				}).catch(err => {
+					Toast(err);
+					reject(err);
+				}).finally(() => {
+					uni.$emit('LOGIN');
+				})
+			}, 300)
 		})
 	},
 
@@ -78,15 +128,16 @@ export const actions = {
 		commit
 	}, data) {
 		return new Promise((resolve, reject) => {
-				uni.removeStorageSync(`isLogin${storage.get('ClientId')}`)
+			uni.removeStorageSync(`isLogin${storage.get('ClientId')}`)
 			//  LoginApi.logout(data, { custom: { catch: true } }).then(response => {
 			storage.remove(ACCESS_TOKEN)
 			storage.remove(CLIENID)
-		
+
 			commit('SET_TOKEN', '')
 			commit('SET_CLIENTID', '')
 			// resolve(response)
 			//  }).catch(reject)
+			$cache.clear('userInfo');
 		})
 	}
 }

@@ -295,19 +295,19 @@
 					}
 				],
 				melList: [],
-				type:'',
-				city:undefined
+				type: '',
+				city: undefined
 			}
 		},
 		onLoad(options) {
 			let name = uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 			this.query.address = name
-			  this.city=this.query.address.split('-')[2] 
+			this.city = this.query.address.split('-')[2]
 			// this.goodOptionInfo = item.goodInfo
 			this.query.clientId = storage.get('ClientId')
 			console.log(JSON.parse(options.info));
 			this.query.serviceId = JSON.parse(options.info).serviceId
-			this.type= JSON.parse(options.info).type
+			this.type = JSON.parse(options.info).type
 			console.log(this.type);
 			this.$nextTick(() => {
 				this.getInfo()
@@ -544,11 +544,11 @@
 
 					workerType: this.goodInfo.workerType
 				})
- 
-				console.log(carArr,this.type,'5466666666666');
-				
-				if (this.type=='submit') {
-					this.goodInfo.remark=undefined
+
+				console.log(carArr, this.type, '5466666666666');
+
+				if (this.type == 'submit') {
+					this.goodInfo.remark = undefined
 					const pages = uni.$u.pages()
 					pages[pages.length - 2].$vm.changeData({
 						clientId: storage.get('ClientId'),
@@ -556,14 +556,14 @@
 						projectImg: this.projectForm.projectImg == [] ? undefined : this.projectForm
 							.projectImg.toString(),
 						remark: this.projectForm.remarks,
-							projectNumber: this.projectForm.projectNumber,
+						projectNumber: this.projectForm.projectNumber,
 						serviceProjectImg: this.goodInfo.serviceImg,
 						serviceProductName: this.goodInfo.serviceName,
 						projectPrice: this.goodInfo.projectAmount
 					})
-					console.log(carArr,this.type);
+					console.log(carArr, this.type);
 					uni.navigateBack()
-				} else{
+				} else {
 					car.joinCar(carArr).then(res => {
 						console.log(res);
 						if (res.code == 200) {
@@ -575,9 +575,9 @@
 							setTimeout(() => {
 								uni.navigateBack()
 							}, 800)
-					
-					
-					
+
+
+
 							// let type = 'goCar'
 							// uni.reLaunch({
 							// 	url: '../../../pages/car/car?type=' + type
@@ -587,7 +587,7 @@
 						}
 					})
 				}
-			
+
 				console.log(this.projectVoList);
 			},
 			//其他页面改变数据

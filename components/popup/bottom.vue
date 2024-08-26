@@ -94,7 +94,7 @@
 			.title {
 				font-size: 32rpx;
 				text-align: center;
-				padding: 30rpx 36rpx;
+				padding: 30rpx 36rpx 0;
 				position: relative;
 				width: 100%;
 				font-size: #212121;

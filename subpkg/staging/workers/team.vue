@@ -8,16 +8,20 @@
 			<!-- <text style="font-size: 34rpx;">我的资产</text> -->
 		</Header>
 		<view class="topBg">
-			<view class="topBg-user acea-row" @click="$jump('/subpkg/center/brand/cooperateSettings')">
+			<view class="topBg-user acea-row" @click.stop="$jump('/subpkg/center/brand/cooperateSettings')">
 				<view class="topBg-user-image">
 					<image v-if="baseInfo.avatarUrl" :src="baseInfo.avatarUrl" mode=""></image>
 					<image v-else
 						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/14/0fc1c13f76864515bd2c314287d11154.png"
 						mode=""></image>
 				</view>
-				<view class="topBg-user-name">
-					<text class="line1">{{baseInfo.realName||'暂无昵称'}}</text>
-					<view class="">{{baseInfo.partnerType==1?'中级':baseInfo.partnerType==2?'高级':'初级'}}合伙人</view>
+				<view class="topBg-user-name acea-row row-between-wrapper">
+					<view class="" style="flex: 1;">
+						<view class="line1">{{baseInfo.realName||'暂无昵称'}}</view>
+						<view class="color">{{baseInfo.partnerType==1?'中级':baseInfo.partnerType==2?'高级':'初级'}}合伙人</view>
+					</view>
+					<view @click.stop="workerAccountShow=true">+师傅账号</view>
+
 				</view>
 			</view>
 			<view class="topBg-team acea-row row-between-wrapper">
@@ -58,9 +62,9 @@
 			<view class="counts">
 				<view class="counts-title">
 					<view>工单概览</view>
-					<!-- <view class="acea-row row-middle" style="margin-right: 30rpx;  font-size: 28rpx; color: #666666;"
-						@click="$jump('/subpkg/center/myOrder/myOrder?name=全部订单')">
-						全部 <u-icon name="arrow-right" color="#666666" size="14"></u-icon></view> -->
+					<view class="acea-row row-middle" style="margin-right: 30rpx;  font-size: 28rpx; color: #666666;"
+						@click="$jump('/subpkg/center/myOrder/myOrderAll?name=全部订单')">
+						全部 <u-icon name="arrow-right" color="#666666" size="14"></u-icon></view>
 				</view>
 
 				<view class="counts-types acea-row">
@@ -113,7 +117,7 @@
 					</view>
 				</view>
 			</view>
-			<!-- 	<view class="setUp">
+			<view class="setUp">
 				<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)" v-for="(item) in typeList"
 					:key="item.id">
 					<view class="setUp-list-left">
@@ -124,7 +128,21 @@
 						<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
 					</view>
 				</view>
-			</view> -->
+			</view>
+			<u-popup :show="noCardShow" mode="center" :round="10" @close="noCardShow=false">
+				<view class="pop_show flex-colum-center" @click="toCard">
+					<image
+						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/07/32651409c622489ebbfb814a7d488cb2.png"
+						mode=""></image>
+					<view class="pop_show-mess">
+						您当前的账号未绑定银行卡，请绑定银行卡后再进行后续操作！
+					</view>
+					<view class="pop_show-btn acea-row row-middle row-center">
+						前往绑卡
+					</view>
+				</view>
+			</u-popup>
+			<workerAccount :show="workerAccountShow" @close="closeWorkerAccount"></workerAccount>
 		</view>
 
 	</view>
@@ -138,19 +156,25 @@
 		getTeamOrderInfo,
 		getTeamBaseInfo
 	} from "@/api/appUpdate.js"
+	import {
+		postVerifyBankCard
+	} from "@/api/brand.js"
+	import workerAccount from "./components/workerAccount.vue"
 	export default {
 		components: {
 			Header,
+			workerAccount
 		},
 		data() {
 			return {
-				userList: [
-					// {
-					// 	id: 0,
-					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/13/2d8e4ecd9bb0440eb0d9e1efd21696ac.png",
-					// 	label: "分享推广",
-					// 	url: "/subpkg/center/brand/MyinviterQrCode"
-					// },
+				noCardShow: false,
+				workerAccountShow: false,
+				userList: [{
+						id: 0,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/13/2d8e4ecd9bb0440eb0d9e1efd21696ac.png",
+						label: "分享推广",
+						url: "/subpkg/center/brand/MyinviterQrCode"
+					},
 					// {
 					// 	id: 1,
 					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/13/61a6f84299d54dcba9b77912d360e557.png",
@@ -179,7 +203,7 @@
 						id: 5,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/13/d8d131e2f98345b6bcd6107c1e0539be.png",
 						label: "我的收益",
-						url: "/subpkg/center/inviteWorker/inviteRewards?type=inviter"
+						url: "/subpkg/center/inviteWorker/inviteRewards?type=推广奖励"
 					},
 					{
 						id: 6,
@@ -188,31 +212,32 @@
 						url: "/subpkg/center/myMoney/myMoney"
 					},
 				],
-				typeList: [{
-						id: 0,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/266f8fc9d00b4e67b40dd52f66a66ec5.png",
-						label: "签约管理",
-						url: "/subpkg/center/brand/Signing"
-					},
+				typeList: [
+					// {
+					// 	id: 0,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/266f8fc9d00b4e67b40dd52f66a66ec5.png",
+					// 	label: "签约管理",
+					// 	url: "/subpkg/center/brand/Signing"
+					// },
 
-					{
-						id: 1,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/cc78fbf88e5e476eafdeef2fe0c9a6d6.png",
-						label: "推广收益统计",
-						url: "/subpkg/center/inviteWorker/inviteRewards?type=inviter"
-					},
-					{
-						id: 2,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/7320eca633d8472692bceca08d92aae4.png",
-						label: "师傅管理",
-						url: "/subpkg/staging/workers/workers"
-					},
-					{
-						id: 3,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
-						label: "师傅结算记录",
-						url: "/subpkg/staging/workers/records"
-					},
+					// {
+					// 	id: 1,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/cc78fbf88e5e476eafdeef2fe0c9a6d6.png",
+					// 	label: "推广收益统计",
+					// 	url: "/subpkg/center/inviteWorker/inviteRewards?type=inviter"
+					// },
+					// {
+					// 	id: 2,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/7320eca633d8472692bceca08d92aae4.png",
+					// 	label: "师傅管理",
+					// 	url: "/subpkg/staging/workers/workers"
+					// },
+					// {
+					// 	id: 3,
+					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+					// 	label: "师傅结算记录",
+					// 	url: "/subpkg/staging/workers/records"
+					// },
 					{
 						id: 4,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
@@ -237,6 +262,13 @@
 						label: "邀请码-测试",
 						url: "/subpkg/center/brand/MyinviterQrCode"
 					},
+					{
+						id: 8,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "申请成为合伙人-测试",
+						url: "/subpkg/car/partner/new"
+					},
+
 
 				],
 				xiuList: [{
@@ -391,8 +423,22 @@
 				// 		break;
 				// }
 			},
+
+			toCard() {
+				this.noCardShow = false
+				this.$jump('/subpkg/center/myMoney/addCard/addCard')
+			},
 			toDetail(i) {
 				switch (i.label) {
+					case '分享推广':
+						postVerifyBankCard(storage.get('ClientId')).then(res => {
+							if (res.msg == 'ture') {
+								this.$jump(i.url + '?partnerId=' + this.partnerId)
+							} else {
+								this.noCardShow = true
+							}
+						})
+						break;
 					case '订单结算':
 						this.$jump(i.url + '?partnerId=' + this.partnerId)
 						break;
@@ -404,6 +450,9 @@
 						break;
 				}
 
+			},
+			closeWorkerAccount(e) {
+				this.workerAccountShow = false
 			}
 		}
 	}
@@ -435,13 +484,13 @@
 				}
 
 				&-name {
-					text {
+					.line1 {
 						display: block;
-						width: 550rpx;
+						width: 420rpx;
 						color: #212121;
 					}
 
-					view {
+					.color {
 						display: inline-block;
 						background: #F3B23E;
 						font-size: 20rpx;
@@ -766,5 +815,39 @@
 			}
 		}
 
+	}
+
+	.pop_show {
+		width: 596rpx;
+		/* #ifndef APP-PLUS */
+		padding-bottom: 20rpx;
+		/* #endif */
+		background: #FFFFFF;
+		border-radius: 24rpx;
+
+		image {
+			width: 160rpx;
+			height: 160rpx;
+			margin: 70rpx 0 16rpx 0;
+		}
+
+		&-mess {
+			width: 504rpx;
+			height: 80rpx;
+			font-size: 28rpx;
+			color: #666666;
+			line-height: 40rpx;
+			text-align: center;
+		}
+
+		&-btn {
+			width: 524rpx;
+			height: 88rpx;
+			background: #A4D091;
+			border-radius: 8rpx;
+			font-size: 32rpx;
+			color: #FFFFFF;
+			margin-top: 90rpx;
+		}
 	}
 </style>

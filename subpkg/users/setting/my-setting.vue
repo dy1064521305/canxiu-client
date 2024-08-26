@@ -1,26 +1,58 @@
 <template>
-	<view class="page">
-		<div class="title">账户信息</div>
-		<view class="cell">
-			<view class="item" v-for="(item) in accountList" :key="item.id">
-				<view class="label">
-					{{item.label}}
+	<view class="page" :style="{height: clientHeight+'px'}">
+		<view class="content">
+			<div class="title">账户信息</div>
+			<view class="cell">
+				<view class="item">
+					<view class="label">头像</view>
+					<view class="value acea-row row-middle" @click="uploadAvatar">
+						<image v-if="avatar&&avatar!= 'null'" class="avatar" :src="avatar" mode="aspectFill"></image>
+						<image v-else
+							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/09/6a266da84dbb4e9f8a4148ded10e2c3a.png"
+							mode="aspectFill">
+						</image>
+
+						<text class="iconfont icon" style="margin:0 -14rpx -4rpx -12rpx;">&#xe604;</text>
+						<!-- #ifdef MP-WEIXIN -->
+						<button class="mask" open-type="chooseAvatar" @chooseavatar="onChooseAvatar"
+							@click.stop="onChooseAvatar()"></button>
+						<!-- #endif -->
+					</view>
 				</view>
-				<view class="value acea-row row-middle" v-if="item.id==1"
-					@click="$jump('/subpkg/users/setting/avatar')">
-					<image
-						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/09/6a266da84dbb4e9f8a4148ded10e2c3a.png">
-					</image>
-					<text class="iconfont icon" style="margin:0 -14rpx -4rpx -12rpx;">&#xe604;</text>
-					<!-- <image v-else :src="userInfo.avatar" mode=""></image> -->
+				<view class="item">
+					<view class="label">账号呢称</view>
+					<view class="value">
+						<form @submit="submit" class="form">
+							<view class="acea-row">
+								<input class="text-c" style="text-align: right;" type="nickname" name="nickname"
+									placeholder="请输入昵称" placeholder-class="font-normal " v-model="nickname">
+								<text class="iconfont icon" style="margin:0 -14rpx 0 -12rpx;">&#xe604;</text>
+							</view>
+							<!-- #ifdef MP-WEIXIN -->
+							<view class=" btns">
+								<button class="view" type="primary" form-type="submit">保存编辑</button>
+							</view>
+							<!-- #endif -->
+
+						</form>
+					</view>
 				</view>
-				<view class="value" v-else>
-					<text class="text"> {{item.value}}</text>
-					<text class="iconfont icon" v-if="item.id==2" style="margin:0 -14rpx 0 -12rpx;">&#xe604;</text>
-				</view>
+				<!-- <view class="item">
+					<view class="label">绑定手机号</view>
+					<view class="value">
+						<text class="text">名字</text><text class="iconfont icon"
+							style="margin:0 -14rpx 0 -12rpx;">&#xe604;</text>
+					</view>
+				</view> -->
 			</view>
 		</view>
-		<div class="title">合作签约信息</div>
+		<!-- #ifndef MP-WEIXIN -->
+		<view class="btn">
+			<button class="view" @click="sureSet" type="primary" form-type="submit"> 保存编辑</button>
+		</view>
+		<!-- #endif -->
+
+		<!-- <div class="title">合作签约信息</div>
 		<view class="cell">
 			<view class="item" v-for="item in messList" :key="item.id">
 				<view class="label">
@@ -33,7 +65,7 @@
 				</view>
 			</view>
 
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -42,11 +74,12 @@
 	// 	mapState,
 	// 	mapGetters
 	// } from "vuex";
-	// import {
-	// 	uploadImageHandler,
-	// 	toPhoneVerify,
-	// 	checkAuth
-	// } from '@/utils/index.js'
+	import {
+		uploadImageHandler,
+	} from '@/utils/index.js'
+	import {
+		putEditInfo
+	} from '@/api/user.js'
 	// import {
 	// 	HTTP_REQUEST_URL,
 	// 	TOKENNAME
@@ -81,8 +114,8 @@
 					},
 					{
 						id: 3,
-						label: "登录账号",
-						value: "俞军",
+						label: "绑定手机号",
+						value: "",
 					},
 				],
 				messList: [{
@@ -119,13 +152,89 @@
 						label: "区域内订单分红",
 						value: "俞军",
 					},
-				]
+				],
+				clientHeight: "",
+				avatar: "",
+				nickname: '',
 
 			}
 		},
 		computed: {},
-		onLoad() {},
+		onLoad(options) {
+			if (options && options.avatarUrl) {
+				this.avatar = options.avatarUrl || ''
+			}
+			if (options && options.clientName) {
+				this.nickname = options.clientName || ''
+			}
+			this.getClineHeight()
+		},
 		methods: {
+			//获取可视区域高度
+			getClineHeight() {
+				const res = uni.getSystemInfo({
+					success: (res => {
+						this.clientHeight = res.windowHeight;
+						// this.clientHeight = res.windowHeight - uni.upx2px(80) - this.getBarHeight();
+					})
+				});
+			},
+			uploadAvatar() {
+				uni.chooseImage({
+					success: (res) => {
+						console.log(res, "res");
+						const img = res.tempFilePaths[0];
+						uploadImageHandler(img, (res) => {
+							console.log(res.data.url, "88");
+							this.avatarEdit(res.data.url)
+						})
+					}
+				});
+			},
+			onChooseAvatar(e) {
+				if (!e) return;
+				const img = e.detail.avatarUrl;
+				uploadImageHandler(img, (res) => {
+					this.avatar = res.data.url;
+				})
+			},
+			sureSet() {
+				if (!this.nickname) {
+					return this.$toast('请先输入昵称');
+				}
+				putEditInfo({
+					avatarUrl: this.avatar,
+					clientName: this.nickname
+				}).then(res => {
+					this.$toast('保存成功！', 'success').then(() => {
+						this.$jump(-1);
+					});
+				})
+			},
+			submit(e) {
+				let {
+					nickname
+				} = e.detail.value;
+				if (!nickname) {
+					uni.hideLoading();
+					return this.$toast('请先输入昵称');
+				}
+				this.nickname = nickname
+				this.sureSet()
+			},
+			avatarEdit(url) {
+				console.log('修改头像成功');
+				this.avatar = url
+				// this.$toast('修改头像成功!', 'success')
+				// userEdit({
+				// 	avatar: url
+				// }).then(res => {
+				// 	this.$toast('修改头像成功!', 'success')
+				// 	this.$store.dispatch('USERINFO', 1);
+				// }).catch(() => {
+				// 	this.$alert(msg);
+				// })
+			},
 			// 	goPwd() {
 			// 		if (!this.userInfo.phone) {
 			// 			this.$alert('未验证手机号', 1, {
@@ -311,10 +420,15 @@
 
 <style lang="scss" scoped>
 	.page {
-		min-height: 100vh;
-		position: relative;
-		padding: 0rpx 30rpx 20rpx;
+		height: 100%;
 		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+
+		.content {
+			padding: 0 30rpx;
+		}
 
 		.title {
 			height: 78rpx;
@@ -356,14 +470,34 @@
 				.value {
 					display: flex;
 					align-items: center;
-					color: #C0C4CC;
+					color: #212121;
+					position: relative;
 
 					.text {
 						font-size: 28rpx;
 					}
+				}
 
-					.null {
-						color: #C0C4CC;
+				.btns {
+					position: fixed;
+					bottom: 0;
+					left: 0;
+					width: 100%;
+					background: #fff;
+					border-radius: 8rpx 8rpx 0 0;
+					font-size: 32rpx;
+					padding: 26rpx 0 40rpx;
+
+					.view {
+						width: 686rpx;
+						height: 88rpx;
+						background: #F3B23E;
+						line-height: 88rpx;
+						border-radius: 8rpx;
+						color: #FFFFFF;
+						text-align: center;
+						font-size: 28rpx;
+						margin: 0 auto;
 					}
 				}
 
@@ -380,6 +514,28 @@
 					width: 50rpx;
 				}
 			}
+		}
+	}
+
+	.btn {
+		width: 100%;
+		background: #fff;
+		border-radius: 8rpx;
+		font-size: 32rpx;
+		color: #FFFFFF;
+		padding: 30rpx 0 50rpx;
+		position: relative;
+
+		.view {
+			width: 686rpx;
+			height: 88rpx;
+			background: #F3B23E;
+			line-height: 88rpx;
+			border-radius: 8rpx;
+			color: #FFFFFF;
+			text-align: center;
+			font-size: 28rpx;
+			margin: 0 auto;
 		}
 	}
 </style>

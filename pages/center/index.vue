@@ -20,22 +20,22 @@
 				<view class="info acea-row row-between-wrapper">
 					<view class="acea-row" @click.stop="goInfo">
 						<view class="info-image">
-							<image v-if="userInfo.storeImg==null||userInfo.storeImg==''"
+							<image v-if="userInfo.avatarUrl==null||userInfo.avatarUrl==''"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
 							</image>
-							<u--image v-else width='80rpx' height='80rpx' :src="userInfo.storeImg" shape="circle">
+							<u--image v-else width='80rpx' height='80rpx' :src="userInfo.avatarUrl" shape="circle">
 							</u--image>
 						</view>
 						<view class="name  flex-colum">
 							<view class="name-left">
-								{{userInfo.phone}}
+								{{userInfo.clientName}}
 							</view>
-							<view class="grade" @click.stop="$jump('/subpkg/car/partner/index')"
+							<!-- 	<view class="grade" @click.stop="$jump('/subpkg/car/partner/index')"
 								v-if="partnerInfo==null">
 								申请合伙人
-							</view>
-							<view class="grade" v-else>
-								{{partnerInfo.partnerType==1?'中级':partnerInfo.partnerType==2?'高级':'初级'}}合伙人
+							</view> -->
+							<view class="grade">
+								{{userInfo.phone}}
 							</view>
 						</view>
 					</view>
@@ -49,13 +49,13 @@
 				<view class="balance acea-row  row-between-wrapper">
 					<view class="balance-two " @click="$jump('/pages/users/reward/coupon')">
 						<view class="balance-two-num ">
-							{{couponNum}}
+							{{couponNum||0}}
 						</view>
 						<text>优惠券</text>
 					</view>
 					<view class="balance-two " @click="$jump('/subpkg/center/myMoney/myMoney')">
 						<view class="balance-two-num ">
-							{{totalAmount}}
+							{{totalAmount||0}}
 						</view>
 						<text>钱包余额</text>
 					</view>
@@ -72,7 +72,7 @@
 				</view>
 				<view class="teamMy acea-row row-between-wrapper" v-if="partnerInfo != null">
 					<view class="teamMy-item flex-colum"
-						@click="$jump('/subpkg/staging/workers/team?partnerId='+partnerInfo.partnerId)">
+						@click="$jump('/subpkg/staging/team/index?partnerId='+partnerInfo.partnerId)">
 						<view class="acea-row row-between-wrapper">
 							<text style="font-size: 32rpx;">团队管理</text>
 							<u-icon name="arrow-right" color="#AEDD94" size="16"></u-icon>
@@ -749,10 +749,11 @@
 				}
 			},
 			goInfo() {
+				let data = this.userInfo || {}
 				uni.navigateTo({
-					url: '/subpkg/center/personalInfo/personalInfo?item=' + JSON.stringify(this.listAvatar)
+					url: '/subpkg/users/setting/my-setting?avatarUrl=' + data.avatarUrl + '&clientName=' +
+						data.clientName
 				})
-
 			},
 
 		}
@@ -847,7 +848,7 @@
 				}
 
 				.grade {
-					color: #FAC723;
+					color: #999;
 					font-size: 24rpx;
 					margin-top: 2rpx;
 				}

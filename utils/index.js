@@ -10,6 +10,62 @@ import storage from '@/utils/storage'
 import Routine from '@/config/routine.js';
 // #endif
 
+export function toLogin(logout, other) {
+	if (logout == 1) {
+		$store.commit('LOGOUT');
+	}
+	let url = '/pages/login/index';
+	// #ifdef MP
+	url = '/pages/login/login';
+	// #endif
+	// #ifdef APP-PLUS
+	url = '/pages/login/login';
+	// #endif
+	// #ifdef H5
+	if (isWeixin()) {
+		url = '/pages/login/login';
+	}
+	// #endif
+	toAuthPage(url);
+}
+
+export function toAuthPage(toUrl) {
+	const curPage = getCurrentPages();
+	if (curPage && curPage.length) {
+		const itemPage = curPage[curPage.length - 1]
+		const {
+			route,
+			options
+		} = itemPage;
+		let path = '/' + route;
+		if (toUrl.indexOf(path) === 0) return;
+
+		let url = itemPage.$page.fullPath || urlJoin(path, options);
+		$cache.set('authBackUrl', url);
+		if (!isTabber(url)) {
+			return uni.redirectTo({
+				url: toUrl
+			})
+		}
+	}
+	uni.navigateTo({
+		url: toUrl
+	});
+}
+export function parseQuery(url, key) {
+	let data = {};
+	if (!url) return key ? null : data;
+	let qs = (url.indexOf('?') > -1 ? url.split("?")[1] : url).split('&');
+	if (!qs || !qs.length) return key ? null : data;
+	for (let i = 0; i < qs.length; i++) {
+		let arr = qs[i].split('=');
+		if (key && key == arr[0]) return arr[1];
+		data[arr[0]] = arr[1];
+	}
+	return data;
+}
+
+
 export function numSimpWan(num) {
 	if (!num) return 0;
 	if (isNaN(num)) return num;
@@ -31,6 +87,7 @@ export function jumpUrl(url) {
 		let arr = url.split(methodsKey);
 		methods = arr[0];
 		url = arr[1];
+		console.log(arr, "3arr")
 	} else {
 		if (!isTabber(url)) {
 			methods = 'navigateTo'
@@ -69,6 +126,7 @@ export function jumpUrl(url) {
 			uni[methods]({
 				url
 			});
+			console.log(url, "url222222222222")
 			break;
 		case 'mp':
 			openMiniProgram(parseQuery(url));
@@ -90,7 +148,21 @@ export function jumpUrl(url) {
 			break;
 	}
 };
-
+export function backToIndex() {
+	const routes = getCurrentPages();
+	if (routes.length > 1) {
+		let url = '/' + routes[0].route;
+		if (url == TABBAR_PATH[0]) {
+			let delta = routes.length - 1;
+			return uni.navigateBack({
+				delta: delta
+			})
+		}
+	}
+	uni.switchTab({
+		url: TABBAR_PATH[0]
+	})
+}
 export function Toast(title, icon = 'none', duration = 1500) {
 	icon = ['none', 'success', 'fail'].indexOf(icon) > -1 ? icon : 'none';
 	return new Promise((resolve, reject) => {
@@ -241,55 +313,96 @@ export function uploadImageHandler(img, successCallback, errorCallback) {
 	uni.showLoading({
 		title: '图片上传中',
 	});
-	for (let i = 0; i < img.length; i++) {
-		const path = img[i];
-		console.log(path, 'path');
-		(function(i) {
-			setTimeout(function() {
-				uni.uploadFile({
-					url: environment.baseURL + '/system/oss/upload',
-					filePath: path,
-					fileType: 'image',
-					name: 'file',
-					formData: {
-						'filename': 'pics'
-					},
-					header: {
-						// #ifdef MP
-						"Content-Type": "multipart/form-data",
-						// #endif
-						Authorization: 'Bearer ' + storage.get('AccessToken')
-					},
-					success: function(res) {
-						uni.hideLoading();
-						if (res.statusCode == 403) {
-							Toast(res.data)
-						} else {
-							let data = res.data ? JSON.parse(res.data) : {};
-							console.log(data, "data");;
-							if (data.code == 200) {
-								console.log(data, "@");
-								let list = []
-								list.push(data.data
-									.url)
-								successCallback && successCallback(list)
+	if (Object.prototype.toString.call(img) === '[object Array]') {
+		for (let i = 0; i < img.length; i++) {
+			const path = img[i];
+			console.log(path, 'path');
+			(function(i) {
+				setTimeout(function() {
+					uni.uploadFile({
+						url: environment.baseURL + '/system/oss/upload',
+						filePath: path,
+						fileType: 'image',
+						name: 'file',
+						formData: {
+							'filename': 'pics'
+						},
+						header: {
+							// #ifdef MP
+							"Content-Type": "multipart/form-data",
+							// #endif
+							Authorization: 'Bearer ' + storage.get('AccessToken')
+						},
+						success: function(res) {
+							uni.hideLoading();
+							if (res.statusCode == 403) {
+								Toast(res.data)
 							} else {
-								errorCallback && errorCallback(data);
-								Toast(data.msg)
+								let data = res.data ? JSON.parse(res.data) : {};
+								console.log(data, "data");;
+								if (data.code == 200) {
+									console.log(data, "@");
+									let list = []
+									list.push(data.data
+										.url)
+									successCallback && successCallback(list)
+								} else {
+									errorCallback && errorCallback(data);
+									Toast(data.msg)
+								}
 							}
+						},
+						fail: function(res) {
+							uni.hideLoading();
+							Toast('上传图片失败');
 						}
-					},
-					fail: function(res) {
+					});
+					if (i == res.tempFiles.length - 1) {
 						uni.hideLoading();
-						Toast('上传图片失败');
 					}
-				});
-				if (i == res.tempFiles.length - 1) {
-					uni.hideLoading();
+				}, (i + 1) * 1000);
+			})(i)
+		}
+	} else {
+		uni.uploadFile({
+			url: environment.baseURL + '/system/oss/upload',
+			filePath: img,
+			fileType: 'image',
+			name: 'file',
+			formData: {
+				'filename': 'pics'
+			},
+			header: {
+				// #ifdef MP
+				"Content-Type": "multipart/form-data",
+				// #endif
+				Authorization: 'Bearer ' + storage.get('AccessToken')
+			},
+			success: function(res) {
+				uni.hideLoading();
+				if (res.statusCode == 403) {
+					Toast(res.data)
+				} else {
+					let data = res.data ? JSON.parse(res.data) : {};
+					console.log(data, "data");;
+					if (data.code == 200) {
+						console.log(data, "@");
+						let list = {}
+						list = data
+						successCallback && successCallback(list)
+					} else {
+						errorCallback && errorCallback(data);
+						Toast(data.msg)
+					}
 				}
-			}, (i + 1) * 1000);
-		})(i)
+			},
+			fail: function(res) {
+				uni.hideLoading();
+				Toast('上传图片失败');
+			}
+		});
 	}
+
 }
 
 
@@ -435,4 +548,67 @@ export function hasFile(url, callback) {
 		callback && callback(false)
 	}
 	// #endif	
+}
+
+/**
+ * app分享卡片到好友列表
+ * @param {String} params.imageUrl
+ * @param {String} params.title
+ * @param {String} params.path  跳转路径
+ * @param {String} params.type //小程序版本  0-正式版； 1-测试版； 2-体验版。
+ */
+export function appOpenWeixin(params) {
+	// #ifdef APP-PLUS
+	plus.share.getServices(
+		res => {
+			let sweixin = null;
+			for (let i in res) {
+				if (res[i].id == 'weixin') {
+					sweixin = res[i];
+				}
+			}
+			//唤醒微信小程序
+			if (sweixin) {
+				uni.share({
+					provider: 'weixin',
+					scene: "WXSceneSession",
+					type: 5,
+					imageUrl: params.imageUrl,
+					title: params.title,
+					miniProgram: {
+						id: 'gh_06220a7bf72f',
+						path: params.path,
+						type: params.type || 0,
+						// webUrl: 'https://m.reduxingke.com/down/app.html'
+					},
+					success: ret => {
+						console.log(JSON.stringify(ret));
+					}
+				});
+			} else {
+				return Toast('未检测到微信')
+			}
+		}
+	);
+	// #endif
+	// #ifndef APP-PLUS
+	Toast('请在app或小程序中打开分享')
+	// #endif
+}
+
+export function shareImage(img) {
+	// #ifdef MP-WEIXIN
+	Routine.shareImage(img);
+	// #endif
+	// #ifdef APP-PLUS
+	uni.share({
+		provider: "weixin",
+		scene: "WXSceneSession",
+		type: 2,
+		imageUrl: img
+	});
+	// #endif
+	// #ifdef H5
+	return window.open(img);
+	// #endif
 }

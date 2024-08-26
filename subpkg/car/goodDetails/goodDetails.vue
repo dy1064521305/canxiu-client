@@ -2,8 +2,8 @@
 	<view class="good-detail-page">
 		<view class="navbar"
 			:style="{padding:(statusHeight*2)+'rpx 0px 24rpx 16rpx',backgroundColor:'rgba(255,255,255,'+navbarColorOpacity+')'}">
-		
-			<view @click="goBack()">	<u-icon color="#fff" name="arrow-left" size="19" ></u-icon>{{city}}</view>
+
+			<view @click="goBack()"> <u-icon color="#fff" name="arrow-left" size="19"></u-icon>{{city}}</view>
 		</view>
 
 		<scroll-view class="serviceInfo" ref="target" :scroll-y="true" :scroll-into-view="scrollIntoView"
@@ -443,9 +443,9 @@
 			// 	data.path = '/subpkg/car/goodDetails/goodDetails?typeId=' + id + '&type=share';
 			// 	resolve(data)
 			// })
-			let id=this.query.typeId?this.query.typeId:this.query.serviceId
+			let id = this.query.typeId ? this.query.typeId : this.query.serviceId
 			return {
-				query:`typeId=${id}&type=share&address=${this.query.address}`,
+				query: `typeId=${id}&type=share&address=${this.query.address}`,
 				title: this.goodInfo.serviceName,
 				path: '/subpkg/car/goodDetails/goodDetails',
 				imageUrl: this.serviceImgList[0],
@@ -456,7 +456,7 @@
 			// console.log(this.isLogin);
 			console.log(options);
 			let name = uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
-			this.query.address = name?name:options.address
+			this.query.address = name ? name : options.address
 			this.type = options.type
 			this.city = this.query.address.split('-')[2]
 			this.query.clientId = !storage.get('ClientId') ? '' : storage.get('ClientId')
@@ -569,13 +569,13 @@
 
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
-					
+
 					// if (this.type=='share') {
 					// 	uni.setNavigationBarTitle({
 					// 		title: this.goodInfo.serviceName
 					// 	})
 					// }
-					
+
 
 					for (let key in this.goodInfo.materialVoMap) {
 						this.melList.push({
@@ -653,17 +653,17 @@
 					this.serviceImgList = this.goodInfo.serviceImg !== null && this.goodInfo.serviceImg !== "" ?
 						this.goodInfo.serviceImg.split(',') : []
 
-				}).catch((err)=>{
+				}).catch((err) => {
 					// #ifdef MP-WEIXIN
 					this.$refs.uToast.show({
 						type: 'error',
 						message: err.msg
 					});
 					// #endif
-					setTimeout(()=>{
+					setTimeout(() => {
 						uni.navigateBack()
-					},800)
-					
+					}, 800)
+
 				})
 
 
@@ -809,8 +809,8 @@
 				// 	return
 				// }
 				let newSetArray = [] //新数组
-				console.log(this.projectForm,'80111111111');
-				this.goodInfo.remark=''
+				console.log(this.projectForm, '80111111111');
+				this.goodInfo.remark = ''
 				newSetArray.push({
 					clientId: storage.get('ClientId'),
 					...this.goodInfo,

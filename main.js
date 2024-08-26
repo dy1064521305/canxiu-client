@@ -38,7 +38,10 @@ import LoadingPage from '@/components/Loading/page.vue'
 Vue.component('loading-page', LoadingPage);
 import LoadingMore from '@/components/Loading/more.vue'
 Vue.component('loading-more', LoadingMore);
-
+import commonPage from '@/components/common/page.vue'
+Vue.component('common-page', commonPage);
+// import toLogin from './utils/toLogin'
+// Vue.use(toLogin)
 const app = new Vue({
 	store,
 	...App
