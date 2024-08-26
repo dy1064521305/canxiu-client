@@ -129,7 +129,11 @@
 				}
 			}
 		},
-		onLoad() {
+		// onLoad() {
+		// 	this.getInfo()
+		// 	this.getList()
+		// },
+		onShow() {
 			this.getInfo()
 			this.getList()
 		},
