@@ -40,9 +40,9 @@
 						</view>
 
 					</view>
-					<view style="display: flex;justify-content: space-between;">
-						<text style="color: #A5A7A7;">工时：{{info.projectHours}}分钟</text>
-						<text v-if="type=='repair'"
+					<view style="text-align: end;">
+					<!-- 	<text style="color: #A5A7A7;">工时：{{info.projectHours}}分钟</text> -->
+						<text 
 							style="font-size: 30rpx;color: #EC5722;">服务费：¥{{Number(info.price)*Number(info.projectNumber)}}</text>
 					</view>
 
@@ -52,9 +52,9 @@
 		<view v-if="illustrate!=null&&type!='repair'" style="margin-left:149rpx;font-size: 25rpx;color:#A5A7A7;">
 			{{illustrate}}
 		</view>
-		<view v-if="type!='myOrder'&&type!='repair'" style="text-align: end;margin-top: 7rpx;">
+		<!-- <view v-if="type!='myOrder'&&type!='repair'" style="text-align: end;margin-top: 7rpx;">
 			<text style="font-size: 30rpx;color: #EC5722;">服务费：¥{{Number(info.price)*Number(info.projectNumber)}}</text>
-		</view>
+		</view> -->
 	</view>
 </template>
 

@@ -170,7 +170,7 @@
 
 
 		<view
-			v-if="(newProject.length!=0||showMelList.length!=0)&&info.orderStatus!='服务中【审核驳回】'&&info.orderStatus!='服务中【待上级审核】'&&info.orderStatus!='服务中【客户驳回】'"
+			v-if="(newProject.length!=0||showPartsList.length!=0||showMelList.length!=0)&&info.orderStatus!='服务中【审核驳回】'&&info.orderStatus!='服务中【待上级审核】'&&info.orderStatus!='服务中【客户驳回】'"
 			class="bg">
 			<view v-if="newProject.length!=0" class="projec">
 				<view style="font-size: 33rpx;font-weight: bold;">
@@ -183,16 +183,17 @@
 					<project-card :pro='item' />
 				</view>
 			</view>
+
 			<view v-if="showMelList.length!=0" class="info">
 				<view class="mel-title">
 					<text>维修材料</text>
-					<!-- 	<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text> -->
+			<!-- 		<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text> -->
 				</view>
 				<view v-for="(mfel,fmi) in showMelList" :key="fmi">
 					<view style="font-weight: bold;margin-top: 20rpx;">
 						{{mfel[0].classifyName}}
 					</view>
-					<view class="thumb-box" v-for="(mel,mi) in mfel" :key="mi">
+					<view class="thumb-box-mel" v-for="(mel,mi) in mfel" :key="mi">
 						<view class="no-imgs">
 							<image v-if="mel.materialImg!=null&&mel.materialImg!=''" :src="mel.materialImg"
 								style="width:100%;height:100%;border-radius: 10rpx;">
@@ -233,23 +234,50 @@
 				</view>
 
 			</view>
-			<!--	<view v-if="newProject.length!=0||showMelList.length!=0" style="margin-top: 30rpx;" class="info">
-				<view class="title">
-					项目预估总价
+
+
+			<view v-if="showPartsList.length!=0" class="info">
+				<view class="mel-title">
+					<text>维修材料</text>
+			<!-- 		<text style="font-size: 33rpx;color: #EC5722;">¥{{partsTotal}}</text> -->
 				</view>
-		 	<view class="line">
-					<text class="ziduan">预估人工费</text>
-					<text style="color: #EC5722;">¥{{newTotalPrice}}</text>
+				<view v-for="(mfel,fmi) in showPartsList" :key="fmi">
+					<view style="font-weight: bold;margin-top: 20rpx;">
+						{{mfel[0].oneName}}({{mfel.length}})
+					</view>
+					<view class="thumb-box-parts" v-for="(mel,mi) in mfel" :key="mi">
+						<view class="no-imgs">
+							<image v-if="mel.partsImg&&mel.partsImg!=null" :src="mel.partsImg"
+								style="width:100%;height:100%;border-radius: 10rpx;">
+							</image>
+							<view v-else style="width:100%;height:100%;" class="img-text">
+								<image style="width:90rpx ;height:68rpx;"
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+									mode=""></image>
+								<text>暂无图片</text>
+							</view>
+						</view>
+						<view class="flex-col center">
+							<view style="font-weight: bold;color: #3D3F3E;">{{mel.partsName||'-'}}</view>
+							<view class="line2" style="margin-top: 8rpx;color:#A5A7A7;font-size: 25rpx;">
+								{{mel.partsSpecs||'-'}}
+							</view>
+						</view>
+						<view class="right justify-between">
+							<view class="">
+								¥{{mel.partsPrice}}{{mel.materialUnit!=null?'/'+mel.materialUnit:''}}
+							</view>
+							<view>x{{mel.partsCount }}</view>
+							<view style="color:#EC5722 ;">
+								小计：¥{{Number(mel.partsCount)*Number(mel.partsPrice)}}</view>
+						</view>
+
+
+					</view>
 				</view>
-				<view class="line">
-					<text class="ziduan">加急费</text>
-					<text style="color: #EC5722;">¥{{info.additionalPrice!=null?info.additionalPrice:0}}</text>
-				</view> 
-				<view class="line">
-					<text class="ziduan">合计</text>
-					<text style="color: #EC5722;">¥{{info.additionalPrice!=null?Number(info.additionalPrice)+Number(newTotalPrice):newTotalPrice}}</text>
-				</view>
-			</view>-->
+
+			</view>
+		
 		</view>
 		<view v-if="info.priceFlag == 0" class="bg info" style="margin-top: -20rpx;">
 			<view class="title" style="display: flex;justify-content: space-between;align-items: center;">
@@ -290,6 +318,10 @@
 			<view v-if="info.materialPrice!=null&&info.materialPrice!=0" class="line">
 				<text class="ziduan">材料费</text>
 				<text style="color: #EC5722;">¥{{info.materialPrice}}</text>
+			</view>
+			<view v-if="info.partsPrice!=null&&info.partsPrice!=0" class="line">
+				<text class="ziduan">材料费</text>
+				<text style="color: #EC5722;">¥{{info.partsPrice}}</text>
 			</view>
 			<view class="line">
 				<text class="ziduan">小计：</text>
@@ -736,8 +768,10 @@
 				appraise: {},
 				id: '', //订单id
 				newProject: [], //新项目列表
+				showPartsList: [], //显示的配件格式
 				showMelList: [], //显示的材料格式
 				melTotal: 0, //材料总钱数,
+				partsTotal: 0, //配件总钱数
 				isGet: false, //是否达到起步价
 				workerType: undefined,
 			};
@@ -755,7 +789,7 @@
 				total1 = this.newProject.reduce((pre, item) => {
 					return pre + Number(item.projectPrice) * Number(item.projectNumber)
 				}, 0)
-				let total2 = this.melTotal
+				let total2 = this.showMelList.length != 0 ? this.melTotal : this.partsTotal
 				let total = total1 + total2
 				return total
 			}
@@ -898,43 +932,51 @@
 						})
 						this.newProject = res.data
 
-					})
+					}),
 
-				//新材料
-				order.getNewMaterial(this.id).then(res => {
-					let arr = []
-					arr = res.data
-					const map = new Map()
-					this.melTotal = arr.reduce((pre, item) => {
-						return pre + Number(item.materialPrice) * Number(item.materialCount)
-					}, 0)
-					arr.forEach((item, index, arr) => {
-						//	console.log( Number(item.materialPrice) * Number(item.materialCount),'？？？？？？？');
-						//	this.melTotal =this.melTotal+ Number(item.materialPrice) * Number(item.materialCount)
-						//console.log(this.melTotal);
-						item.materialSpecsList = JSON.parse(item.materialSpecs)
-						// listByIds(item.materialImg).then(res => {
-						// 	// item.img = res.data[0].url
-						// 	console.log(res, 'imgggggggggggg');
-						// 	this.$set(arr[index], 'img', res.data[0].url)
-						// })
-						if (item.materialImg != null) {
-							// listByIds(item.materialImg).then(res => {
-							// 	// item.img = res.data[0].url
-							// 	this.$set(arr[index], 'img', res.data[0].url)
-							// })
-							item.img = item.materialImg.split(',')[0]
-						}
-						if (!map.has(item.classifyId)) {
-							map.set(
-								item.classifyId,
-								arr.filter(a => a.classifyId == item.classifyId)
-							)
-						}
-					})
+					//新配件
+					order.getNewParts(this.id).then(res => {
+						let arr = []
+						arr = res.data
+						const map = new Map()
+						this.partsTotal = arr.reduce((pre, item) => {
+							return pre + Number(item.partsPrice) * Number(item.partsCount)
+						}, 0)
+						arr.forEach((item, index, arr) => {
+							if (!map.has(item.oneName)) {
+								map.set(
+									item.oneName,
+									arr.filter(a => a.oneName == item.oneName)
+								)
+							}
+						})
 
-					this.showMelList = Array.from(map).map(item => [...item[1]])
-				})
+						this.showPartsList = Array.from(map).map(item => [...item[1]])
+					}),
+
+					//新材料
+					order.getNewMaterial(this.id).then(res => {
+						let arr = []
+						arr = res.data
+						const map = new Map()
+						this.melTotal = arr.reduce((pre, item) => {
+							return pre + Number(item.materialPrice) * Number(item.materialCount)
+						}, 0)
+						arr.forEach((item, index, arr) => {
+							item.materialSpecsList = JSON.parse(item.materialSpecs)
+							if (item.materialImg != null) {
+								item.img = item.materialImg.split(',')[0]
+							}
+							if (!map.has(item.classifyId)) {
+								map.set(
+									item.classifyId,
+									arr.filter(a => a.classifyId == item.classifyId)
+								)
+							}
+						})
+
+						this.showMelList = Array.from(map).map(item => [...item[1]])
+					})
 			},
 			//评价
 			appraiseHandle() {
@@ -1028,7 +1070,7 @@
 					id: this.info.orderId,
 					info: this.info,
 					newProject: this.newProject,
-					showMelList: this.showMelList,
+					showMelList: this.showPartsList.length!=0?this.showPartsList:this.showMelList.length,
 					isGet: this.isGet
 				}
 				uni.navigateTo({
@@ -1456,7 +1498,8 @@
 			}
 		}
 
-		.thumb-box {
+		.thumb-box-mel {
+
 			// height: 130rpx;
 			margin-top: 20rpx;
 			display: flex;
@@ -1473,6 +1516,55 @@
 				display: flex;
 				justify-content: space-between;
 			}
+
+
+			.no-imgs {
+				width: 130rpx;
+				height: 130rpx;
+
+
+				.img-text {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					height: 100%;
+					background: #F4F4F4;
+					border-radius: 11rpx;
+
+					text {
+						font-size: 21rpx;
+						color: #A4D091;
+					}
+				}
+
+
+			}
+
+
+		}
+
+
+		.thumb-box-parts {
+			height: 130rpx;
+			margin-top: 20rpx;
+			display: flex;
+			align-items: center;
+
+			.center {
+				height: 100%;
+				width: 47%;
+				margin-left: 15rpx;
+			}
+
+			.right {
+				height: 100%;
+				flex-direction: column;
+				margin-left: 14rpx;
+				text-align: end;
+				width: 30%;
+			}
+
 
 
 			.no-imgs {
