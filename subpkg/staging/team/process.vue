@@ -79,7 +79,8 @@
 					<view class="invite_list-item-time acea-row">
 						<!-- 	{{item.createTime}} 提交 -->
 						<view class="invite_list-item-time-btn acea-row">
-							<view @click="showPhoneHandle(item.cellPhone,JSON.stringify(item))">联系ta</view>
+							<view @click="showPhoneHandle(item.cellPhone,JSON.stringify(item))">联系ta
+							</view>
 							<view v-if="item.status==0" @click="toSet(JSON.stringify(item),1)">信息审核</view>
 						</view>
 					</view>
@@ -108,7 +109,8 @@
 				<view class="popMoney-set acea-row row-middle">
 					<text style="margin-right: 50rpx;">审核结果</text>
 					<u-radio-group v-model="whereSh.status" placement="row">
-						<u-radio style="margin-right: 60rpx;" activeColor="#F3B23E" :name="1" label="审核通过"></u-radio>
+						<u-radio activeColor="#F3B23E" :name="1" label="审核通过"></u-radio>
+						<text style="margin-right: 50rpx;"></text>
 						<u-radio activeColor="#F3B23E" :name="2" label="审核驳回"></u-radio>
 					</u-radio-group>
 				</view>
