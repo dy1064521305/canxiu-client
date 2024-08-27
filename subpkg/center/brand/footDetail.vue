@@ -12,7 +12,7 @@
 			</view>
 			<view class="box-item acea-row row-between-wrapper">
 				<text>佣金金额</text>
-				<text>{{info.commission||'-'}}</text>
+				<text>￥ {{info.commission||'0'}}</text>
 			</view>
 			<view class="box-item acea-row row-between-wrapper">
 				<text>收款账号</text>
@@ -23,11 +23,11 @@
 		<view class="box">
 			<view class="box-item acea-row row-between-wrapper">
 				<text>维保优惠比例</text>
-				<text>{{info.maintenanceRatio||'-'}}</text>
+				<text>{{info.maintenanceRatio||'0'}}%</text>
 			</view>
 			<view class="box-item acea-row row-between-wrapper">
 				<text>维修优惠比例</text>
-				<text>{{info.repairRatio||'-'}}</text>
+				<text>{{info.repairRatio||'0'}}%</text>
 			</view>
 			<view class="box-item acea-row row-between-wrapper">
 				<text>集团支付</text>
@@ -50,7 +50,9 @@
 		<view class="box">
 			<view class="box-item acea-row row-between-wrapper">
 				<text>业务经理</text>
-				<text>{{info.exclusiveSale||'-'}}</text>
+				<text>{{info.exclusiveSale||'-'}} <text style="color: #323233;;"
+						v-if="info.exclusiveSaleId">/{{info.exclusiveSaleId||'-'}}
+					</text> </text>
 			</view>
 			<view class="box-item acea-row row-between-wrapper">
 				<text>客服人员</text>

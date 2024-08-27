@@ -11,7 +11,8 @@
 				</image> -->
 				<!-- <image :src="tempImage" style="width: 375px; height: 667px;"></image> -->
 				<!-- 画布 -->
-				<canvas canvas-id="myCanvas" style="width: 628rpx;height: 100%;position: absolute;"></canvas>
+				<canvas canvas-id="myCanvas" style="width: 628rpx;position: absolute;"
+					:style="{'height':(460 * powerW)+'px'}"></canvas>
 				<!-- <button type="warn" class="btn" @click="exportPost">保存海报</button> -->
 			</view>
 			<view class="bottom-btns acea-row">
@@ -55,6 +56,7 @@
 		saveImage,
 		appOpenWeixin
 	} from '@/utils/index.js'
+	import $cache from '@/utils/cache';
 
 	export default {
 		name: 'PopupShareActivity',
@@ -91,11 +93,13 @@
 				poster: '',
 				needLongTapSaveImg: false,
 				tempFilePath: "",
+				tempFilePath2: "",
 				initImagePath: "",
 				ctx: '',
 				img1Path: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/22/354f6d1cb13e4dc7952282e9b082f10c.png', // 图片背景路径
 				img2Path: 'https://f0.0sm.com/node0/2024/04/86617AFED06414DC-b3ee7cb6d2a73d90.png', // 图片二维码路径
-				params: {}
+				params: {},
+				powerW: 0
 
 			}
 		},
@@ -105,6 +109,7 @@
 			this.winW = sys.windowWidth;
 			// 获取屏幕宽度比率
 			this.powerW = uni.getSystemInfoSync().windowWidth / 375;
+			console.log(this.powerW, 'this.powerW');
 			// console.log(this.powerW, '宽度比率');
 
 
@@ -123,10 +128,10 @@
 			// 合并图片的方法
 			async mergeImages(show) {
 				console.log(show, 'show');
+
 				// 创建画布 初始化canvas上下文
 				const ctx = uni.createCanvasContext('myCanvas', this);
 				// 加载第一张图片到canvas上
-				console.log(this.params.img, 'this.params.img');
 				const image1 = await this.loadImage(this.params.img);
 
 				// 在(0,0)位置绘制图片1，图一宽高分别为345px和334px
@@ -152,13 +157,14 @@
 				ctx.drawImage(image1, 0, 0, 310 * this.powerW, 460 * this.powerW);
 
 
+
 				// 加载第二张图片到canvas上，并设置位置和大小（根据需要调整）
 				const image2 = await this.loadImage(this.poster);
 				// 在(10,209)位置绘制图片2,图片二宽高75px，可以根据需要调整位置和大小
 				if (this.params.index == 1) {
 					ctx.drawImage(image2, 125 * this.powerW, 270 * this.powerW, 72 * this.powerW, 70 * this.powerW);
 				} else {
-					ctx.drawImage(image2, 125 * this.powerW, 270 * this.powerW, 72 * this.powerW, 70 * this.powerW);
+					ctx.drawImage(image2, 118 * this.powerW, 266 * this.powerW, 72 * this.powerW, 70 * this.powerW);
 				}
 
 				// 加载第二张图片到canvas上，并设置位置和大小（根据需要调整）
@@ -197,15 +203,13 @@
 					// 这里可以处理合并后的图片，比如保存到相册或上传到服务器等操作。
 					// 如果需要导出为文件或上传等操作，可以使用uni.canvasToTempFilePath等方法。	
 					setTimeout(() => {
-						console.log(5555568788999, "r000000000");
 						uni.canvasToTempFilePath({ // res.tempFilePath临时路径
 							canvasId: 'myCanvas',
 							success: (res) => {
-								console.log(res, "res.tempFilePath");
+								$cache.set('shareParamsImg', res.tempFilePath)
 								this.tempFilePath = res.tempFilePath
 								if (show) return
-								uni.saveImageToPhotos
-								Album({ // 保存本地
+								uni.saveImageToPhotosAlbum({ // 保存本地
 									filePath: res.tempFilePath,
 									success: (response) => {
 										uni.showToast({
@@ -244,6 +248,7 @@
 						}, this)
 					}, 1000)
 				})());
+
 			},
 
 			circleImg(ctx, img, x, y, r) {
@@ -280,8 +285,23 @@
 				console.log(999);
 				this.show = false;
 				this.$emit('hideMask');
+				this.clear()
+			},
+
+			//清空画布
+			clear() {
+				const ctx = uni.createCanvasContext('myCanvas', this);
+				uni.getSystemInfo({
+					success: function(res) {
+						let canvasw = res.windowWidth;
+						let canvash = res.windowHeight;
+						ctx.clearRect(0, 0, canvasw, canvash);
+						ctx.draw(true);
+					},
+				})
 			},
 			open(poster, params) {
+
 				this.params = params || {}
 				// if (checkAuth(1) !== 200) return;
 				if (poster && typeof poster == 'string') {
@@ -303,11 +323,35 @@
 
 			},
 			sharePoster() {
-				this.hideMask();
+				// this.hideMask();
 				// #ifdef MP-WEIXIN
 				// #endif
 				// #ifndef MP-WEIXIN
-				shareImage(this.tempFilePath);
+				// shareImage(this.tempFilePath);
+				let info = this.params
+				console.log(info, "info");
+				if (info.index == 1) {
+					let params = {
+						imageUrl: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/24/899f507562e247549ee0bddb40b62348.png',
+						title: '餐修专注智能报修服务，提升故障报修效率！',
+						path: 'subpkg/center/brand/inviter?id=' + info.id,
+						// let url = '/subpkg/center/brand/inviter?id=' + this.partnerInfo.partnerId
+						// 分享的app体验版
+						type: 2
+					}
+					appOpenWeixin(params);
+				} else {
+					let params = {
+						imageUrl: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/22/d6ba47b337714a0e8ffad99d0fb9fe2d.png',
+						title: '餐修百万合伙人招募计划',
+						path: 'subpkg/car/partner/new?userId=' + info.userId,
+						// let url = '/subpkg/center/brand/inviter?id=' + this.partnerInfo.partnerId
+						// 分享的app体验版
+						type: 2
+					}
+					appOpenWeixin(params);
+				}
+
 				// #endif
 			},
 			shareMoments() {
@@ -327,7 +371,6 @@
 					type: 2,
 					imageUrl: this.tempFilePath,
 					success: function(res) {
-
 						this.$toast(JSON.stringify(res))
 					},
 					fail: function(err) {
@@ -357,8 +400,10 @@
 				// 		icon: 'none'
 				// 	})
 				// });
+				let img = $cache.get('shareParamsImg')
+				console.log(img, "22");
 				uni.saveImageToPhotosAlbum({ // 保存本地
-					filePath: this.tempFilePath,
+					filePath: img,
 					success: (response) => {
 						uni.showToast({
 							title: '保存成功',

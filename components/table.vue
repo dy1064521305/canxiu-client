@@ -1,17 +1,18 @@
 <template>
 	<view class="vant-table">
 		<table cellspacing="0" style="width:100%" class="table">
-			<tr>
-				<th class="th"
+			<tr class="acea-row row-middle row-center" style="box-sizing: border-box;">
+				<th class="th acea-row row-middle row-center"
 					:style="{backgroundColor: thBg,color:thColor,height: thHeight+'rpx',fontSize:thSize+'rpx',width:item.width}"
 					v-for="(item, index) in option.column" :key="index">
 					{{ item.label }}
 				</th>
 			</tr>
 			<tr v-for="(item, index) in tableData" :key="index" class="list-tr">
-				<td class="td"
-					:style="{backgroundColor: tdBg,color:tdColor,height: tdHeight+'rpx',textAlign: align,fontSize:tdSize+'rpx'}"
-					v-for="(context, i) in option.column" :key="i">{{ item[context.prop] }}</td>
+				<td class="td acea-row row-middle row-center" v-for="(context, i) in option.column" :key="i"
+					:style="{backgroundColor: tdBg,color:tdColor,height: tdHeight+'rpx',textAlign: align,fontSize:tdSize+'rpx' ,width:context.width}">
+					{{ item[context.prop] }}
+				</td>
 			</tr>
 		</table>
 		<!-- <view class="table_page">
@@ -89,16 +90,18 @@
 		.table {
 			border-radius: 10rpx;
 			font-family: PingFangSC, PingFang SC;
+			box-sizing: border-box;
 
 			.th {
-				height: 1.074074rem;
-				line-height: 1.074074rem;
+				// height: 1.074074rem;
+				// line-height: 1.074074rem;
 				background-color: #ccc;
 				text-align: center;
 				border-top-left-radius: 10rpx;
 				border-top-right-radius: 10rpx;
 				border-right: 1rpx solid #f1f1f1;
 				border-bottom: 1rpx solid #f1f1f1;
+				box-sizing: border-box;
 			}
 
 			.th:nth-last-child(1) {
@@ -106,15 +109,16 @@
 			}
 
 			.list-tr {
-				height: 1.074074rem;
-				line-height: 1.074074rem;
-
-
+				// height: 1.074074rem;
+				// line-height: 1.074074rem;
+				display: flex;
 			}
 
 			.td {
+
 				border-right: 1rpx solid #f1f1f1;
 				border-bottom: 1rpx solid #f1f1f1;
+				box-sizing: border-box;
 			}
 
 			.td:nth-last-of-type(1) {

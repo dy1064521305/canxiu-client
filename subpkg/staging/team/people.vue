@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<z-paging ref="paging" v-model="dataList" @query="getList" @onRefresh='refresh'>
+		<z-paging ref="paging" v-model="dataList" @query="getList" @onRefresh='refresh()'>
 			<view slot='top'>
 				<view class="data-box acea-row row-middle">
 					<view class="input acea-row row-middle">
@@ -20,7 +20,7 @@
 							<view class="input-s" @click="search()"></view>
 						</view>
 					</view>
-					<view style="font-size: 26rpx;color: #555; margin-left: 16rpx;" @click="refresh">
+					<view style="font-size: 26rpx;color: #555; margin-left: 16rpx;" @click="refresh()">
 						重置
 					</view>
 					<view style="width: 100%; margin-top: 16rpx;">
@@ -53,7 +53,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="list_box" v-show="type==0">
+			<view class="list_box" v-if="type==0">
 				<view class="list" v-for="(item,index) in dataList" :key="index">
 					<view class="box acea-row row-middle">
 						<view class="box-image">
@@ -114,7 +114,7 @@
 					</view>
 				</view>
 			</view>
-			<Table v-show="type==1" :tableData='tableData' :total="total" @changeTable="changeTable" :where="where"
+			<Table v-else="type==1" :tableData='tableData' :total="total" @changeTable="changeTable" :where="where"
 				:option="option"></Table>
 		</z-paging>
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect_two' :closeOnClickOverlay='false'
@@ -159,7 +159,7 @@
 
 					<view class="btns" style="justify-content: space-evenly;margin-top: 80rpx;">
 
-						<view class="btn-white" @click="refresh">重置</view>
+						<view class="btn-white" @click="refresh(1)">重置</view>
 						<view @click="queryList" class="btn-green">确认</view>
 					</view>
 				</view>
@@ -285,19 +285,14 @@
 						this.dataList = []
 					}
 					this.$refs.paging.completeByTotal(res.rows, res.total);
-
-				})
-			},
-			getSaleInfo() {
-
-				getTeamList(this.where).then(res => {
-					this.tableData = res.rows
 					this.total = res.total
+					this.tableData = res.rows
 					this.tableData.forEach((item) => {
 						item.partnerType = item.partnerType == 1 ? '中级合伙人' : item.partnerType == 2 ?
 							'高级合伙人' :
 							'初级合伙人'
 					})
+
 				})
 			},
 			changeTable(e) {
@@ -374,7 +369,7 @@
 				this.type = this.type == 0 ? 1 : 0
 				if (this.type) {
 					this.where.pageSize = 1000
-					this.getSaleInfo()
+					this.$refs.paging.reload();
 				} else {
 					this.$refs.paging.reload();
 					this.where.pageSize = 10
@@ -421,22 +416,27 @@
 					this.endTime = ''
 				}
 			},
-			refresh() {
-				this.reset()
+			refresh(i) {
+				if (i) {
+					this.where.endTime = ''
+					this.where.startTime = ''
+					this.endTime = ''
+					this.startTime = ''
+				} else {
+					this.where.endTime = ''
+					this.where.startTime = ''
+					this.endTime = ''
+					this.startTime = ''
+					this.where.relationType = ''
+					this.where.regionList = ""
+					this.where.region = ''
+					this.where.realName = ''
+					this.where.cellPhone = ''
+					this.searchValue = ''
+				}
 				// this.getNum()
 				this.$refs.paging.reload();
-			},
-			reset() {
-				this.where.endTime = ''
-				this.where.startTime = ''
-				this.endTime = ''
-				this.startTime = ''
-				this.where.relationType = ''
-				this.where.regionList = ""
-				this.where.region = ''
-				this.where.realName = ''
-				this.where.cellPhone = ''
-			},
+			}
 		}
 	}
 </script>

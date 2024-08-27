@@ -28,7 +28,7 @@
 						</view>
 						<view class="name  flex-colum">
 							<view class="name-left">
-								{{userInfo.clientName}}
+								{{userInfo.clientName||'暂无'}}
 							</view>
 							<!-- 	<view class="grade" @click.stop="$jump('/subpkg/car/partner/index')"
 								v-if="partnerInfo==null">
@@ -71,8 +71,7 @@
 					</view>
 				</view>
 				<view class="teamMy acea-row row-between-wrapper" v-if="partnerInfo != null">
-					<view class="teamMy-item flex-colum"
-						@click="$jump('/subpkg/staging/team/index?partnerId='+partnerInfo.partnerId)">
+					<view class="teamMy-item flex-colum" @click="$jump('/subpkg/staging/team/index')">
 						<view class="acea-row row-between-wrapper">
 							<text style="font-size: 32rpx;">团队管理</text>
 							<u-icon name="arrow-right" color="#AEDD94" size="16"></u-icon>
@@ -389,7 +388,8 @@
 						id: 5,
 						label: '邀请品牌',
 						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/9e22b888d28e43f9bbec2316ea9c364b.png',
-						url: "/subpkg/center/brand/inviterQrCode"
+						// url: "/subpkg/center/brand/inviterQrCode"
+						url: "/subpkg/center/brand/MyinviterQrCode"
 					},
 					{
 						id: 6,

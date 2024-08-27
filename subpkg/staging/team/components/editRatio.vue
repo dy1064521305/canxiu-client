@@ -10,7 +10,7 @@
 							placeholder="请输入（0.00~100%）" border="surround" clearable></u--input>
 						<view class="input_s">%</view>
 					</view>
-					<view class="pages-message" v-if="type">
+					<view class="pages-message" v-if="type==1">
 						<view style="margin-left: -14rpx;">【规则说明】 </view>
 						<view>
 							<view>1、奖励说明：当该合伙人自己所推广的品牌门店下单时，所获得的利润奖励。</view>

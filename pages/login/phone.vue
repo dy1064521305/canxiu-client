@@ -30,13 +30,13 @@
 		bindIds
 	} from '@/api/login.js'
 	import {
-		getInfoById,
+		getInfoById
 	} from '@/api/user.js'
 	import $cache from '@/utils/cache.js';
 	import {
 		TABBAR_PATH
 	} from '@/config/environment.js'
-	const SECOND = 60;
+	const SECOND = 60
 	export default {
 		data() {
 			return {
@@ -76,16 +76,15 @@
 				if (!that.canSend) return false;
 				that.sending = true;
 				getCode({
-					phonenumber: that.phone,
+					phonenumber: that.phone
 				}).then(res => {
-					that.$toast('发送成功！', 'success');
+					that.$toast('发送成功', 'success');
 					that.countdown();
 					that.sending = false;
 				}).catch(msg => {
 					that.$alert(msg);
 					that.sending = false;
 				})
-
 			},
 			countdown() {
 				this.send.timer = setInterval(() => {
@@ -146,92 +145,73 @@
 					}
 					// #ifdef APP-PLUS
 					plus.push.getClientInfoAsync((info) => {
-							let cid = info["clientid"];
-							bindIds({
-								clientId: info["clientid"],
-								userId: result.data.clientId
-							}).then(res => {
-								this.loading = false;
-							})
-						}),
-						// #endif
-						// #ifndef APP-PLUS
-						getInfoById(result.data.clientId).then(res => {
-							console.log(res);
+						let cid = info["clientid"];
+						bindIds({
+							clientId: info["clientid"],
+							userId: result.data.clientId
+						}).then(res => {
 							this.loading = false;
-							this.userInfo = res.data
-							uni.setStorageSync(`isLogin${storage.get('ClientId')}`, true)
-							let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
-							if (result.data.type == 'Success' && res.data.customerStoreId) {
-								const pages = uni.$u.pages();
-								console.log(pages);
-								apps.type = 'login'
-								if (pages.some(p => p.route.includes('goodDetails'))) {
-									var pagess = getCurrentPages();
-									var prevPage = pagess[pagess.length - 2]; //上一个页面
-									var object = {
-										name: "back"
-									}
-									prevPage.$vm.otherFun(object);
-									uni.navigateBack()
-								} else {
-									// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
-									let back_url = $cache.get('authBackUrl');
-									this.loading = false;
-									$cache.clear('authBackUrl');
-									if (back_url) {
-										this.$jump('redirectTo:/' + back_url);
-									} else {
-										this.$toast('登录成功')
-										setTimeout(() => {
-											this.$jump(-1);
-										}, 500)
-									}
-									// uni.switchTab({
-									// 	url: '/pages/home/index',
-									// 	fail(err) {
-									// 		console.log(err)
-									// 	}
-									// })
-								}
-
-							} else {
-								let info = {
-									type: 'login',
-									storeInfo: {
-										storeImg: res.data.storeImg,
-										storeName: res.data.storeName,
-										storeTypeId: res.data.storeTypeId,
-									}
-								}
-								uni.navigateTo({
-									url: '../../subpkg/center/myStore/addStore/addStore?info=' +
-										encodeURIComponent(JSON.stringify(info))
-								})
-							}
 						})
-
+					})
 					// #endif
-					// if (!user.phone) {
-					// 	this.$toast('登录成功！请绑定手机号').then(() => {
-					// 		this.loading = false;
-					// 		this.$jump('redirectTo://pages/auth/phone');
-					// 	});
-					// } else if (!user.spread_uid) {
-					// 	this.$toast('登录成功！请绑定邀请人').then(() => {
-					// 		this.loading = false;
-					// 		this.$jump('redirectTo://pages/auth/spread');
-					// 	});
-					// } else {
-					// 	let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
-					// 	this.$toast('登录成功！', 'success').then(() => {
-					// 		this.loading = false;
-					// 		$cache.clear('authBackUrl');
-					// 		this.$jump('redirectTo:/' + back_url);
-					// 	});
-					// }
-				});
-			},
+					// #ifndef APP-PLUS
+					getInfoById(result.data.clientId).then(res => {
+						console.log(res);
+						this.loading = false;
+						this.userInfo = res.data
+						uni.setStorageSync(`isLogin${storage.get('ClientId')}`, true)
+						let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
+						if (result.data.type == 'Success' && res.data.customerStoreId) {
+							const pages = uni.$u.pages();
+							console.log(pages);
+							apps.type = 'login'
+							if (pages.some(p => p.route.includes('goodDetails'))) {
+								var pagess = getCurrentPages();
+								var prevPage = pagess[pagess.length - 2]; //上一个页面
+								var object = {
+									name: "back"
+								}
+								prevPage.$vm.otherFun(object);
+								uni.navigateBack()
+							} else {
+								// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
+								let back_url = $cache.get('authBackUrl');
+								this.loading = false;
+								$cache.clear('authBackUrl');
+								if (back_url) {
+									this.$jump('redirectTo:/' + back_url);
+								} else {
+									this.$toast('登录成功')
+									setTimeout(() => {
+										this.$jump(-1);
+									}, 500)
+								}
+								// uni.switchTab({
+								// 	url: '/pages/home/index',
+								// 	fail(err) {
+								// 		console.log(err)
+								// 	}
+								// })
+							}
+
+						} else {
+							let info = {
+								type: 'login',
+								storeInfo: {
+									storeImg: res.data.storeImg,
+									storeName: res.data.storeName,
+									storeTypeId: res.data.storeTypeId,
+								}
+							}
+							uni.navigateTo({
+								url: '../../subpkg/center/myStore/addStore/addStore?info=' +
+									encodeURIComponent(JSON.stringify(info))
+							})
+						}
+					})
+					// #endif
+				})
+			}
 		}
 	}
 </script>

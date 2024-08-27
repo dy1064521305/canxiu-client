@@ -499,8 +499,9 @@
 				uni.createSelectorQuery().in(this)
 					.select("#main-flag-0")
 					.boundingClientRect((data) => {
-						console.log(data, '......data.............510');
-						this.mainFlagTop = data.top
+						if (data) {
+							this.mainFlagTop = data.top
+						}
 					})
 					.exec();
 			})

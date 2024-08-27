@@ -93,7 +93,6 @@
 			//#ifdef MP
 			// 小程序获取手机号码
 			getphonenumber(e) {
-
 				if (!this.checkedLogin) return this.$toast('请勾选相关协议')
 				uni.showLoading({
 					title: '加载中'
