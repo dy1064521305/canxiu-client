@@ -580,10 +580,11 @@ export function appOpenWeixin(params) {
 						path: params.path,
 						type: params.type || 0,
 						// webUrl: 'https://m.reduxingke.com/down/app.html'
+						webUrl: ''
 					},
 					success: ret => {
 						console.log(JSON.stringify(ret));
-					}
+					},
 				});
 			} else {
 				return Toast('未检测到微信')

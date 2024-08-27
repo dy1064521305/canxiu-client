@@ -95,10 +95,10 @@
 				</view>
 			</view>
 		</u-popup>
-		<view class="jsImg" @click="$jump('/subpkg/center/brand/footRewrad')">
+		<!-- <view class="jsImg" @click="$jump('/subpkg/center/brand/footRewrad')">
 			<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/10/803423d8f59340f1b5f57f36525da075.png"
 				mode=""></image>
-		</view>
+		</view> -->
 	</view>
 </template>
 

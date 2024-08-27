@@ -52,7 +52,7 @@
 					this.tableData = res.rows
 					this.tableData.forEach((item) => {
 						item.bonusRatio = item.bonusRatio + '%'
-						item.createTime = formatter.formatDate(item.createTime, 'yyyy-MM-dd')
+						item.createTime = formatter.formatDate(item.createTime, 'yyyy-MM-dd') || '-'
 					})
 				})
 			}

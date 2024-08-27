@@ -11,7 +11,7 @@
 				</view>
 				<view class="value">
 					<view class="text acea-row row-middle"> {{partnerInfo.profitSharing||0}}%
-						<view class="acea-row" v-if="!partnerInfo.profitSharingAuditStatus"
+						<view class="acea-row row-middle" v-if="!partnerInfo.profitSharingAuditStatus"
 							style="color:#3882F1 ; margin-left: 12rpx;" @click="editR(1)">修改 <u-icon name="arrow-right"
 								color="#3882F1" style="margin-top: 4rpx;" size="13"></u-icon></view>
 					</view>
@@ -24,8 +24,8 @@
 				</view>
 				<view class="value">
 					<view class="text  acea-row row-middle"> {{partnerInfo.orderConsumeSharing||0}}%
-						<view v-if="!partnerInfo.orderConsumeSharingAuditStatus" class="acea-row"
-							style="color:#3882F1 ; margin-left: 12rpx;" @click="editR()">修改 <u-icon name="arrow-right"
+						<view v-if="!partnerInfo.orderConsumeSharingAuditStatus" class="acea-row row-middle"
+							style="color:#3882F1 ; margin-left: 12rpx;" @click="editR(2)">修改 <u-icon name="arrow-right"
 								color="#3882F1" style="margin-top: 4rpx;" size="13"></u-icon></view>
 					</view>
 				</view>
@@ -139,8 +139,9 @@
 				})
 			},
 			editR(i) {
-				this.editType = i
-				if (i) {
+				this.editType = '' + i
+				console.log(this.editType, "editType");
+				if (i == 1) {
 					this.radioTitle = '修改业务推广分成比例'
 				} else {
 					this.radioTitle = '修改订单消化分成比例 '
@@ -156,7 +157,7 @@
 				let data = {
 					userId: storage.get('ClientId'),
 					editPartnerId: this.partnerId,
-					type: this.editType ? 1 : 2,
+					type: this.editType,
 					sharing: e
 				}
 				postEditSharing(data).then(res => {

@@ -340,7 +340,7 @@
 				});
 			},
 			toLoginSms() {
-				this.$jump('redirectTo://pages/login/index');
+				// this.$jump('redirectTo://pages/login/index');
 			},
 			//#ifdef APP-PLUS
 			wechatLogin() {

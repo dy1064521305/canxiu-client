@@ -38,9 +38,6 @@
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/eb78f3eb65ec46fc92b1245b17c64838.png"
 							mode=""></image>
 					</view>
-					<view style="width: 100%; margin-top: 16rpx;">
-						<u-tabs :list="statusList" @click="tabClick" lineColor="#A4D091" :scrollable='false'></u-tabs>
-					</view>
 
 				</view>
 				<view class="header-type">
@@ -56,8 +53,9 @@
 				<view class="invite_list-item" v-for="item in dataList" :key="item.id">
 					<view class="invite_list-item-top acea-row row-between-wrapper">
 						<text>申请人：{{item.applyName}}</text>
-						<view class="invite_list-item-top-status">
-							待审核
+						<view class="invite_list-item-top-status"
+							:style="{color:item.status=='1'?'#A4D091':item.status=='2'?'#E02020':'#F3B23E'}">
+							{{item.status=='1'?'已通过':item.status=='2'?'已驳回':'待审核'}}
 						</view>
 					</view>
 					<view class="invite_list-item-mess">
@@ -73,7 +71,7 @@
 							<text>提交时间：</text>
 							<view class="">{{item.updateTime||'-'}}</view>
 						</view>
-						<view class="invite_list-item-mess-evey acea-row">
+						<view class="invite_list-item-mess-evey acea-row" v-if="item.status==1||item.status==2">
 							<text>审核备注：</text>
 							<view class="">{{item.remark||'-'}}</view>
 						</view>
@@ -105,7 +103,7 @@
 		</u-popup>
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect_three' :closeOnClickOverlay='false'
 			:actions="showActTypeChange" :show="showAction_three"></u-action-sheet>
-		<PopupBottom :title="shenheTitle" :show="accountShow" @close="accountShow=false;" @confirm="confirmSelect">
+		<PopupBottom :title="shenheTitle" :show="accountShow" @tap-mask="close()" @close="close()">
 			<view class="popMoney" style="margin-top: 30rpx;" v-if="shenheTitle=='立即审核'">
 				<view class="popMoney-set acea-row row-middle">
 					审核结果
@@ -125,12 +123,13 @@
 				<view class="popContent-title">
 					审核类型
 				</view>
-				<view class="popContent-con">
-					<view class="popContent-con-item acea-row row-middle row-center" :class="{on:value==item.value}"
-						v-for="(item,index) in shenheType" :key="index">
+				<view class="popContent-con acea-row row-between-wrapper">
+					<view class="popContent-con-item acea-row row-middle row-center" @click="add(item.value)"
+						:class="{on:item.activity}" v-for="(item,index) in shenheType" :key="index">
 						{{item.label}}
 					</view>
 				</view>
+				<view class="btn" @click="close()">保存编辑</view>
 			</view>
 		</PopupBottom>
 	</view>
@@ -159,9 +158,21 @@
 			return {
 				shenheTitle: "立即审核",
 				shenheType: [{
-					label: "全部类型",
-					value: ""
-				}],
+						label: "全部类型",
+						value: "",
+						activity: false
+					},
+					{
+						label: "业务推广分成比例",
+						value: "1",
+						activity: false
+					},
+					{
+						label: "订单消耗分成比例",
+						value: "2",
+						activity: false
+					},
+				],
 				value: "",
 				accountShow: false,
 				showAction_three: false,
@@ -199,7 +210,7 @@
 					}
 				],
 				showActTypeChange: [{
-						name: '真实姓名'
+						name: '申请人'
 					},
 					{
 						name: '手机号码'
@@ -216,10 +227,10 @@
 					status: "",
 					realName: "",
 					cellphone: "",
-					typeList: "",
 					auditSource: 0,
 					pageNum: 1,
 					pageSize: 10,
+					typeList: []
 				},
 				whereSh: {
 					status: 1,
@@ -238,7 +249,7 @@
 				backShow: false,
 				moveShow: false,
 				searchActValue: "",
-				whereActType: '真实姓名'
+				whereActType: '申请人'
 			}
 		},
 		onPageScroll(e) {
@@ -265,6 +276,7 @@
 				uni.showLoading({
 					mask: true
 				});
+				this.where.auditSource = this.where.auditSource
 				getAuditList(this.where).then(res => {
 					uni.hideLoading();
 					this.$refs.paging.completeByTotal(res.rows, res.total);
@@ -329,6 +341,20 @@
 					this.$jump('/subpkg/center/brand/inviter?id=' + data.partnerId)
 				})
 			},
+			searchActivity(i) {
+				if (i) {
+					if (this.whereActType == '申请人') {
+						this.where.realName = this.searchActValue
+						this.where.cellphone = ""
+					} else {
+						this.where.cellphone = this.searchActValue
+						this.where.realName = ""
+					}
+				} else {
+					this.where.realName = this.where.cellphone = this.searchActValue = ''
+				}
+				this.$refs.paging.reload()
+			},
 			actionSelect_three(e) {
 				console.log(e, "type///");
 				if (e.name == '取消') {
@@ -342,9 +368,31 @@
 			edit() {
 				putTeamAudit(this.whereSh).then(res => {
 					this.$toast('操作成功')
-					this.noCardShow = false
+					this.accountShow = false
 					this.$refs.paging.reload();
 				})
+			},
+			add(value) {
+				this.shenheType.forEach(item => {
+					if (item.value == value) {
+						item.activity = !item.activity
+						if (item.activity) {
+							this.where.typeList.push(item.value)
+						} else {
+							this.where.typeList = this.where.typeList.filter(i => i != item.value);
+						}
+					}
+
+				})
+
+			},
+			close() {
+				if (this.shenheTitle == '立即审核') {
+					this.accountShow = false;
+				} else {
+					this.accountShow = false;
+					this.$refs.paging.reload();
+				}
 			}
 		}
 	}
@@ -521,7 +569,7 @@
 
 	.data-box {
 		background: #fff;
-		padding: 22rpx 22rpx 0 22rpx;
+		padding: 22rpx 22rpx 20rpx 22rpx;
 
 		&.on {
 			padding: 22rpx 22rpx 22rpx 22rpx;
@@ -681,6 +729,20 @@
 					color: #FFFFFF;
 				}
 			}
+		}
+
+		.btn {
+			height: 80rpx;
+			background: $pageBorder;
+			border-radius: 8rpx;
+			font-family: PingFangSC, PingFang SC;
+			font-weight: bold;
+			font-size: 30rpx;
+			color: #FFFFFF;
+			line-height: 80rpx;
+			text-align: center;
+			margin-top: 42rpx;
+			margin: 200rpx 30rpx 20rpx;
 		}
 	}
 </style>

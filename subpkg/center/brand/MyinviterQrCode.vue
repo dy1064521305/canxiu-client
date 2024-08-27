@@ -107,25 +107,30 @@
 					}
 				],
 
-				typeIndex: 2,
+				typeIndex: 1,
 				paramsInfo: {},
-				pyqPopShow: false
+				pyqPopShow: false,
+				userId: storage.get('ClientId')
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			if (options && options.userId) {
+				this.userId = options.userId
+				console.log(this.userId, "	this.userId ");
+			}
 			// this.code = `${environment.baseURL}/partner/partner/getQrCode?userId=${storage.get('ClientId')}`
 			// this.inviteCode =
 			// 	`${environment.baseURL}/partner/partner/invite/partner/getQrCode?userId=${storage.get('ClientId')}`
 			this.code =
-				`${environment.baseURL}/partner/partner/invite/brand/getAppletQrCode?userId=${storage.get('ClientId')}`
+				`${environment.baseURL}/partner/partner/invite/brand/getAppletQrCode?userId=${this.userId}`
 			this.inviteCode =
-				`${environment.baseURL}/partner/partner/invite/partner/getAppletQrCode?userId=${storage.get('ClientId')}`
+				`${environment.baseURL}/partner/partner/invite/partner/getAppletQrCode?userId=${this.userId}`
 			this.getInfo()
 		},
 
 		methods: {
 			getInfo() {
-				putImmediate(storage.get('ClientId')).then(res => {
+				putImmediate(this.userId).then(res => {
 					this.partnerInfo = res.data
 				})
 			},
@@ -138,7 +143,8 @@
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/24/483f2847677542139642e508c856d024.png",
 						name: this.partnerInfo.realName,
 						avatar: this.partnerInfo.avatarUrl,
-						index: this.typeIndex
+						index: this.typeIndex,
+						id: this.partnerInfo.partnerId
 					}
 					this.$refs.share.open(this.code, this.paramsInfo);
 				} else {
@@ -146,7 +152,8 @@
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/24/a33ff0feed504c7897f0a1ff86a358b7.png",
 						name: this.partnerInfo.realName,
 						avatar: this.partnerInfo.avatarUrl,
-						index: this.typeIndex
+						index: this.typeIndex,
+						userId: this.userId
 					}
 					this.$refs.share.open(this.inviteCode, this.paramsInfo);
 				}
@@ -179,7 +186,6 @@
 		},
 		//#ifdef MP-WEIXIN
 		onShareAppMessage() {
-
 			return new Promise((resolve, reject) => {
 				if (this.typeIndex == 1) {
 					let url = '/subpkg/center/brand/inviter?id=' + this.partnerInfo.partnerId
@@ -190,18 +196,32 @@
 					}
 					resolve(data)
 				} else {
-					let url = '/subpkg/car/partner/new?userId=' + storage.get('ClientId')
+					let url = '/subpkg/car/partner/new?userId=' + this.userId
 					let data = {
 						title: '餐修百万合伙人招募计划！',
 						path: url,
 						imageUrl: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/22/d6ba47b337714a0e8ffad99d0fb9fe2d.png',
 					}
-					// data.path = url + '&spread=' + uid + '&incode=' + incode + '&noAuth=1';
 					resolve(data)
 				}
-				// data.path = url + '&spread=' + uid + '&incode=' + incode + '&noAuth=1';
-
 			})
+		},
+		onShareTimeline() {
+			if (this.typeIndex == 1) {
+				return {
+					query: `userId=${this.userId}`,
+					title: '餐修专注智能报修服务，提升故障报修效率！',
+					path: '/subpkg/center/brand/MyinviterQrCode',
+					imageUrl: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/24/899f507562e247549ee0bddb40b62348.png',
+				}
+			} else {
+				return {
+					query: `userId=${this.userId}`,
+					title: '餐修百万合伙人招募计划！',
+					path: '/subpkg/center/brand/MyinviterQrCode',
+					imageUrl: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/22/d6ba47b337714a0e8ffad99d0fb9fe2d.png',
+				}
+			}
 		},
 		//#endif
 	}
@@ -254,7 +274,7 @@
 
 		.qr {
 			height: 550rpx;
-			margin: 20rpx 0 40rpx;
+			margin: 40rpx 0 30rpx;
 
 			image {
 				width: 472rpx;
