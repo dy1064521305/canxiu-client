@@ -62,9 +62,9 @@
 			<view class="counts">
 				<view class="counts-title">
 					<view>工单概览</view>
-					<!-- <view class="acea-row row-middle" style="margin-right: 30rpx;  font-size: 28rpx; color: #666666;"
+					<view class="acea-row row-middle" style="margin-right: 30rpx;  font-size: 28rpx; color: #666666;"
 						@click="$jump('/subpkg/center/myOrder/myOrderAll?name=全部订单')">
-						全部 <u-icon name="arrow-right" color="#666666" size="14"></u-icon></view> -->
+						全部 <u-icon name="arrow-right" color="#666666" size="14"></u-icon></view>
 				</view>
 
 				<view class="counts-types acea-row">

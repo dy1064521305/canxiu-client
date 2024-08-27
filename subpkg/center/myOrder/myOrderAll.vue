@@ -23,8 +23,8 @@
 						<text @click='checkType(1)' :class="[type==1?'text-active':'']">维保</text>
 					</view> -->
 					<view style="width: 90%;">
-						<u-tabs :current='current' :list="list1" @click="statusClick" lineColor='#A4D091' lineWidth="50"
-							lineHeight='8' :inactiveStyle="{ color: '#A5A7A7'}">
+						<u-tabs :current='current' :list="list1" @click="statusClick" lineColor='#F3B23E' lineWidth="40"
+							lineHeight='3' :inactiveStyle="{ color: '#A5A7A7'}">
 						</u-tabs>
 					</view>
 					<view class="type-image" @click="screenShow=!screenShow">
@@ -33,73 +33,93 @@
 					<view class="type-count" v-if='screenShow'>
 						<view class="items" v-for="(item,index) in list1" :key="index"
 							:class="{on:item.name===typeName}" @click="statusClick(item,index)">
-							{{item.name}} <text v-if="item.badge">({{item.badge.value||0}})</text>
+							{{item.name}} <text v-if="item.value">({{item.value||0}})</text>
 						</view>
 					</view>
 				</view>
 
 			</view>
-			<view class="orderItems">
+			<view class="orderItems" @click="orderDetail(item)" v-for='(item,index) in orderList' :key='item.orderId'>
 				<view class="orderItems-top acea-row">
 					<view class=" orderItems-top-status acea-row row-between-wrapper">
-						<text class="orderItems-top-status-left">待接单</text>
+						<text class="orderItems-top-status-left">
+							<view :style="{'color':item.orderStatus=='待接单'||item.orderStatus=='售后中'||item.orderStatus=='待评价'?'#F3B133':
+								item.orderStatus=='待上门'?'#3398F3':
+								item.orderStatus=='已完成'?'#A5A7A7':'#A4D091'}">
+								{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.repairId!=null&&statusType!='all'?item.repairStatus:item.orderStatus}}
+							</view>
+						</text>
 						<view class="orderItems-top-status-right acea-row row-middle">
-							<view>产品维修</view>
-							<view>加急</view>
+							<view>{{item.orderType==1?'产品维保':item.orderType==0?'产品维修':""}}</view>
+							<view v-if="item.isUrgent==1||item.isUrgent==2"> 加急 </view>
 						</view>
 					</view>
-					<view class="orderItems-top-order">订单编号：WX33010524052804</view>
+					<view class="orderItems-top-order acea-row">订单编号：{{item.orderNumber}}
+						<view @click.stop="copy(item.orderNumber)">
+							<image
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/57de362ad312499d93634d2ae9021099.png"
+								style="width: 29rpx;height: 29rpx;margin-left: 10rpx;"></image>
+						</view>
+					</view>
 				</view>
 				<view class="orderItems-worker acea-row flex-center">
 					<view class="orderItems-worker-img">
+						<!-- <image src="" mode=""></image> -->
 						<image
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/ea32e75cab3b4381954c83e34b151278.png"
 							mode=""></image>
+
 					</view>
-					<view class="orderItems-worker-mess ">
+					<!-- v-if="item.isAppoint!=null&&item.workerId -->
+					<view class="orderItems-worker-mess">
 						<view class="acea-row row-middle ">
-							<text style="margin-right: 10rpx;">李师傅</text>
+							<text style="margin-right: 10rpx;">{{item.workerName}}</text>
 							<view class="acea-row">
-								3.5<u-rate active-color="#FD5834" readonly :value="countRate" allowHalf
-									inactive-color="#b2b2b2" gutter="2"></u-rate>
+								{{item.levelIdValue}}<u-rate active-color="#FD5834" readonly v-model="item.levelIdValue"
+									allowHalf inactive-color="#b2b2b2" gutter="2"></u-rate>
 							</view>
 						</view>
-						<text class="type">工种：水电师傅</text>
+						<!-- <text class="type">工种：<text v-for="(i,index) in item.typeNameList">{{i}}</text></text> -->
+						<text class="type">工种：{{item.workerType}}</text>
 					</view>
-					<view class="orderItems-worker-phone">
+					<view class="orderItems-worker-phone" @click.stop="showPhoneHandle(item)">
 						<image
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/5beeb82b9a3f4952889976a3f009c7d8.png"
 							mode=""></image>
 					</view>
 				</view>
-				<view class="orderItems-article acea-row">
+				<view class="orderItems-article acea-row"
+					v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
+					v-for="(pro,i) in item.projectDataVoList" :key="i">
 					<view class="orderItems-article-left">
-						<image
+						<image v-if="pro.projectImg.split(',')[0]" :src="pro.projectImg.split(',')[0]" mode=""></image>
+						<image v-else
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/5beeb82b9a3f4952889976a3f009c7d8.png"
 							mode=""></image>
 					</view>
 					<view class="orderItems-article-right">
-						<text>水龙头换把手</text>
-						<view class="" style="margin: 4rpx 0;">水管台盆/水龙头/漏水</view>
+						<text>{{pro.projectName}}</text>
+						<view class="" style="margin: 4rpx 0;">{{pro.typeName}}</view>
 						<view class="acea-row row-middle  row-between-wrapper">
-							<view>38个</view>
-							<view>x1</view>
+							<view>{{pro.projectPrice}}元/个</view>
+							<view>x{{pro.projectNumber}}</view>
 						</view>
 					</view>
 				</view>
+
 				<view class="orderItems-time flex-colum">
-					<view> <text>上门时间：</text>08-06 （周五）02:00</view>
-					<view style="margin: 8rpx 0;"> <text>报修地址：</text>门店地址</view>
+					<view> <text>上门时间：</text>{{item.expectTime}}</view>
+					<view style="margin: 8rpx 0;"> <text> 报修地址：</text>{{item.addressVo.addressDetailed}}</view>
 					<view> <text>所属品牌：</text>xx品牌</view>
 				</view>
 				<view class="orderItems-money acea-row row-between-wrapper">
 					<view class="orderItems-money-left">
-						<text>费用：</text> ¥38
+						<text>费用：</text> ¥{{item.orderPrice}}
 					</view>
-					<view class="orderItems-money-right acea-row row-center row-middle">
+					<!-- <view class="orderItems-money-right acea-row row-center row-middle">
 						<view class="orderItems-money-right-btn">关闭订单</view>
 						<view class="orderItems-money-right-btn2">指派师傅</view>
-					</view>
+					</view> -->
 				</view>
 			</view>
 			<view class=" orders" @click="orderDetail(item)" v-for='(item,index) in orderList' :key='index'>
@@ -250,6 +270,9 @@
 		</u-popup>
 
 		<u-toast ref="uToast"></u-toast>
+		<!-- 拨打电话 -->
+		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
+			:actions="actionList" :show="showPhone"></u-action-sheet>
 	</view>
 </template>
 
@@ -270,6 +293,17 @@
 		data() {
 
 			return {
+				showPhone: false,
+				actionList: [{
+						name: ''
+					},
+					{
+						name: '呼叫'
+					},
+					{
+						name: '取消'
+					},
+				], //拨打电话
 				screenShow: false,
 				countRate: 3.9,
 				repairOrderShow: false,
@@ -286,71 +320,48 @@
 				type: 0,
 				list1: [{
 						name: '全部',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'total'
-
 					},
 					{
 						name: '待审核',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'waitExamine'
 					}, {
 						name: '待接单',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'grabOrder'
 					}, {
 						name: '待签到',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'waitDoor'
 					}, {
 						name: '待服务',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'waitService'
 					}, {
 						name: '服务中',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'servicing'
 					}, {
 						name: '待验收',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'waitAcc'
 					}, {
 						name: '待付款',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'waitPay'
 					}, {
 						name: '待评价',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'waitAppraise'
 					}, {
 						name: '已完成',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'finish'
 					}, {
 						name: '已关闭',
-						badge: {
-							value: 0,
-						},
+						value: 0,
 						val: 'close'
 					}
 				],
@@ -363,6 +374,8 @@
 					pageNum: 1,
 					endTime: '',
 					beginTime: '',
+					// queryType 0 - 合伙人订单， 1 - 默认
+					queryType: 0
 				},
 				endTime: '', //显示的时间
 				beginTime: '',
@@ -392,6 +405,7 @@
 		onLoad(option) {
 			console.log(option.name);
 			this.queryParams.clientId = storage.get('ClientId')
+			// this.queryParams.clientId = '1801434770530971650'
 			this.statusType = option.name == '待服务' || option.name == '服务中' || option.name == '待付款' || option.name == '返修' ?
 				'status' : 'all'
 			console.log(this.statusType);
@@ -456,6 +470,28 @@
 						})
 					})
 					uni.hideLoading();
+					res.rows.forEach(item => {
+						if (item.levelName) {
+							switch (item.levelName) {
+								case '一星匠人':
+									item.levelIdValue = 1
+									break;
+								case '二星匠人':
+									item.levelIdValue = 2
+									break;
+								case '三星匠人':
+									item.levelIdValue = 3
+									break;
+								case '四星匠人':
+									item.levelIdValue = 4
+									break;
+								case '五星匠人':
+									item.levelIdValue = 5
+									break;
+							}
+						}
+					})
+
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})
 				queryAllOrderCount({
@@ -464,10 +500,8 @@
 					beginTime: this.queryParams.beginTime,
 					endTime: this.queryParams.endTime
 				}).then(res => {
-
 					this.list1.forEach(item => {
-
-						item.badge.value = res.data[item.val]
+						item.value = res.data[item.val]
 					})
 				})
 			},
@@ -600,6 +634,24 @@
 						console.log('success');
 					}
 				});
+			},
+			showPhoneHandle(item) {
+				this.showPhone = true
+				this.actionList[0].name = items.workerPhone
+			},
+			actionSelect(e) {
+				console.log(e);
+				if (e.name == '取消') {
+					this.showPhone = false
+				} else {
+					// #ifdef APP-PLUS
+					callPhone(this.actionList[0].name, 'app')
+					// #endif
+					// #ifdef MP-WEIXIN
+					callPhone(this.actionList[0].name, 'wx')
+					// #endif
+					this.showPhone = false
+				}
 			},
 
 		}

@@ -129,6 +129,7 @@
 				let scene = parseQuery(decodeURIComponent(options.scene)) || null
 				if (options.scene) {
 					this.clientId = scene.userId || ''
+					console.log(scene, "scene");
 					// this.where.clientId = this.clientId
 					this.getInfo(this.clientId)
 				}
@@ -147,9 +148,9 @@
 		},
 		onShow() {
 			if (this.isLogin) {
-				let id = storage.get('ClientId')
-				console.log(id, "this.userId");
 				setTimeout(() => {
+					let id = storage.get('ClientId')
+					console.log(id, "this.userId");
 					putImmediate(id).then(res => {
 						if (res.data) {
 							this.$toast('您已是合伙人!', 'success').then(() => {

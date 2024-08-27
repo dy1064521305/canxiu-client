@@ -30,18 +30,18 @@
 				</view>
 			</view>
 
-			<view class="orders" @click="orderDetail(item)" v-for='(item,index) in orderList'
-				:key='index'>
+			<view class="orders" @click="orderDetail(item)" v-for='(item,index) in orderList' :key='index'>
 				<view class="main">
 					<view class="title">
 						<view class="top">
 							<view
 								style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
 								<view style="display: flex;align-items: center;">
-									<text v-if="item.warrantyStore!=null" style="margin-right: 15rpx;">{{item.warrantyStore}}</text>
+									<text v-if="item.warrantyStore!=null"
+										style="margin-right: 15rpx;">{{item.warrantyStore}}</text>
 									<text v-if="item.isClientAppoint==1" class="appoint">门店指派</text>
 								</view>
-								<img style="width: 83rpx;height: 36rpx;"   v-if="item.isUrgent==1||item.isUrgent==2"
+								<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
 							</view>
 							<view style="display: flex;margin: 7rpx 0;">
@@ -81,15 +81,16 @@
 					<view class="btns" v-if="!item.repairId">
 						<!-- 	<view @click.stop='backFix(item)' class="btn-white"
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view> -->
-					<!-- 	<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
+						<!-- 	<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
 							@click="handleRoute(item)">联系师傅</view> -->
-							<view @click.stop='orderDetail(item)' class="btn-white" v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
-								返修</view>
+						<view @click.stop='orderDetail(item)' class="btn-white"
+							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
+							返修</view>
 						<view @click.stop='orderDetail(item)' class="btn-green" v-if="item.orderStatus=='待评价'">
 							去评价</view>
 						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
-						<view @click.stop='orderDetail(item)' class="btn-green"
-							v-if="item.orderStatus=='服务中【审核通过】'">确认方案</view>
+						<view @click.stop='orderDetail(item)' class="btn-green" v-if="item.orderStatus=='服务中【审核通过】'">
+							确认方案</view>
 					</view>
 				</view>
 			</view>
@@ -287,6 +288,8 @@
 					pageNum: 1,
 					endTime: '',
 					beginTime: '',
+					// queryType 0 - 合伙人订单， 1 - 默认
+					queryType: 1
 				},
 				endTime: '', //显示的时间
 				beginTime: '',
@@ -310,7 +313,7 @@
 
 		},
 		onShow() {
-				this.getOrderlistHandle(1, 10)
+			this.getOrderlistHandle(1, 10)
 		},
 		onLoad(option) {
 			console.log(option.name);
@@ -374,10 +377,10 @@
 				getOrderList(this.queryParams).then(res => {
 					res.rows.forEach(i => {
 						i.projectDataVoList && i.projectDataVoList.forEach(item => {
-							item.img=i.repairId !=null? (item.projectUrl != null ? item
-								.projectUrl.split(',') : []): (item.projectImg != null ? item
-								.projectImg.split(',') : []) 
-					
+							item.img = i.repairId != null ? (item.projectUrl != null ? item
+								.projectUrl.split(',') : []) : (item.projectImg != null ? item
+								.projectImg.split(',') : [])
+
 						})
 					})
 					uni.hideLoading();
@@ -385,9 +388,9 @@
 				})
 				queryAllOrderCount({
 					clientId: storage.get('ClientId'),
-					projectName:this.queryParams.projectName,
-					beginTime:this.queryParams.beginTime,
-					endTime:this.queryParams.endTime
+					projectName: this.queryParams.projectName,
+					beginTime: this.queryParams.beginTime,
+					endTime: this.queryParams.endTime
 				}).then(res => {
 
 					this.list1.forEach(item => {
@@ -430,13 +433,13 @@
 			},
 			//订单详情
 			orderDetail(item) {
-				if (item.repairId!=null) {
-					let info={
-						type:this.title,
-						id:this.title=='返修'?item.repairId:item.orderId
+				if (item.repairId != null) {
+					let info = {
+						type: this.title,
+						id: this.title == '返修' ? item.repairId : item.orderId
 					}
 					uni.navigateTo({
-						url: '../../car/repairingOrder/repairingOrder?info=' +JSON.stringify(info)
+						url: '../../car/repairingOrder/repairingOrder?info=' + JSON.stringify(info)
 					})
 				} else {
 					uni.navigateTo({
@@ -597,6 +600,7 @@
 					font-size: 26rpx;
 
 					.top {
+
 						// display: flex;
 						// justify-content: space-between;
 						.appoint {
@@ -607,6 +611,7 @@
 							text-align: center;
 							padding: 8rpx 17rpx;
 						}
+
 						.right {
 							//background-color: red;
 							padding: 8rpx 28rpx 8rpx 20rpx;
