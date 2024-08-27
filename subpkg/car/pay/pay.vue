@@ -60,18 +60,18 @@
 			// #ifdef MP-WEIXIN
 			this.list.splice(1, 1)
 			wx.login({
-				success:(res)=> {
+				success: (res) => {
 					if (res.code) {
 						this.wxCode = res.code
 					}
 				}
 			})
 			// #endif
-			// this.info = JSON.parse(decodeURIComponent(option.item))
-			// this.isGroupPayHandle()
+			this.info = JSON.parse(decodeURIComponent(option.item))
+			this.isGroupPayHandle()
 			uni.getStorage({
 				key: 'code',
-				success:(res)=>{
+				success: (res) => {
 					this.code = res.data
 				}
 			});
