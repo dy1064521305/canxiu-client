@@ -67,8 +67,8 @@
 				}
 			})
 			// #endif
-			// this.info = JSON.parse(decodeURIComponent(option.item))
-			// this.isGroupPayHandle()
+			this.info = JSON.parse(decodeURIComponent(option.item))
+			this.isGroupPayHandle()
 			uni.getStorage({
 				key: 'code',
 				success:(res)=>{
