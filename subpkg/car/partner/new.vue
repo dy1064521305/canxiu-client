@@ -15,7 +15,10 @@
 							v-if="userInfo&&userInfo.partnerId">
 							<text class="form-key">邀请人</text>
 							<view class="people acea-row row-middle">
-								<image :src="userInfo.avatarUrl" mode=""></image>
+								<image v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" mode=""></image>
+								<image v-else
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
+								</image>
 								{{userInfo.realName}}
 							</view>
 						</view>
@@ -92,7 +95,7 @@
 					realName: "",
 					cellPhone: "",
 					region: "",
-					clientId: '',
+					clientId: "",
 					superiorId: ''
 				},
 				clientHeight: "",
@@ -120,13 +123,13 @@
 			// // if (this.isLogin) return this.$store.commit('OPEN_LOGIN_POP');
 			if (options) {
 				if (options.userId) {
-					this.where.clientId = options.userId
+					// this.where.clientId = options.userId
 					this.getInfo(options.userId)
 				}
 				let scene = parseQuery(decodeURIComponent(options.scene)) || null
 				if (options.scene) {
 					this.clientId = scene.userId || ''
-					this.where.clientId = this.clientId
+					// this.where.clientId = this.clientId
 					this.getInfo(this.clientId)
 				}
 			}
@@ -146,17 +149,20 @@
 			if (this.isLogin) {
 				let id = storage.get('ClientId')
 				console.log(id, "this.userId");
-				putImmediate(id).then(res => {
-					if (res.data) {
-						this.$toast('您已是合伙人!', 'success').then(() => {
-							uni.redirectTo({
-								url: '../../staging/team/index',
-							})
-						});
-					} else {
-						console.log(11, "不存在123");
-					}
-				})
+				setTimeout(() => {
+					putImmediate(id).then(res => {
+						if (res.data) {
+							this.$toast('您已是合伙人!', 'success').then(() => {
+								uni.redirectTo({
+									url: '../../staging/team/index',
+								})
+							});
+						} else {
+							console.log(11, "不存在123");
+						}
+					})
+				}, 500)
+
 			} else {
 				this.$store.commit('OPEN_LOGIN_POP')
 			}
@@ -191,6 +197,7 @@
 					return false
 				}
 				if (!this.where.region) return this.$toast('所在城市不能为空')
+				this.where.clientId = storage.get('ClientId') || ''
 				postPartnerApply(this.where).then(res => {
 					this.$toast('操作成功')
 					setTimeout(() => {

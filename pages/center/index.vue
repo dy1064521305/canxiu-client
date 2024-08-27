@@ -20,7 +20,7 @@
 				<view class="info acea-row row-between-wrapper">
 					<view class="acea-row" @click.stop="goInfo">
 						<view class="info-image">
-							<image v-if="userInfo.avatarUrl==null||userInfo.avatarUrl==''"
+							<image v-if="userInfo.avatarUrl==null||userInfo.avatarUrl==''||userInfo.avatarUrl=='null'"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
 							</image>
 							<u--image v-else width='80rpx' height='80rpx' :src="userInfo.avatarUrl" shape="circle">

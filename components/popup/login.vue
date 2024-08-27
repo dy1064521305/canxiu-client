@@ -27,7 +27,7 @@
 									<view style="margin:3rpx 10rpx 0 0;">
 										<view v-if="!checkedLogin" class="check"></view>
 										<view v-else>
-											<u-icon name="checkmark-circle-fill" color="#A4D091" size="27rpx"></u-icon>
+											<u-icon name="checkmark-circle-fill" color="#F3B23E" size="27rpx"></u-icon>
 										</view>
 
 									</view>
@@ -270,10 +270,12 @@
 				.btn {
 					width: 638rpx;
 					height: 96rpx;
+					line-height: 96rpx;
 					background: #2F2F2F;
 					margin-bottom: 16rpx;
 					border-radius: 16rpx;
 					color: #FFFEFE;
+					font-size: 30rpx;
 
 				}
 

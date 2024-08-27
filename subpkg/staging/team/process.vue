@@ -33,7 +33,7 @@
 						<view class="input-s" @click="searchActivity(1)"></view>
 
 					</view>
-					<view class="shaixuan" @click="toSet()">
+					<view class="shaixuan" @click="toSetS()">
 						<image
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/eb78f3eb65ec46fc92b1245b17c64838.png"
 							mode=""></image>
@@ -79,8 +79,9 @@
 					<view class="invite_list-item-time acea-row">
 						<!-- 	{{item.createTime}} 提交 -->
 						<view class="invite_list-item-time-btn acea-row">
-							<view @click.stop="showPhoneHandle(item.cellPhone)">联系ta</view>
-							<view v-if="item.status==0" @click="toSet(item,1)">信息审核</view>
+							<view @click="showPhoneHandle(item.cellPhone,JSON.stringify(item))">联系ta
+							</view>
+							<view v-if="item.status==0" @click="toSet(JSON.stringify(item),1)">信息审核</view>
 						</view>
 					</view>
 				</view>
@@ -106,9 +107,10 @@
 		<PopupBottom :title="shenheTitle" :show="accountShow" @tap-mask="close()" @close="close()">
 			<view class="popMoney" style="margin-top: 30rpx;" v-if="shenheTitle=='立即审核'">
 				<view class="popMoney-set acea-row row-middle">
-					审核结果
-					<u-radio-group v-model="whereSh.status" placement="row" style="margin-left: 50rpx;">
-						<u-radio style="margin-right: 60rpx;" activeColor="#F3B23E" :name="1" label="审核通过"></u-radio>
+					<text style="margin-right: 50rpx;">审核结果</text>
+					<u-radio-group v-model="whereSh.status" placement="row">
+						<u-radio activeColor="#F3B23E" :name="1" label="审核通过"></u-radio>
+						<text style="margin-right: 50rpx;"></text>
 						<u-radio activeColor="#F3B23E" :name="2" label="审核驳回"></u-radio>
 					</u-radio-group>
 				</view>
@@ -294,12 +296,16 @@
 				this.$refs.paging.reload();
 			},
 			typeClick(item) {
+				console.log(item, "itemitem");
 				this.where.auditSource = item.id
 				this.$refs.paging.reload();
 			},
-			showPhoneHandle(phone) {
+			showPhoneHandle(phone, item) {
+				console.log(phone, "phone");
+				let items = JSON.parse(item)
+				console.log(items, "item123");
 				this.showPhone = true
-				this.actionList[0].name = phone
+				this.actionList[0].name = items.cellPhone
 			},
 			queryList() {
 				this.$refs.paging.reload();
@@ -319,17 +325,15 @@
 					this.showPhone = false
 				}
 			},
-			toSet(item, id) {
-				if (id) {
-					this.shenheTitle = '立即审核'
-					this.whereSh.auditId = item.auditId
-					this.accountShow = true
-				} else {
-					this.shenheTitle = '设置筛选条件'
-					this.accountShow = true
-				}
-				// return
-
+			toSet(items, id) {
+				let item = JSON.parse(items)
+				this.shenheTitle = '立即审核'
+				this.whereSh.auditId = item.auditId
+				this.accountShow = true
+			},
+			toSetS() {
+				this.shenheTitle = '设置筛选条件'
+				this.accountShow = true
 			},
 			toCard() {
 				this.noCardShow = false

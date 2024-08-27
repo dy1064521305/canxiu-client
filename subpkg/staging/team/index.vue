@@ -117,7 +117,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="setUp">
+			<!-- <view class="setUp">
 				<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)" v-for="(item) in typeList"
 					:key="item.id">
 					<view class="setUp-list-left">
@@ -128,7 +128,7 @@
 						<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
 					</view>
 				</view>
-			</view>
+			</view> -->
 			<u-popup :show="noCardShow" mode="center" :round="10" @close="noCardShow=false">
 				<view class="pop_show flex-colum-center" @click="toCard">
 					<image
