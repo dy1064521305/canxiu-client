@@ -82,27 +82,25 @@ export const actions = {
 	}, data) {
 		// commit('UPDATE_TOKEN', data.token, data.expires_time);
 		return new Promise((resolve, reject) => {
-			setTimeout(() => {
-				LoginApi.postLoginPartner(data, {
-					custom: {
-						catch: true
-					}
-				}).then(res => {
-					const result = res.data;
-					loginSuccess(commit, result)
-					resolve(res.data);
-					// type： 新用户：Register  老用户：Success
-					// token
-					// clientId，
-					// isPartner: true 是否是合伙人
+			LoginApi.postLoginPartner(data, {
+				custom: {
+					catch: true
+				}
+			}).then(res => {
+				const result = res.data;
+				loginSuccess(commit, result)
+				resolve(res.data);
+				// type： 新用户：Register  老用户：Success
+				// token
+				// clientId，
+				// isPartner: true 是否是合伙人
 
-				}).catch(err => {
-					Toast(err);
-					reject(err);
-				}).finally(() => {
-					uni.$emit('LOGIN');
-				})
-			}, 300)
+			}).catch(err => {
+				Toast(err);
+				reject(err);
+			}).finally(() => {
+				uni.$emit('LOGIN');
+			})
 		})
 	},
 

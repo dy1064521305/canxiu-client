@@ -57,7 +57,7 @@
 				<view class="list" v-for="(item,index) in dataList" :key="index">
 					<view class="box acea-row row-middle">
 						<view class="box-image">
-							<image v-if="item.avatarUrl" :src="baseInfo.avatarUrl" mode=""></image>
+							<image v-if="item.avatarUrl" :src="item.avatarUrl" mode=""></image>
 							<image v-else
 								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/14/0fc1c13f76864515bd2c314287d11154.png"
 								mode=""></image>
@@ -538,6 +538,7 @@
 					image {
 						width: 100%;
 						height: 100%;
+						border-radius: 10rpx;
 					}
 				}
 

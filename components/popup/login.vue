@@ -127,11 +127,11 @@
 					if (this.inviteType && user.isPartner && user.type == 'Success') {
 						putImmediate(user.clientId).then(res => {
 							if (res.data) {
+								this.$store.commit('CLOSE_LOGIN_POP')
 								this.$toast('您已是合伙人!', 'success').then(() => {
 									uni.redirectTo({
 										url: '../../staging/team/index',
 									})
-									this.$store.commit('CLOSE_LOGIN_POP')
 								});
 
 							}
@@ -140,12 +140,14 @@
 							this.$store.commit('CLOSE_LOGIN_POP')
 						})
 					} else {
-						// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
-						this.$toast('登录成功!', 'success').then(() => {
-							this.$store.commit('CLOSE_LOGIN_POP')
-							// $cache.clear('authBackUrl');
-							// this.$jump('redirectTo:/' + back_url);
+						this.$store.commit('CLOSE_LOGIN_POP')
+						const currentPagePath = this.getCurrentPagePath();
+						uni.reLaunch({
+							url: `/${currentPagePath}`
 						});
+						setTimeout(() => {
+							this.$toast('登录成功!', 'success')
+						}, 500)
 					}
 
 				}).catch(err => {
@@ -156,6 +158,11 @@
 					Routine.refreshCode()
 					uni.hideLoading();
 				});
+			},
+			getCurrentPagePath() {
+				const pages = getCurrentPages();
+				const currentPage = pages[pages.length - 1];
+				return currentPage.route; // 获取当前页面的路径
 			},
 			getListLogin() {
 				getAgreement({
@@ -171,6 +178,7 @@
 				}
 				this.$store.commit('CLOSE_LOGIN_POP')
 			},
+
 			//查协议内容
 			goAgreementLogin(index) {
 				let remark = this.agreementListLogin[index].remark

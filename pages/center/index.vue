@@ -319,6 +319,9 @@
 </template>
 
 <script>
+	import {
+		mapGetters
+	} from 'vuex'
 	import storage from '@/utils/storage'
 	import {
 		getUserWallet
@@ -339,6 +342,7 @@
 	import {
 		putImmediate
 	} from "@/api/brand.js"
+	import $cache from '@/utils/cache.js';
 	export default {
 		data() {
 			return {
@@ -354,7 +358,6 @@
 					},
 				], //拨打电话
 				showPhone: false, //底部电话显示
-				isLogin: false,
 				userInfo: {}, //用户信息
 				couponNum: 0,
 				useList: [{
@@ -548,15 +551,19 @@
 				key: 'service_info'
 			})
 		},
+		computed: {
+			...mapGetters(['isLogin'])
+		},
+		onLoad() {
+			console.log(this.isLogin, "isLogin123");
+		},
 		onShow() {
-
-			this.isLogin = storage.get('ClientId')
+			console.log(this.isLogin, "isLogin");
 			if (this.isLogin) {
 				this.getList()
 				this.getOrderlistHandle(1, 10)
 				this.getInfo()
 			}
-
 		},
 		methods: {
 			getList() {
@@ -684,6 +691,7 @@
 			//去登录
 			login() {
 				// #ifdef MP-WEIXIN
+				$cache.set('authBackUrl', "pages/center/index")
 				this.$store.commit('OPEN_LOGIN_POP')
 				// #endif
 				// #ifndef MP-WEIXIN
