@@ -62,7 +62,11 @@
 		getAgreement,
 		postLoginPartner
 	} from '@/api/login.js'
+	import {
+		putImmediate
+	} from "@/api/brand.js"
 	import Routine from '@/config/routine.js';
+
 	// 解密获取手机号
 	// import WXBizDataCrypt from "@/static/wx/WXBizDataCrypt.js"
 	export default {
@@ -141,20 +145,23 @@
 					if (this.inviteType && user.isPartner && user.type == 'Success') {
 						putImmediate(user.clientId).then(res => {
 							if (res.data) {
-								this.$toast('登录成功!您已是合伙人', 'success').then(() => {
+								this.$toast('您已是合伙人!', 'success').then(() => {
 									uni.redirectTo({
 										url: '../../staging/team/index',
 									})
+									this.$store.commit('CLOSE_LOGIN_POP')
 								});
 
 							}
 						}).catch(err => {
+							this.$alert(err)
+							this.$store.commit('CLOSE_LOGIN_POP')
 							// this.$jump(-1)
 						})
 					} else {
 						// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
 						this.$toast('登录成功!', 'success').then(() => {
-
+							this.$store.commit('CLOSE_LOGIN_POP')
 							// $cache.clear('authBackUrl');
 							// this.$jump('redirectTo:/' + back_url);
 						});
@@ -163,10 +170,10 @@
 				}).catch(err => {
 					uni.hideLoading();
 					this.$alert(err);
+					this.$store.commit('CLOSE_LOGIN_POP')
 				}).finally(() => {
 					Routine.refreshCode()
 					uni.hideLoading();
-					this.$store.commit('CLOSE_LOGIN_POP')
 				});
 			},
 			getListLogin() {
