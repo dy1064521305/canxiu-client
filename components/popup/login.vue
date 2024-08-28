@@ -11,10 +11,6 @@
 							<view class="">
 								未注册手机号验证后即完成注册
 							</view>
-							<!-- <view class="acea-row row-middle"
-								style="width: 70rpx;height: 40rpx;justify-content: flex-end;" @click="$emit('close')">
-								<u-icon name="close"></u-icon>
-							</view> -->
 						</view>
 						<view class="content acea-con">
 							<button v-if="checkedLogin" class="btn" type="primary" open-type="getPhoneNumber"
@@ -62,7 +58,11 @@
 		getAgreement,
 		postLoginPartner
 	} from '@/api/login.js'
+	import {
+		putImmediate
+	} from "@/api/brand.js"
 	import Routine from '@/config/routine.js';
+
 	// 解密获取手机号
 	// import WXBizDataCrypt from "@/static/wx/WXBizDataCrypt.js"
 	export default {
@@ -86,9 +86,7 @@
 			console.log(this.inviteType, "inviteTypeinviteType");
 			this.getListLogin()
 		},
-		mounted() {
-			// console.log('this.specia', this._specia);
-		},
+		mounted() {},
 		methods: {
 			//#ifdef MP
 			// 小程序获取手机号码
@@ -118,43 +116,33 @@
 					loginCode: code,
 					phoneNumberCode: phoneCode,
 				}
-
 				this.loginHandler(data);
-				// postLoginPartner(data)
-				// 	.then(res => {
-				// 		uni.hideLoading();
-
-				// 	})
-				// 	.catch(err => {
-				// 		uni.hideLoading();
-				// 		this.$alert(err);
-				// 	}).finally(() => {
-				// 		Routine.refreshCode()
-				// 	});
 			},
 			//#endif
 			loginHandler(data) {
-				// data.expires_time = data.expires_time - $cache.time();
 				this.$store.dispatch('LOGIN', data).then(user => {
 					console.log(user, "back_url");
 					uni.hideLoading();
+					// 二维码邀请的时候的判断
 					if (this.inviteType && user.isPartner && user.type == 'Success') {
 						putImmediate(user.clientId).then(res => {
 							if (res.data) {
-								this.$toast('登录成功!您已是合伙人', 'success').then(() => {
+								this.$toast('您已是合伙人!', 'success').then(() => {
 									uni.redirectTo({
 										url: '../../staging/team/index',
 									})
+									this.$store.commit('CLOSE_LOGIN_POP')
 								});
 
 							}
 						}).catch(err => {
-							// this.$jump(-1)
+							this.$alert(err)
+							this.$store.commit('CLOSE_LOGIN_POP')
 						})
 					} else {
 						// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
 						this.$toast('登录成功!', 'success').then(() => {
-
+							this.$store.commit('CLOSE_LOGIN_POP')
 							// $cache.clear('authBackUrl');
 							// this.$jump('redirectTo:/' + back_url);
 						});
@@ -163,10 +151,10 @@
 				}).catch(err => {
 					uni.hideLoading();
 					this.$alert(err);
+					this.$store.commit('CLOSE_LOGIN_POP')
 				}).finally(() => {
 					Routine.refreshCode()
 					uni.hideLoading();
-					this.$store.commit('CLOSE_LOGIN_POP')
 				});
 			},
 			getListLogin() {

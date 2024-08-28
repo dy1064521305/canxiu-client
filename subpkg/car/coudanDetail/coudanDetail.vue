@@ -1,76 +1,77 @@
 <template>
-	<view class="good-detail-page">
-		<view class="navbar"
-			:style="{padding:(statusHeight*2)+'rpx 0px 24rpx 16rpx',backgroundColor:'rgba(255,255,255,'+navbarColorOpacity+')'}">
-			<u-icon name="arrow-left" size="19" @click="goBack()"></u-icon>
-			<text>{{city}}</text>
-		</view>
-
-		<scroll-view class="serviceInfo" ref="target" :scroll-y="true" :scroll-into-view="scrollIntoView"
-			@scroll="pageScroll">
-
-
-			<!-- 服务详情 -->
-			<view class="top">
-				<u-swiper v-if="serviceImgList.length!=0" height='564rpx' :list="serviceImgList"
-					@change="e => currentNum = e.current" :autoplay="false" indicatorStyle="right: 20px">
-					<view slot="indicator" class="indicator-num">
-						<text class="indicator-num__text">{{ currentNum + 1 }}/{{ serviceImgList.length }}</text>
-					</view>
-				</u-swiper>
-				<view v-else class="no-img">
-					<image style="width:500rpx ;height:400rpx;"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
-						mode=""></image>
-					<text>暂无图片</text>
-				</view>
-				<view class="info bgf">
-					<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/0616977a744749ac86c5b97a1728f654.png"
-			mode=""></image> -->
-					<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
-					<view :class="['prices',goodInfo.preferentialPrice!=null?'price-img':'']">
-						<view class="top">
-							<text
-								style="font-size: 43rpx;">{{goodInfo.preferentialPrice!=null?goodInfo.discountPrice:goodInfo.projectAmount}}</text>
-							<text style="font-size: 27rpx;">元</text>
-							<text v-if="goodInfo.preferentialPrice!=null">已补贴￥{{goodInfo.preferentialPrice}}</text>
-						</view>
-						<view v-if="goodInfo.preferentialPrice!=null" style="font-size: 22rpx;">
-							日常价：{{goodInfo.projectAmount}}元
-						</view>
-
-					</view>
-					<view style="margin:15rpx 0 ;">{{goodInfo.serviceName}}</view>
-					<view>
-						{{goodInfo.serviceDescription}}
-					</view>
-				</view>
+	<common-page>
+		<view class="good-detail-page">
+			<view class="navbar"
+				:style="{padding:(statusHeight*2)+'rpx 0px 24rpx 16rpx',backgroundColor:'rgba(255,255,255,'+navbarColorOpacity+')'}">
+				<u-icon name="arrow-left" size="19" @click="goBack()"></u-icon>
+				<text>{{city}}</text>
 			</view>
 
-			<view class="services bgf">
-				<view class="service_top">
-					<view class="">
-						<view>服务数量<text style="color: #3D3F3E;">(单位：{{goodInfo.projectCompany}})</text></view>
-						<u-number-box min='1' disabledInput v-model="projectForm.projectNumber" class='number'
-							button-size="27" color="#ffffff" bgColor="#A4D091" :asyncChange="true"
-							iconStyle="color: #fff" @change='numChange'>
-						</u-number-box>
+			<scroll-view class="serviceInfo" ref="target" :scroll-y="true" :scroll-into-view="scrollIntoView"
+				@scroll="pageScroll">
+
+
+				<!-- 服务详情 -->
+				<view class="top">
+					<u-swiper v-if="serviceImgList.length!=0" height='564rpx' :list="serviceImgList"
+						@change="e => currentNum = e.current" :autoplay="false" indicatorStyle="right: 20px">
+						<view slot="indicator" class="indicator-num">
+							<text class="indicator-num__text">{{ currentNum + 1 }}/{{ serviceImgList.length }}</text>
+						</view>
+					</u-swiper>
+					<view v-else class="no-img">
+						<image style="width:500rpx ;height:400rpx;"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/11/0cee8335a9f94b82aab54ebab36f524b.png"
+							mode=""></image>
+						<text>暂无图片</text>
 					</view>
-					<view>
-						如有多处需要维修/维保，请按照数量加购
+					<view class="info bgf">
+						<!-- 	<image src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/06/0616977a744749ac86c5b97a1728f654.png"
+			mode=""></image> -->
+						<!-- <view style="font-size: 36rpx;color: #3D3F3E;margin-top: 30rpx;"> -->
+						<view :class="['prices',goodInfo.preferentialPrice!=null?'price-img':'']">
+							<view class="top">
+								<text
+									style="font-size: 43rpx;">{{goodInfo.preferentialPrice!=null?goodInfo.discountPrice:goodInfo.projectAmount}}</text>
+								<text style="font-size: 27rpx;">元</text>
+								<text v-if="goodInfo.preferentialPrice!=null">已补贴￥{{goodInfo.preferentialPrice}}</text>
+							</view>
+							<view v-if="goodInfo.preferentialPrice!=null" style="font-size: 22rpx;">
+								日常价：{{goodInfo.projectAmount}}元
+							</view>
+
+						</view>
+						<view style="margin:15rpx 0 ;">{{goodInfo.serviceName}}</view>
+						<view>
+							{{goodInfo.serviceDescription}}
+						</view>
 					</view>
 				</view>
-				<view class="remark">
-					<view>
+
+				<view class="services bgf">
+					<view class="service_top">
 						<view class="">
-							<text style="color: red">*</text><text
-								style="margin:0 30rpx 14rpx 10rpx;font-size: 33rpx;">上传视频/图片</text>
+							<view>服务数量<text style="color: #3D3F3E;">(单位：{{goodInfo.projectCompany}})</text></view>
+							<u-number-box min='1' disabledInput v-model="projectForm.projectNumber" class='number'
+								button-size="27" color="#ffffff" bgColor="#A4D091" :asyncChange="true"
+								iconStyle="color: #fff" @change='numChange'>
+							</u-number-box>
 						</view>
-						<view style="color: #A5A7A7;font-size: 22rpx;margin: 19rpx 0;">
-							请上传1-9张现场环境或设备故障视频/图片信息
+						<view>
+							如有多处需要维修/维保，请按照数量加购
 						</view>
-						<view style="width: 100%;margin: 10.87rpx 0 28.99rpx 0;">
-							<cl-upload :listStyle="{
+					</view>
+					<view class="remark">
+						<view>
+							<view class="">
+								<text style="color: red">*</text><text
+									style="margin:0 30rpx 14rpx 10rpx;font-size: 33rpx;">上传视频/图片</text>
+							</view>
+							<view style="color: #A5A7A7;font-size: 22rpx;margin: 19rpx 0;">
+								请上传1-9张现场环境或设备故障视频/图片信息
+							</view>
+							<view style="width: 100%;margin: 10.87rpx 0 28.99rpx 0;">
+								<cl-upload :listStyle="{
 											columnGap: '10rpx',
 											columns:'4',
 											rowGap:'10rpx'
@@ -79,155 +80,152 @@
 											}" :videoFromData="{
 												size:10
 											}" v-model="projectForm.projectImg" :headers="headers" :action="action" @onSuccess="onSuccesss"
-								@input='onInput'></cl-upload>
+									@input='onInput'></cl-upload>
+							</view>
+						</view>
+
+						<view style="align-items: center;">
+							<view style="font-size: 33rpx;">故障描述</view>
+							<view style="font-size: 22rpx;color: #A5A7A7;margin: 10rpx 0;">请简单描述故障或特殊需求备注信息</view>
+							<view style='width: 100%'>
+								<u--textarea height='72' maxlength='50' confirmType="done" v-model="projectForm.remarks"
+									placeholder="请输入内容" count></u--textarea>
+							</view>
 						</view>
 					</view>
 
-					<view style="align-items: center;">
-						<view style="font-size: 33rpx;">故障描述</view>
-						<view style="font-size: 22rpx;color: #A5A7A7;margin: 10rpx 0;">请简单描述故障或特殊需求备注信息</view>
-						<view style='width: 100%'>
-							<u--textarea height='72' maxlength='50' confirmType="done" v-model="projectForm.remarks"
-								placeholder="请输入内容" count></u--textarea>
-						</view>
-					</view>
 				</view>
 
-			</view>
 
-
-			<view class="comment bgf">
-				<view class="title">
-					<text>用户评论({{appraiseList.length}})</text>
-					<view v-if="appraiseList.length!=0" style="display:flex;align-items: center;" @click="allComment">
-						<view style="font-size: 25rpx;color: #CBCFCE;margin-right: 17rpx;">全部</view>
-						<image
-							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
-							mode=""></image>
-					</view>
-				</view>
-				<view v-if="appraiseList.length!=0" style="margin:30rpx 0 10rpx;display: flex;">
-					<u-avatar :src="appraiseList[0].avatarUrl" size="25"></u-avatar>
-					<!-- 	<image src="../../static/img/login/loginBg.png" mode=""></image> -->
-					<view
-						style="font-size: 25rpx;color: #3D3F3E;width:10%;height: 50rpx;line-height: 50rpx;margin-left: 20rpx;">
-						{{appraiseList[0].name}}
-					</view>
-					<u-rate :count="count" v-model="appraiseList[0].num" allowHalf activeColor='#ec9322'
-						readonly></u-rate>
-					<view
-						style="font-size: 25rpx;color: #3D3F3E;height: 50rpx;line-height: 50rpx;width: 50%;text-align: end;">
-						{{appraiseList[0].time}}
-					</view>
-				</view>
-				<view v-if="appraiseList.length!=0">
-					<u--text :lines="2" :text="appraiseList[0].appraiseContent">
-					</u--text>
-				</view>
-				<view v-if="appraiseList.length!=0" style="display: flex;width:97%;overflow: hidden;">
-					<view style='margin:15rpx 10rpx;' v-for="(item, index) in appraiseList[0].imgs" :key="index"
-						v-if="index < 3">
-						<u-image radius='8px' width="156rpx" height="156rpx" :src="item" mode=""
-							@click="previewImage(item)">
-						</u-image>
-					</view>
-					<view v-if="appraiseList[0].imgs.length > 4"
-						:style="{ background: `url(${appraiseList[0].imgs[4]})`,margin:' 14rpx 0 0 14rpx',width:'158rpx',height:'156rpx',borderRadius:'14rpx' }">
-						<view style="text-align: center;line-height: 156rpx;">
-							+{{ appraiseList[0].imgs.length - 4 }}
-						</view>
-					</view>
-				</view>
-			</view>
-
-			<view class="detail bgf">
-				<view class="tabs" :style="{top:navbarHeight+'px'}"><u-tabs :list="list" @change="tabChange"
-						lineColor="black" :scrollable='false' placeholder></u-tabs>
-				</view>
-				<!-- 对应的盒子模块 -->
-				<view class="main0">
-					<view class="main-flag" id="main-flag-0" :style="{height:navbarHeight+44+'px'}"></view>
+				<view class="comment bgf">
 					<view class="title">
-						服务内容
-					</view>
-					<view v-if="goodInfo.projectImg!=null">
-						<image v-for='(img,imgi) in goodInfo.projectImg.split(",")' :key="imgi" :src="img"
-							style="width:100%;"></image>
-					</view>
-				</view>
-				<view class="main1">
-					<view class="main-flag" id="main-flag-1" :style="{height:navbarHeight+44+'px'}"></view>
-					<view class="title">
-						<text>收费标准</text>
-						<view style="color: #A5A7A7;float: right;display: flex;">收费项说明<u-icon
-								name="info-circle"></u-icon>
+						<text>用户评论({{appraiseList.length}})</text>
+						<view v-if="appraiseList.length!=0" style="display:flex;align-items: center;"
+							@click="allComment">
+							<view style="font-size: 25rpx;color: #CBCFCE;margin-right: 17rpx;">全部</view>
+							<image
+								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/0e15ed9e53ec47569b535aaffb6b0d7b.png"
+								mode=""></image>
 						</view>
 					</view>
-					<table style="width: 100%;">
-						<tr style="background-color: #ecf7f1;">
-							<td>费用名称</td>
-							<td>价格</td>
-						</tr>
-						<tr v-for='(item,index)  in priceList' :key="index">
-							<td>{{item.name}}</td>
-							<td>{{item.price}}</td>
-						</tr>
-					</table>
-				</view>
-				<view class="main2">
-					<view class="main-flag" id="main-flag-2" :style="{height:navbarHeight+44+'px'}"></view>
-					<view class="title">
-						材料清单
+					<view v-if="appraiseList.length!=0" style="margin:30rpx 0 10rpx;display: flex;">
+						<u-avatar :src="appraiseList[0].avatarUrl" size="25"></u-avatar>
+						<!-- 	<image src="../../static/img/login/loginBg.png" mode=""></image> -->
+						<view
+							style="font-size: 25rpx;color: #3D3F3E;width:10%;height: 50rpx;line-height: 50rpx;margin-left: 20rpx;">
+							{{appraiseList[0].name}}
+						</view>
+						<u-rate :count="count" v-model="appraiseList[0].num" allowHalf activeColor='#ec9322'
+							readonly></u-rate>
+						<view
+							style="font-size: 25rpx;color: #3D3F3E;height: 50rpx;line-height: 50rpx;width: 50%;text-align: end;">
+							{{appraiseList[0].time}}
+						</view>
 					</view>
-					<view class="cell">
-						<u-collapse :border='false'>
-
-							<u-collapse-item v-for="(item,index) in melList" :key="index" :title="item.name"
-								name="Docs guide">
-								<view v-for="(ch,chindex) in item.list" :key='chindex'
-									style="display: flex;justify-content: space-between;margin-bottom: 20rpx;">
-									<text v-for="(s,si) in Object.values(JSON.parse(ch.materialSpecs))" :key="si">
-										{{s}}
-									</text>
-									<text>{{ch.salePrice}}元/{{ch.materialUnit}}</text>
-								</view>
-							</u-collapse-item>
-
-						</u-collapse>
+					<view v-if="appraiseList.length!=0">
+						<u--text :lines="2" :text="appraiseList[0].appraiseContent">
+						</u--text>
 					</view>
-				</view>
-			</view>
-
-
-			<view v-if="goodInfo.standard" class="bgf" style="margin-top: 20rpx;padding: 20rpx;">
-				<view style="font-size: 30rpx;">
-					维修小百科
-				</view>
-				<view style="margin: 10rpx 0 0 10rpx;">
-					{{goodInfo.standard.standardName}}
-					<view style="font-size: 22rpx;color: #A5A7A7;margin-top:20rpx ;">
-						服务分类：{{goodInfo.standard.serviceType}}
+					<view v-if="appraiseList.length!=0" style="display: flex;width:97%;overflow: hidden;">
+						<view style='margin:15rpx 10rpx;' v-for="(item, index) in appraiseList[0].imgs" :key="index"
+							v-if="index < 3">
+							<u-image radius='8px' width="156rpx" height="156rpx" :src="item" mode=""
+								@click="previewImage(item)">
+							</u-image>
+						</view>
+						<view v-if="appraiseList[0].imgs.length > 4"
+							:style="{ background: `url(${appraiseList[0].imgs[4]})`,margin:' 14rpx 0 0 14rpx',width:'158rpx',height:'156rpx',borderRadius:'14rpx' }">
+							<view style="text-align: center;line-height: 156rpx;">
+								+{{ appraiseList[0].imgs.length - 4 }}
+							</view>
+						</view>
 					</view>
 				</view>
-			</view>
+
+				<view class="detail bgf">
+					<view class="tabs" :style="{top:navbarHeight+'px'}"><u-tabs :list="list" @change="tabChange"
+							lineColor="black" :scrollable='false' placeholder></u-tabs>
+					</view>
+					<!-- 对应的盒子模块 -->
+					<view class="main0">
+						<view class="main-flag" id="main-flag-0" :style="{height:navbarHeight+44+'px'}"></view>
+						<view class="title">
+							服务内容
+						</view>
+						<view v-if="goodInfo.projectImg!=null">
+							<image v-for='(img,imgi) in goodInfo.projectImg.split(",")' :key="imgi" :src="img"
+								style="width:100%;"></image>
+						</view>
+					</view>
+					<view class="main1">
+						<view class="main-flag" id="main-flag-1" :style="{height:navbarHeight+44+'px'}"></view>
+						<view class="title">
+							<text>收费标准</text>
+							<view style="color: #A5A7A7;float: right;display: flex;">收费项说明<u-icon
+									name="info-circle"></u-icon>
+							</view>
+						</view>
+						<table style="width: 100%;">
+							<tr style="background-color: #ecf7f1;">
+								<td>费用名称</td>
+								<td>价格</td>
+							</tr>
+							<tr v-for='(item,index)  in priceList' :key="index">
+								<td>{{item.name}}</td>
+								<td>{{item.price}}</td>
+							</tr>
+						</table>
+					</view>
+					<view class="main2">
+						<view class="main-flag" id="main-flag-2" :style="{height:navbarHeight+44+'px'}"></view>
+						<view class="title">
+							材料清单
+						</view>
+						<view class="cell">
+							<u-collapse :border='false'>
+
+								<u-collapse-item v-for="(item,index) in melList" :key="index" :title="item.name"
+									name="Docs guide">
+									<view v-for="(ch,chindex) in item.list" :key='chindex'
+										style="display: flex;justify-content: space-between;margin-bottom: 20rpx;">
+										<text v-for="(s,si) in Object.values(JSON.parse(ch.materialSpecs))" :key="si">
+											{{s}}
+										</text>
+										<text>{{ch.salePrice}}元/{{ch.materialUnit}}</text>
+									</view>
+								</u-collapse-item>
+
+							</u-collapse>
+						</view>
+					</view>
+				</view>
 
 
-			<view class="bgf" style="height:212rpx;">
-			</view>
+				<view v-if="goodInfo.standard" class="bgf" style="margin-top: 20rpx;padding: 20rpx;">
+					<view style="font-size: 30rpx;">
+						维修小百科
+					</view>
+					<view style="margin: 10rpx 0 0 10rpx;">
+						{{goodInfo.standard.standardName}}
+						<view style="font-size: 22rpx;color: #A5A7A7;margin-top:20rpx ;">
+							服务分类：{{goodInfo.standard.serviceType}}
+						</view>
+					</view>
+				</view>
 
-		</scroll-view>
-		<view class="bottom">
-			<view @click="jionCar" class="btn">
-				选好了
+
+				<view class="bgf" style="height:212rpx;">
+				</view>
+
+			</scroll-view>
+			<view class="bottom">
+				<view @click="jionCar" class="btn">
+					选好了
+				</view>
 			</view>
+			<u-toast ref="uToast"></u-toast>
 		</view>
-
-		<u-toast ref="uToast"></u-toast>
-
-
-	</view>
-
-
+	</common-page>
 </template>
 
 <script>
@@ -500,9 +498,14 @@
 			},
 			//去登录
 			confirm() {
+				// #ifdef MP-WEIXIN
+				this.$store.commit('OPEN_LOGIN_POP')
+				// #endif
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '/pages/login/index'
 				})
+				// #endif
 				this.isShowLogin = false
 			},
 			// //是否是加入维修车

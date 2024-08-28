@@ -1,93 +1,97 @@
 <template>
-	<view class="order">
+	<common-page>
+		<view class="order">
 
-		<z-paging ref="paging" v-model="orderList" @query="getOrderlistHandle" @onRefresh="refresh">
-			<view slot='top'>
-				<view class="top">
-					<u-grid :border="false" @click="click" col="5">
+			<z-paging ref="paging" v-model="orderList" @query="getOrderlistHandle" @onRefresh="refresh">
+				<view slot='top'>
+					<view class="top">
+						<u-grid :border="false" @click="click" col="5">
 
-						<u-grid-item v-for="(item,index) in list" :key="index">
-							<view style="position: relative;">
-								<u-badge style="font-size: 18rpx;" max="99" :value="item.num" :offset="[2,-12]"
-									:absolute='true' bgColor='#EC5722'></u-badge>
-								<img :src="item.img" style="width: 39rpx;height: 36rpx;padding-top: 20rpx;">
+							<u-grid-item v-for="(item,index) in list" :key="index">
+								<view style="position: relative;">
+									<u-badge style="font-size: 18rpx;" max="99" :value="item.num" :offset="[2,-12]"
+										:absolute='true' bgColor='#EC5722'></u-badge>
+									<img :src="item.img" style="width: 39rpx;height: 36rpx;padding-top: 20rpx;">
 
-							</view>
-							<text class="grid-text">{{item.name}}</text>
-						</u-grid-item>
-					</u-grid>
+								</view>
+								<text class="grid-text">{{item.name}}</text>
+							</u-grid-item>
+						</u-grid>
+					</view>
 				</view>
-			</view>
 
 
-			<view class="orders" @click="orderDetail(item.orderId,item.orderStatus)" v-for='(item,index) in orderList'
-				:key='index'>
-				<view class="main">
-					<view class="title">
-						<view class="top">
-							<view
-								style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
-								<view style="display: flex;align-items: center;">
-									<text v-if="item.warrantyStore!=null" style="margin-right: 15rpx;">{{item.warrantyStore}}</text>
-									<text v-if="item.isClientAppoint==1" class="appoint">门店指派</text>
+				<view class="orders" @click="orderDetail(item.orderId,item.orderStatus)"
+					v-for='(item,index) in orderList' :key='index'>
+					<view class="main">
+						<view class="title">
+							<view class="top">
+								<view
+									style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
+									<view style="display: flex;align-items: center;">
+										<text v-if="item.warrantyStore!=null"
+											style="margin-right: 15rpx;">{{item.warrantyStore}}</text>
+										<text v-if="item.isClientAppoint==1" class="appoint">门店指派</text>
+									</view>
+									<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
+										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
 								</view>
-								<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
-							</view>
-							<view style="display: flex;margin: 7rpx 0;">
-								订单号：{{item.orderNumber}}
-								<view @click.stop="copy(item.orderNumber)">
-									<image
-										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/57de362ad312499d93634d2ae9021099.png"
-										style="width: 29rpx;height: 29rpx;margin-left: 10rpx;"></image>
+								<view style="display: flex;margin: 7rpx 0;">
+									订单号：{{item.orderNumber}}
+									<view @click.stop="copy(item.orderNumber)">
+										<image
+											src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/57de362ad312499d93634d2ae9021099.png"
+											style="width: 29rpx;height: 29rpx;margin-left: 10rpx;"></image>
+									</view>
 								</view>
-							</view>
 
-						</view>
-						<view class="bottom">
-							<view>下单时间：{{item.orderTime}}</view>
-							<view :style="{'color':item.orderStatus=='待接单'||item.orderStatus=='售后中'||item.orderStatus=='待评价'?'#F3B133':
+							</view>
+							<view class="bottom">
+								<view>下单时间：{{item.orderTime}}</view>
+								<view :style="{'color':item.orderStatus=='待接单'||item.orderStatus=='售后中'||item.orderStatus=='待评价'?'#F3B133':
 								item.orderStatus=='待上门'?'#3398F3':
 								item.orderStatus=='已完成'?'#A5A7A7':'#A4D091'}">{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.orderStatus}}
+								</view>
 							</view>
 						</view>
-					</view>
-					<view class="">
+						<view class="">
 
-					</view>
-					<view v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
-						v-for="(pro,i) in item.projectDataVoList" :key="i" style="margin: 20rpx 0;">
+						</view>
+						<view v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
+							v-for="(pro,i) in item.projectDataVoList" :key="i" style="margin: 20rpx 0;">
 
-						<project-card :pro='pro' type='myOrder' />
-					</view>
-					<view style="color: #EC5722;text-align: end;font-weight: bold;margin-bottom: 21rpx;">
-						应付款：￥{{item.orderPrice}}
-					</view>
-					<view class="time">
-						<text>预约上门时间：{{item.expectTime}}</text>
-						<text>由{{item.workerType!=null&&item.workerType}}维修</text>
-					</view>
-					<view class="btns">
-						<!-- 	<view @click.stop='backFix(item)' class="btn-white"
+							<project-card :pro='pro' type='myOrder' />
+						</view>
+						<view style="color: #EC5722;text-align: end;font-weight: bold;margin-bottom: 21rpx;">
+							应付款：￥{{item.orderPrice}}
+						</view>
+						<view class="time">
+							<text>预约上门时间：{{item.expectTime}}</text>
+							<text>由{{item.workerType!=null&&item.workerType}}维修</text>
+						</view>
+						<view class="btns">
+							<!-- 	<view @click.stop='backFix(item)' class="btn-white"
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view> -->
-						<!-- 	<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
+							<!-- 	<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
 							@click="handleRoute(item)">联系师傅</view> -->
-						<view @click.stop='orderDetail(item.orderId)' class="btn-white"
-							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
-							返修</view>
-						<view @click.stop='orderDetail(item.orderId)' class="btn-green" v-if="item.orderStatus=='待评价'">
-							去评价</view>
-						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
-						<view @click.stop='orderDetail(item.orderId)' class="btn-green"
-							v-if="item.orderStatus=='服务中【审核通过】'">确认方案</view>
+							<view @click.stop='orderDetail(item.orderId)' class="btn-white"
+								v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
+								返修</view>
+							<view @click.stop='orderDetail(item.orderId)' class="btn-green"
+								v-if="item.orderStatus=='待评价'">
+								去评价</view>
+							<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付</view>
+							<view @click.stop='orderDetail(item.orderId)' class="btn-green"
+								v-if="item.orderStatus=='服务中【审核通过】'">确认方案</view>
+						</view>
 					</view>
 				</view>
-			</view>
 
-		</z-paging>
+			</z-paging>
 
 
-	</view>
+		</view>
+	</common-page>
 </template>
 
 <script>
@@ -176,9 +180,14 @@
 				// 	}
 				// })
 			} else {
+				// #ifdef MP-WEIXIN
+				this.$store.commit('OPEN_LOGIN_POP')
+				// #endif
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '/pages/login/index'
 				})
+				// #endif
 			}
 		},
 		methods: {
@@ -190,7 +199,7 @@
 				})
 			},
 			getOrderlistHandle(pageNo, pageSize) {
-				if(!storage.get('ClientId'))return
+				if (!storage.get('ClientId')) return
 				console.log(this.queryParams);
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
