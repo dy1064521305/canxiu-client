@@ -62,25 +62,24 @@
 						</view>
 					</view>
 				</view>
-				<view class="orderItems-worker acea-row flex-center">
+				<view class="orderItems-worker acea-row flex-center" v-if="item.workerId&&item.workerId!=null">
 					<view class="orderItems-worker-img">
-						<!-- <image src="" mode=""></image> -->
-						<image
+						<image v-if="item.avatarUrl&&item.avatarUrl!=null" :src="item.avatarUrl" mode=""></image>
+						<image v-else
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/ea32e75cab3b4381954c83e34b151278.png"
 							mode=""></image>
 
 					</view>
-					<!-- v-if="item.isAppoint!=null&&item.workerId -->
 					<view class="orderItems-worker-mess">
 						<view class="acea-row row-middle ">
 							<text style="margin-right: 10rpx;">{{item.workerName}}</text>
 							<view class="acea-row">
-								{{item.levelIdValue}}<u-rate active-color="#FD5834" readonly v-model="item.levelIdValue"
-									allowHalf inactive-color="#b2b2b2" gutter="2"></u-rate>
+								<u-rate active-color="#FD5834" readonly v-model="item.levelIdValue" allowHalf
+									inactive-color="#b2b2b2" gutter="2"></u-rate>
 							</view>
 						</view>
-						<!-- <text class="type">工种：<text v-for="(i,index) in item.typeNameList">{{i}}</text></text> -->
-						<text class="type">工种：{{item.workerType}}</text>
+						<text class="type line1">工种：<text v-for="(i,index) in item.typeNameList">{{i}}</text></text>
+						<!-- <text class="type">工种：{{item.workerType}}</text> -->
 					</view>
 					<view class="orderItems-worker-phone" @click.stop="showPhoneHandle(item)">
 						<image
@@ -101,7 +100,7 @@
 						<text>{{pro.projectName}}</text>
 						<view class="" style="margin: 4rpx 0;">{{pro.typeName}}</view>
 						<view class="acea-row row-middle  row-between-wrapper">
-							<view>{{pro.projectPrice}}元/个</view>
+							<view>{{pro.discountPrice}}元/个</view>
 							<view>x{{pro.projectNumber}}</view>
 						</view>
 					</view>
@@ -110,7 +109,7 @@
 				<view class="orderItems-time flex-colum">
 					<view> <text>上门时间：</text>{{item.expectTime}}</view>
 					<view style="margin: 8rpx 0;"> <text> 报修地址：</text>{{item.addressVo.addressDetailed}}</view>
-					<view> <text>所属品牌：</text>xx品牌</view>
+					<view> <text>所属品牌：</text>{{item.brandName}}品牌</view>
 				</view>
 				<view class="orderItems-money acea-row row-between-wrapper">
 					<view class="orderItems-money-left">
@@ -122,7 +121,7 @@
 					</view> -->
 				</view>
 			</view>
-			<view class=" orders" @click="orderDetail(item)" v-for='(item,index) in orderList' :key='index'>
+			<!-- <view class=" orders" @click="orderDetail(item)" v-for='(item,index) in orderList' :key='index'>
 				<view class="main">
 					<view class="title">
 						<view class="top">
@@ -171,10 +170,6 @@
 						<text>由{{item.workerType!=null&&item.workerType}}维修</text>
 					</view>
 					<view class="btns" v-if="!item.repairId">
-						<!-- 	<view @click.stop='backFix(item)' class="btn-white"
-							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">返修</view> -->
-						<!-- 	<view @click.stop='contactMaster' class="btn-green" v-if="item.orderStatus=='待上门'"
-							@click="handleRoute(item)">联系师傅</view> -->
 						<view @click.stop='orderDetail(item)' class="btn-white"
 							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
 							返修</view>
@@ -186,7 +181,7 @@
 							确认方案</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 
 		</z-paging>
 
@@ -812,7 +807,9 @@
 					}
 
 					.type {
-						margin-top: 19rpx;
+						display: inline-block;
+						width: 400rpx;
+						margin-top: 9rpx;
 					}
 				}
 

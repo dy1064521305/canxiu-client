@@ -186,7 +186,6 @@
 				console.log(e, "eee");
 			},
 			submit() {
-				console.log(this.where, "where");
 				if (!this.isLogin) return this.$store.commit('OPEN_LOGIN_POP')
 				if (!this.where.realName) return this.$toast('您的姓名不能为空')
 				if (isEmpty(this.where.cellPhone)) {
@@ -199,6 +198,7 @@
 				}
 				if (!this.where.region) return this.$toast('所在城市不能为空')
 				this.where.clientId = storage.get('ClientId') || ''
+				console.log(this.where, "where");
 				postPartnerApply(this.where).then(res => {
 					this.$toast('操作成功')
 					setTimeout(() => {
