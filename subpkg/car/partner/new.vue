@@ -129,6 +129,7 @@
 				let scene = parseQuery(decodeURIComponent(options.scene)) || null
 				if (options.scene) {
 					this.clientId = scene.userId || ''
+					console.log(scene, "scene");
 					// this.where.clientId = this.clientId
 					this.getInfo(this.clientId)
 				}
@@ -147,9 +148,9 @@
 		},
 		onShow() {
 			if (this.isLogin) {
-				let id = storage.get('ClientId')
-				console.log(id, "this.userId");
 				setTimeout(() => {
+					let id = storage.get('ClientId')
+					console.log(id, "this.userId");
 					putImmediate(id).then(res => {
 						if (res.data) {
 							this.$toast('您已是合伙人!', 'success').then(() => {
@@ -185,7 +186,6 @@
 				console.log(e, "eee");
 			},
 			submit() {
-				console.log(this.where, "where");
 				if (!this.isLogin) return this.$store.commit('OPEN_LOGIN_POP')
 				if (!this.where.realName) return this.$toast('您的姓名不能为空')
 				if (isEmpty(this.where.cellPhone)) {
@@ -198,6 +198,7 @@
 				}
 				if (!this.where.region) return this.$toast('所在城市不能为空')
 				this.where.clientId = storage.get('ClientId') || ''
+				console.log(this.where, "where");
 				postPartnerApply(this.where).then(res => {
 					this.$toast('操作成功')
 					setTimeout(() => {
