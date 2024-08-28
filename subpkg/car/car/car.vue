@@ -1,45 +1,46 @@
 <template>
-	<view class="page">
-		<!-- 未登录 -->
-		<view v-if="!isLogin" style="padding-top: 330rpx;">
-			<u-empty mode="permission"
-				icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
-				text="您还未登录">
-			</u-empty>
-			<view class="btns">
-				<view @click="quxiao">
-					取消
-				</view>
-				<view @click="login">
-					去登录
+	<common-page>
+		<view class="page">
+			<!-- 未登录 -->
+			<view v-if="!isLogin" style="padding-top: 330rpx;">
+				<u-empty mode="permission"
+					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
+					text="您还未登录">
+				</u-empty>
+				<view class="btns">
+					<view @click="quxiao">
+						取消
+					</view>
+					<view @click="login">
+						去登录
+					</view>
 				</view>
 			</view>
-		</view>
 
 
-		<view v-else>
-			<!-- 	<z-paging ref="paging" v-model="dataList" @query="queryList">
+			<view v-else>
+				<!-- 	<z-paging ref="paging" v-model="dataList" @query="queryList">
 				<view slot="top">
 			
 				</view>
 
 			</z-paging> -->
 
-			<u-navbar title="维修车" placeholder :safeAreaInsetTop="true" :autoBack='true'>
+				<u-navbar title="维修车" placeholder :safeAreaInsetTop="true" :autoBack='true'>
 
-				<view class="u-nav-slot" slot="right">
-					<image v-if="dataList.length!=0" @click='isDelete=!isDelete'
-						:style="{'margin-right':menuButtonInfoWidth+'rpx','width': '29rpx','height': '29rpx','padding-left': '10rpx'}"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/77aa4cd356c141118bd73c3bfc162be9.png"
-						mode=""></image>
-					<view v-if="dataList.length!=0" @click='isDelete=!isDelete'
-						:style="{'margin-top':'-10rpx','font-size': '22rpx','color': '#3D3F3E','padding-right': '15rpx','margin-right':menuButtonInfoWidth+'rpx'}">
-						{{isDelete?'取消':'管理'}}
+					<view class="u-nav-slot" slot="right">
+						<image v-if="dataList.length!=0" @click='isDelete=!isDelete'
+							:style="{'margin-right':menuButtonInfoWidth+'rpx','width': '29rpx','height': '29rpx','padding-left': '10rpx'}"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/77aa4cd356c141118bd73c3bfc162be9.png"
+							mode=""></image>
+						<view v-if="dataList.length!=0" @click='isDelete=!isDelete'
+							:style="{'margin-top':'-10rpx','font-size': '22rpx','color': '#3D3F3E','padding-right': '15rpx','margin-right':menuButtonInfoWidth+'rpx'}">
+							{{isDelete?'取消':'管理'}}
+						</view>
 					</view>
-				</view>
 
-			</u-navbar>
-			<!-- 	<view class="address" @click="myAddress"
+				</u-navbar>
+				<!-- 	<view class="address" @click="myAddress"
 				:style="{'height':JSON.stringify(addressList)==='[]'?'130rpx':'200rpx'}">
 				<view class="left" v-if="addressList.length!=0">
 					<view style="font-size: 36rpx;color: #3D3F3E;font-weight: bold;">
@@ -64,111 +65,113 @@
 
 
 
-			<view class="list">
-				<u-checkbox-group v-model="checkboxValue1" placement="column">
-					<view style="background-color: #fff;margin-bottom: 20rpx;" v-for="(item,index) in dataList"
-						:key="index">
-						<view
-							style="padding: 20rpx 28rpx;display: flex;justify-content: space-between;align-items: center;">
-							<!-- 	<view > -->
+				<view class="list">
+					<u-checkbox-group v-model="checkboxValue1" placement="column">
+						<view style="background-color: #fff;margin-bottom: 20rpx;" v-for="(item,index) in dataList"
+							:key="index">
+							<view
+								style="padding: 20rpx 28rpx;display: flex;justify-content: space-between;align-items: center;">
+								<!-- 	<view > -->
 
-							<view style="display: flex;align-items: center;">
-								<u-checkbox v-if="!item.isStatus" shape="circle" :name="item.workerType"
-									activeColor='#A4D091' @change='val=>typeCheckChange(val,item,index)'>
-								</u-checkbox>
-								<text
-									style="font-size:34rpx;font-weight: bold;color: #3D3F3E;">{{item.workerType}}</text>
+								<view style="display: flex;align-items: center;">
+									<u-checkbox v-if="!item.isStatus" shape="circle" :name="item.workerType"
+										activeColor='#A4D091' @change='val=>typeCheckChange(val,item,index)'>
+									</u-checkbox>
+									<text
+										style="font-size:34rpx;font-weight: bold;color: #3D3F3E;">{{item.workerType}}</text>
 
 
-							</view>
-							<view style="display: flex;">
-								起步价:{{item.startingFreeDiscount}}元/次
-								<text
-									v-if="Number(item.startingFreeDiscount)-((item.children.filter(f=>{return f.projectStatus==0})).reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))>0"
-									@click="coudanHandle(item.workerType)">
-									<text style="margin:0 10rpx;">|</text>去凑单 >
-									<!-- 	<text style="font-size: 25rpx;">
+								</view>
+								<view style="display: flex;">
+									起步价:{{item.startingFreeDiscount}}元/次
+									<text
+										v-if="Number(item.startingFreeDiscount)-((item.children.filter(f=>{return f.projectStatus==0})).reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))>0"
+										@click="coudanHandle(item.workerType)">
+										<text style="margin:0 10rpx;">|</text>去凑单 >
+										<!-- 	<text style="font-size: 25rpx;">
 										还差<text
 											style="color:#EC5722;">{{Number(item.startingFreeDiscount)-(item.children.reduce((p, c) => p + (Number(c.projectNumber) * Number(c.discountPrice)), 0))}}</text>元达到起步价
 									</text> -->
-								</text>
-								<text v-else>
-									<!-- <image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
+									</text>
+									<text v-else>
+										<!-- <image style="width: 35rpx;height: 35rpx;margin-right: 10rpx;"
 										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
 									</image>已达到起步价 -->
-									（已满足）
-								</text>
+										（已满足）
+									</text>
+								</view>
+
 							</view>
+							<proInfo :list="item.children" :isCar='true' :isDelete='isDelete' @getCarList='getCarList'
+								@getCheck='getCheck' @check_change="checkChange" @deleteCarList="deleteList"
+								@getDeleteUrlList='getDeleteUrlList' @textareaInput='textareaInput' />
+						</view>
+					</u-checkbox-group>
+
+					<u-empty v-if="dataList.length==0" mode="car"
+						icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/125e056702434056b9b3bc5f7768eb0a.png"
+						text='维修车为空' marginTop='100' width="210px">
+					</u-empty>
+
+
+				</view>
+
+				<!-- :style="{bottom:(tabbarHeight*2-10)+'rpx'}" -->
+				<view v-if="dataList.length!=0" class="bottom" :style="{bottom:(tabbarHeight*2-10)+'rpx'}">
+					<view v-if="checkedList.length !== allNum||checkedList.length==0" class="check"
+						@click="allCheckHandle(true)">
+
+					</view>
+					<!-- {{checkedList.length}}{{allNum}} -->
+					<view v-if="checkedList.length === allNum&&checkedList.length!=0" @click="allCheckHandle(false)">
+						<image style="width: 43rpx;height: 43rpx;"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
+						</image>
+					</view>
+					<text style="font-size: 29rpx;color: #3D3F3E;">全选</text>
+					<view style="width: 53%;text-align: end;">
+						<text style="font-size: 22rpx;color: #A5A7A7;">合计:</text>
+						<text
+							style="font-size: 33rpx;color: #EC5722;margin:0 10rpx 0 10rpx;width:14%;">¥{{totalMoney}}</text>
+					</view>
+					<view v-if='isDelete' style="background: #EC5722;" class="btn" @click="deleteHandle">
+						删除所选({{checkedList.length}})
+					</view>
+					<view v-else class="btn" style="background:linear-gradient(270deg, #A4D091 0%, #769D71 100%);"
+						@click="submitOrder">去下单({{checkedList.length}})</view>
+				</view>
+			</view>
+			<view style="height:100rpx;">
+			</view>
+
+
+			<!-- 凑单弹框 -->
+			<u-popup :show="coudanShow" closeable @close="coudanShow=false">
+				<view class="cou-dan">
+					<view class="title">服务橱窗</view>
+					<view style="padding:10rpx 20rpx;">
+						<u-search clearabled placeholder="请输入需要的服务" v-model="searchName" @clear="getCoudanList"
+							@search="getCoudanList" :show-action="false"></u-search>
+					</view>
+
+
+					<view v-if="coudanList.length!=0" class="main">
+						<view v-for="(item,index) in coudanList" :key="index" class="box">
+							<coudan-card :item='item' />
+
+
 
 						</view>
-						<proInfo :list="item.children" :isCar='true' :isDelete='isDelete' @getCarList='getCarList'
-							@getCheck='getCheck' @check_change="checkChange" @deleteCarList="deleteList"
-							@getDeleteUrlList='getDeleteUrlList' @textareaInput='textareaInput' />
-					</view>
-				</u-checkbox-group>
-
-				<u-empty v-if="dataList.length==0" mode="car"
-					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/125e056702434056b9b3bc5f7768eb0a.png"
-					text='维修车为空' marginTop='100' width="210px">
-				</u-empty>
-
-
-			</view>
-
-			<!-- :style="{bottom:(tabbarHeight*2-10)+'rpx'}" -->
-			<view v-if="dataList.length!=0" class="bottom" :style="{bottom:(tabbarHeight*2-10)+'rpx'}">
-				<view v-if="checkedList.length !== allNum||checkedList.length==0" class="check"
-					@click="allCheckHandle(true)">
-
-				</view>
-				<!-- {{checkedList.length}}{{allNum}} -->
-				<view v-if="checkedList.length === allNum&&checkedList.length!=0" @click="allCheckHandle(false)">
-					<image style="width: 43rpx;height: 43rpx;"
-						src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/08/18/87c7f99dab0b4efcb0ff259ecc86c7fd.png">
-					</image>
-				</view>
-				<text style="font-size: 29rpx;color: #3D3F3E;">全选</text>
-				<view style="width: 53%;text-align: end;">
-					<text style="font-size: 22rpx;color: #A5A7A7;">合计:</text>
-					<text
-						style="font-size: 33rpx;color: #EC5722;margin:0 10rpx 0 10rpx;width:14%;">¥{{totalMoney}}</text>
-				</view>
-				<view v-if='isDelete' style="background: #EC5722;" class="btn" @click="deleteHandle">
-					删除所选({{checkedList.length}})
-				</view>
-				<view v-else class="btn" style="background:linear-gradient(270deg, #A4D091 0%, #769D71 100%);"
-					@click="submitOrder">去下单({{checkedList.length}})</view>
-			</view>
-		</view>
-		<view style="height:100rpx;">
-		</view>
-
-
-		<!-- 凑单弹框 -->
-		<u-popup :show="coudanShow" closeable @close="coudanShow=false">
-			<view class="cou-dan">
-				<view class="title">服务橱窗</view>
-				<view style="padding:10rpx 20rpx;">
-					<u-search clearabled placeholder="请输入需要的服务" v-model="searchName" @clear="getCoudanList"
-						@search="getCoudanList" :show-action="false"></u-search>
-				</view>
-
-
-				<view v-if="coudanList.length!=0" class="main">
-					<view v-for="(item,index) in coudanList" :key="index" class="box">
-						<coudan-card :item='item' />
-
-
 
 					</view>
-
+					<u-empty v-else mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png"
+						text='没有找到哦，换个关键词试一下吧'>
+					</u-empty>
 				</view>
-				<u-empty v-else mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" text='没有找到哦，换个关键词试一下吧'>
-				</u-empty>
-			</view>
-		</u-popup>
+			</u-popup>
 
-	</view>
+		</view>
+	</common-page>
 </template>
 <script>
 	import storage from '@/utils/storage'
@@ -667,9 +670,15 @@
 			},
 			//去登录
 			login() {
+				// #ifdef MP-WEIXIN
+				this.$store.commit('OPEN_LOGIN_POP')
+				// #endif
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '/pages/login/index'
 				})
+				// #endif
+
 			},
 			textareaInput(arr) {
 				this.dataList.forEach(item1 => {

@@ -11,10 +11,6 @@
 							<view class="">
 								未注册手机号验证后即完成注册
 							</view>
-							<!-- <view class="acea-row row-middle"
-								style="width: 70rpx;height: 40rpx;justify-content: flex-end;" @click="$emit('close')">
-								<u-icon name="close"></u-icon>
-							</view> -->
 						</view>
 						<view class="content acea-con">
 							<button v-if="checkedLogin" class="btn" type="primary" open-type="getPhoneNumber"
@@ -90,9 +86,7 @@
 			console.log(this.inviteType, "inviteTypeinviteType");
 			this.getListLogin()
 		},
-		mounted() {
-			// console.log('this.specia', this._specia);
-		},
+		mounted() {},
 		methods: {
 			//#ifdef MP
 			// 小程序获取手机号码
@@ -122,26 +116,14 @@
 					loginCode: code,
 					phoneNumberCode: phoneCode,
 				}
-
 				this.loginHandler(data);
-				// postLoginPartner(data)
-				// 	.then(res => {
-				// 		uni.hideLoading();
-
-				// 	})
-				// 	.catch(err => {
-				// 		uni.hideLoading();
-				// 		this.$alert(err);
-				// 	}).finally(() => {
-				// 		Routine.refreshCode()
-				// 	});
 			},
 			//#endif
 			loginHandler(data) {
-				// data.expires_time = data.expires_time - $cache.time();
 				this.$store.dispatch('LOGIN', data).then(user => {
 					console.log(user, "back_url");
 					uni.hideLoading();
+					// 二维码邀请的时候的判断
 					if (this.inviteType && user.isPartner && user.type == 'Success') {
 						putImmediate(user.clientId).then(res => {
 							if (res.data) {
@@ -156,7 +138,6 @@
 						}).catch(err => {
 							this.$alert(err)
 							this.$store.commit('CLOSE_LOGIN_POP')
-							// this.$jump(-1)
 						})
 					} else {
 						// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];

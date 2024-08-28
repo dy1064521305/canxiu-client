@@ -1,92 +1,94 @@
 <template>
-	<view class="page">
-		<view v-if="!isLogin" style="padding-top:31vh">
-			<u-empty mode="permission"
-				icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
-				text="您还未登录">
-			</u-empty>
-			<view class="btns">
-				<view @click="quxiao">
-					取消
-				</view>
-				<view @click="login">
-					去登录
+	<common-page>
+		<view class="page">
+			<view v-if="!isLogin" style="padding-top:31vh">
+				<u-empty mode="permission"
+					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
+					text="您还未登录">
+				</u-empty>
+				<view class="btns">
+					<view @click="quxiao">
+						取消
+					</view>
+					<view @click="login">
+						去登录
+					</view>
 				</view>
 			</view>
-		</view>
-		<view v-else>
-			<view class="bg"></view>
-			<view class="center">
-				<view class="info acea-row row-between-wrapper">
-					<view class="acea-row" @click.stop="goInfo">
-						<view class="info-image">
-							<image v-if="userInfo.avatarUrl==null||userInfo.avatarUrl==''||userInfo.avatarUrl=='null'"
-								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
-							</image>
-							<u--image v-else width='80rpx' height='80rpx' :src="userInfo.avatarUrl" shape="circle">
-							</u--image>
-						</view>
-						<view class="name  flex-colum">
-							<view class="name-left">
-								{{userInfo.clientName||'暂无'}}
+			<view v-else>
+				<view class="bg"></view>
+				<view class="center">
+					<view class="info acea-row row-between-wrapper">
+						<view class="acea-row" @click.stop="goInfo">
+							<view class="info-image">
+								<image
+									v-if="userInfo.avatarUrl==null||userInfo.avatarUrl==''||userInfo.avatarUrl=='null'"
+									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
+								</image>
+								<u--image v-else width='80rpx' height='80rpx' :src="userInfo.avatarUrl" shape="circle">
+								</u--image>
 							</view>
-							<!-- 	<view class="grade" @click.stop="$jump('/subpkg/car/partner/index')"
+							<view class="name  flex-colum">
+								<view class="name-left">
+									{{userInfo.clientName||'暂无'}}
+								</view>
+								<!-- 	<view class="grade" @click.stop="$jump('/subpkg/car/partner/index')"
 								v-if="partnerInfo==null">
 								申请合伙人
 							</view> -->
-							<view class="grade">
-								{{userInfo.phone}}
+								<view class="grade">
+									{{userInfo.phone}}
+								</view>
 							</view>
 						</view>
-					</view>
-					<!-- <view style="display: flex;align-items: center;">
+						<!-- <view style="display: flex;align-items: center;">
 						<image style="width: 16rpx;height: 29rpx;"
 							src='http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/28/6840f46a9289454198777dd3471d456b.png'
 							mode=""></image>
 					</view> -->
 
-				</view>
-				<view class="balance acea-row  row-between-wrapper">
-					<view class="balance-two " @click="$jump('/pages/users/reward/coupon')">
-						<view class="balance-two-num ">
-							{{couponNum||0}}
-						</view>
-						<text>优惠券</text>
 					</view>
-					<view class="balance-two " @click="$jump('/subpkg/center/myMoney/myMoney')">
-						<view class="balance-two-num ">
-							{{totalAmount||0}}
+					<view class="balance acea-row  row-between-wrapper">
+						<view class="balance-two " @click="$jump('/pages/users/reward/coupon')">
+							<view class="balance-two-num ">
+								{{couponNum||0}}
+							</view>
+							<text>优惠券</text>
 						</view>
-						<text>钱包余额</text>
-					</view>
-				</view>
-				<view class="order_list acea-row row-between-wrapper">
-					<view class="order_list-item" v-for="(item,index) in list"
-						@click="$jump('/subpkg/center/myOrder/myOrder?name='+item.name)" :key="item.val">
-						<view class="image">
-							<image :src="item.img" mode=""></image>
-							<view class="topValue acea-row row-between-wrapper" v-if="item.num">{{item.num}}</view>
+						<view class="balance-two " @click="$jump('/subpkg/center/myMoney/myMoney')">
+							<view class="balance-two-num ">
+								{{totalAmount||0}}
+							</view>
+							<text>钱包余额</text>
 						</view>
-						<text>{{item.name}}</text>
 					</view>
-				</view>
-				<view class="teamMy acea-row row-between-wrapper" v-if="partnerInfo != null">
-					<view class="teamMy-item flex-colum" @click="$jump('/subpkg/staging/team/index')">
-						<view class="acea-row row-between-wrapper">
-							<text style="font-size: 32rpx;">团队管理</text>
-							<u-icon name="arrow-right" color="#AEDD94" size="16"></u-icon>
+					<view class="order_list acea-row row-between-wrapper">
+						<view class="order_list-item" v-for="(item,index) in list"
+							@click="$jump('/subpkg/center/myOrder/myOrder?name='+item.name)" :key="item.val">
+							<view class="image">
+								<image :src="item.img" mode=""></image>
+								<view class="topValue acea-row row-between-wrapper" v-if="item.num">{{item.num}}</view>
+							</view>
+							<text>{{item.name}}</text>
 						</view>
-						<view style="margin-top: 8rpx;">团队人数：{{partnerInfo.teamCount||0}}人</view>
 					</view>
-					<view class="teamMy-item flex-colum" @click="$jump('/subpkg/center/myMoney/invest/account')">
-						<view class="acea-row row-between-wrapper">
-							<text style="font-size: 32rpx;">我的投资款</text>
-							<u-icon name="arrow-right" color="#FD9C2B" size="16"></u-icon>
+					<view class="teamMy acea-row row-between-wrapper" v-if="partnerInfo != null">
+						<view class="teamMy-item flex-colum" @click="$jump('/subpkg/staging/team/index')">
+							<view class="acea-row row-between-wrapper">
+								<text style="font-size: 32rpx;">团队管理</text>
+								<u-icon name="arrow-right" color="#AEDD94" size="16"></u-icon>
+							</view>
+							<view style="margin-top: 8rpx;">团队人数：{{partnerInfo.teamCount||0}}人</view>
 						</view>
-						<view style="margin-top: 8rpx;">账户余额：¥{{partnerInfo.investmentBalance||0}}</view>
+						<view class="teamMy-item flex-colum" @click="$jump('/subpkg/center/myMoney/invest/account')">
+							<view class="acea-row row-between-wrapper">
+								<text style="font-size: 32rpx;">我的投资款</text>
+								<u-icon name="arrow-right" color="#FD9C2B" size="16"></u-icon>
+							</view>
+							<view style="margin-top: 8rpx;">账户余额：¥{{partnerInfo.investmentBalance||0}}</view>
+						</view>
 					</view>
-				</view>
-				<!-- <view class="counts">
+					<!-- <view class="counts">
 					<view class="counts-title">
 						<view>门店订单数据</view>
 						<view style="margin-right: 30rpx;" @click="$jump('/subpkg/center/myOrder/myOrder?name=全部订单')">
@@ -107,42 +109,42 @@
 						</view>
 					</view>
 				</view> -->
-				<!-- <view class="swiperBanner"></view> -->
-				<view class="counts">
-					<text class="counts-title">常用功能</text>
-					<view class="counts-type acea-row">
-						<view class="counts-type-all " @click="toDetail(i)" v-for="(i) in useList" :key="i.id">
-							<image :class="'img-'+i.id" :src="i.img" mode=""></image>
-							<view>{{i.label}}</view>
-						</view>
+					<!-- <view class="swiperBanner"></view> -->
+					<view class="counts">
+						<text class="counts-title">常用功能</text>
+						<view class="counts-type acea-row">
+							<view class="counts-type-all " @click="toDetail(i)" v-for="(i) in useList" :key="i.id">
+								<image :class="'img-'+i.id" :src="i.img" mode=""></image>
+								<view>{{i.label}}</view>
+							</view>
 
-					</view>
-				</view>
-				<view class="setUp">
-					<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
-						v-for="(item) in typeList.slice(0,3)" :key="item.id">
-						<view class="setUp-list-left">
-							<image :src="item.img" :class="'img-'+item.id" mode=""></image>
-							<text>{{item.label}}</text>
-						</view>
-						<view class="setUp-list-right">
-							<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
 						</view>
 					</view>
-				</view>
-				<view class="setUp" v-if="partnerInfo==null">
-					<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
-						v-for="(item) in typeList.slice(3,4)" :key="item.id">
-						<view class="setUp-list-left">
-							<image :src="item.img" :class="'img2-'+item.id" mode=""></image>
-							<text>{{item.label}}</text>
-						</view>
-						<view class="setUp-list-right">
-							<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
+					<view class="setUp">
+						<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
+							v-for="(item) in typeList.slice(0,3)" :key="item.id">
+							<view class="setUp-list-left">
+								<image :src="item.img" :class="'img-'+item.id" mode=""></image>
+								<text>{{item.label}}</text>
+							</view>
+							<view class="setUp-list-right">
+								<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
+							</view>
 						</view>
 					</view>
-				</view>
-				<!-- <view class="tixian" @click="goMyMoney">
+					<view class="setUp" v-if="partnerInfo==null">
+						<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
+							v-for="(item) in typeList.slice(3,4)" :key="item.id">
+							<view class="setUp-list-left">
+								<image :src="item.img" :class="'img2-'+item.id" mode=""></image>
+								<text>{{item.label}}</text>
+							</view>
+							<view class="setUp-list-right">
+								<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
+							</view>
+						</view>
+					</view>
+					<!-- <view class="tixian" @click="goMyMoney">
 					<view class="imgPlace">
 						<image style="width: 36rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/baaacef4cc9f4aecad3f6458f07d7fdf.png"
@@ -157,7 +159,7 @@
 						去提现
 					</view>
 				</view> -->
-				<!-- <view class="order">
+					<!-- <view class="order">
 					<view class="title">
 						<text>我的订单</text>
 						<text @click='allOrder'>全部订单</text>
@@ -181,7 +183,7 @@
 					</view>
 
 				</view> -->
-				<!-- 	<view class="hetong">
+					<!-- 	<view class="hetong">
 					<view class="imgPlace">
 						<image style="width: 36rpx;"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/a5a0b58c2d674bacb335cb758d4fca3d.png"
@@ -207,8 +209,8 @@
 						立即开通
 					</view>
 				</view> -->
-				<view class="my">
-					<!--	<view class="title">我的服务</view>
+					<view class="my">
+						<!--	<view class="title">我的服务</view>
 					<view class="main">
 						 <view class="box">
 							<view class='img'>
@@ -259,7 +261,7 @@
 							<text style="margin-left:-3rpx;">设置</text>
 						</view>
 					</view> -->
-					<!-- <u-cell-group :border='false'>
+						<!-- <u-cell-group :border='false'>
 						<u-cell size='large' isLink url="../../subpkg/car/myAddress/myAddress">
 							<view slot="title" style="display: flex;align-items: center;">
 								<image src="../../static/center/address.png"></image>
@@ -299,21 +301,21 @@
 					</u-cell-group> -->
 
 
-				</view>
+					</view>
 
-				<!-- <view @click="showPhone=true"
+					<!-- <view @click="showPhone=true"
 					style="width:100%;margin:0 auto;color: #3398F3; text-align: center; margin:80rpx 0; ">
 					有疑问？联系客服
 				</view> -->
+				</view>
 			</view>
+			<!-- 拨打电话 -->
+			<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
+				:actions="actionList" :show="showPhone"></u-action-sheet>
+
+
 		</view>
-		<!-- 拨打电话 -->
-		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
-			:actions="actionList" :show="showPhone"></u-action-sheet>
-
-
-	</view>
-
+	</common-page>
 </template>
 
 <script>
@@ -681,9 +683,14 @@
 			},
 			//去登录
 			login() {
+				// #ifdef MP-WEIXIN
+				this.$store.commit('OPEN_LOGIN_POP')
+				// #endif
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '/pages/login/index'
 				})
+				// #endif
 			},
 			actionSelect(e) {
 				if (e.name == '取消') {

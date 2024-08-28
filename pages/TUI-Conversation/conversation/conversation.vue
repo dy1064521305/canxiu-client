@@ -1,52 +1,53 @@
 <template>
-	<view class="container-conversation">
-		<u-navbar :title="num==0?'信息':'信息'+'('+num+')'" placeholder :safeAreaInsetTop="true" :titleStyle="{
+	<common-page>
+		<view class="container-conversation">
+			<u-navbar :title="num==0?'信息':'信息'+'('+num+')'" placeholder :safeAreaInsetTop="true" :titleStyle="{
 					'fontWeight':'bold'
 				}">
-		</u-navbar>
-		<view v-if="!isLogin" style="padding-top: 330rpx;">
-			<u-empty mode="permission"
-				icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
-				text="您还未登录">
-			</u-empty>
-			<view class="btns">
-				<view @click="quxiao">
-					取消
-				</view>
-				<view @click="login">
-					去登录
+			</u-navbar>
+			<view v-if="!isLogin" style="padding-top: 330rpx;">
+				<u-empty mode="permission"
+					icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/04/04/99b6e40d11194c5bae53b199773db5b6.png"
+					text="您还未登录">
+				</u-empty>
+				<view class="btns">
+					<view @click="quxiao">
+						取消
+					</view>
+					<view @click="login">
+						去登录
+					</view>
 				</view>
 			</view>
-		</view>
-		<view v-else class="">
+			<view v-else class="">
 
-			<!-- <uni-list>
+				<!-- <uni-list>
 				<uni-list-chat title="工单助手" avatar="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/gdzs.png"
 					:note="content" :time="time" badge-positon="left"
 					:badge-text="num" link to="/subpkgChat/order-push-list/index"></uni-list-chat>
 			</uni-list> -->
-			<view style="background-color: #fff;justify-content: space-evenly;
+				<view style="background-color: #fff;justify-content: space-evenly;
     display: flex;margin-top: 18rpx;">
-				<view @click="goUrl(index)" v-for="(item, index) in topList" :index="index" :key="index">
-					<view class="grid-item-box">
-						<view class="">
-							<uni-badge :customStyle="{background: '#EC5722',zIndex:'100'}"
-								:is-dot="item.num==1?true:false" :offset="[8,6]" :text="item.num" absolute="rightTop"
-								size="normal">
-								<image style="width: 108rpx;height: 108rpx;" :src="item.img"></image>
-							</uni-badge>
+					<view @click="goUrl(index)" v-for="(item, index) in topList" :index="index" :key="index">
+						<view class="grid-item-box">
+							<view class="">
+								<uni-badge :customStyle="{background: '#EC5722',zIndex:'100'}"
+									:is-dot="item.num==1?true:false" :offset="[8,6]" :text="item.num"
+									absolute="rightTop" size="normal">
+									<image style="width: 108rpx;height: 108rpx;" :src="item.img"></image>
+								</uni-badge>
 
 
+							</view>
+
+							<text style="margin-top: 10rpx;font-size: 31rpx;">{{item.title}}</text>
 						</view>
-
-						<text style="margin-top: 10rpx;font-size: 31rpx;">{{item.title}}</text>
 					</view>
 				</view>
-			</view>
 
 
 
-			<!-- 		<view class="scroll-box">
+				<!-- 		<view class="scroll-box">
 				<view class="uni-list margintop-bar" style="margin-top: 5px;">
 					<view v-for="item in conversationList" :key="item.conversationID"
 						@tap="handleRoute(item.conversationID)">
@@ -54,7 +55,7 @@
 					</view>
 				</view>
 			</view> -->
-			<!-- <view class="bottom-back">
+				<!-- <view class="bottom-back">
 				<view class="bottom-area">
 					<view v-if="showSelectTag" class="conversation-bubble" @tap.stop="handleEditToggle">
 						<view v-for="(item, index) in array" :key="index" class="picker" :data-name="item.name" @tap="handleOnTap">{{ item.name }}</view>
@@ -63,9 +64,10 @@
 					<view @tap="learnMore" class="im-link">了解更多IM功能</view>
 				</view>
 			</view> -->
-		</view>
+			</view>
 
-	</view>
+		</view>
+	</common-page>
 </template>
 <!-- 这里有个加载的补丁逻辑待优化，页面向SDK请求conversationList的时候会有时延，
 造成页面的一个抖动，这里加一个if逻辑打一个补丁，后续继续优化 -->
@@ -199,9 +201,15 @@
 			},
 			//去登录
 			login() {
+				// #ifdef MP-WEIXIN
+				this.$store.commit('OPEN_LOGIN_POP')
+				// #endif
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '/pages/login/index'
 				})
+				// #endif
+
 
 			},
 
