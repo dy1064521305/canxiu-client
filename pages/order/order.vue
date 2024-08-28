@@ -176,9 +176,9 @@
 			};
 		},
 		onShow() {
-
-			this.queryParams.clientId = storage.get('ClientId')
-			if (storage.get('ClientId')) {
+			console.log(this.isLogin, "this.isLogin");
+			if (this.isLogin) {
+				this.queryParams.clientId = storage.get('ClientId')
 				this.getOrderlistHandle(1, 10)
 				getOrderNum().then(res => {
 					uni.setTabBarBadge({
@@ -216,14 +216,14 @@
 			},
 			getOrderlistHandle(pageNo, pageSize) {
 				if (!storage.get('ClientId')) return
-				console.log(this.queryParams);
+				console.log(this.queryParams, "！111");
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
 				uni.showLoading({
 					mask: true
 				});
 				getOrderList(this.queryParams).then(res => {
-					console.log(res);
+					console.log(res, "！22");
 					res.rows.forEach(i => {
 						i.projectDataVoList && i.projectDataVoList.forEach(item => {
 							item.img = item.projectImg != null ? item.projectImg.split(
@@ -237,7 +237,7 @@
 				queryOrderCount({
 					clientId: storage.get('ClientId')
 				}).then(res => {
-					console.log(res);
+					console.log(res, "！233");
 
 					this.list.forEach(item => {
 						item.num = res.data[item.val]
