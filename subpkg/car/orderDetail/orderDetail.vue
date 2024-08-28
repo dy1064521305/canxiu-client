@@ -1027,10 +1027,11 @@
 						title: '取消成功',
 						duration: 2000
 					});
-					this.getList()
+					
 					this.dateDiff = 0
 					this.pipeiStatus = true
 					this.show = false
+					uni.navigateBack()
 				})
 			},
 			//师傅详情
@@ -1134,8 +1135,8 @@
 						title: '驳回成功',
 						duration: 1000
 					});
-
-					this.getList()
+					
+					uni.navigateBack()
 				})
 			},
 			//维修结果驳回

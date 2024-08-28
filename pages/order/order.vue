@@ -207,6 +207,9 @@
 			...mapGetters(['isLogin'])
 		},
 		methods: {
+			// otherFun(){
+			// 	this.getOrderlistHandle(1,10)
+			// },
 			click(e) {
 				console.log(e);
 
