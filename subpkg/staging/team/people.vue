@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<z-paging ref="paging" v-model="dataList" @query="getList" @onRefresh='refresh()'>
+		<z-paging ref="paging" v-model="dataList" @query="getList(1,10000)" @onRefresh='refresh()'>
 			<view slot='top'>
 				<view class="data-box acea-row row-middle">
 					<view class="input acea-row row-middle">
@@ -252,8 +252,8 @@
 					regionList: [],
 					relationType: "",
 					userId: storage.get('ClientId'),
-					pageSize: 1,
-					pageNum: 10
+					pageSize: 10000,
+					pageNum: 1
 				},
 				startTime: "",
 				endTime: "",
@@ -367,13 +367,8 @@
 			onChange(t) {
 				if (t == this.type) return
 				this.type = this.type == 0 ? 1 : 0
-				if (this.type) {
-					this.where.pageSize = 1000
-					this.$refs.paging.reload();
-				} else {
-					this.$refs.paging.reload();
-					this.where.pageSize = 10
-				}
+				this.where.pageSize = 1000
+				this.$refs.paging.reload();
 			},
 			bindDateChangeBegin: function(e) {
 				this.where.startTime = e.detail.value + ' 00:00:00'
