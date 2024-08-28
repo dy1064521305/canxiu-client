@@ -140,14 +140,22 @@
 							this.$store.commit('CLOSE_LOGIN_POP')
 						})
 					} else {
-						this.$store.commit('CLOSE_LOGIN_POP')
-						const currentPagePath = this.getCurrentPagePath();
-						uni.reLaunch({
-							url: `/${currentPagePath}`
-						});
-						setTimeout(() => {
-							this.$toast('登录成功!', 'success')
-						}, 500)
+						if (this.inviteType) {
+							this.$store.commit('CLOSE_LOGIN_POP')
+							setTimeout(() => {
+								this.$toast('登录成功!', 'success')
+							}, 500)
+						} else {
+							this.$store.commit('CLOSE_LOGIN_POP')
+							const currentPagePath = this.getCurrentPagePath();
+							uni.reLaunch({
+								url: `/${currentPagePath}`
+							});
+							setTimeout(() => {
+								this.$toast('登录成功!', 'success')
+							}, 500)
+						}
+
 					}
 
 				}).catch(err => {

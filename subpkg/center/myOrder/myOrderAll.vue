@@ -281,6 +281,9 @@
 	import storage from '@/utils/storage'
 	import formatter from '@/utils/formatter.js'
 	import projectCard from '@/components/projectCard/projectCard.vue'
+	import {
+		callPhone
+	} from '@/utils/phone.js'
 	export default {
 		components: {
 			projectCard
