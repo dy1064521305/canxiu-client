@@ -123,7 +123,8 @@
 				</view>
 				<view style="max-height: 800rpx; overflow-y: auto; position: relative; padding-bottom: 160rpx;">
 					<view class=" acea-row">
-						<view :class="['worker_box',item.value==where.brandId?'box_active':'']"
+						<view class="acea-row row-center row-middle"
+							:class="['worker_box',item.value==where.brandId?'box_active':'']"
 							v-for='(item,index) in brandList' :key="index" @click="brandClick(item)">
 							{{item.label}}
 						</view>

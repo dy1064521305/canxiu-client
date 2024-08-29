@@ -46,16 +46,16 @@
 				</view>
 
 			</view>
-			<view class="orderItems" @click="orderDetail(item)" v-for='(item,index) in orderList' :key='item.orderId'>
+			<view class="orderItems" @click="orderDetail(item)" v-for='(item,index) in orderList' :key='index'>
 				<view class="orderItems-top acea-row">
 					<view class=" orderItems-top-status acea-row row-between-wrapper">
-						<text class="orderItems-top-status-left">
+						<view class="orderItems-top-status-left">
 							<view :style="{'color':item.orderStatus=='待接单'||item.orderStatus=='售后中'||item.orderStatus=='待评价'?'#F3B133':
 								item.orderStatus=='待上门'?'#3398F3':
 								item.orderStatus=='已完成'?'#A5A7A7':'#A4D091'}">
 								{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.repairId!=null&&statusType!='all'?item.repairStatus:item.orderStatus}}
 							</view>
-						</text>
+						</view>
 						<view class="orderItems-top-status-right acea-row row-middle">
 							<view>{{item.orderType==1?'产品维保':item.orderType==0?'产品维修':""}}</view>
 							<view v-if="item.isUrgent==1||item.isUrgent==2"> 加急 </view>
@@ -116,7 +116,7 @@
 				<view class="orderItems-time flex-colum">
 					<view> <text>上门时间：</text>{{item.expectTime}}</view>
 					<view style="margin: 8rpx 0;"> <text> 报修地址：</text>{{item.addressVo.addressDetailed}}</view>
-					<view> <text>所属品牌：</text>{{item.brandName}}品牌</view>
+					<view> <text>所属品牌：</text>{{item.brandName||'暂无'}}品牌</view>
 				</view>
 				<view class="orderItems-money acea-row row-between-wrapper">
 					<view class="orderItems-money-left">
@@ -662,7 +662,7 @@
 			},
 			showPhoneHandle(item) {
 				this.showPhone = true
-				this.actionList[0].name = items.workerPhone
+				this.actionList[0].name = item.workerPhone
 			},
 			actionSelect(e) {
 				console.log(e);
