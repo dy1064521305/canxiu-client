@@ -8,7 +8,14 @@
 						<u-search v-model="queryParams.projectName" @search="queryList" @clear="queryList"
 							placeholder="搜索项目名称" :clearabled="true" :showAction='false'></u-search>
 					</view>
-					<view @click="show" class=" acea-row row-middle">
+					<!-- 					<view @click="show" class=" acea-row row-middle">
+						<image :style="{'width': '29rpx','margin': 10+'rpx','padding-top':'9rpx'}"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/eb78f3eb65ec46fc92b1245b17c64838.png"
+							mode="widthFix"></image>
+						筛选
+					</view> -->
+					<view @click="$jump('/subpkg/center/myOrder/screen?info='+JSON.stringify(infoItem) )"
+						class=" acea-row row-middle">
 						<image :style="{'width': '29rpx','margin': 10+'rpx','padding-top':'9rpx'}"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/eb78f3eb65ec46fc92b1245b17c64838.png"
 							mode="widthFix"></image>
@@ -379,7 +386,8 @@
 				beginTime: '',
 				statusType: 'all',
 				title: '',
-				typeName: "全部"
+				typeName: "全部",
+				infoItem: {}
 			};
 		},
 		computed: {
@@ -398,7 +406,25 @@
 
 		},
 		onShow() {
-			this.getOrderlistHandle(1, 10)
+			uni.$once('selectAll', item => {
+				this.infoItem = item
+				if (item) {
+					this.queryParams.addressRegion = item.addressRegion || ''
+					this.queryParams.beginTime = item.beginTime || ''
+					this.queryParams.endTime = item.endTime || ''
+					this.queryParams.brandId = item.brandId || ''
+					this.queryParams.orderSource = item.orderSource || ''
+					this.queryParams.partnerrderlype = item.partnerrderlype || ''
+					this.queryParams.workerTypeldList = [...item.workerTypeldList]
+					this.$refs.paging.reload();
+				}
+			})
+		},
+		onHide() {
+			console.log(222, "infoItem");
+			if (this.infoItem) {
+				uni.$off('selectAll', this.infoItem)
+			}
 		},
 		onLoad(option) {
 			console.log(option.name);
@@ -415,6 +441,7 @@
 					name: '全部'
 				})
 			}
+
 
 		},
 		methods: {
@@ -448,7 +475,7 @@
 					console.log(this.queryParams);
 					this.getOrderlistHandle(1, 10)
 				}
-				// this.screenShow = false
+				this.screenShow = false
 
 			},
 			getOrderlistHandle(pageNo, pageSize) {
