@@ -63,3 +63,6 @@ export const getAuditList = (data) => request.get('/partner/team/auditList', dat
 
 // 合伙人审核
 export const putTeamAudit = (data) => request.put('/partner/team/audit', data)
+
+// 获取合伙人及下级合伙人邀请的品牌
+export const getTeamBrand = (partnerId) => request.get('/partner/team/teamBrand/' + partnerId)

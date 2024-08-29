@@ -613,6 +613,14 @@
 					}
 				},
 				{
+					"path": "myOrder/screen",
+					"style": {
+						"navigationBarTitleText": "更多筛选条件",
+						// "navigationStyle": "custom",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
 					"path": "workerDetailed/workerDetailed",
 					"style": {
 						"navigationBarTitleText": "维修师详情",
