@@ -217,11 +217,12 @@
 				if (e.name == '取消') {
 					this.showPhone = false
 				} else {
+					console.log(e, "222");
 					// #ifdef APP-PLUS
-					callPhone(e.name, 'app')
+					callPhone(this.actionList[0].name, 'app')
 					// #endif
 					// #ifdef MP-WEIXIN
-					callPhone(e.name, 'wx')
+					callPhone(this.actionList[0].name, 'wx')
 					// #endif
 					this.showPhone = false
 				}

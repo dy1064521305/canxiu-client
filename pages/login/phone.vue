@@ -143,27 +143,28 @@
 						this.loading = false;
 						return
 					}
-					// #ifdef APP-PLUS
-					plus.push.getClientInfoAsync((info) => {
-						let cid = info["clientid"];
-						bindIds({
-							clientId: info["clientid"],
-							userId: result.data.clientId
-						}).then(res => {
-							this.loading = false;
-						})
-					})
-					// #endif
+					// // #ifdef APP-PLUS
+					// plus.push.getClientInfoAsync((info) => {
+					// 	let cid = info["clientid"];
+					// 	bindIds({
+					// 		clientId: info["clientid"],
+					// 		userId: result.data.clientId
+					// 	}).then(res => {
+					// 		this.loading = false;
+					// 	})
+					// })
+					// // #endif
 					// #ifndef APP-PLUS
 					getInfoById(result.data.clientId).then(res => {
-						console.log(res);
+						console.log(res, "22");
 						this.loading = false;
 						this.userInfo = res.data
 						uni.setStorageSync(`isLogin${storage.get('ClientId')}`, true)
 						let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
+						console.log(arr, "arr")
 						if (result.data.type == 'Success' && res.data.customerStoreId) {
 							const pages = uni.$u.pages();
-							console.log(pages);
+							console.log(pages, "@22222222222");
 							apps.type = 'login'
 							if (pages.some(p => p.route.includes('goodDetails'))) {
 								var pagess = getCurrentPages();

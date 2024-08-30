@@ -50,16 +50,23 @@
 				</view>
 			</view>
 			<view class="invite_list">
-				<view class="invite_list-item" v-for="item in dataList" :key="item.id">
+				<view class="invite_list-item" v-for="(item,index) in dataList" :key="index">
 					<view class="invite_list-item-top acea-row row-between-wrapper">
-						<text>申请人：{{item.applyName}}</text>
+						<text v-if="where.auditSource==0">申请人：{{item.applyName}}</text>
+						<text v-else>{{item.type==1?'修改业务推广分成比例':item.type==2?"修改订单消化分成比例":'品牌入驻审核'}}</text>
 						<view class="invite_list-item-top-status"
 							:style="{color:item.status=='1'?'#A4D091':item.status=='2'?'#E02020':'#F3B23E'}">
 							{{item.status=='1'?'已通过':item.status=='2'?'已驳回':'待审核'}}
 						</view>
 					</view>
 					<view class="invite_list-item-mess">
-						<view class="invite_list-item-mess-evey acea-row">
+
+						<view class="invite_list-item-mess-evey acea-row"
+							v-if="where.auditSource==1&&(item.status==1||item.status==0)">
+							<text>审核人：</text>
+							<view>{{item.auditName||'-'}}</view>
+						</view>
+						<view class="invite_list-item-mess-evey acea-row" v-else>
 							<text>审核类型：</text>
 							<view>{{item.type==1?'修改业务推广分成比例':item.type==2?"修改订单消化分成比例":'品牌入驻审核'}}</view>
 						</view>
@@ -67,7 +74,12 @@
 							<text>申请内容：</text>
 							<view class="">{{item.content||'-'}}</view>
 						</view>
-						<view class="invite_list-item-mess-evey acea-row">
+						<view class="invite_list-item-mess-evey acea-row"
+							v-if="where.auditSource==1&&(item.status==1||item.status==2)">
+							<text>审核时间：</text>
+							<view class="">{{item.auditTime||'-'}}</view>
+						</view>
+						<view class="invite_list-item-mess-evey acea-row" v-else>
 							<text>提交时间：</text>
 							<view class="">{{item.updateTime||'-'}}</view>
 						</view>
@@ -76,12 +88,17 @@
 							<view class="">{{item.remark||'-'}}</view>
 						</view>
 					</view>
-					<view class="invite_list-item-time acea-row">
-						<!-- 	{{item.createTime}} 提交 -->
+					<view class="invite_list-item-time acea-row" v-if="where.auditSource==0&&item.status==0">
 						<view class="invite_list-item-time-btn acea-row">
-							<view @click="showPhoneHandle(item.cellPhone,JSON.stringify(item))">联系ta
+							<view @click="showPhoneHandle(item.cellPhone)">联系ta
 							</view>
 							<view v-if="item.status==0" @click="toSet(JSON.stringify(item),1)">信息审核</view>
+						</view>
+					</view>
+					<view class="invite_list-item-time acea-row" v-if="where.auditSource==1">
+						<view class="invite_list-item-time-btn acea-row">
+							<view @click="showPhoneHandle(item.auditPhone)">联系审核人
+							</view>
 						</view>
 					</view>
 				</view>
@@ -300,12 +317,9 @@
 				this.where.auditSource = item.id
 				this.$refs.paging.reload();
 			},
-			showPhoneHandle(phone, item) {
-				console.log(phone, "phone");
-				let items = JSON.parse(item)
-				console.log(items, "item123");
+			showPhoneHandle(phone) {
 				this.showPhone = true
-				this.actionList[0].name = items.cellPhone
+				this.actionList[0].name = phone
 			},
 			queryList() {
 				this.$refs.paging.reload();
@@ -540,7 +554,7 @@
 				color: #999999;
 				justify-content: flex-end;
 				padding: 0 26rpx;
-				margin-top: 30rpx;
+				margin-top: 20rpx;
 
 				&-btn {
 					align-items: center;

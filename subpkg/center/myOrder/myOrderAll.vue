@@ -5,8 +5,19 @@
 				<!-- <u-navbar title="订单管理" placeholder :safeAreaInsetTop="false" :autoBack="true"> </u-navbar> -->
 				<view class=" acea-row row-middle" style=" padding: 20rpx 24rpx; background-color: #fff;">
 					<view style="flex: 1;">
-						<u-search v-model="queryParams.projectName" @search="queryList" @clear="queryList"
-							placeholder="搜索项目名称" :clearabled="true" :showAction='false'></u-search>
+						<!-- 			<u-search v-model="queryParams.projectName" @search="queryList()" @clear="queryList(1)"
+							placeholder="请输入服务项目名称" :clearabled="true" :showAction='false'></u-search> -->
+
+						<view class="input acea-row row-middle">
+							<input type="text" @confirm="queryList()" maxlength="36" @input="seachValue"
+								v-model="queryParams.projectName" placeholder="请输入服务项目名称">
+							<view class="" style="position: absolute; top: 17rpx; right: 20rpx;">
+								<u-icon v-if="queryParams.projectName" @click="queryList(1)" color="#D8DCDB"
+									name="close-circle"></u-icon>
+							</view>
+							<view class="input-s" @click="queryList()"></view>
+
+						</view>
 					</view>
 					<!-- 					<view @click="show" class=" acea-row row-middle">
 						<image :style="{'width': '29rpx','margin': 10+'rpx','padding-top':'9rpx'}"
@@ -46,16 +57,16 @@
 				</view>
 
 			</view>
-			<view class="orderItems" @click="orderDetail(item)" v-for='(item,index) in orderList' :key='item.orderId'>
+			<view class="orderItems" @click="orderDetail(item)" v-for='(item,index) in orderList' :key='index'>
 				<view class="orderItems-top acea-row">
 					<view class=" orderItems-top-status acea-row row-between-wrapper">
-						<text class="orderItems-top-status-left">
+						<view class="orderItems-top-status-left">
 							<view :style="{'color':item.orderStatus=='待接单'||item.orderStatus=='售后中'||item.orderStatus=='待评价'?'#F3B133':
 								item.orderStatus=='待上门'?'#3398F3':
 								item.orderStatus=='已完成'?'#A5A7A7':'#A4D091'}">
 								{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.repairId!=null&&statusType!='all'?item.repairStatus:item.orderStatus}}
 							</view>
-						</text>
+						</view>
 						<view class="orderItems-top-status-right acea-row row-middle">
 							<view>{{item.orderType==1?'产品维保':item.orderType==0?'产品维修':""}}</view>
 							<view v-if="item.isUrgent==1||item.isUrgent==2"> 加急 </view>
@@ -98,7 +109,8 @@
 					v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
 					v-for="(pro,i) in item.projectDataVoList" :key="i">
 					<view class="orderItems-article-left">
-						<image v-if="pro.projectImg.split(',')[0]" :src="pro.projectImg.split(',')[0]" mode=""></image>
+						<image v-if="pro.projectImg&&pro.projectImg.split(',')[0]" :src="pro.projectImg.split(',')[0]"
+							mode=""></image>
 						<image v-else
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/5beeb82b9a3f4952889976a3f009c7d8.png"
 							mode=""></image>
@@ -116,7 +128,7 @@
 				<view class="orderItems-time flex-colum">
 					<view> <text>上门时间：</text>{{item.expectTime}}</view>
 					<view style="margin: 8rpx 0;"> <text> 报修地址：</text>{{item.addressVo.addressDetailed}}</view>
-					<view> <text>所属品牌：</text>{{item.brandName}}品牌</view>
+					<view> <text>所属品牌：</text>{{item.brandName||'暂无'}}品牌</view>
 				</view>
 				<view class="orderItems-money acea-row row-between-wrapper">
 					<view class="orderItems-money-left">
@@ -534,9 +546,12 @@
 
 			},
 			//条件查询
-			queryList() {
+			queryList(i) {
 				console.log(this.queryParams);
 				// this.getNum()
+				if (i) {
+					this.queryParams.projectName = ''
+				}
 				this.$refs.paging.reload();
 			},
 			refresh() {
@@ -552,6 +567,11 @@
 				} else {
 					this.queryParams.endTime = ''
 					this.endTime = ''
+				}
+			},
+			seachValue(e) {
+				if (!e.target.value) {
+					this.$refs.paging.reload()
 				}
 			},
 			reset() {
@@ -662,7 +682,7 @@
 			},
 			showPhoneHandle(item) {
 				this.showPhone = true
-				this.actionList[0].name = items.workerPhone
+				this.actionList[0].name = item.workerPhone
 			},
 			actionSelect(e) {
 				console.log(e);
@@ -692,7 +712,35 @@
 
 <style lang="scss">
 	.my-order {
+		.input {
+			// width: 563rpx;
+			flex: 1;
+			padding: 0 30rpx;
+			background-color: rgb(242, 242, 242);
+			border-radius: 50rpx;
+			height: 60rpx;
+			line-height: 60rpx;
+			position: relative;
 
+			input {
+				width: 340rpx;
+				height: 62rpx;
+				margin-left: 40rpx;
+				font-size: 26rpx;
+			}
+
+			.input-s {
+				position: absolute;
+				top: 19rpx;
+				left: 30rpx;
+				width: 25rpx;
+				height: 25rpx;
+				background: url("https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/31fd266c68a248babb495e4aa76f9408.png") no-repeat;
+
+				background-size: 100% 100%;
+			}
+
+		}
 
 		.top {
 			background: #fff;

@@ -100,7 +100,7 @@
 					师傅工种
 				</view>
 				<view style="max-height: 800rpx; overflow-y: auto; position: relative; padding-bottom: 160rpx;">
-					<view class=" acea-row">
+					<view class=" acea-row row-between-wrapper" style="padding: 0 20rpx;">
 						<view :class="['worker_box',activeTypeName.includes(item.typeName)?'box_active':'']"
 							v-for='(item,index) in workerTypeList' :key="index" @click="typeClick(item)">
 							{{item.typeName}}
@@ -122,8 +122,9 @@
 					品牌信息
 				</view>
 				<view style="max-height: 800rpx; overflow-y: auto; position: relative; padding-bottom: 160rpx;">
-					<view class=" acea-row">
-						<view :class="['worker_box',item.value==where.brandId?'box_active':'']"
+					<view class=" acea-row row-between-wrapper" style="padding: 0 20rpx;">
+						<view class="acea-row row-center row-middle"
+							:class="['worker_box',item.value==where.brandId?'box_active':'']"
 							v-for='(item,index) in brandList' :key="index" @click="brandClick(item)">
 							{{item.label}}
 						</view>
@@ -520,15 +521,16 @@
 		}
 
 		.worker_box {
-			width: 200rpx;
+			width: 49%;
 			height: 71rpx;
 			line-height: 71rpx;
 			background: #FFFFFF;
 			border-radius: 7rpx;
 			border: 2rpx solid #D8DCDB;
 			color: #A5A7A7;
-			margin: 20rpx auto;
+			margin: 20rpx 0;
 			text-align: center;
+			box-sizing: border-box;
 		}
 
 		.box_active {
