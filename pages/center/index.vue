@@ -389,13 +389,14 @@
 						label: '邀请师傅',
 						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/5356f25f26ec464b929b0d380bead987.png',
 						url: "/subpkg/center/inviteWorker/inviteWorker"
-					}, {
-						id: 5,
-						label: '邀请品牌',
-						img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/9e22b888d28e43f9bbec2316ea9c364b.png',
-						// url: "/subpkg/center/brand/inviterQrCode"
-						url: "/subpkg/center/brand/MyinviterQrCode"
 					},
+					// {
+					// 	id: 5,
+					// 	label: '邀请品牌',
+					// 	img: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/9e22b888d28e43f9bbec2316ea9c364b.png',
+					// 	// url: "/subpkg/center/brand/inviterQrCode"
+					// 	url: "/subpkg/center/brand/MyinviterQrCode"
+					// },
 					{
 						id: 6,
 						label: '邀请门店',
@@ -554,11 +555,9 @@
 		computed: {
 			...mapGetters(['isLogin'])
 		},
-		onLoad() {
-			console.log(this.isLogin, "isLogin123");
-		},
+		onLoad() {},
 		onShow() {
-			console.log(this.isLogin, "isLogin");
+			console.log(this.isLogin, "isLogin99");
 			if (this.isLogin) {
 				this.getList()
 				this.getOrderlistHandle(1, 10)
@@ -691,7 +690,7 @@
 			//去登录
 			login() {
 				// #ifdef MP-WEIXIN
-				$cache.set('authBackUrl', "pages/center/index")
+				// $cache.set('authBackUrl', "pages/center/index")
 				this.$store.commit('OPEN_LOGIN_POP')
 				// #endif
 				// #ifndef MP-WEIXIN

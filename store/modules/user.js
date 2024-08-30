@@ -135,6 +135,7 @@ export const actions = {
 			commit('SET_CLIENTID', '')
 			// resolve(response)
 			//  }).catch(reject)
+			$cache.clear('AccessToken');
 			$cache.clear('userInfo');
 		})
 	}

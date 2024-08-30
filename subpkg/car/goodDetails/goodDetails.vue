@@ -4,7 +4,8 @@
 			<view class="navbar"
 				:style="{padding:(statusHeight*2)+'rpx 0px 24rpx 16rpx',backgroundColor:'rgba(255,255,255,'+navbarColorOpacity+')'}">
 
-				<view @click="goBack()"> <u-icon color="#fff" name="arrow-left" size="19"></u-icon>{{city}}</view>
+				<view class="navbarCity" @click="goBack()"> <u-icon color="#fff" name="arrow-left"
+						size="19"></u-icon>{{city}}</view>
 			</view>
 
 			<scroll-view class="serviceInfo" ref="target" :scroll-y="true" :scroll-into-view="scrollIntoView"
@@ -1142,7 +1143,7 @@
 			padding-left: 16rpx;
 			z-index: 10;
 
-			view {
+			.navbarCity {
 				display: flex;
 				background: rgba(0, 0, 0, 0.45);
 				padding: 10rpx 20rpx 10rpx 7rpx;
@@ -1161,7 +1162,7 @@
 		position: fixed;
 		bottom: 0;
 		font-size: 22rpx;
-		z-index: 100000;
+		z-index: 20;
 
 		.btn-green {
 			height: 65rpx;
@@ -1215,7 +1216,7 @@
 			padding: 0 20rpx;
 
 			::v-deep.u-badge {
-				z-index: 100;
+				z-index: 80;
 			}
 
 			image {
