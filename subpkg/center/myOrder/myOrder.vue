@@ -390,7 +390,9 @@
 					clientId: storage.get('ClientId'),
 					projectName: this.queryParams.projectName,
 					beginTime: this.queryParams.beginTime,
-					endTime: this.queryParams.endTime
+					endTime: this.queryParams.endTime,
+					queryType: 1
+
 				}).then(res => {
 
 					this.list1.forEach(item => {

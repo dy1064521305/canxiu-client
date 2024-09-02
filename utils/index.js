@@ -83,12 +83,14 @@ export function jumpUrl(url) {
 	const methodsKey = '://'
 	url = '' + url;
 	let fullurl = url;
+	console.log(url.indexOf(methodsKey), "url.indexOf(methodsKey)")
 	if (url.indexOf(methodsKey) > 0) {
 		let arr = url.split(methodsKey);
 		methods = arr[0];
 		url = arr[1];
 		console.log(arr, "3arr")
 	} else {
+
 		if (!isTabber(url)) {
 			methods = 'navigateTo'
 		} else {
@@ -106,6 +108,7 @@ export function jumpUrl(url) {
 	}
 
 	switch (methods) {
+
 		case 'http':
 		case 'https':
 			let weburl = methods + methodsKey + url
@@ -117,6 +120,7 @@ export function jumpUrl(url) {
 		case 'redirectTo':
 		case 'reLaunch':
 		case 'switchTab':
+			console.log(url, "url22")
 			if (url.indexOf('pages/') == 0) {
 				url = '/' + url;
 			}
@@ -126,6 +130,7 @@ export function jumpUrl(url) {
 			uni[methods]({
 				url
 			});
+			console.log(methods, "methods")
 			console.log(url, "url222222222222")
 			break;
 		case 'mp':

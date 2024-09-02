@@ -331,6 +331,7 @@
 </template>
 
 <script>
+	import $cache from '@/utils/cache.js';
 	import storage from '@/utils/storage'
 	import proInfo from '@/components/proInfo/proInfo.vue'
 	import lPainter from '@/components/lime-painter/components/l-painter/l-painter.vue'
@@ -720,6 +721,7 @@
 			//去登录
 			confirm() {
 				// #ifdef MP-WEIXIN
+				$cache.set('authBackUrl', "/pages/home/index");
 				this.$store.commit('OPEN_LOGIN_POP')
 				// #endif
 				// #ifndef MP-WEIXIN
