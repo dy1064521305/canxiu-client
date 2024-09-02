@@ -66,3 +66,6 @@ export const putTeamAudit = (data) => request.put('/partner/team/audit', data)
 
 // 获取合伙人及下级合伙人邀请的品牌
 export const getTeamBrand = (partnerId) => request.get('/partner/team/teamBrand/' + partnerId)
+
+// 更换品牌业务负责人
+export const putBusinessLeader = (data) => request.put('/partner/team/edit/businessLeader', data)

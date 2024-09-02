@@ -40,8 +40,11 @@
 				<view class="invite_list-item" v-for="item in dataList" :key="item.id">
 					<view class="invite_list-item-top acea-row row-between-wrapper">
 						<view class="invite_list-item-top-left acea-row">
-							<image :src="item.brandLog" mode=""></image>
-							<view class="invite_list-item-top-left-title acea-row  row-column-between">
+							<image v-if="item.brandLog==null||item.brandLog==''||item.brandLog=='null'"
+								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/02/23d8137225a440f3a4e19e43d527cc32.png"
+								mode=""></image>
+							<image v-else :src="item.brandLog" mode=""></image>
+							<view class="invite_list-item-top-left-title flex-colum">
 								<view class="invite_list-item-top-left-title-name acea-row row-between-wrapper">
 									<view class="acea-row">
 										<view class="view">{{item.brandName}} </view>
@@ -415,6 +418,8 @@
 						width: 120rpx;
 						height: 120rpx;
 						border-radius: 14rpx;
+						background-color: #fafaf3;
+						box-sizing: border-box;
 					}
 
 					&-title {
@@ -423,10 +428,11 @@
 						color: #212121;
 						font-weight: bold;
 						margin-left: 20rpx;
-						padding: 10rpx 0;
+						padding: 6rpx 0;
+						justify-content: space-between;
 
 						&-name {
-							margin: -6rpx 0 10rpx 0;
+							margin: 0rpx 0 10rpx 0;
 							display: flex;
 
 							.view {

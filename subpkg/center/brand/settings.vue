@@ -36,15 +36,17 @@
 		<view class="card cardPadding">
 
 			<view class="form-row acea-row row-middle">
-				<view class="form-key acea-row row-middle">业务经理 </view>
+				<view class="form-key acea-row row-middle">品牌业务负责人</view>
 				<view class="acea-row"
 					style="flex: 1; align-items: center; justify-content: flex-end;align-items: center; font-size: 28rpx;"
-					@tap="handleMultiple(where.saleIds,1)">
-					{{saleNames|| ''}}<text style="color: #C8C9CC;" v-if='!saleNames'>请设置平台业务经理</text>
+					@click="$jump('/subpkg/center/brand/teamPeople?partnerId='+where.brandBusinessLeader)">
+					{{brandBusinessLeaderName|| ''}}<text style="color: #C8C9CC;"
+						v-if='!brandBusinessLeaderName'>请设置品牌业务负责人</text>
 				</view>
-				<u-icon name="arrow-right" size="14" :color="saleNames?'#333':'#C8C9CC'"
+				<u-icon name="arrow-right" size="14" :color="brandBusinessLeaderName?'#333':'#C8C9CC'"
 					style="margin-top: 4rpx;"></u-icon>
 			</view>
+			<view style="font-size: 24rpx;padding: 20rpx 0;color: #999;">仅支持选择团队成员，关联后该用户可以获得该品牌业务推广分成奖励</view>
 		</view>
 		<view class="card cardPadding">
 			<view class="form-row acea-row row-middle">
@@ -190,7 +192,8 @@
 					serviceNames: [],
 					saleNames: [],
 					serviceIds: [],
-					maintenanceNames: []
+					maintenanceNames: [],
+					brandBusinessLeader: ""
 
 				},
 				maintenanceRatio: "",
@@ -232,7 +235,8 @@
 				index_1: [],
 				index_2: [],
 				index_3: [],
-				openType: ""
+				openType: "",
+				brandBusinessLeaderName: ""
 			}
 		},
 		watch: {
@@ -276,6 +280,15 @@
 				return p.route.includes('submitOrder') || p.route.includes('goosDetails')
 			})
 			this.getList()
+		},
+		onShow() {
+			uni.$once('brandTeam', row => {
+				if (row) {
+					this.where.brandBusinessLeader = row.partnerId
+					this.brandBusinessLeaderName = row.realName
+					console.log(res, "res");
+				}
+			})
 		},
 		methods: {
 			bulr(e) {
@@ -402,12 +415,14 @@
 							',')] : [],
 						maintenanceNames: data.maintenanceSupervisor ? [...data.maintenanceSupervisor.split(
 							',')] : [],
+						brandBusinessLeader: data.brandBusinessLeader
 					}
 					this.maintenanceRatio = data.maintenanceRatio || ''
 					this.repairRatio = data.repairRatio || ''
 					this.serviceNames = data.customerService
 					this.saleNames = data.exclusiveSale
 					this.maintenanceNames = data.maintenanceSupervisor
+					this.brandBusinessLeaderName = data.brandBusinessLeaderName
 					if (data.contractImg) {
 						this.fileListt = data.contractImg.split(',')
 					}

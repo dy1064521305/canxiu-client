@@ -586,15 +586,22 @@
 				{
 					"path": "brand/footRewrad",
 					"style": {
-						"enablePullDownRefresh": true,
+						"enablePullDownRefresh": false,
 						"navigationBarTitleText": "佣金结算记录"
 					}
 				},
 				{
 					"path": "brand/footDetail",
 					"style": {
-						"enablePullDownRefresh": true,
+						"enablePullDownRefresh": false,
 						"navigationBarTitleText": "签约记录"
+					}
+				},
+				{
+					"path": "brand/teamPeople",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "设置品牌业务负责人"
 					}
 				},
 				{
