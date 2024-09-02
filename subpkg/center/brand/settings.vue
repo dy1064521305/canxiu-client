@@ -34,6 +34,19 @@
 		</view>
 
 		<view class="card cardPadding">
+
+			<view class="form-row acea-row row-middle">
+				<view class="form-key acea-row row-middle">业务经理 </view>
+				<view class="acea-row"
+					style="flex: 1; align-items: center; justify-content: flex-end;align-items: center; font-size: 28rpx;"
+					@tap="handleMultiple(where.saleIds,1)">
+					{{saleNames|| ''}}<text style="color: #C8C9CC;" v-if='!saleNames'>请设置平台业务经理</text>
+				</view>
+				<u-icon name="arrow-right" size="14" :color="saleNames?'#333':'#C8C9CC'"
+					style="margin-top: 4rpx;"></u-icon>
+			</view>
+		</view>
+		<view class="card cardPadding">
 			<view class="form-row acea-row row-middle">
 				<view class="form-key acea-row row-middle">*维保优惠比例 <view style="position: relative;"
 						@click.stop="showBubble3 = !showBubble3">

@@ -565,7 +565,7 @@
 	}
 
 	.bottom {
-		padding: 36rpx 0;
+		padding: 36rpx 0 40rpx;
 		background-color: #fff;
 		color: #999999;
 		font-size: 28rpx;
@@ -575,7 +575,7 @@
 			width: 49%;
 
 			image {
-				width: 46rpx;
+				width: 45rpx;
 				height: 48rpx;
 				margin-right: 16rpx;
 			}
