@@ -481,12 +481,14 @@
 
 		.changeTypes {
 			width: 100%;
-			height: 124rpx;
+			height: 110rpx;
 			position: relative;
+			background-color: #fff;
+			margin-bottom: 20rpx;
 
 			&-change {
 				position: absolute;
-				top: 24rpx;
+				top: 10rpx;
 				right: 32rpx;
 				width: 224rpx;
 				height: 80rpx;
@@ -513,13 +515,14 @@
 	}
 
 	.list_box {
-		background-color: #fff;
 		font-size: 26rpx;
 		border-radius: 20rpx 20rpx 0 0;
 
 		.list {
 			// margin: 0 30rpx;
 			border-bottom: 1rpx solid #F8F8F8;
+			margin-bottom: 20rpx;
+			background-color: #fff;
 
 			.box {
 				padding: 34rpx 30rpx;
@@ -638,8 +641,8 @@
 
 		.filter-row {
 			box-sizing: border-box;
-			height: 88rpx;
-			margin-top: 20rpx;
+			height: 80rpx;
+			margin-top: 4rpx;
 			border-top: 1rpx solid #ececec;
 			padding: 0 40rpx;
 

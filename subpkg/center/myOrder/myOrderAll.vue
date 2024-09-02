@@ -109,11 +109,13 @@
 					v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
 					v-for="(pro,i) in item.projectDataVoList" :key="i">
 					<view class="orderItems-article-left">
-						<image v-if="pro.projectImg&&pro.projectImg.split(',')[0]" :src="pro.projectImg.split(',')[0]"
+						<!-- <image v-if="pro.projectImg&&pro.projectImg.split(',')[0]" :src="pro.projectImg.split(',')[0]"
+							mode=""></image> -->
+						<image v-if="pro.initiallmg" @click.stop="previewImage(pro.initiallmg)" :src="pro.initiallmg "
 							mode=""></image>
-						<image v-else
+						<!-- 	<image v-else
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/5beeb82b9a3f4952889976a3f009c7d8.png"
-							mode=""></image>
+							mode=""></image> -->
 					</view>
 					<view class="orderItems-article-right">
 						<text>{{pro.projectName}}</text>
@@ -127,7 +129,8 @@
 
 				<view class="orderItems-time flex-colum">
 					<view> <text>上门时间：</text>{{item.expectTime}}</view>
-					<view style="margin: 8rpx 0;"> <text> 报修地址：</text>{{item.addressVo.addressDetailed}}</view>
+					<view style="margin: 8rpx 0;" v-if="item.addressVo&&item.addressVo.addressDetailed"> <text>
+							报修地址：</text>{{item.addressVo.addressDetailed}}</view>
 					<view> <text>所属品牌：</text>{{item.brandName||'暂无'}}品牌</view>
 				</view>
 				<view class="orderItems-money acea-row row-between-wrapper">
@@ -699,6 +702,12 @@
 					this.showPhone = false
 				}
 			},
+			previewImage(img) {
+				uni.previewImage({
+					current: 0,
+					urls: [img]
+				});
+			}
 
 		}
 	}
