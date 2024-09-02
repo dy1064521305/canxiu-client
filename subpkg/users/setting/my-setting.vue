@@ -165,7 +165,7 @@
 				this.avatar = options.avatarUrl || ''
 			}
 			if (options && options.clientName) {
-				this.nickname = options.clientName || ''
+				this.nickname = (options.clientName && options.clientName != 'null') ? options.clientName : ''
 			}
 			this.getClineHeight()
 		},

@@ -147,13 +147,21 @@
 							}, 500)
 						} else {
 							this.$store.commit('CLOSE_LOGIN_POP')
-							const currentPagePath = this.getCurrentPagePath();
-							uni.reLaunch({
-								url: `/${currentPagePath}`
-							});
+							let back_url = $cache.get('authBackUrl');
+							$cache.clear('authBackUrl');
+							if (back_url) {
+								this.$jump(back_url);
+							} else {
+								const currentPagePath = this.getCurrentPagePath();
+								uni.reLaunch({
+									url: `/${currentPagePath}`
+								});
+							}
 							setTimeout(() => {
 								this.$toast('登录成功!', 'success')
 							}, 500)
+
+
 						}
 
 					}

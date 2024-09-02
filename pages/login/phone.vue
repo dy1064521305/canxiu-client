@@ -166,36 +166,50 @@
 							const pages = uni.$u.pages();
 							console.log(pages, "@22222222222");
 							apps.type = 'login'
-							if (pages.some(p => p.route.includes('goodDetails'))) {
-								var pagess = getCurrentPages();
-								var prevPage = pagess[pagess.length - 2]; //上一个页面
-								var object = {
-									name: "back"
-								}
-								prevPage.$vm.otherFun(object);
-								uni.navigateBack()
+							// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
+							let back_url = $cache.get('authBackUrl');
+							this.loading = false;
+							$cache.clear('authBackUrl');
+							if (back_url) {
+								this.$jump(back_url);
 							} else {
-								// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
-								let back_url = $cache.get('authBackUrl');
-								this.loading = false;
-								$cache.clear('authBackUrl');
-								if (back_url) {
-									this.$jump('redirectTo:/' + back_url);
-								} else {
-									this.$toast('登录成功')
-									setTimeout(() => {
-										this.$jump(-1);
-									}, 500)
-								}
-								// uni.switchTab({
-								// 	url: '/pages/home/index',
-								// 	fail(err) {
-								// 		console.log(err)
-								// 	}
-								// })
+								this.$toast('登录成功')
+								setTimeout(() => {
+									this.$jump(-1);
+								}, 500)
 							}
+							// if (pages.some(p => p.route.includes('goodDetails'))) {
+							// 	var pagess = getCurrentPages();
+							// 	var prevPage = pagess[pagess.length - 2]; //上一个页面
+							// 	var object = {
+							// 		name: "back"
+							// 	}
+							// 	console.log(1, "00000000000");
+							// 	prevPage.$vm.otherFun(object);
+							// 	uni.navigateBack()
+							// } else {
+							// 	// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
+							// 	let back_url = $cache.get('authBackUrl');
+							// 	this.loading = false;
+							// 	$cache.clear('authBackUrl');
+							// 	if (back_url) {
+							// 		this.$jump(back_url);
+							// 	} else {
+							// 		this.$toast('登录成功')
+							// 		setTimeout(() => {
+							// 			this.$jump(-1);
+							// 		}, 500)
+							// 	}
+							// 	// uni.switchTab({
+							// 	// 	url: '/pages/home/index',
+							// 	// 	fail(err) {
+							// 	// 		console.log(err)
+							// 	// 	}
+							// 	// })
+							// }
 
 						} else {
+							this.loading = false;
 							let info = {
 								type: 'login',
 								storeInfo: {
