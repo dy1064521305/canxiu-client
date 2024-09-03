@@ -69,3 +69,7 @@ export const getTeamBrand = (partnerId) => request.get('/partner/team/teamBrand/
 
 // 更换品牌业务负责人
 export const putBusinessLeader = (data) => request.put('/partner/team/edit/businessLeader', data)
+
+// 树城市列表
+
+export const getTreeList = (data) => request.get('/basic/cityArea/treeList', data)

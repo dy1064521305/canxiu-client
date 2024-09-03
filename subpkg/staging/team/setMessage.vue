@@ -185,16 +185,6 @@
 			line-height: 78rpx;
 		}
 
-		.kefu {
-			height: 90rpx;
-			line-height: 86rpx;
-			background: #F3B23E;
-			border-radius: 16rpx 16rpx 0rpx 0rpx;
-			margin-bottom: -10rpx;
-			font-size: 28rpx;
-			color: #FFFFFF;
-			padding-left: 34rpx;
-		}
 
 		.cell {
 			background-color: #fff;
@@ -229,7 +219,7 @@
 
 					.shenhe {
 						padding: 2rpx 14rpx;
-						background-color: #A4D091;
+						background-color: #F3B23E;
 						color: #fff;
 						border-radius: 30rpx;
 						font-size: 24rpx;

@@ -443,7 +443,7 @@
 				content: "";
 				position: absolute;
 				height: 6rpx;
-				background: $pageBorder;
+				background: $pageColor;
 				border-radius: 3rpx;
 				width: 100%;
 				bottom: -10rpx;
@@ -486,7 +486,7 @@
 						content: "";
 						position: absolute;
 						height: 6rpx;
-						background: $pageBorder;
+						background: $pageColor;
 						border-radius: 3rpx;
 						width: 100%;
 						bottom: -24rpx;
@@ -569,8 +569,8 @@
 						height: 54rpx;
 						background: #FFFFFF;
 						border-radius: 8rpx;
-						border: 2rpx solid $pageBorder;
-						color: $pageBorder;
+						border: 2rpx solid $pageColor;
+						color: $pageColor;
 						font-size: 24rpx;
 						display: flex;
 						justify-content: center;
@@ -579,7 +579,7 @@
 
 
 					view:nth-last-child(1) {
-						background: $pageBorder;
+						background: $pageColor;
 						color: #FFFFFF;
 						margin-left: 14rpx;
 					}
@@ -660,7 +660,7 @@
 		&-btn {
 			width: 524rpx;
 			height: 88rpx;
-			background: $pageBorder;
+			background: $pageColor;
 			border-radius: 8rpx;
 			font-size: 32rpx;
 			color: #FFFFFF;
@@ -711,7 +711,7 @@
 
 		.btn {
 			height: 88rpx;
-			background: $pageBorder;
+			background: $pageColor;
 			border-radius: 8rpx;
 			font-family: PingFangSC, PingFang SC;
 			font-weight: bold;
@@ -749,7 +749,7 @@
 				margin-bottom: 20rpx;
 
 				&.on {
-					background: #F3B23E;
+					background: $pageColor;
 					color: #FFFFFF;
 				}
 			}
@@ -757,7 +757,7 @@
 
 		.btn {
 			height: 80rpx;
-			background: $pageBorder;
+			background: $pageColor;
 			border-radius: 8rpx;
 			font-family: PingFangSC, PingFang SC;
 			font-weight: bold;

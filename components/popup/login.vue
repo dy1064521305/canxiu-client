@@ -83,7 +83,6 @@
 			...mapState(['loginPopShow'])
 		},
 		created() {
-			console.log(this.inviteType, "inviteTypeinviteType");
 			this.getListLogin()
 		},
 		mounted() {},

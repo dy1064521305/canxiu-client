@@ -34,7 +34,8 @@
 						</view>
 						<view class="form-row acea-row row-middle">
 							<text class="form-key">所在城市</text>
-							<pickers v-if="!isSubmit" @address="addressHandle" style="flex: 1;text-align: right">
+							<pickers v-if="!isSubmit" :type="1" @address="addressHandle"
+								style="flex: 1;text-align: right">
 								<view v-if="where.region!=''">{{where.region}}</view>
 								<view v-else class="acea-row row-middle"
 									style="color: rgb(192, 196, 204); justify-content: flex-end;">

@@ -865,7 +865,7 @@
 						font-size: 24rpx;
 
 						view {
-							padding: 2rpx 4rpx;
+							padding: 2rpx 10rpx;
 							border-radius: 10rpx;
 							color: #fff;
 							background-color: #FD5834;
