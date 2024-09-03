@@ -28,6 +28,19 @@
 	// }
 	// #endif
 	export default {
+		globalData: {
+			index: undefined, // 默认参数 也可设置为空
+			// userInfo: userID userSig token phone
+			userInfo: null,
+			// 个人信息
+			userProfile: null,
+			isTUIKit: true,
+			headerHeight: 0,
+			statusBarHeight: 0,
+			SDKAppID: 1400802214,
+			// 小程序右上角胶囊信息
+			menuRect: {},
+		},
 		onLaunch() {
 
 			// 加载系统信息
@@ -57,7 +70,11 @@
 				console.log('准备跳转111');
 			}, false);
 			// #endif
-
+			// #ifdef MP
+			let mrect = uni.getMenuButtonBoundingClientRect()
+			this.globalData.menuRect = mrect;
+			// this.checkIsAddedToMyMiniProgram();
+			// #endif
 
 			// 监听推送
 			// uni.onPushMessage((res) => {
@@ -102,20 +119,9 @@
 			// uni.$TUIKit.on(uni.$TUIKitEvent.NET_STATE_CHANGE, this.onNetStateChange);
 			// uni.$TUIKit.on(uni.$TUIKitEvent.SDK_RELOAD, this.onSDKReload);
 
-
 		},
 		onHide() {},
-		globalData: {
-			index: undefined, // 默认参数 也可设置为空
-			// userInfo: userID userSig token phone
-			userInfo: null,
-			// 个人信息
-			userProfile: null,
-			isTUIKit: true,
-			headerHeight: 0,
-			statusBarHeight: 0,
-			SDKAppID: 1400802214
-		},
+
 		methods: {
 			// TODO:
 			resetLoginData() {
@@ -132,7 +138,6 @@
 			},
 			onTIMError() {},
 			onSDKReady(event) {
-				console.info(123132321321321)
 				uni.$emit('totalUnreadCount', {
 					msg: 'tim准备就绪'
 				})
@@ -148,7 +153,29 @@
 				uni.navigateTo({
 					url: './pages/TUI-Login/login'
 				});
-			}
+			},
+			// 检测是否添加到我的小程序
+			checkIsAddedToMyMiniProgram() {
+				// #ifdef MP-WEIXIN
+				try {
+					wx.checkIsAddedToMyMiniProgram({
+						success: (res) => {
+							if (res.added && this.isLogin) {
+								// 添加到了小程序
+								taskComplete({
+									task_key: 4,
+								}).then(res => {})
+							}
+						},
+						fail: (e) => {
+							console.log(e);
+						},
+					});
+				} catch (error) {
+					console.log('error: ', error);
+				}
+				// #endif
+			},
 		}
 	}
 </script>

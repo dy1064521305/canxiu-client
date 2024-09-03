@@ -10,10 +10,13 @@
 					<!-- 	<view style="display: flex; align-items: center;" slot="center" @click="showAction=true">
 						{{type}}<u-icon style="margin-left: 10rpx;" name="arrow-down-fill" size="10"></u-icon>
 					</view> -->
-					<view class="two_change" style="display: flex; align-items: center;" slot="center">
+					<view class="two_change" slot="center">
 						<text v-for="(item) in typeTab" :key="item.id" :class="{on:type==item.label}"
 							@click="typeClick(item)">{{item.label}}</text>
 					</view>
+					<!-- #ifdef MP -->
+					<!-- <view :style="{width: mwith}" slot="right" style="color: #3D3F3E;"></view> -->
+					<!-- #endif -->
 				</u-navbar>
 				<!-- <view class="data-box" v-if="type=='活动奖励'">
 					<u-search @custom="search" @clear="search" @search="search" :show-action="true"
@@ -412,7 +415,8 @@
 				showMonth: '',
 				partnerld: "",
 				registerDate_2: "",
-				typeId: ""
+				typeId: "",
+				mwith: ""
 
 			};
 		},
@@ -422,6 +426,7 @@
 			// this.getList(1, 10)
 
 		},
+
 		watch: {
 			typeId: {
 				handler: function(newVal, oldVal) {
@@ -490,7 +495,13 @@
 			if (option && option.type) {
 				this.type = option.type
 			}
-			console.log(this.type, '122');
+			// #ifdef MP
+			const app = getApp();
+			const m = app.globalData.menuRect;
+
+			this.mwith = m.width + 'px';
+			console.log(this.mwith, "this.mwith");
+			// #endif	
 
 		},
 		methods: {
@@ -712,12 +723,15 @@
 	.two_change {
 		font-family: PingFangSC, PingFang SC;
 		font-weight: bold;
-		font-size: 32rpx;
+		font-size: 30rpx;
 		color: #212121;
+		/* #ifdef MP */
+		margin-right: 100rpx;
+		/* #endif */
 
 		text {
 			position: relative;
-			margin-right: 15rpx;
+			margin-right: 10rpx;
 
 
 			&.on {
@@ -727,7 +741,7 @@
 			&.on::after {
 				content: "";
 				position: absolute;
-				height: 6rpx;
+				height: 4rpx;
 				background: #A4D091;
 				border-radius: 3rpx;
 				width: 100%;

@@ -41,8 +41,8 @@
 						<text @click='checkType(1)' :class="[type==1?'text-active':'']">维保</text>
 					</view> -->
 					<view style="width: 90%;">
-						<u-tabs :current='current' :list="list1" @click="statusClick" lineColor='#F3B23E' lineWidth="40"
-							lineHeight='3' :inactiveStyle="{ color: '#A5A7A7'}">
+						<u-tabs :current='current' :list="list1" @click="statusClick()" lineColor='#F3B23E'
+							lineWidth="40" lineHeight='3' :inactiveStyle="{ color: '#A5A7A7'}">
 						</u-tabs>
 					</view>
 					<view class="type-image" @click="screenShow=!screenShow">
@@ -108,14 +108,13 @@
 				<view class="orderItems-article acea-row"
 					v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
 					v-for="(pro,i) in item.projectDataVoList" :key="i">
-					<view class="orderItems-article-left" @click.stop="previewImage(pro.projectImg.split(',')[0])">
-						<image v-if="pro.projectImg&&pro.projectImg.split(',')[0]" :src="pro.projectImg.split(',')[0]"
-							mode=""></image>
+					<view class="orderItems-article-left" @click.stop="previewImage(pro.img)">
+						<image v-if="pro.img" :src="pro.img" mode=""></image>
 						<!-- 	<image v-if="pro.initiallmg" @click.stop="previewImage(pro.initiallmg)" :src="pro.initiallmg "
 							mode=""></image> -->
-						<!-- 	<image v-else
-							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/5beeb82b9a3f4952889976a3f009c7d8.png"
-							mode=""></image> -->
+						<image v-else
+							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/02/23d8137225a440f3a4e19e43d527cc32.png"
+							mode=""></image>
 					</view>
 					<view class="orderItems-article-right">
 						<text>{{pro.projectName}}</text>
@@ -301,6 +300,9 @@
 		queryAllOrderCount
 	} from '@/api/order.js'
 	import storage from '@/utils/storage'
+	import {
+		checkMediaType
+	} from '@/utils/index'
 	import formatter from '@/utils/formatter.js'
 	import projectCard from '@/components/projectCard/projectCard.vue'
 	import {
@@ -435,12 +437,6 @@
 				}
 			})
 		},
-		onHide() {
-			console.log(222, "infoItem");
-			if (this.infoItem) {
-				uni.$off('selectAll', this.infoItem)
-			}
-		},
 		onLoad(option) {
 			console.log(option.name);
 			this.queryParams.clientId = storage.get('ClientId')
@@ -460,7 +456,6 @@
 
 		},
 		methods: {
-
 			handleRoute(item) {
 				let id = 'C2C' + item.workerId
 				const url = `../../subpkgChat/TUI-Chat/chat?conversationID=${id}`;
@@ -468,8 +463,6 @@
 					url
 				});
 			},
-
-
 			show() {
 				console.log(11111);
 				this.showScreen = true
@@ -479,7 +472,6 @@
 			},
 			//状态切换
 			statusClick(item, index) {
-				this.$refs.paging.reload();
 				this.typeName = item.name
 				if (item.name != '全部') {
 					this.queryParams.orderStatus = item.name
@@ -488,12 +480,13 @@
 					this.current = 0
 					this.queryParams.orderStatus = ''
 					console.log(this.queryParams);
-					this.getOrderlistHandle(1, 10)
 				}
 				this.screenShow = false
+				this.getOrderlistHandle(1, 10)
 
 			},
 			getOrderlistHandle(pageNo, pageSize) {
+				console.log(pageNo, 'pageNopageNo');
 				this.showScreen = false
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
@@ -502,10 +495,40 @@
 				});
 				getOrderList(this.queryParams).then(res => {
 					res.rows.forEach(i => {
-						i.projectDataVoList && i.projectDataVoList.forEach(item => {
-							item.img = i.repairId != null ? (item.projectUrl != null ? item
-								.projectUrl.split(',') : []) : (item.projectImg != null ? item
-								.projectImg.split(',') : [])
+						i.projectDataVoList && i.projectDataVoList.forEach((item, index) => {
+							let list = item.initialImg != null ? item.initialImg.split(',') : []
+							if (list.length) {
+								console.log(list, "list");
+								if (list.length > 1) {
+									const iterator = list[Symbol.iterator]();
+
+									for (const i of iterator) {
+										let data = checkMediaType(i)
+										if (data == 'video') {
+											item.img = (item.projectImg ? item.projectImg.split(
+												',')[0] : [])
+											break
+										} else {
+											item.img = list[0]
+										}
+									}
+								} else {
+									let data = checkMediaType(list[0])
+									item.img = data == 'video' ? (item.projectImg ?
+										item.projectImg.split(',')[0] : []) : list[0]
+
+								}
+
+							} else {
+								item.img = i.repairId != null ? (item.projectUrl != null ? item
+									.projectUrl.split(',')[0] : []) : (item.projectImg !=
+									null ?
+									item.projectImg.split(',')[0] : [])
+							}
+
+							// item.img = i.repairId != null ? (item.projectUrl != null ? item
+							// 	.projectUrl.split(',') : []) : (item.projectImg != null ? item
+							// 	.projectImg.split(',') : [])
 
 						})
 					})
@@ -941,7 +964,6 @@
 			}
 
 			&-time {
-				height: 192rpx;
 				box-sizing: border-box;
 				border-top: 1rpx solid #EBEDF0;
 				padding: 28rpx 26rpx;
@@ -954,9 +976,9 @@
 			}
 
 			&-money {
-				height: 96rpx;
+				// height: 96rpx;
 				border-top: 1rpx solid #EBEDF0;
-				padding: 0 24rpx;
+				padding: 26rpx 24rpx;
 
 				&-left {
 					color: #FD5834;

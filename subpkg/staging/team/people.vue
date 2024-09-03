@@ -350,7 +350,7 @@
 			},
 			addressHandle(e) {
 				this.where.region = e.value1.toString().replace(/,/g, "/")
-				this.where.regionList = e.value1
+				this.where.regionList = e.value1.toString().replace(/,/g, "/")
 				this.$refs.paging.reload()
 				console.log(e, "eee");
 			},

@@ -64,7 +64,7 @@
 					</view>
 					<view class="value">
 						<text
-							v-if="partnerInfo.isTeamBonus&&partnerInfo.teamBonusRatio">{{partnerInfo.teamBonusRatio}}</text>
+							v-if="partnerInfo.isTeamBonus&&partnerInfo.teamBonusRatio">{{partnerInfo.teamBonusRatio}}%</text>
 						<text class="text" v-else>暂不享受该收益</text>
 					</view>
 				</view>
