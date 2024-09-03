@@ -6,7 +6,7 @@
 				<view class="box">
 					<view style="margin-bottom: 20rpx; color: #646566; font-size: 28rpx;">设置百分比</view>
 					<view class="input">
-						<u--input style="width: 564rpx;" v-model="ratio" @change="blurs" type="digit"
+						<u--input style="width: 564rpx;" v-model="ratio" @input="blurs" type="digit"
 							placeholder="请输入（0.00~100%）" border="surround" clearable></u--input>
 						<view class="input_s">%</view>
 					</view>
@@ -74,8 +74,13 @@
 				this.$emit('close')
 			},
 			blurs(e) {
+				//正则表达试
+				e = (e.match(/^\d*(\.?\d{0,2})/g)[0]) || null
+				//重新赋值给input
+				this.$nextTick(() => {
+					this.ratio = e
+				})
 				if (e < 0 || e > 100) return this.$toast('值只能输入0-100')
-				// console.log(e, "@2");
 			},
 			editSure() {
 				this.$emit('sureEdit', this.ratio)
@@ -117,7 +122,7 @@
 			color: #FFFFFF;
 			line-height: 88rpx;
 			text-align: center;
-			margin: 40rpx 0 20rpx;
+			margin: 40rpx 0 0rpx;
 		}
 	}
 
