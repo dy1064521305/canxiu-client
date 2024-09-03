@@ -108,11 +108,11 @@
 				<view class="orderItems-article acea-row"
 					v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
 					v-for="(pro,i) in item.projectDataVoList" :key="i">
-					<view class="orderItems-article-left">
-						<!-- <image v-if="pro.projectImg&&pro.projectImg.split(',')[0]" :src="pro.projectImg.split(',')[0]"
-							mode=""></image> -->
-						<image v-if="pro.initiallmg" @click.stop="previewImage(pro.initiallmg)" :src="pro.initiallmg "
+					<view class="orderItems-article-left" @click.stop="previewImage(pro.projectImg.split(',')[0])">
+						<image v-if="pro.projectImg&&pro.projectImg.split(',')[0]" :src="pro.projectImg.split(',')[0]"
 							mode=""></image>
+						<!-- 	<image v-if="pro.initiallmg" @click.stop="previewImage(pro.initiallmg)" :src="pro.initiallmg "
+							mode=""></image> -->
 						<!-- 	<image v-else
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/5beeb82b9a3f4952889976a3f009c7d8.png"
 							mode=""></image> -->
