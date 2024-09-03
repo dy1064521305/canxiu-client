@@ -1,6 +1,6 @@
 <template>
 	<view class="pages">
-		<z-paging ref="paging" v-model="dataList" @query="getList">
+		<z-paging ref="paging" v-model="dataList" @query="getList" @onRefresh="refresh">
 			<view slot='top'>
 				<Header type="dark" bgTop="#fff" listen-scroll :scroll-top="scrollTop" :offset-top="300" title=""
 					no-blank>
@@ -247,9 +247,17 @@
 			})
 		},
 		methods: {
-			getList() {
+			getList(pageNo, pageSize) {
+				this.where.pageNum = pageNo;
+				this.where.pageSize = pageSize;
+				uni.showLoading({
+					mask: true
+				});
 				putBrandManageList(this.where).then(res => {
+					uni.hideLoading();
 					this.$refs.paging.completeByTotal(res.rows, res.total);
+				}).finally(i => {
+					uni.hideLoading();
 				})
 			},
 			productSort(item, index) {
@@ -263,7 +271,7 @@
 				}
 				this.where.orderByColumn = item.value;
 				this.where.isAsc = item.order_by
-				this.getList()
+				this.$refs.paging.reload();
 			},
 			showPhoneHandle(phone) {
 				if (!phone) return this.$toast('对方未留联系方式')
@@ -294,6 +302,16 @@
 			typeClick(item) {
 				this.where.queryType = item.id
 				this.$refs.paging.reload();
+			},
+			refresh() {
+				this.reset()
+				this.$refs.paging.reload();
+			},
+
+			reset() {
+				this.where.searchValue = ''
+				this.where.orderByColumn = ''
+				this.where.isAsc = ''
 			},
 		}
 	}

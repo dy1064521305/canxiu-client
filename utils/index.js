@@ -410,7 +410,7 @@ export function uploadImageHandler(img, successCallback, errorCallback) {
 
 }
 
-
+// 下载图片
 export function saveImage(url, callback, noCache) {
 	if (!url) return;
 	let is_arr = Object.prototype.toString.call(url) === '[object Array]';
@@ -602,6 +602,7 @@ export function appOpenWeixin(params) {
 	// #endif
 }
 
+// 分享
 export function shareImage(img) {
 	// #ifdef MP-WEIXIN
 	Routine.shareImage(img);
@@ -617,4 +618,43 @@ export function shareImage(img) {
 	// #ifdef H5
 	return window.open(img);
 	// #endif
+}
+
+// 判断一个链接是图片还是视频
+export function checkMediaType(url) {
+	var mediaType = checkType(url);
+	if (mediaType === 'image') {
+		return 'image'
+		console.log('这是一个图片链接');
+	} else if (mediaType === 'video') {
+		return 'video'
+		console.log('这是一个视频链接');
+	} else {
+		return 'noType'
+		console.log('这个链接无法确定媒体类型');
+	}
+}
+
+function checkType(url) {
+	console.log(url, '222');
+	// // 创建URL对象
+	// var link = new URL(url);
+	// // 获取路径部分（去除参数）
+	// var path = link.pathname;
+	// 获取路径的最后一个点之后的内容作为文件扩展名
+	var extension = url.split('.').pop().toLowerCase();
+	console.log(extension, 'extension');
+	// 声明支持的图片和视频文件扩展名
+	var imageExtensions = ['jpg', 'jpeg', 'gif', 'png', 'jfif'];
+	var videoExtensions = ['mp4', 'wmv', 'avi', 'mov']
+	// 判断文件扩展名是否在图片扩展名数组中
+	if (imageExtensions.includes(extension)) {
+		return 'image';
+	}
+	// 判断文件扩展名是否在视频扩展名数组中
+	if (videoExtensions.includes(extension)) {
+		return 'video';
+	}
+	// 扩展名不在图片或视频数组中，返回null表示无法确定媒体类型
+	return null;
 }

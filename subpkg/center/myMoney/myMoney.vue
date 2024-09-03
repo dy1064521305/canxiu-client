@@ -236,11 +236,11 @@
 			</view>
 			<view class="money-get-item acea-row row-column row-center">
 				<text>订单消化收益</text>
-				<view>0</view>
+				<view>{{info.orderConsumeAmount||0}}</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center">
 				<text>团队育成奖励</text>
-				<view>0</view>
+				<view>{{info.teamBonusAmount||0}}</view>
 			</view>
 			<view class="money-get-item acea-row row-column row-center">
 				<text>区域运营补贴</text>
