@@ -105,7 +105,7 @@
 							<view>品牌签约人</view>
 							<view>{{item.partnerName}}</view>
 						</view>
-						<view class="invite_list-item-middle2-items" @click=" toSet(item) ">
+						<view class="invite_list-item-middle2-items" @click="toSet(item) ">
 							<view class="acea-row row-between-wrapper row-middle">业务负责人 <view
 									class="acea-row row-middle"> {{item.brandBusinessLeaderName?'更改':'去设置'}} <text
 										style="font-size: 36rpx;" class="iconfont icon-arrow-right"></text>
@@ -243,7 +243,6 @@
 							this.$refs.paging.reload();
 						})
 					}
-					console.log(res, "res");
 				}
 			})
 		},
