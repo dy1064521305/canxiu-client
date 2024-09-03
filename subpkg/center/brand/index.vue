@@ -53,11 +53,11 @@
 			<view class="invite_list">
 				<view class="invite_list-item" v-for="(item,index) in dataList" :key="index">
 					<view class="invite_list-item-top acea-row row-between-wrapper">
-						<view class="invite_list-item-top-left acea-row">
-							<image v-if="item.brandLog==null||item.brandLog==''||item.brandLog=='null'"
+						<view class="invite_list-item-top-left acea-row row-middle">
+							<image v-if="item.brandLogo==null||item.brandLogo==''||item.brandLogo=='null'"
 								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/02/23d8137225a440f3a4e19e43d527cc32.png"
 								mode=""></image>
-							<image v-else="item.brandLog" :src="item.brandLog" mode=""></image>
+							<image v-else="item.brandLogo" :src="item.brandLogo" mode=""></image>
 							<view class="invite_list-item-top-left-title">
 								<view class="invite_list-item-top-left-title-name acea-row row-middle">
 									<view class="view">{{item.brandName||'暂无名称'}}</view>
@@ -67,7 +67,7 @@
 										@click="showPhoneHandle(item.personPhone)">联系ta
 									</view>
 								</view>
-								<text>联系人：{{item.personName}}</text>
+								<text>{{item.region||'暂无区域信息'}}</text>
 								<!-- <text>工种信息：张</text> -->
 							</view>
 						</view>
@@ -442,6 +442,7 @@
 						width: 80rpx;
 						height: 80rpx;
 						border-radius: 14rpx;
+						background-color: #fffef3;
 					}
 
 					&-title {
@@ -478,7 +479,7 @@
 						text {
 							font-weight: 400;
 							display: block;
-							font-size: 26rpx;
+							font-size: 24rpx;
 							color: #999999;
 							overflow: hidden;
 							text-overflow: ellipsis;

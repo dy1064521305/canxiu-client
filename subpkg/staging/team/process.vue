@@ -182,6 +182,11 @@
 						activity: false
 					},
 					{
+						label: "品牌入驻",
+						value: "0",
+						activity: false
+					},
+					{
 						label: "业务推广分成比例",
 						value: "1",
 						activity: false
@@ -554,7 +559,7 @@
 				color: #999999;
 				justify-content: flex-end;
 				padding: 0 26rpx;
-				margin-top: 20rpx;
+
 
 				&-btn {
 					align-items: center;
@@ -741,6 +746,7 @@
 				height: 56rpx;
 				background: #F2F2F2;
 				border-radius: 8rpx;
+				margin-bottom: 20rpx;
 
 				&.on {
 					background: #F3B23E;
@@ -760,7 +766,7 @@
 			line-height: 80rpx;
 			text-align: center;
 			margin-top: 42rpx;
-			margin: 200rpx 30rpx 20rpx;
+			margin: 200rpx 30rpx 0rpx;
 		}
 	}
 </style>

@@ -8,7 +8,7 @@
 			<!-- <text style="font-size: 34rpx;">我的资产</text> -->
 		</Header>
 		<view class="topBg">
-			<view class="topBg-user acea-row" @click.stop="$jump('/subpkg/center/brand/cooperateSettings')">
+			<view class="topBg-user acea-row row-middle" @click.stop="$jump('/subpkg/center/brand/cooperateSettings')">
 				<view class="topBg-user-image">
 					<image v-if="baseInfo.avatarUrl" :src="baseInfo.avatarUrl" mode=""></image>
 					<image v-else
@@ -464,7 +464,6 @@
 		background-color: #F2F2F2;
 
 		.topBg {
-			// height: 556rpx;
 			background: url("https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/13/af640efd1c3f4672b9a6825acf651946.png") no-repeat;
 			background-size: 100% 100%;
 			padding: 186rpx 32rpx 48rpx;
