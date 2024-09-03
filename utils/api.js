@@ -10,8 +10,8 @@ import {
 	getCarList
 } from '@/api/car.js';
 import {
-		getOrderList
-	} from '@/api/order.js'
+	getOrderList
+} from '@/api/order.js'
 import storage from '@/utils/storage';
 const app = getApp();
 export function login(options) {
@@ -110,34 +110,27 @@ export async function cancellation(data, handleSuccess, handleFail) {
 	});
 }
 export const getCarNum = () => {
-	return getCarList({ 
+	return getCarList({
 		clientId: storage.get('ClientId') == false ? 0 : storage.get('ClientId'),
-		address:'浙江省-杭州市-拱墅区'
+		address: '浙江省-杭州市-拱墅区'
 	}).then(res => {
-		console.log(res, '<<<<<<<<<<<<getCarList>>>>>>>>', storage.get('ClientId'));
-
 		let allNum = 0
 		res.data.forEach(item => {
 			allNum += item.children.length
-
 		})
-		console.log(allNum, '<<<<<<<allnum')
 		return Promise.resolve(String(allNum))
 	})
 }
 
 //获取订单数量
 export const getOrderNum = () => {
-	return getOrderList({ 
+	return getOrderList({
 		pageSize: 10,
 		pageNum: 1,
-		orderStatus:"",
+		orderStatus: "",
 		clientId: storage.get('ClientId') == false ? 0 : storage.get('ClientId')
 	}).then(res => {
-
 		let allNum = res.total
-	
-		console.log(allNum, '<<<<<<<allnumorderorderorderorderfe')
 		return Promise.resolve(String(allNum))
 	})
 }

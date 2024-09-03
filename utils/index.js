@@ -83,12 +83,10 @@ export function jumpUrl(url) {
 	const methodsKey = '://'
 	url = '' + url;
 	let fullurl = url;
-	console.log(url.indexOf(methodsKey), "url.indexOf(methodsKey)")
 	if (url.indexOf(methodsKey) > 0) {
 		let arr = url.split(methodsKey);
 		methods = arr[0];
 		url = arr[1];
-		console.log(arr, "3arr")
 	} else {
 
 		if (!isTabber(url)) {
@@ -130,8 +128,6 @@ export function jumpUrl(url) {
 			uni[methods]({
 				url
 			});
-			console.log(methods, "methods")
-			console.log(url, "url222222222222")
 			break;
 		case 'mp':
 			openMiniProgram(parseQuery(url));

@@ -32,7 +32,7 @@
 										:value="where.date">
 										<text class="select-left-time">{{item.name}}</text>
 									</picker> -->
-									<pickers v-if="item.value==2" @address="addressHandle"
+									<pickers v-if="item.value==2" :type="1" @address="addressHandle"
 										style="flex: 1;text-align: right ;">
 										<text>{{item.name}}</text>
 
@@ -125,12 +125,9 @@
 		<u-popup :show="showScreen" @close="showScreen=false" closeable zIndex='100'>
 			<view style="margin:70rpx 50rpx;">
 				<view style="text-align: center;margin-bottom: 40rpx;font-weight: bold;">
-					筛选
+					时间筛选
 				</view>
-				<view class="screen">
-					<view class="title" style="margin-top: 20rpx;">
-						时间
-					</view>
+				<view class="screen flex-colum-center">
 					<view style="display: flex;margin-top: 20rpx;">
 						<view class="date-class">
 							<picker class="picker" mode="date" :value="date" :start="startDate" :end="endDate"
@@ -484,7 +481,7 @@
 			height: 110rpx;
 			position: relative;
 			background-color: #fff;
-			margin-bottom: 20rpx;
+			border-bottom: 1rpx solid #f5f5f5;
 
 			&-change {
 				position: absolute;
@@ -493,10 +490,10 @@
 				width: 224rpx;
 				height: 80rpx;
 				text-align: center;
-				background: #F3B23E;
+				background: $pageColor;
 				color: #FFFFFF;
 				font-size: 32rpx;
-				border-radius: 16rpx;
+				border-radius: 50rpx;
 				padding: 0 10rpx;
 
 				view {
@@ -506,8 +503,8 @@
 						height: 64rpx;
 						background-color: #FFFFFF;
 						line-height: 64rpx;
-						border-radius: 18rpx;
-						color: #F3B23E;
+						border-radius: 50rpx;
+						color: $pageColor;
 					}
 				}
 			}
@@ -521,7 +518,7 @@
 		.list {
 			// margin: 0 30rpx;
 			border-bottom: 1rpx solid #F8F8F8;
-			margin-bottom: 20rpx;
+			margin-top: 20rpx;
 			background-color: #fff;
 
 			.box {
@@ -556,10 +553,11 @@
 						.color {
 							height: 32rpx;
 							display: inline-block;
-							background: #F3B23E;
-							padding: 0 8rpx;
+							background: $pageColor;
+							padding: 2rpx 10rpx;
+							font-size: 22rpx;
 							color: #fff;
-							border-radius: 6rpx;
+							border-radius: 10rpx;
 						}
 
 					}
@@ -616,12 +614,13 @@
 					line-height: 94rpx;
 
 					.btn {
-						width: 176rpx;
-						height: 64rpx;
-						background: #F3B23E;
-						border-radius: 8rpx;
+						width: 170rpx;
+						height: 60rpx;
+						background: $pageColor;
+						border-radius: 30rpx;
 						color: #FFFFFF;
-						line-height: 64rpx;
+						font-size: 26rpx;
+						line-height: 60rpx;
 						text-align: center;
 					}
 				}
@@ -676,14 +675,9 @@
 	}
 
 	.screen {
-		height: 380rpx;
-
-		.title {
-			font-size: 29rpx;
-			color: #3D3F3E;
-			font-weight: bold;
-			margin-bottom: 30rpx;
-		}
+		height: 300rpx;
+		justify-content: space-between;
+		margin-bottom: 30rpx;
 
 		.date-class {
 			width: 290rpx;
@@ -712,7 +706,7 @@
 
 		.time-active {
 			background: #f0fbf5;
-			border: 2rpx solid #F3B23E;
+			border: 2rpx solid $pageColor;
 		}
 
 		.time {
@@ -755,15 +749,15 @@
 		.btn-white {
 			height: 55rpx;
 			background: #FFFFFF;
-			border: 4rpx solid #F3B23E;
-			color: #F3B23E;
+			border: 4rpx solid $pageColor;
+			color: $pageColor;
 			line-height: 55rpx;
 		}
 
 		.btn-green {
 			line-height: 60rpx;
 			height: 60rpx;
-			background: #F3B23E;
+			background: $pageColor;
 			color: #fff;
 		}
 
