@@ -169,9 +169,9 @@
 						let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 						console.log(res.data.customerStoreId, "res.data.customerStoreId")
 						console.log(this.inviteType, "inviteType")
-						if (result.data.type == 'Success' && ((res.data.customerStoreId != null && res.data
-									.customerStoreId) || this
-								.inviteType == 1)) {
+						if ((res.data.customerStoreId != null && res.data
+								.customerStoreId) || this
+							.inviteType == 1) {
 							const pages = uni.$u.pages();
 							apps.type = 'login'
 							let back_url = $cache.get('authBackUrl');
@@ -188,6 +188,7 @@
 
 						} else {
 							this.loading = false;
+
 							let info = {
 								type: 'login',
 								storeInfo: {
@@ -200,6 +201,7 @@
 								url: '../../subpkg/center/myStore/addStore/addStore?info=' +
 									encodeURIComponent(JSON.stringify(info))
 							})
+
 						}
 					})
 					// #endif
