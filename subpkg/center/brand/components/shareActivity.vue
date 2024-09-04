@@ -400,7 +400,7 @@
 						path: 'subpkg/center/brand/inviter?id=' + info.id,
 						// let url = '/subpkg/center/brand/inviter?id=' + this.partnerInfo.partnerId
 						// 分享的app体验版
-						type: 0
+						type: 2
 					}
 					appOpenWeixin(params);
 				} else {
