@@ -5,13 +5,9 @@
 				@click="changeTypes(item.type)">{{item.label}}
 			</view>
 		</view>
-		<view class="qr" v-show="typeIndex==1">
-			<image :src="code" mode=""></image>
-			</image>
-		</view>
-		<view class="qr" v-show="typeIndex==2">
-			<image :src="inviteCode" mode=""></text>
-			</image>
+		<view class="qr" :class="{on:typeIndex==2}">
+			<image v-show="typeIndex==1" :src="code" mode=""></image>
+			<image v-show="typeIndex==2" :src="inviteCode" mode=""></image>
 		</view>
 		<view class="qr_mess">保存至本地，直接分享或面对面扫码注册</view>
 		<view class="qr_saveImg" @click="toInvite">保存到相册</view>
@@ -118,9 +114,7 @@
 				this.userId = options.userId
 				console.log(this.userId, "	this.userId ");
 			}
-			// this.code = `${environment.baseURL}/partner/partner/getQrCode?userId=${storage.get('ClientId')}`
-			// this.inviteCode =
-			// 	`${environment.baseURL}/partner/partner/invite/partner/getQrCode?userId=${storage.get('ClientId')}`
+
 			this.code =
 				`${environment.baseURL}/partner/partner/invite/brand/getAppletQrCode?userId=${this.userId}`
 			this.inviteCode =
@@ -245,6 +239,7 @@
 				color: $uni-border-color;
 				line-height: 64rpx;
 				text-align: center;
+				background-color: $backGroundColor;
 
 				&.on {
 					width: 172rpx;
@@ -255,20 +250,13 @@
 			}
 
 			.items:nth-child(1) {
-				border-radius: 8rpx 0rpx 0rpx 8rpx;
+				border-radius: 50rpx 0rpx 0rpx 50rpx;
 				border-right: none;
 			}
 
-			// .items:nth-child(2) {
-			// 	border-right: none;
-			// }
-
-			// .items:nth-child(3) {
-			// 	border-right: none;
-			// }
-
 			.items:nth-last-child(1) {
-				border-radius: 0rpx 8rpx 8rpx 0rpx;
+				border-radius: 0rpx 50rpx 50rpx 0rpx;
+				border-left: none;
 			}
 		}
 
@@ -283,13 +271,6 @@
 			}
 		}
 
-		// .qr2 {
-		// 	image {
-		// 		width: 472rpx;
-		// 		height: 472rpx;
-		// 		margin-top: 20rpx;
-		// 	}
-		// }
 
 		.qr_mess {
 			font-size: 32rpx;
@@ -300,14 +281,14 @@
 			margin: 66rpx 0 44rpx;
 			width: 622rpx;
 			height: 88rpx;
-			background: #FFFFFF;
-			border-radius: 8rpx;
+			background-color: $backGroundColor;
+			border-radius: 50rpx;
 			border: 2rpx solid $uni-border-color;
 			font-family: PingFangSC, PingFang SC;
 			font-weight: bold;
 			font-size: 32rpx;
 			color: $uni-border-color;
-			line-height: 88rpx;
+			line-height: 86rpx;
 			text-align: center;
 			box-sizing: border-box;
 		}

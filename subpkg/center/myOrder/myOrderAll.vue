@@ -25,9 +25,9 @@
 							mode="widthFix"></image>
 						筛选
 					</view> -->
-					<view @click="$jump('/subpkg/center/myOrder/screen?info='+JSON.stringify(infoItem) )"
+					<view @click="$jump('/subpkg/center/myOrder/screen?info='+JSON.stringify(infoItem))"
 						class=" acea-row row-middle">
-						<image :style="{'width': '29rpx','margin': 10+'rpx','padding-top':'9rpx'}"
+						<image style="margin: 0 10rpx 5rpx 10rpx;" :style="{'width': '29rpx','padding-top':'9rpx'}"
 							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/eb78f3eb65ec46fc92b1245b17c64838.png"
 							mode="widthFix"></image>
 						筛选
@@ -109,9 +109,8 @@
 					v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
 					v-for="(pro,i) in item.projectDataVoList" :key="i">
 					<view class="orderItems-article-left" @click.stop="previewImage(pro.img)">
-						<image v-if="pro.img" :src="pro.img" mode=""></image>
-						<!-- 	<image v-if="pro.initiallmg" @click.stop="previewImage(pro.initiallmg)" :src="pro.initiallmg "
-							mode=""></image> -->
+						<image v-if="pro.img&&Object.prototype.toString.call(pro.img) !== '[object Array]'"
+							:src="pro.img" mode=""></image>
 						<image v-else
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/02/23d8137225a440f3a4e19e43d527cc32.png"
 							mode=""></image>
@@ -524,6 +523,7 @@
 									.projectUrl.split(',')[0] : []) : (item.projectImg !=
 									null ?
 									item.projectImg.split(',')[0] : [])
+								console.log(item.img, "****************", index);
 							}
 
 							// item.img = i.repairId != null ? (item.projectUrl != null ? item

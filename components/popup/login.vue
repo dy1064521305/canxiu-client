@@ -1,48 +1,52 @@
 <template>
 	<view>
-		<view v-show="loginPopShow">
-			<view class="popLogin">
-				<view class="mask" v-on:click="$store.commit('CLOSE_LOGIN_POP')"></view>
-				<slot name="wrapper">
-					<view class="wrapper acea-row row-column">
-						<view class="title flex-colum">
-							<text>欢迎登录，</text>
-							<text>餐修让维修更快捷、更标准！</text>
-							<view class="">
-								未注册手机号验证后即完成注册
-							</view>
-						</view>
-						<view class="content acea-con">
-							<button v-if="checkedLogin" class="btn" type="primary" open-type="getPhoneNumber"
-								@getphonenumber="getphonenumber">手机号快捷登录</button>
-							</button>
-							<view v-else class="btn acea-row row-center row-middle" @click="toPhone">手机号快捷登录</view>
-							<view class="btn btn2 acea-row row-center row-middle" @click="toPhone(1)">短信验证码登录</view>
-							<view class="agreement">
-								<view class="fonts acea-row row-middle" @click="checkedLogin = !checkedLogin">
-									<view style="margin:3rpx 10rpx 0 0;">
-										<view v-if="!checkedLogin" class="check"></view>
-										<view v-else>
-											<u-icon name="checkmark-circle-fill" color="#F3B23E" size="27rpx"></u-icon>
-										</view>
-
-									</view>
-									我已阅读并同意
-									<!-- <text v-for="(item,index) in agreementListLogin" :key="index"
-								@click.stop="goAgreementLogin(item)">《{{item.agreementName}}》<text
-									v-if="index!=agreementListLogin.length-1">和</text></text> -->
-									<text @click.stop="goAgreementLogin(0)">《注册协议》</text><text>和</text><text
-										@click.stop="goAgreementLogin(1)">《隐私协议》</text>
+		<u-transition :show="loginPopShow" mode="fade">
+			<view v-show="loginPopShow">
+				<view class="popLogin">
+					<view class="mask" v-on:click="$store.commit('CLOSE_LOGIN_POP')"></view>
+					<slot name="wrapper">
+						<view class="wrapper acea-row row-column">
+							<view class="title flex-colum">
+								<text>欢迎登录，</text>
+								<text>餐修让维修更快捷、更标准！</text>
+								<view class="">
+									未注册手机号验证后即完成注册
 								</view>
 							</view>
+							<view class="content acea-con">
+								<button v-if="checkedLogin" class="btn" type="primary" open-type="getPhoneNumber"
+									@getphonenumber="getphonenumber">手机号快捷登录</button>
+								</button>
+								<view v-else class="btn acea-row row-center row-middle" @click="toPhone">手机号快捷登录</view>
+								<view class="btn btn2 acea-row row-center row-middle" @click="toPhone(1)">短信验证码登录</view>
+								<view class="agreement">
+									<view class="fonts acea-row row-middle" @click="checkedLogin = !checkedLogin">
+										<view style="margin:3rpx 10rpx 0 0;">
+											<view v-if="!checkedLogin" class="check"></view>
+											<view v-else>
+												<u-icon name="checkmark-circle-fill" color="#F3B23E"
+													size="27rpx"></u-icon>
+											</view>
 
+										</view>
+										我已阅读并同意
+										<!-- <text v-for="(item,index) in agreementListLogin" :key="index"
+									@click.stop="goAgreementLogin(item)">《{{item.agreementName}}》<text
+										v-if="index!=agreementListLogin.length-1">和</text></text> -->
+										<text @click.stop="goAgreementLogin(0)">《注册协议》</text><text>和</text><text
+											@click.stop="goAgreementLogin(1)">《隐私协议》</text>
+									</view>
+								</view>
+
+
+							</view>
 
 						</view>
-
-					</view>
-				</slot>
+					</slot>
+				</view>
 			</view>
-		</view>
+		</u-transition>
+
 	</view>
 </template>
 
@@ -99,7 +103,6 @@
 				});
 				Routine.getCode(1)
 					.then(code => {
-						console.log(e, "@2");
 						// this.getUserPhoneNumber(e.detail.encryptedData, e.detail.iv, code);
 						this.getUserPhoneNumber(e.detail.code, code);
 						// let pc = new WXBizDataCrypt('wx365a28a668734937', session_key);
@@ -123,7 +126,6 @@
 			//#endif
 			loginHandler(data) {
 				this.$store.dispatch('LOGIN', data).then(user => {
-					console.log(user, "back_url");
 					uni.hideLoading();
 					// 二维码邀请的时候的判断
 					if (this.inviteType && user.isPartner && user.type == 'Success') {
@@ -144,10 +146,9 @@
 					} else {
 						getInfoById(user.clientId).then(res => {
 							uni.setStorageSync(`isLogin${storage.get('ClientId')}`, true)
-							console.log(res.data.customerStoreId, "res.data.customerStoreId")
-							console.log(this.inviteType, "inviteType")
 							// 判断是不是从二维码邀请过来的如果是去登录后不去门店。而是去邀请的页面。
-							if (user.type == 'Success' && (res.data.customerStoreId || this
+							if (user.type == 'Success' && res.data.customerStoreId != null && (res.data
+									.customerStoreId || this
 									.inviteType)) {
 								// 分邀请来的还是普通登录，普通登录直接重新打开当前页刷新，邀请来的直接关闭登录弹窗
 								if (this.inviteType) {
