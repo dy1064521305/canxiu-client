@@ -458,8 +458,6 @@
 		},
 		//#endif
 		onLoad(options) {
-			// console.log(this.isLogin);
-			console.log(options);
 			let name = uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 			this.query.address = name ? name : options.address
 			this.type = options.type
@@ -498,7 +496,6 @@
 					.select(".navbar")
 					.boundingClientRect((data) => {
 						this.navbarHeight = data.height
-						console.log(this.navbarHeight, 'navbarHeight');
 					})
 					.exec();
 				uni.createSelectorQuery().in(this)
@@ -510,7 +507,6 @@
 					})
 					.exec();
 			})
-			console.log('onshowonshowwwwwww');
 			// #ifdef MP-WEIXIN
 			const res = uni.getMenuButtonBoundingClientRect()
 			this.statusHeight = res.top //胶囊距离顶部
@@ -524,7 +520,6 @@
 				}
 			});
 			// #endif
-			console.log(this.statusHeight, '448888888');
 			// this.isLogin = storage.get('AccessToken')
 			//获取购物车数量
 			if (this.isLogin) {
@@ -589,7 +584,6 @@
 							list: this.goodInfo.materialVoMap[key]
 						})
 					}
-					console.log(this.melList, '5566666666');
 					//收费标准
 					this.priceList = [{
 							name: '服务起步价',
@@ -651,7 +645,6 @@
 						page: 'pages/home/index',
 						// scene: 'a=1'
 					}).then(async res => {
-						console.log(res);
 						//this.qrCode = await this.Tobase(res.msg)
 						//console.log(this.qrCode);
 					})
@@ -677,7 +670,6 @@
 			},
 			//将钱替换为星号
 			replaceMoney(i) {
-				console.log(i);
 				return i.replace(/[0-9]/g, "x")
 			},
 			hldsz(e) {
@@ -733,11 +725,9 @@
 			},
 
 			onSuccesss(reslut) {
-				console.log(reslut);
 				this.projectForm.projectImg.push(reslut.data.url)
 			},
 			onInput(data) {
-				console.log(data);
 				this.projectForm.projectImg = data.list
 			},
 			getCheck() {
@@ -745,7 +735,6 @@
 				// 	this.isShowLogin = true
 				// 	return
 				// }
-				console.log(this.getRules());
 				if (!this.getRules()) return
 				let carArr = []
 				carArr.push({

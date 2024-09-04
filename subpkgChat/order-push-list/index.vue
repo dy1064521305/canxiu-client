@@ -2,15 +2,16 @@
 	<view>
 		<z-paging ref="paging" v-model="dataList" @query="queryList" :default-page-size="20">
 			<view v-for="(item,index) in dataList" :key="index" @click="toOrderDetail(item)">
-			
-				<uni-badge :customStyle="{background: '#EC5722'}"  :is-dot="true"
-					:offset="[20,2]" :text="item.readStatus == 0 ? 1 : 0" absolute="rightTop" size="normal">
-			
+
+				<uni-badge :customStyle="{background: '#EC5722'}" :is-dot="true" :offset="[20,2]"
+					:text="item.readStatus == 0 ? 1 : 0" absolute="rightTop" size="normal">
+
 					<uni-card :title="item.title" :extra="item.time" :border="false">
-			
+
 						<view class="uni-body" style="font-size: 26rpx;">
 							{{item.before}}
-							<text style="color:#3398F3 ;" @click.stop="copy(item.orderNumber)">{{item.orderNumber}}</text>
+							<text style="color:#3398F3 ;"
+								@click.stop="copy(item.orderNumber)">{{item.orderNumber}}</text>
 							{{item.after}}
 						</view>
 						<view slot="actions" class="card-actions">
@@ -20,9 +21,9 @@
 								<uni-icons type="right" size="15" color="#3398F3"></uni-icons>
 							</view>
 						</view>
-			
+
 					</uni-card>
-			
+
 				</uni-badge>
 			</view>
 		</z-paging>
@@ -56,8 +57,8 @@
 					res.rows.forEach(item => {
 						let i1 = item.content.indexOf('【')
 						let i2 = item.content.indexOf('】')
-						item.before = item.content.substring(0, i1+1)
-						item.orderNumber = item.content.substring(i1+1, i2)
+						item.before = item.content.substring(0, i1 + 1)
+						item.orderNumber = item.content.substring(i1 + 1, i2)
 						item.after = item.content.substring(i2)
 					})
 					this.$refs.paging.complete(res.rows);
@@ -70,7 +71,6 @@
 			},
 			//复制单号
 			copy(n) {
-				console.log(n);
 				uni.setClipboardData({
 					data: n,
 					success: function() {
@@ -95,15 +95,16 @@
 </script>
 
 <style scoped>
-	.uni-badge-left-margin{
-		margin: 10rpx  0;
+	.uni-badge-left-margin {
+		margin: 10rpx 0;
 	}
+
 	/deep/.uni-badge--x {
 		width: 100%;
 		display: block;
 		/* margin: -32rpx 0; */
 	}
-	
+
 	/deep/.uni-card__header-content-title {
 		font-weight: bold;
 		font-size: 33rpx !important;

@@ -121,7 +121,6 @@ export default {
 										resolve();
 									},
 									fail: (err) => {
-										console.log(err)
 										reject();
 									}
 								})
@@ -141,7 +140,6 @@ export default {
 		try {
 			return fs.accessSync(url)
 		} catch (e) {
-			console.error(e)
 			return false;
 		}
 	},
@@ -168,12 +166,12 @@ export default {
 						return resolve(res.needAuthorization)
 					},
 					fail: (err) => {
-						console.log(err)
+
 						return resolve(false)
 					}
 				})
 			} catch (err) {
-				console.log(err)
+
 				return resolve(false)
 			}
 		})
@@ -192,7 +190,6 @@ export default {
 					return resolve(itemSettings)
 				},
 				fail: (res) => {
-					console.log(res)
 					reject(res)
 				}
 			})
@@ -213,7 +210,6 @@ export default {
 			};
 
 			this.getSubscribeIds().then(idRes => {
-				console.log(idRes, "idRes11");
 				if (idRes === false) {
 					Alert('是否开启通知', 1, {
 						cancelText: '以后再说',

@@ -557,7 +557,6 @@
 		},
 		onLoad() {},
 		onShow() {
-			console.log(this.isLogin, "isLogin99");
 			if (this.isLogin) {
 				this.getList()
 				this.getOrderlistHandle(1, 10)

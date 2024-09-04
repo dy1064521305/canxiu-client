@@ -183,11 +183,9 @@
 					// 这里可以处理合并后的图片，比如保存到相册或上传到服务器等操作。
 					// 如果需要导出为文件或上传等操作，可以使用uni.canvasToTempFilePath等方法。	
 					setTimeout(() => {
-						console.log(5555568788999, "r000000000");
 						uni.canvasToTempFilePath({ // res.tempFilePath临时路径
 							canvasId: 'myCanvas',
 							success: (res) => {
-								console.log(res, "res.tempFilePath");
 								this.tempFilePath = res.tempFilePath
 								if (show) return
 								uni.saveImageToPhotos
@@ -198,10 +196,8 @@
 											title: '保存成功',
 											icon: 'success'
 										})
-										console.log(response, 'success');
 									},
 									fail: (response) => {
-										console.log(response, 'error');
 										uni.openSetting({ //打开权限
 											success: (
 												response) => {
@@ -224,9 +220,7 @@
 									}
 								})
 							},
-							fail: (response) => {
-								console.log(response, 'responseresponse');
-							}
+							fail: (response) => {}
 						}, this)
 					}, 1000)
 				})());

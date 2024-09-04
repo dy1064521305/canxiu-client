@@ -59,7 +59,7 @@ class AuthWechat {
 						resolve(this.instance);
 					})
 				}).catch(err => {
-					console.log(err);
+
 					this.status = false;
 					reject(err);
 				});

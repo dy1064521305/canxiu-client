@@ -147,7 +147,6 @@
 				this.queryState();
 				getC2cUnreadMsgNum().then(res => {
 					queryUnreadNum().then(ress => {
-						console.log(res);
 						// this.gdzsData = ress.data;
 						this.content = ress.data.data.content;
 						this.time = ress.data.data.time;
@@ -157,7 +156,6 @@
 							.AllC2CUnreadMsgNum) : 0) + parseInt(ress
 							.data.num)
 						this.num = this.num > 99 ? '99+' : this.num
-						console.log(this.num);
 						if (parseInt(this.num) > 0) {
 							uni.setTabBarBadge({
 								index: 2,
@@ -183,7 +181,6 @@
 							}).then(function(imResponse) {
 								if (imResponse.data.repeatLogin === true) {
 									// 标识帐号已登录，本次登录操作为重复登录。v2.5.1 起支持
-									console.log(imResponse.data.errorInfo);
 								}
 							}).catch((error) => {
 								console.info(error)

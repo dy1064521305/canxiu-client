@@ -1,7 +1,6 @@
 <template>
 	<view class="page">
-		<PopupBottom @tap-mask="closeAccountShow" :title="title" :show="show" @close="closeAccountShow"
-			@confirm="confirmSelect">
+		<PopupBottom @tap-mask="closeAccountShow" :title="title" :show="show" @close="closeAccountShow">
 			<view class="popMoney" style="margin-top: 30rpx;">
 				<view class="box">
 					<view style="margin-bottom: 20rpx; color: #646566; font-size: 28rpx;">设置百分比</view>

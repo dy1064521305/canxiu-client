@@ -136,8 +136,7 @@
 		</z-paging>
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect_two' :closeOnClickOverlay='false'
 			:actions="showTypeChange" :show="showAction_two"></u-action-sheet>
-		<PopupBottom :title="popTitle==1?'支付订单结算金额':'调整金额'" :show="accountShow" @close="accountShow=false;"
-			@confirm="confirmSelect">
+		<PopupBottom :title="popTitle==1?'支付订单结算金额':'调整金额'" :show="accountShow" @close="accountShow=false;">
 			<view class="popMent" v-if="popTitle" style="margin-top: 30rpx;">
 				<view class="error acea-row row-between-wrapper"
 					v-show="Number(investmentBalance)<Number(info.orderCost)">

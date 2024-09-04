@@ -235,13 +235,11 @@
 			// #endif
 			// #ifdef H5
 			this.tabbarHeight = uni.getSystemInfoSync().windowBottom
-			console.log(uni.getSystemInfoSync().windowBottom);
 			// #endif	
 			//this.getList()
 			this.isLogin = storage.get('AccessToken')
 			let that = this
 			uni.$on('updateNote', function(data) {
-				console.log(data, '245555555555');
 				that.getCarList()
 			})
 
@@ -292,7 +290,6 @@
 				// })
 			},
 			getDeleteUrlList(data) {
-				console.log(this.dataList);
 				this.dataList.forEach((fu, index) => {
 
 
@@ -304,8 +301,6 @@
 						})
 					})
 				})
-
-				console.log(this.dataList, '....185', data);
 			},
 			groupBy(array, f) {
 
@@ -344,11 +339,8 @@
 			},
 			getTotalMoney() {
 				let arr = this.arrayGroupBy(this.checkedList, 'workerType');
-				console.log(arr, 'checkedListcheckedListcheckedListcheckedListcheckedList');
-
 				this.totalMoney = 0
 				arr.forEach((item, index) => {
-					console.log(item);
 					let all = item.reduce((p, c) => p + (c.projectNumber * c.discountPrice), 0)
 					let money2 = all < Number(item[0].startingFreeDiscount) ? Number(item[0]
 						.startingFreeDiscount) : all
@@ -367,22 +359,21 @@
 				this.allNum = this.dataList.reduce((p, c) => p + (c.children.filter(f => {
 					return f.projectStatus == 0
 				})).length, 0)
-				console.log(this.allNum, '364444444444');
+
 			},
 			//其他页面改变数据
 			changeData(data) {
-				console.log(data[0]);
 				this.dataList.forEach((fu, index) => {
 					fu.children.forEach((son, ind) => {
 						data.forEach(d => {
 							if (son.id == d.id) {
 								this.$set(this.dataList[index].children, ind, d)
-								console.log(this.dataList, '....182');
+
 							}
 						})
 					})
 				})
-				console.log(this.dataList, '....186');
+
 				this.$nextTick(() => {
 					this.getCheckList()
 					this.getAllNum()
@@ -391,14 +382,12 @@
 			},
 			//单个复选框勾选或不勾选事件回调
 			checkChange(data) {
-				console.log(data, 'datadata');
 				let index = this.checkedList.findIndex(c => c.id === data.item.id)
 				if (data.value) {
 					index < 0 && this.checkedList.push(data.item)
 				} else {
 					this.checkedList.splice(index, 1)
 				}
-				console.log(this.dataList, 'this.dataListthis.dataList');
 				this.dataList.forEach(ele1 => {
 					ele1.children.forEach(ele2 => {
 
@@ -411,7 +400,6 @@
 				})
 				this.fatherCheckout()
 				this.getCheckList()
-				console.log(this.checkedList);
 				this.getAllNum()
 				this.getTotalMoney()
 			},
@@ -426,7 +414,6 @@
 					getAddressList({
 						clientId: storage.get('ClientId')
 					}).then(res => {
-						console.log(res);
 						this.addressList = res.rows
 						if (this.addressList.length == 0) {
 							uni.removeStorage({
@@ -444,12 +431,10 @@
 										key: `address_info${storage.get('ClientId')}`
 									}) : this.addressInfo = value
 
-									console.log(value);
 								} else {
 									this.addressList.forEach(item => {
 										if (item.isDefault == 0) {
 											this.addressInfo = item
-											console.log(111, '118111111111111111111');
 											uni.setStorage({
 												key: `address_info${storage.get('ClientId')}`,
 												data: item,
@@ -459,10 +444,6 @@
 								}
 							} catch (e) {}
 						}
-
-
-
-						console.log(this.addressInfo);
 					})
 
 				}
@@ -484,14 +465,11 @@
 			// },
 			getCarList() {
 				// let place=uni.getS
-				console.log(uni.getStorageSync('address_refreash'));
 				//维修车列表
 				car.getCarList({
 					clientId: storage.get('ClientId'),
 					address: uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 				}).then(res => {
-					console.log(res, '3145455555>>>>>>>>>');
-
 					this.dataList = res.data
 					this.checkboxValue1 = []
 					this.totalMoney = 0
@@ -514,12 +492,11 @@
 			},
 			showMask() {
 				this.isShow = true;
-				console.log(this.isShow);
 			},
 
 			handelClose(data) {
 				this.isShow = false;
-				console.log(data); //data={
+				//data={
 				//  date: "2020/3/30 09:00"
 				//  _date: "2020-3-30 09:00"
 				//  dateRange: "2020/3/30 09:00-09:30"
@@ -529,17 +506,13 @@
 			},
 			//底部勾选框全选或反选
 			allCheckHandle(bool) {
-				console.log(this.allNum, this.checkedList.length);
-				console.log(bool);
 
 				//console.log(this.dataList);
 				if (bool) {
-					console.log(this.dataList);
 					this.checkedList = this.dataList.map(c => c.children).flatMap(c1 => c1)
 					this.checkedList = this.checkedList.filter(c => {
 						return c.projectStatus == '0'
 					})
-					console.log('277,.', this.checkedList);
 					this.getTotalMoney()
 				} else {
 					this.checkedList = []
@@ -567,9 +540,7 @@
 					confirmText: '确认',
 					success: res => {
 						if (res.confirm) {
-							console.log(arr);
 							car.deleteCar(arr).then(res => {
-								console.log(res);
 								if (res.code === 200) {
 									uni.showToast({
 										title: '删除成功',
@@ -582,9 +553,7 @@
 
 								}
 							})
-						} else if (res.cancel) {
-							console.log('用户点击取消');
-						}
+						} else if (res.cancel) {}
 
 					}
 				});
@@ -592,7 +561,7 @@
 			},
 			//下单
 			submitOrder() {
-				console.log('374.。。。', this.checkedList);
+
 				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
 				if (this.checkedList.length == 0) {
 					uni.showToast({
@@ -601,7 +570,7 @@
 						icon: 'none'
 					})
 				} else {
-					console.log(this.checkedList);
+
 					let info = {
 						checkedList: this.checkedList,
 						isCar: true
@@ -624,14 +593,12 @@
 			},
 			//计算总钱数
 			getCheck(data) {
-				console.log(data);
 				this.dataList.forEach(ele1 => {
 					ele1.children.forEach(ele2 => {
 						if (ele2.id === data.item.id) ele2.projectNumber = data.num.value
 					})
 				})
 				this.checkedList = this.dataList.map(c => c.children.filter(c2 => c2.checked)).flatMap(c1 => c1)
-				console.log(this.dataList, '.....346', this.checkedList);
 				this.getTotalMoney()
 				car.editCar({
 					id: data.item.id,
@@ -642,14 +609,10 @@
 			},
 			//
 			deleteList(arr) {
-				console.log(arr);
-				console.log(this.dataList, '409409409409');
-
 				this.dataList = this.dataList.map(d => ({
 					...d,
 					children: d.children.filter(d1 => !arr.includes(d1.id))
 				}))
-				console.log(this.dataList, '417417417');
 				this.dataList = this.dataList.filter(d => d.children && d.children.length > 0)
 				this.dataList.forEach(item => {
 					item['isStatus'] = item.children.every(ch => {
@@ -694,7 +657,6 @@
 			},
 			//工种全选
 			typeCheckChange(val, item, i) {
-				console.log(val, item);
 				this.dataList[i].children.forEach((car1, index1) => {
 					this.$set(this.dataList[i].children, index1, {
 						...car1,
@@ -720,7 +682,6 @@
 					name: this.searchName,
 					address: uni.getStorageSync(`address_refreash${storage.get('ClientId')}`)
 				}).then(res => {
-					console.log(res, 'listByWorkerTypelistByWorkerTypelistByWorkerType');
 					this.coudanList = res.data
 
 				})

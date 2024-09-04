@@ -144,7 +144,6 @@
 				getAgreement({
 					type: '用户端'
 				}).then(res => {
-					console.log(res);
 					this.agreementList = res.data
 				})
 			},
@@ -156,9 +155,7 @@
 					}
 				}, 800)
 			},
-			radioChange() {
-				console.log(this.check);
-			},
+			radioChange() {},
 			//倒计时定时器
 			countDown() {
 				uni.$u.toast('验证码已发送，请查收短信')
@@ -204,9 +201,7 @@
 				this.countDown()
 				getCode({
 					phonenumber: this.phone
-				}).then(res => {
-					console.log(res);
-				})
+				}).then(res => {})
 
 			},
 			// 确认登录
@@ -237,21 +232,17 @@
 									bindIds({
 										clientId: info["clientid"],
 										userId: result.data.clientId
-									}).then(res => {
-										console.log(res);
-									})
+									}).then(res => {})
 								}),
 								// #endif
 
 
 								getInfoById(result.data.clientId).then(res => {
-									console.log(res);
 									this.userInfo = res.data
 									uni.setStorageSync(`isLogin${storage.get('ClientId')}`, true)
 									let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 									if (result.data.type == 'Success' && res.data.customerStoreId) {
 										const pages = uni.$u.pages();
-										console.log(pages);
 										apps.type = 'login'
 										if (pages.some(p => p.route.includes('goodDetails'))) {
 											var pagess = getCurrentPages();
@@ -317,7 +308,6 @@
 
 			//查协议内容
 			goAgreement(item) {
-				console.log(item);
 				uni.navigateTo({
 					url: '../../subpkg/login/agreementDetailed/agreementDetailed?remark=' + encodeURIComponent(JSON
 						.stringify(item.remark))

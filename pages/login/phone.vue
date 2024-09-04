@@ -163,17 +163,16 @@
 					// // #endif
 					// #ifndef APP-PLUS
 					getInfoById(result.data.clientId).then(res => {
-						console.log(res, "22");
 						this.loading = false;
 						this.userInfo = res.data
 						uni.setStorageSync(`isLogin${storage.get('ClientId')}`, true)
 						let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
 						console.log(res.data.customerStoreId, "res.data.customerStoreId")
 						console.log(this.inviteType, "inviteType")
-						if (result.data.type == 'Success' && (res.data.customerStoreId || this
-								.inviteType)) {
+						if (result.data.type == 'Success' && res.data.customerStoreId != null && (res.data
+								.customerStoreId || this
+								.inviteType == 1)) {
 							const pages = uni.$u.pages();
-							console.log(pages, "@22222222222");
 							apps.type = 'login'
 							let back_url = $cache.get('authBackUrl');
 							this.loading = false;

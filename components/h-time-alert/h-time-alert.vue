@@ -178,14 +178,12 @@
 				});
 				timeList[_ind].checked = true;
 				this.timeList = timeList;
-				console.log(this.timeList);
 				this.selectDateStr = timeList[_ind].dateStr;
 				this.select_dateStr = timeList[_ind]._dateStr;
 				this.activeTimeArr = timeList[_ind].timeArr;
 				this.isToday = e == 0
 			},
 			_changeTime(e) {
-				console.log(e);
 				this.isUrgent = e <= this.isUrgentIndex && this.isToday && !this.isCar
 				let _ind = e - 0;
 				let {
@@ -463,7 +461,6 @@
 			},
 			ok() {
 				let _data = this._handleData();
-				console.log(this.selectTime);
 				if (this.selectTime == '') {
 					uni.showToast({
 						title: '请选择上门时间',
@@ -708,7 +705,7 @@
 		// }
 		.btn-white,
 		.btn-green {
-		
+
 			border-radius: 45rpx;
 			text-align: center;
 			font-size: 34rpx;
@@ -719,11 +716,11 @@
 			background: #FFFFFF;
 			border: 4rpx solid #A4D091;
 			color: #A4D091;
-			padding:20rpx;
+			padding: 20rpx;
 		}
 
 		.btn-green {
-			padding:24rpx;
+			padding: 24rpx;
 			background: #A4D091;
 			color: #fff;
 		}

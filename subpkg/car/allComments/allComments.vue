@@ -55,7 +55,7 @@
 				queryParams: {
 					pageSize: 10,
 					pageNum: 1,
-					appraiseStatus:1
+					appraiseStatus: 1
 				},
 				appraiseList: []
 			};
@@ -73,13 +73,13 @@
 				this.queryParams.pageSize = pageSize;
 				//获取评论
 				order.appraiseList(this.queryParams).then(res => {
-					console.log(res);
 					res.rows.forEach(item => {
 						let num = (Number(item.attitudeScore) + Number(item.technicalScore) + Number(item
 							.velocityScore)) / 3
 						item.num = Math.floor(num)
 						item.imgs = item.appraiseImg != null ? item.appraiseImg.split(',') : [],
-							item.name = item.clientName!=null&& item.clientName!=''?item.clientName[0] + '*':'**'
+							item.name = item.clientName != null && item.clientName != '' ? item.clientName[
+								0] + '*' : '**'
 						item.time = formatter.transDate(item.createTime).one
 
 					})

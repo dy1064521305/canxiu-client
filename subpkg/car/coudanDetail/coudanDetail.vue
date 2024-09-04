@@ -303,10 +303,8 @@
 			this.city = this.query.address.split('-')[2]
 			// this.goodOptionInfo = item.goodInfo
 			this.query.clientId = storage.get('ClientId')
-			console.log(JSON.parse(options.info));
 			this.query.serviceId = JSON.parse(options.info).serviceId
 			this.type = JSON.parse(options.info).type
-			console.log(this.type);
 			this.$nextTick(() => {
 				this.getInfo()
 			})
@@ -314,13 +312,11 @@
 			uni.getStorage({
 				key: 'city',
 				success: function(res) {
-					console.log(res, '246246246');
 					//获取收费标准
 					getListCharge({
 						city: res.data
 					}).then(res => {
 						that.chargeList = res.data
-						console.log(res);
 					})
 				}
 			});
@@ -329,13 +325,11 @@
 			// })
 		},
 		onShow() {
-			console.log(this.query);
 			this.$nextTick(() => {
 				uni.createSelectorQuery().in(this)
 					.select(".navbar")
 					.boundingClientRect((data) => {
 						this.navbarHeight = data.height
-						console.log(this.navbarHeight, 'navbarHeight');
 					})
 					.exec();
 				uni.createSelectorQuery().in(this)
@@ -347,7 +341,6 @@
 					})
 					.exec();
 			})
-			console.log('onshowonshowwwwwww');
 			// #ifdef MP-WEIXIN
 			const res = uni.getMenuButtonBoundingClientRect()
 			this.statusHeight = res.top //胶囊距离顶部
@@ -366,7 +359,6 @@
 		methods: {
 			otherFun(object) {
 				if (object) {
-					console.log(object, 'objectobjectobject')
 					this.getInfo()
 				}
 			},
@@ -375,7 +367,6 @@
 				//console.log(this.query, 'queryqueryqueryqueryquery');
 				getServiceInfo(this.query).then(res => {
 					this.goodInfo = res.data
-					console.log(this.goodInfo, 'goodInfogoodInfogoodInfo');
 					for (let key in this.goodInfo.materialVoMap) {
 						this.melList.push({
 							name: key,
@@ -442,32 +433,26 @@
 
 			},
 			numChange(val) {
-				console.log(val);
 				this.projectForm.projectNumber = val.value
 			},
 			//将钱替换为星号
 			replaceMoney(i) {
-				console.log(i);
 				return i.replace(/[0-9]/g, "x")
 			},
 			previewImage(e) {
-				console.log(e);
 				wx.previewImage({
 					current: e, // 当前显示图片的http链接
 					urls: this.appraiseList[0].imgs, // 需要预览的图片http链接列表
 				})
 			},
 			onSuccesss(reslut) {
-				console.log(reslut);
 				this.projectForm.projectImg.push(reslut.data.url)
 			},
 			onInput(data) {
-				console.log(data);
 				this.projectForm.projectImg = data.list
 			},
 			//所有评论
 			allComment() {
-				console.log(11111);
 				uni.navigateTo({
 					url: '../allComments/allComments?id=' + this.goodInfo.serviceId
 				})
@@ -480,9 +465,7 @@
 				let type = 'goCar'
 				this.isLogin ? uni.reLaunch({
 					url: '../../../pages/car/car?type=' + type
-				}).then(res => {
-					console.log(res);
-				}) : this.isShowLogin = true
+				}).then(res => {}) : this.isShowLogin = true
 
 			},
 			tabChange(e) {
@@ -521,7 +504,6 @@
 
 			//加入购物车
 			jionCar() {
-				console.log(this.projectVoList[0]);
 				if (this.projectForm.projectImg == '' || this.projectForm.projectImg.length == 0) {
 					this.$refs.uToast.show({
 						type: 'error',
@@ -548,9 +530,6 @@
 
 					workerType: this.goodInfo.workerType
 				})
-
-				console.log(carArr, this.type, '5466666666666');
-
 				if (this.type == 'submit') {
 					this.goodInfo.remark = undefined
 					const pages = uni.$u.pages()
@@ -565,11 +544,9 @@
 						serviceProductName: this.goodInfo.serviceName,
 						projectPrice: this.goodInfo.projectAmount
 					})
-					console.log(carArr, this.type);
 					uni.navigateBack()
 				} else {
 					car.joinCar(carArr).then(res => {
-						console.log(res);
 						if (res.code == 200) {
 							uni.showToast({
 								title: '操作成功',
@@ -591,8 +568,6 @@
 						}
 					})
 				}
-
-				console.log(this.projectVoList);
 			},
 			//其他页面改变数据
 			changeData(data) {
@@ -600,19 +575,15 @@
 					data.forEach(d => {
 						if (fu.projectId == d.projectId) {
 							this.$set(this.projectVoList, index, d)
-							console.log(this.projectVoList, '....182');
 						}
 					})
 				})
 				this.$nextTick(() => {
 					this.$refs.proInfo.checkboxValue1 = checkValues
-					console.log(checkValues, 'checkValuescheckValuescheckValuescheckValues...', this.$refs
-						.proInfo);
 				})
 			},
 
 			textConfirm(arr) {
-				console.log(arr);
 				this.projectVoList[0].remarks = arr[0].remarks
 			},
 		}

@@ -74,9 +74,7 @@
 			},
 
 		},
-		created() {
-			console.log(this.tableData, "tableData");
-		},
+		created() {},
 		getPageNo(pageNo) {
 			//再次发请求
 			this.$emit('changeTable', pageNo)

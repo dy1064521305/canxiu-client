@@ -199,55 +199,118 @@
 				// 第二个和第三个参数是文字的 x 和 y 坐标
 				ctx.fillText(this.params.name, 20 * this.powerW, 40 * this.powerW);
 				// // 完成绘制并导出为图片（可选）
-				ctx.draw(true, (() => {
-					// 这里可以处理合并后的图片，比如保存到相册或上传到服务器等操作。
-					// 如果需要导出为文件或上传等操作，可以使用uni.canvasToTempFilePath等方法。	
-					setTimeout(() => {
-						uni.canvasToTempFilePath({ // res.tempFilePath临时路径
-							canvasId: 'myCanvas',
-							success: (res) => {
-								$cache.set('shareParamsImg', res.tempFilePath)
-								this.tempFilePath = res.tempFilePath
-								if (show) return
-								uni.saveImageToPhotosAlbum({ // 保存本地
-									filePath: res.tempFilePath,
-									success: (response) => {
-										uni.showToast({
-											title: '保存成功',
-											icon: 'success'
-										})
-										console.log(response, 'success');
-									},
-									fail: (response) => {
-										console.log(response, 'error');
-										uni.openSetting({ //打开权限
-											success: (
-												response) => {
-												if (!response
-													.authSetting[
-														'scope.writePhotosAlbum'
-													]) {
-													uni.showToast({
-														title: '获取权限成功, 再次点击即可保存',
-														icon: none
-													})
-												} else {
-													uni.showToast({
-														title: '获取权限失败, 无法保存',
-														icon: none
-													})
+				if (this.params.index == 1) {
+					ctx.draw(true, (() => {
+						// 这里可以处理合并后的图片，比如保存到相册或上传到服务器等操作。
+						// 如果需要导出为文件或上传等操作，可以使用uni.canvasToTempFilePath等方法。	
+						setTimeout(() => {
+							uni.canvasToTempFilePath({ // res.tempFilePath临时路径
+								canvasId: 'myCanvas',
+								success: (res) => {
+									$cache.set('shareParamsImg', res.tempFilePath)
+									this.tempFilePath = res.tempFilePath
+									console.log(this.tempFilePath,
+										"this.tempFilePath23");
+									if (show) return
+									uni.saveImageToPhotosAlbum({ // 保存本地
+										filePath: res.tempFilePath,
+										success: (response) => {
+											uni.showToast({
+												title: '保存成功',
+												icon: 'success'
+											})
+											console.log(response,
+												'success');
+										},
+										fail: (response) => {
+											console.log(response, 'error');
+											uni.openSetting({ //打开权限
+												success: (
+													response
+												) => {
+													if (!
+														response
+														.authSetting[
+															'scope.writePhotosAlbum'
+														]) {
+														uni.showToast({
+															title: '获取权限成功, 再次点击即可保存',
+															icon: none
+														})
+													} else {
+														uni.showToast({
+															title: '获取权限失败, 无法保存',
+															icon: none
+														})
+													}
 												}
-											}
-										})
-									}
-								})
-							},
-							fail: (response) => {
-								console.log(response, 'responseresponse');
-							}
-						}, this)
-					}, 1000)
-				})());
+											})
+										}
+									})
+								},
+								fail: (response) => {
+									console.log(response, 'responseresponse');
+								}
+							}, this)
+						}, 500)
+					})());
+				} else {
+					ctx.draw(true, (() => {
+						// 这里可以处理合并后的图片，比如保存到相册或上传到服务器等操作。
+						// 如果需要导出为文件或上传等操作，可以使用uni.canvasToTempFilePath等方法。	
+						setTimeout(() => {
+							uni.canvasToTempFilePath({ // res.tempFilePath临时路径
+								canvasId: 'myCanvas',
+								success: (res) => {
+									$cache.set('shareParamsImg', res.tempFilePath)
+									this.tempFilePath = res.tempFilePath
+									console.log(this.tempFilePath,
+										"this.tempFilePath45 ");
+									if (show) return
+									uni.saveImageToPhotosAlbum({ // 保存本地
+										filePath: res.tempFilePath,
+										success: (response) => {
+											uni.showToast({
+												title: '保存成功',
+												icon: 'success'
+											})
+											console.log(response,
+												'success');
+										},
+										fail: (response) => {
+											console.log(response, 'error');
+											uni.openSetting({ //打开权限
+												success: (
+													response
+												) => {
+													if (!
+														response
+														.authSetting[
+															'scope.writePhotosAlbum'
+														]) {
+														uni.showToast({
+															title: '获取权限成功, 再次点击即可保存',
+															icon: none
+														})
+													} else {
+														uni.showToast({
+															title: '获取权限失败, 无法保存',
+															icon: none
+														})
+													}
+												}
+											})
+										}
+									})
+								},
+								fail: (response) => {
+									console.log(response, 'responseresponse');
+								}
+							}, this)
+						}, 500)
+					})());
+				}
+
 
 			},
 
@@ -337,7 +400,7 @@
 						path: 'subpkg/center/brand/inviter?id=' + info.id,
 						// let url = '/subpkg/center/brand/inviter?id=' + this.partnerInfo.partnerId
 						// 分享的app体验版
-						type: 2
+						type: 0
 					}
 					appOpenWeixin(params);
 				} else {
@@ -402,6 +465,7 @@
 				// });
 				let img = $cache.get('shareParamsImg')
 				console.log(img, "22");
+				console.log(img, "this.tempFilePathimgimg");
 				uni.saveImageToPhotosAlbum({ // 保存本地
 					filePath: img,
 					success: (response) => {
