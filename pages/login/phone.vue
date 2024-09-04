@@ -49,6 +49,7 @@
 				},
 				sendText: '发送验证码',
 				loading: false,
+				inviteType: 0
 			}
 		},
 		computed: {
@@ -59,6 +60,12 @@
 			disabled() {
 				if (!this.phone || !this.codeVal) return true;
 				return false;
+			}
+		},
+		onLoad(options) {
+			if (options && options.invite) {
+				// 判断是不是从二维码邀请过来的如果是去登录后不去门店。而是去邀请的页面。
+				this.inviteType = options.invite || 0
 			}
 		},
 		methods: {
@@ -161,12 +168,13 @@
 						this.userInfo = res.data
 						uni.setStorageSync(`isLogin${storage.get('ClientId')}`, true)
 						let arr = res.data.avatarUrl != null ? res.data.avatarUrl.split(',') : []
-						console.log(arr, "arr")
-						if (result.data.type == 'Success' && res.data.customerStoreId) {
+						console.log(res.data.customerStoreId, "res.data.customerStoreId")
+						console.log(this.inviteType, "inviteType")
+						if (result.data.type == 'Success' && (res.data.customerStoreId || this
+								.inviteType)) {
 							const pages = uni.$u.pages();
 							console.log(pages, "@22222222222");
 							apps.type = 'login'
-							// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
 							let back_url = $cache.get('authBackUrl');
 							this.loading = false;
 							$cache.clear('authBackUrl');
@@ -178,35 +186,6 @@
 									this.$jump(-1);
 								}, 500)
 							}
-							// if (pages.some(p => p.route.includes('goodDetails'))) {
-							// 	var pagess = getCurrentPages();
-							// 	var prevPage = pagess[pagess.length - 2]; //上一个页面
-							// 	var object = {
-							// 		name: "back"
-							// 	}
-							// 	console.log(1, "00000000000");
-							// 	prevPage.$vm.otherFun(object);
-							// 	uni.navigateBack()
-							// } else {
-							// 	// let back_url = $cache.get('authBackUrl') || TABBAR_PATH[0];
-							// 	let back_url = $cache.get('authBackUrl');
-							// 	this.loading = false;
-							// 	$cache.clear('authBackUrl');
-							// 	if (back_url) {
-							// 		this.$jump(back_url);
-							// 	} else {
-							// 		this.$toast('登录成功')
-							// 		setTimeout(() => {
-							// 			this.$jump(-1);
-							// 		}, 500)
-							// 	}
-							// 	// uni.switchTab({
-							// 	// 	url: '/pages/home/index',
-							// 	// 	fail(err) {
-							// 	// 		console.log(err)
-							// 	// 	}
-							// 	// })
-							// }
 
 						} else {
 							this.loading = false;

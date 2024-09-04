@@ -19,7 +19,7 @@
 								<image v-else
 									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/23/5595ab7226854043abab1449a9067a94.png">
 								</image>
-								{{userInfo.realName}}
+								{{userInfo.clientName}}
 							</view>
 						</view>
 						<view class="form-row acea-row row-middle">
