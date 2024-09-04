@@ -210,7 +210,62 @@
 									$cache.set('shareParamsImg', res.tempFilePath)
 									this.tempFilePath = res.tempFilePath
 									console.log(this.tempFilePath,
-										"this.tempFilePath*********** ");
+										"this.tempFilePath23");
+									if (show) return
+									uni.saveImageToPhotosAlbum({ // 保存本地
+										filePath: res.tempFilePath,
+										success: (response) => {
+											uni.showToast({
+												title: '保存成功',
+												icon: 'success'
+											})
+											console.log(response,
+												'success');
+										},
+										fail: (response) => {
+											console.log(response, 'error');
+											uni.openSetting({ //打开权限
+												success: (
+													response
+												) => {
+													if (!
+														response
+														.authSetting[
+															'scope.writePhotosAlbum'
+														]) {
+														uni.showToast({
+															title: '获取权限成功, 再次点击即可保存',
+															icon: none
+														})
+													} else {
+														uni.showToast({
+															title: '获取权限失败, 无法保存',
+															icon: none
+														})
+													}
+												}
+											})
+										}
+									})
+								},
+								fail: (response) => {
+									console.log(response, 'responseresponse');
+								}
+							}, this)
+						}, 500)
+					})());
+				} else {
+					ctx.draw(true, (() => {
+						// 这里可以处理合并后的图片，比如保存到相册或上传到服务器等操作。
+						// 如果需要导出为文件或上传等操作，可以使用uni.canvasToTempFilePath等方法。	
+						setTimeout(() => {
+							uni.canvasToTempFilePath({ // res.tempFilePath临时路径
+								canvasId: 'myCanvas',
+								success: (res) => {
+									$cache.set('shareParamsImg', res.tempFilePath)
+									this.tempFilePath = res.tempFilePath
+									console.log(this.tempFilePath,
+										"this.tempFilePath45 ");
 									if (show) return
 									uni.saveImageToPhotosAlbum({ // 保存本地
 										filePath: res.tempFilePath,
