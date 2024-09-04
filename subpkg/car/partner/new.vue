@@ -32,7 +32,7 @@
 							<input class="acea-con" v-model="where.cellPhone"
 								style="text-align: right;margin-right: 10rpx;" placeholder="请输入您的手机号"></input>
 						</view>
-						<view class="form-row acea-row row-middle">
+						<view class="form-row acea-row row-middle" v-if="isLogin">
 							<text class="form-key">所在城市</text>
 							<pickers v-if="!isSubmit" :type="1" @address="addressHandle"
 								style="flex: 1;text-align: right">
@@ -43,7 +43,7 @@
 										style="margin-left: 4rpx;" :size="14"></u-icon></view>
 							</pickers>
 						</view>
-						<view class="content-btn acea-row row-middle row-center" @click="submit">
+						<view class="content-btn acea-row row-middle row-center" @click.stop="submit">
 							申请成为合伙人
 						</view>
 					</view>
@@ -184,7 +184,6 @@
 			},
 			addressHandle(e) {
 				this.where.region = e.value1.toString().replace(/,/g, "/")
-				console.log(e, "eee");
 			},
 			submit() {
 				if (!this.isLogin) return this.$store.commit('OPEN_LOGIN_POP')
