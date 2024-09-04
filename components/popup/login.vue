@@ -147,9 +147,9 @@
 						getInfoById(user.clientId).then(res => {
 							uni.setStorageSync(`isLogin${storage.get('ClientId')}`, true)
 							// 判断是不是从二维码邀请过来的如果是去登录后不去门店。而是去邀请的页面。
-							if (user.type == 'Success' && res.data.customerStoreId != null && (res.data
-									.customerStoreId || this
-									.inviteType)) {
+							if (user.type == 'Success' && ((res.data.customerStoreId != null && res.data
+										.customerStoreId) || this
+									.inviteType == 1)) {
 								// 分邀请来的还是普通登录，普通登录直接重新打开当前页刷新，邀请来的直接关闭登录弹窗
 								if (this.inviteType) {
 									this.$store.commit('CLOSE_LOGIN_POP')
