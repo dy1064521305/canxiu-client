@@ -61,8 +61,11 @@
 	import {
 		putImmediate
 	} from "@/api/brand.js"
+	import {
+		getInfoById
+	} from '@/api/user.js'
 	import Routine from '@/config/routine.js';
-
+	import storage from '@/utils/storage'
 	// 解密获取手机号
 	// import WXBizDataCrypt from "@/static/wx/WXBizDataCrypt.js"
 	export default {
@@ -139,29 +142,53 @@
 							this.$store.commit('CLOSE_LOGIN_POP')
 						})
 					} else {
-						if (this.inviteType) {
-							this.$store.commit('CLOSE_LOGIN_POP')
-							setTimeout(() => {
-								this.$toast('登录成功!', 'success')
-							}, 500)
-						} else {
-							this.$store.commit('CLOSE_LOGIN_POP')
-							let back_url = $cache.get('authBackUrl');
-							$cache.clear('authBackUrl');
-							if (back_url) {
-								this.$jump(back_url);
+						getInfoById(user.clientId).then(res => {
+							uni.setStorageSync(`isLogin${storage.get('ClientId')}`, true)
+							console.log(res.data.customerStoreId, "res.data.customerStoreId")
+							console.log(this.inviteType, "inviteType")
+							// 判断是不是从二维码邀请过来的如果是去登录后不去门店。而是去邀请的页面。
+							if (user.type == 'Success' && (res.data.customerStoreId || this
+									.inviteType)) {
+								// 分邀请来的还是普通登录，普通登录直接重新打开当前页刷新，邀请来的直接关闭登录弹窗
+								if (this.inviteType) {
+									this.$store.commit('CLOSE_LOGIN_POP')
+									setTimeout(() => {
+										this.$toast('登录成功!', 'success')
+									}, 500)
+								} else {
+									this.$store.commit('CLOSE_LOGIN_POP')
+									let back_url = $cache.get('authBackUrl');
+									$cache.clear('authBackUrl');
+									if (back_url) {
+										this.$jump(back_url);
+									} else {
+										const currentPagePath = this.getCurrentPagePath();
+										uni.reLaunch({
+											url: `/${currentPagePath}`
+										});
+									}
+									setTimeout(() => {
+										this.$toast('登录成功!', 'success')
+									}, 500)
+								}
+
 							} else {
-								const currentPagePath = this.getCurrentPagePath();
-								uni.reLaunch({
-									url: `/${currentPagePath}`
-								});
+								let info = {
+									type: 'login',
+									storeInfo: {
+										storeImg: res.data.storeImg,
+										storeName: res.data.storeName,
+										storeTypeId: res.data.storeTypeId,
+									}
+								}
+								this.$store.commit('CLOSE_LOGIN_POP')
+								uni.navigateTo({
+									url: '../../subpkg/center/myStore/addStore/addStore?info=' +
+										encodeURIComponent(JSON.stringify(info))
+								})
 							}
-							setTimeout(() => {
-								this.$toast('登录成功!', 'success')
-							}, 500)
-
-
-						}
+						})
+						// 
 
 					}
 
@@ -189,7 +216,9 @@
 			toPhone(i) {
 				if (!this.checkedLogin) return this.$toast('请勾选相关协议')
 				if (i) {
-					this.$jump('/pages/login/phone')
+					// 判断是不是从二维码邀请过来的如果是取登录后不去门店。而是去邀请的页面。
+					let data = this.inviteType ? 1 : 0
+					this.$jump('/pages/login/phone?invite=' + data)
 				}
 				this.$store.commit('CLOSE_LOGIN_POP')
 			},
