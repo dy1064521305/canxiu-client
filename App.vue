@@ -51,10 +51,10 @@
 			//监听接收透传消息事件
 			plus.push.addEventListener('receive', function(msg) {
 				// 在线消息
-				console.log('离线消息1', msg)
+				// console.log('离线消息1', msg)
 				plus.runtime.setBadgeNumber(0); //清除app角标
 				plus.push.clear(); //清空通知栏
-				console.log('准备跳转111');
+				// console.log('准备跳转111');
 				uni.switchTab({
 					url: '/pages/msg/index'
 				})
@@ -64,10 +64,10 @@
 			//监听系统通知栏消息点击事件
 			plus.push.addEventListener('click', function(msg) {
 				// 离线消息
-				console.log('离线消息2', msg)
+				// console.log('离线消息2', msg)
 				plus.runtime.setBadgeNumber(0); //清除app角标
 				plus.push.clear(); //清空通知栏
-				console.log('准备跳转111');
+				// console.log('准备跳转111');
 			}, false);
 			// #endif
 			// #ifdef MP
@@ -168,11 +168,11 @@
 							}
 						},
 						fail: (e) => {
-							console.log(e);
+							// console.log(e);
 						},
 					});
 				} catch (error) {
-					console.log('error: ', error);
+					// console.log('error: ', error);
 				}
 				// #endif
 			},

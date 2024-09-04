@@ -28,8 +28,6 @@ export default {
 			this.getListApi && this.getListApi().then((res) => {
 				this.loading = false;
 				let data = this.getResponeseData(res);
-				console.log(res, "@");
-				console.log(data, "@data");
 				this.list.push.apply(this.list, data);
 				if (data.length && res.total != data.length) {
 					this.where.pageNum++;

@@ -176,9 +176,7 @@
 			};
 		},
 		onShow() {
-			console.log(this.isLogin, "this.isLogin");
 			if (this.isLogin) {
-				this.queryParams.clientId = storage.get('ClientId')
 				this.getOrderlistHandle(1, 10)
 				getOrderNum().then(res => {
 					uni.setTabBarBadge({
@@ -208,37 +206,32 @@
 		},
 		methods: {
 			click(e) {
-				console.log(e);
-
 				uni.navigateTo({
 					url: '../../subpkg/center/myOrder/myOrder?name=' + this.list[e].name
 				})
 			},
+
 			getOrderlistHandle(pageNo, pageSize) {
 				if (!storage.get('ClientId')) return
-				console.log(this.queryParams, "！111");
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
+				this.queryParams.clientId = storage.get('ClientId')
 				uni.showLoading({
 					mask: true
 				});
 				getOrderList(this.queryParams).then(res => {
-					console.log(res, "！22");
 					res.rows.forEach(i => {
 						i.projectDataVoList && i.projectDataVoList.forEach(item => {
 							item.img = item.projectImg != null ? item.projectImg.split(
 								',') : []
 						})
 					})
-					console.log(res, '.......2');
 					uni.hideLoading();
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})
 				queryOrderCount({
 					clientId: storage.get('ClientId')
 				}).then(res => {
-					console.log(res, "！233");
-
 					this.list.forEach(item => {
 						item.num = res.data[item.val]
 						// item.badge.value = res.data[item.value] == null ? 0 : res.data[item.value]
@@ -248,8 +241,6 @@
 			//申请返修
 			repairOrderHandle() {
 				repairOrder(this.repairInfo).then(res => {
-					console.log(res);
-
 					this.$refs.uToast.show({
 						type: 'error',
 						message: res.data.msg
@@ -261,24 +252,19 @@
 			},
 			//复制单号
 			copy(n) {
-				console.log(n);
 				uni.setClipboardData({
 					data: n,
-					success: function() {
-						console.log('success');
-					}
+					success: function() {}
 				});
 			},
 			//评价
 			appraise(item) {
-				console.log(item);
 				uni.navigateTo({
 					url: '../../subpkg/car/appraise/appraise?id=' + item.orderId
 				})
 			},
 			//支付
 			pay(item) {
-				console.log(item);
 				uni.navigateTo({
 					url: '../../subpkg/car/pay/pay?item=' + encodeURIComponent(JSON.stringify(item))
 				})

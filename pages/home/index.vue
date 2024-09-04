@@ -89,11 +89,11 @@
 							}" itemStyle="padding-left: 15px; padding-right: 15px; height: 45px;" @click="tabClick">
 						</u-tabs>
 					</view>
-					
-				<view style="text-align: center;margin-top: 28rpx;" v-if='loading'>正在加载...</view>
+
+					<view style="text-align: center;margin-top: 28rpx;" v-if='loading'>正在加载...</view>
 					<swiper v-if="serviceSymptomsName.length>0"
 						:style="{minHeight:(serviceItemHeight*10)+'px',height:(serviceItemHeight*serviceSymptomsName[currentIndex].list.length)+'px'}"
-						:current="currentIndex" @change="swiper_change" >
+						:current="currentIndex" @change="swiper_change">
 						<swiper-item v-for="(item,index) in serviceSymptomsName" :key="index">
 							<view class="scroll-view" v-if="item.list">
 								<view v-for="(item1,index1) in item.list" :key="index1" class="service-item">
@@ -110,7 +110,7 @@
 									icon="http://cdn.uviewui.com/uview/empty/list.png">
 								</u-empty>
 								<view class='btns'>
-									
+
 									<view v-if='item.list.length==item.total&&item.list.length!=0'>-已加载全部-</view>
 								</view>
 							</view>
@@ -447,21 +447,19 @@
 				this.serviceSymptomsName[this.currentIndex].params.pageNum++
 				if (!this.serviceSymptomsName[this.currentIndex].params.symptoms) this.serviceSymptomsName[this
 					.currentIndex].params.symptoms = this.serviceSymptomsName[this.currentIndex].name
-				console.log(this.serviceSymptomsName[this.currentIndex].list.length, this.serviceSymptomsName[this
-					.currentIndex].total);
+
 				if (this.serviceSymptomsName[this.currentIndex].list.length == this.serviceSymptomsName[this.currentIndex]
 					.total) return
 				this.getServiceSymptomsHandle()
 			},
 			refreshHandle() {
-				console.log('454444444444');
 				this.serviceSymptomsName.forEach(service => {
 					if (service.params) {
 						service.params.pageNum = 1
 					}
 					service.list ? service.list.length = 0 : []
 				})
-				this.serviceItemHeight=0
+				this.serviceItemHeight = 0
 				// uni.pageScrollTo({
 				// 	selector: '.flag',
 				// 	success: () => {
@@ -478,7 +476,7 @@
 					if (service.params) {
 						service.params.pageNum = 1
 					}
-					service.total=0
+					service.total = 0
 					service.list ? service.list.length = 0 : []
 				})
 
@@ -499,7 +497,6 @@
 					symptoms: '',
 					clientId: storage.get('ClientId') || ''
 				} : this.serviceSymptomsName[this.currentIndex].params
-				console.log(params);
 				getServiceSymptoms({
 					...params,
 					address: this.address,
@@ -761,7 +758,6 @@
 
 			},
 			notPermissions() {
-				console.log('notPermissionsnotPermissionsnotPermissionsnotPermissions');
 				uni.getStorage({
 					key: `city${storage.get('ClientId')}`,
 					success: (res) => {
@@ -790,7 +786,6 @@
 
 					},
 					complete: () => {
-						console.log('77555555555555');
 						this.getList()
 						this.getServiceSymptomsHandle()
 

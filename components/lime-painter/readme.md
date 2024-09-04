@@ -344,13 +344,13 @@ this.$refs.painter.canvasToTempFilePathSync({
   pathType: 'url',
   quality: 1,
   success: (res) => {
-    console.log(res.tempFilePath);
+    // console.log(res.tempFilePath);
 	// 非H5 保存到相册
 	// H5 提示用户长按图另存
 	uni.saveImageToPhotosAlbum({
 		filePath: res.tempFilePath,
 		success: function () {
-			console.log('save success');
+			// console.log('save success');
 		}
 	});
   },
@@ -375,12 +375,12 @@ this.$refs.painter.canvasToTempFilePathSync({
   pathType: 'url',
   quality: 1,
   success: (res) => {
-    console.log(res.tempFilePath);
+    // console.log(res.tempFilePath);
 	// 非H5 保存到相册
 	uni.saveImageToPhotosAlbum({
 		filePath: res.tempFilePath,
 		success: function () {
-			console.log('save success');
+			// console.log('save success');
 		}
 	});
   },

@@ -92,6 +92,5 @@ files.keys().forEach((key) => {
 	Object.assign(modules.actions, files(key)["actions"] || {});
 	Object.assign(modules.getters, files(key)["getters"] || {});
 });
-console.log(modules, "modules");
 const store = new Vuex.Store(modules);
 export default store;

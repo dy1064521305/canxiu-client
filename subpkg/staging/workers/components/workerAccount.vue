@@ -1,7 +1,6 @@
 <template>
 	<view class="page">
-		<PopupBottom @tap-mask="closeAccountShow" :title="title" :show="show" @close="closeAccountShow"
-			@confirm="confirmSelect">
+		<PopupBottom @tap-mask="closeAccountShow" :title="title" :show="show" @close="closeAccountShow">
 			<text style="font-size: 24rpx; color: #999999;margin-left: 30rpx;">成功关联后，你才能获得消耗品牌订单利润分成奖励</text>
 			<view class="popMoney">
 				<view class="popMoney-set acea-row row-middle">

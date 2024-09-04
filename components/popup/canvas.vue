@@ -63,8 +63,6 @@
 
 				this.width = this.imageSize.width * this.count;
 				this.height = this.imageSize.height * this.count;
-				console.log(this.width, "this.width ");
-				console.log(this.height, "this.height ");
 				this.screenWidth = screenWidth;
 			},
 

@@ -156,7 +156,6 @@
 			// #endif
 			//this.getMenuItemTop()
 			this.getList()
-			console.log(getApp().index);
 			if (getApp().index != undefined) {
 				this.$nextTick(() => {
 					this.swichMenu(getApp().index)
@@ -166,8 +165,8 @@
 		onTabItemTap: function() {
 			this.getList()
 			this.swichMenu(0)
-			this.arr=[]
-			
+			this.arr = []
+
 
 		},
 		onShow() {
@@ -207,7 +206,7 @@
 				this.loading = true
 				service.getService({
 					...this.query,
-					clientId:storage.get('ClientId')?storage.get('ClientId'):''
+					clientId: storage.get('ClientId') ? storage.get('ClientId') : ''
 				}).then(res => {
 					this.loading = false
 					if (type == 'search') {
@@ -305,7 +304,6 @@
 			},
 			async swichMenu(index) {
 				const ind = index
-				console.log(this.scrollRightTop);
 				if (this.typesList.length === 0) {
 					setTimeout(() => {
 						this.swichMenu(ind)
@@ -315,12 +313,10 @@
 				if (this.arr.length == 0) {
 					await this.getMenuItemTop();
 				}
-				console.log(index);
 				if (index == this.current) return;
 
 				this.$nextTick(function() {
 					this.scrollRightTop = this.arr[index];
-					// console.log(this.scrollRightTop, 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr219', this.arr, index);
 					this.current = index;
 					this.leftMenuStatus(index);
 				})

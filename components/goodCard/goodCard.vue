@@ -119,19 +119,16 @@
 		methods: {
 			//详情
 			goDetailed(itemm) {
-				console.log(itemm);
-				console.log(this.type);
-
 				if (this.type == 'pro') {
 					this.$emit('getCityNameEmit')
 					uni.navigateTo({
 						url: '../../subpkg/car/goodDetails/goodDetails?serviceId=' + itemm.serviceId,
 						fail(res) {
-							console.log(res);
+							// console.log(res);
 						}
 					})
 				} else if (this.type == 'coudan') {
-					console.log(itemm.productId);
+					// console.log(itemm.productId);
 					let info = {
 						serviceId: itemm.productId,
 						goodInfo: this.goodInfo
@@ -140,14 +137,14 @@
 						url: '/subpkg/car/coudanDetail/coudanDetail?info=' + encodeURIComponent(JSON.stringify(
 							info)),
 						fail(res) {
-							console.log(res);
+							// console.log(res);
 						}
 					})
 				} else {
 					uni.navigateTo({
 						url: '../../../subpkg/car/goodDetails/goodDetails?serviceId=' + itemm.serviceId,
 						fail(res) {
-							console.log(res);
+							// console.log(res);
 						}
 					})
 				}
@@ -228,7 +225,8 @@
 			width: 70%;
 
 			// height: 161rpx;
-			justify-content: space-between ;
+			justify-content: space-between;
+
 			.top {
 				// height: 68%;
 

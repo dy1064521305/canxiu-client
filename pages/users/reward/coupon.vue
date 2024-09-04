@@ -104,7 +104,6 @@
 			if (JSON.stringify(option) != '{}') {
 				this.choseInfo = JSON.parse(option.info)
 			}
-			console.log(this.choseInfo);
 			this.getList()
 		},
 		methods: {
@@ -117,8 +116,8 @@
 						item.activity = false
 						let arr = item.orderType.split(',')
 						let arr1 = item.superpositionRule.split(',')
-						 // item.couponAmount=100
-						item.isGet=Number(this.choseInfo.orderPrice)>Number(item.minAmount)
+						// item.couponAmount=100
+						item.isGet = Number(this.choseInfo.orderPrice) > Number(item.minAmount)
 						item.orderTypeName =
 							`${arr.includes('0')?'个人':''}${arr.includes('1')?'门店':''}${arr.includes('2')?'品牌':''}可用`
 						item.superpositionRuleName =

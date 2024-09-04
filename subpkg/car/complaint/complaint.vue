@@ -62,7 +62,6 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 		},
 		onLoad(option) {
 			this.info = JSON.parse(option.item)
-			console.log(this.info);
 			this.query.orderId = this.info.orderId
 			this.projectData = this.info.newProject.length != 0 ? this.info.newProject : this.info.projectDataVoList
 			this.projectData.forEach(item => {
@@ -70,19 +69,15 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 				item.projectUrl = this.info.newProject.length != 0 ? item.projectImg.split(
 					',') : item.img
 			})
-			console.log(this.projectData);
 		},
 		methods: {
 			getUrl(val) {
-				console.log(val);
 				let str = val.urls.toString()
 				this.query.complaintImg = str
 			},
 			tousu() {
 				this.query.complaintContent = this.value1
-				console.log(this.query);
 				orderComplaint(this.query).then(res => {
-					console.log(res);
 					if (res.code == 200) {
 						this.show = true
 					}

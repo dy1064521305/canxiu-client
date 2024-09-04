@@ -12,8 +12,8 @@
 					</pickers> -->
 					<view style="display: flex;align-items: center;">
 						<view style="width:360rpx;">
-							<u--input  placeholder="请选择所在城市" disabled
-								v-model="model1.address.addressRegion" border="none">
+							<u--input placeholder="请选择所在城市" disabled v-model="model1.address.addressRegion"
+								border="none">
 							</u--input>
 						</view>
 						<view v-if="!isSubmit||id==''" @click="getAddress">
@@ -148,27 +148,21 @@
 			}
 		},
 		onLoad(option) {
-			console.log(option);
 			this.getAddressCode()
 			const pages = uni.$u.pages();
 			this.isSubmit = pages.some(p => {
 				return p.route.includes('submitOrder') || p.route.includes('goosDetails')
 			})
-			console.log(pages);
 			uni.setNavigationBarTitle({
 				title: option.id ? '修改地址' : '添加地址'
 			})
 			if (option.id) {
 				this.id = option.id
-				console.log('2222222222');
 				getAddressInfo(this.id).then(res => {
-					console.log(res);
 					this.model1.address = res.data
 					this.model1.address.addressRegion = this.model1.address.addressRegion.replace(/\//g, '-')
 				})
 			}
-			console.log(this.id);
-
 		},
 		onReady() {
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
@@ -186,13 +180,11 @@
 				getAddressList({
 					clientId: storage.get('ClientId'),
 				}).then(res => {
-					console.log(res);
 					this.addressList = res.rows
 
 				})
 			},
 			commitCheck(e) {
-				console.log(e);
 				let location = e.location.split(',')
 				this.model1.address.latitude = location[1]
 				this.model1.address.longitude = location[0]
@@ -212,7 +204,6 @@
 			     }
 			   */
 			captureLocation(res) {
-				console.log('res', res);
 				var regex = /^(北京市|天津市|重庆市|上海市|香港特别行政区|澳门特别行政区)/;
 				var province = [];
 				var addressBean = {
@@ -244,15 +235,14 @@
 			},
 
 			getAddress() {
-				let info={
-					longitude:this.model1.address.longitude,
-					latitude:this.model1.address.latitude
+				let info = {
+					longitude: this.model1.address.longitude,
+					latitude: this.model1.address.latitude
 				}
 				uni.navigateTo({
-					url:'./map/map?info='+JSON.stringify(info)
+					url: './map/map?info=' + JSON.stringify(info)
 				})
 				return
-				console.log(12121);
 				let params = {}
 				if (this.model1.address.latitude) params = {
 					latitude: this.model1.address.latitude,
@@ -275,8 +265,7 @@
 											if (san.name == locationObj.country) {
 												this.model1.address.regionCode = san
 													.code
-												console.log(res, '1733333', this.model1
-													.address.regionCode)
+
 											}
 										})
 									}
@@ -308,7 +297,6 @@
 					}
 					if (this.id != '') {
 						editAddress(this.model1.address).then(res => {
-							console.log(res);
 							if (res.code === 200) {
 								uni.showToast({
 									title: '编辑成功',
@@ -320,9 +308,7 @@
 							}
 						})
 					} else {
-						console.log(this.model1.address);
 						addAddress(this.model1.address).then(res => {
-							console.log(res);
 							if (res.code === 200) {
 								uni.showToast({
 									title: '添加成功',
@@ -337,7 +323,6 @@
 
 
 				}).catch(errors => {
-					console.log(errors);
 					uni.$u.toast('校验失败')
 				})
 

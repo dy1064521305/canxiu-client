@@ -408,7 +408,6 @@
 	export default {
 		methods: {
 			exportPhoto(e, ownerVm) {
-				console.log();
 				//下面的代码可能会比较耗时,给个加载动画
 				ownerVm.callMethod('openLoading')
 				var dom = document.querySelector('#poster'); // 获取dom元素
@@ -486,7 +485,6 @@
 		onLoad(option) {
 			this.info = JSON.parse(option.info)
 			this.orderInfo = this.info.info
-			console.log(this.info);
 			this.signUrl = this.orderInfo.sign
 			uni.setNavigationBarTitle({
 				title: this.info.name
@@ -509,7 +507,6 @@
 		methods: {
 			receiveRenderData(data) {
 				base64ToPath(data, '.jpeg').then(function(imgPath) {
-					console.log(imgPath);
 					//保存到手机相册,你也可以做其他操作上传到自己服务端等
 					// #ifdef APP-PLUS
 					uni.saveImageToPhotosAlbum({
@@ -591,7 +588,6 @@
 				this.ctx = uni.createCanvasContext("handWriting");
 				this.$nextTick(() => {
 					uni.createSelectorQuery().select('.handCenter').boundingClientRect(rect => {
-							console.log(rect);
 							this.canvasWidth = rect.width;
 							this.canvasHeight = rect.height;
 							/* 将canvas背景设置为 白底，不设置  导出的canvas的背景为透明 */
@@ -652,16 +648,13 @@
 								success: res => {
 									let data = JSON.parse(res.data);
 									if (data.code == 200) {
-										console.log(data);
 										that.signUrl = data.data.url
-										console.log();
 										acceptance({
 											sign: data.data.url,
 											orderId: that.info.id,
 											repairId: that.info.repairId ? that.info.repairId :
 												undefined
 										}).then(res => {
-											console.log(res);
 											uni.showToast({
 												title: '签字成功',
 												duration: 2000,
@@ -699,12 +692,9 @@
 			},
 			//下载
 			actionSelect(e) {
-				console.log(e);
 				if (e.name == '取消') {
 					this.showDownLoad = false
 				} else {
-					console.log(this.urlImg);
-					h
 					// let that=this
 					// that.urlImg.forEach((img,index) => {
 					// 	uni.saveImageToPhotosAlbum({

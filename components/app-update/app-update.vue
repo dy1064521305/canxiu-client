@@ -1,7 +1,7 @@
 <template>
 	<view class="wrap">
-		<u-popup :show="popup_show" :closeOnClickOverlay="!force" mode="center" round="10" 
-		:overlayStyle="{background: 'rgba(0,0,0,0.6)'}">
+		<u-popup :show="popup_show" :closeOnClickOverlay="!force" mode="center" round="10"
+			:overlayStyle="{background: 'rgba(0,0,0,0.6)'}">
 			<view class="update-wrap">
 				<view class="update-content">
 					<view class="update-con-top">
@@ -10,7 +10,7 @@
 						<text class="update-top-version">V{{update_info.version}}</text>
 					</view>
 					<text class="uodate-content" v-if="downstatus < 1">更新内容:
-					{{update_info.note}}</text>
+						{{update_info.note}}</text>
 					<text class="current-version" v-if="downstatus < 1">当前版本:V{{version}}</text>
 
 					<view class="update-btn" v-if="downstatus < 1">
@@ -134,7 +134,7 @@
 							break;
 						}
 					}
-					
+
 					if (!vm.update_info.os) {
 						// 后台未配置当前系统的升级数据
 					} else {
@@ -145,12 +145,10 @@
 			},
 			// 检查是否更新
 			checkUpdate() {
-				console.info('------------------------------------');
-				console.info(vm.version);
-				console.info('------------------------------------');
+				// console.info(vm.version);
 				vm.need_update = vm.compareVersion(vm.version, vm.update_info.version); // 检查是否需要升级
 				if (vm.need_update) {
-					console.info("需要么升级的")
+					// console.info("需要么升级的")
 					vm.popup_show = true; //线上版本号大于当前安装的版本号  显示升级框
 					// 创建原生view用来遮罩tabbar的点击事件 (如果是没有用原生的tabbar这一步可以取消)
 					vm.viewObj = new plus.nativeObj.View('viewObj', {
@@ -161,7 +159,7 @@
 						backgroundColor: "rgba(0,0,0,0.6)"
 					});
 					vm.viewObj.show() //显示原生遮罩
-				}else{
+				} else {
 
 				}
 			},
