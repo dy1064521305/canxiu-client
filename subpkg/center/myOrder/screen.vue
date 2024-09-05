@@ -4,7 +4,7 @@
 		<view class="cell">
 			<view class="cell-con acea-row row-between-wrapper">
 				<view class="cell-con-item acea-row row-middle row-center" @click="onselect(item.value,1)"
-					:class="{on:item.value==where.partnerrderlype}" v-for="(item,index) in type1" :key="index">
+					:class="{on:item.value==where.partnerOrderType}" v-for="(item,index) in type1" :key="index">
 					{{item.label}}
 				</view>
 			</view>
@@ -207,7 +207,7 @@
 				workerTypeList: [],
 				activeTypeName: [],
 				where: {
-					partnerrderlype: "",
+					partnerOrderType: "",
 					workerTypeldList: [],
 					orderSource: "",
 					brandId: "",
@@ -241,8 +241,9 @@
 
 				if (info) {
 					this.where = {
-						partnerrderlype: info.partnerrderlype,
+						partnerOrderType: info.partnerOrderType,
 						workerTypeldList: [...info.workerTypeldList],
+						workerTypeNameList: [...info.workerTypeNameList],
 						orderSource: info.orderSource,
 						brandId: info.brandId,
 						addressRegion: info.addressRegion,
@@ -252,7 +253,7 @@
 					}
 					this.beginTime = formatter.formatDate(info.beginTime),
 						this.endTime = formatter.formatDate(info.endTime),
-						this.activeTypeName = [...info.workerTypeldList]
+						this.activeTypeName = [...info.workerTypeNameList]
 				}
 				console.log(this.where, "this.where");
 			}
@@ -280,7 +281,7 @@
 			},
 			onselect(value, type) {
 				if (type == 1) {
-					this.where.partnerrderlype = value
+					this.where.partnerOrderType = value
 				} else {
 					this.where.orderSource = value
 				}
@@ -288,11 +289,14 @@
 			//工种选择
 			typeClick(item) {
 				console.log(item)
+
 				var i = this.activeTypeName.findIndex(c => c == item.typeName)
 				if (i == -1) {
 					this.activeTypeName.push(item.typeName)
+					this.where.workerTypeldList.push(item.hoursId)
 				} else {
 					this.activeTypeName.splice(i, 1)
+					this.where.workerTypeldList.splice(i, 1)
 				}
 				console.log(this.activeTypeName);
 			},
@@ -300,10 +304,11 @@
 			//筛选确认
 			queryHandle(t) {
 				if (t == 'type') {
-					this.where.workerTypeldList = [...this.activeTypeName]
+					this.where.workerTypeNameList = [...this.activeTypeName]
 					this.showWorkerType = false
 				} else if (t == 'noType') {
-					this.where.workerTypeldList = this.activeTypeName = []
+					this.where.workerTypeldList = this.where.workerTypeNameList = []
+					this.activeTypeName = []
 					this.showWorkerType = false
 				} else if (t == 'brand') {
 					// this.where.brandId
@@ -320,8 +325,9 @@
 					});
 				} else if (t == 'noAll') {
 					this.where = {
-						partnerrderlype: "",
+						partnerOrderType: "",
 						workerTypeldList: [],
+						workerTypeNameList: [],
 						orderSource: "",
 						brandId: "",
 						brandName: "",
@@ -333,6 +339,7 @@
 					this.where.endTime = ''
 					this.beginTime = ''
 					this.endTime = ''
+					this.activeTypeName = []
 				}
 			},
 			addressHandle(e) {

@@ -313,10 +313,16 @@
 					},
 				],
 				showTypeChange: [{
+						type: 2,
 						name: '订单编号'
 					},
 					{
+						type: 1,
 						name: '品牌名称'
+					},
+					{
+						type: 0,
+						name: '门店名称'
 					},
 					{
 						name: '取消'
@@ -342,6 +348,8 @@
 					userId: storage.get('ClientId'),
 					brandName: "",
 					orderNumber: "",
+					type: 2,
+					keyWord: "",
 					code: "",
 					pageSize: 10,
 					pageNum: 1,
@@ -570,17 +578,12 @@
 			},
 			search(i) {
 				if (i) {
-					if (this.whereType == '订单编号') {
-						this.where.orderNumber = this.searchValue
-						this.where.brandName = ""
-					} else {
-						this.where.brandName = this.searchValue
-						this.where.orderNumber = ""
-					}
+					this.where.keyWord = this.searchValue
 				} else {
 					this.searchValue = ""
-					this.where.brandName = ""
-					this.where.orderNumber = ""
+					this.where.keyWord = ""
+					// this.where.brandName = ""
+					// this.where.orderNumber = ""
 				}
 				this.$refs.paging.reload()
 			},
@@ -652,6 +655,9 @@
 						userId: this.where.userId,
 						brandName: this.where.brandName,
 						orderNumber: this.where.orderNumber,
+						type: this.where.type,
+						keyWord: this.where.keyWord,
+
 						code: this.where.code,
 						date: this.where.date
 					}
@@ -692,6 +698,7 @@
 					this.showAction_two = false
 				} else {
 					this.whereType = e.name
+					this.where.type = e.type
 					console.log(e.name, "22882");
 					this.showAction_two = false
 				}
