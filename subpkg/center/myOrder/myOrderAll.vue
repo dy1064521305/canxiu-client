@@ -41,8 +41,8 @@
 						<text @click='checkType(1)' :class="[type==1?'text-active':'']">维保</text>
 					</view> -->
 					<view style="width: 90%;">
-						<u-tabs :current='current' :list="list1" @click="statusClick()" lineColor='#F3B23E'
-							lineWidth="40" lineHeight='3' :inactiveStyle="{ color: '#A5A7A7'}">
+						<u-tabs :current='current' :list="list1" @click="statusClick" lineColor='#F3B23E' lineWidth="40"
+							lineHeight='3' :inactiveStyle="{ color: '#A5A7A7'}">
 						</u-tabs>
 					</view>
 					<view class="type-image" @click="screenShow=!screenShow">
@@ -471,7 +471,11 @@
 			},
 			//状态切换
 			statusClick(item, index) {
+				console.log(item, "item");
 				this.typeName = item.name
+				if (item.index) {
+					this.$refs.paging.reload();
+				}
 				if (item.name != '全部') {
 					this.queryParams.orderStatus = item.name
 					this.current = index
