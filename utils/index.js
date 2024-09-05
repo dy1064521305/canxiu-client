@@ -569,6 +569,7 @@ export function appOpenWeixin(params) {
 				}
 			}
 			//唤醒微信小程序
+			console.log(sweixin, "sweixin");
 			if (sweixin) {
 				uni.share({
 					provider: 'weixin',
@@ -580,12 +581,16 @@ export function appOpenWeixin(params) {
 						id: 'gh_06220a7bf72f',
 						path: params.path,
 						type: params.type || 0,
-						// webUrl: 'https://m.reduxingke.com/down/app.html'
-						webUrl: ''
+						webUrl: 'https://h5-c.canxiukeji.com/'
+						// webUrl: ''
 					},
 					success: ret => {
-						console.log(JSON.stringify(ret));
+						console.log(JSON.stringify(ret), "@2");
 					},
+					fail(res) {
+						console.log(JSON.stringify(res), "@2res");
+						// 分享失败
+					}
 				});
 			} else {
 				return Toast('未检测到微信')

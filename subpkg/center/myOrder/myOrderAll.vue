@@ -126,9 +126,9 @@
 				</view>
 
 				<view class="orderItems-time flex-colum">
-					<view> <text>上门时间：</text>{{item.expectTime}}</view>
-					<view style="margin: 8rpx 0;" v-if="item.addressVo&&item.addressVo.addressDetailed"> <text>
-							报修地址：</text>{{item.addressVo.addressDetailed}}</view>
+					<view> <text>上门时间：</text>{{item.workerSignTime||'暂无'}}</view>
+					<view style="margin: 8rpx 0;" v-if="item.orderAddress"> <text>
+							报修地址：</text>{{item.orderAddress}}</view>
 					<view> <text>所属品牌：</text>{{item.brandName||'暂无'}}品牌</view>
 				</view>
 				<view class="orderItems-money acea-row row-between-wrapper">

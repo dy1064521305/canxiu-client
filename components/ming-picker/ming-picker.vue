@@ -57,17 +57,6 @@
 						reject(err);
 					}
 				})
-
-				// getTreeList().then(res => {
-				// 	console.log(res, "22");
-				// 	that.addressData = res
-				// 	console.log(that.addressData, '11111111111');
-
-				// 	that.province = that.addressData.map(it => it.name)
-				// 	that.city = that.addressData[0].children.map(it => it.name)
-				// 	that.area = that.addressData[0].children[0].children.map(it => it.name)
-				// 	that.onAttached();
-				// })
 			} else {
 				uni.request({
 					url: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/30/78ed8008c9ef4aa6a6c29f101bb0c9ec.json',
@@ -110,7 +99,6 @@
 			changeHandler() {
 				let value1 = this.getAddress(...this.value),
 					value = this.getCode(...this.value)
-				console.log(value);
 				this.$emit("address", {
 					value1,
 					value,
@@ -133,10 +121,18 @@
 				return [province[p], city[c] || '', area[a] || ''];
 			},
 			getCode(p, c, a) {
-				let province = this.addressData.map(it => it.code),
-					city = this.addressData[p].children.map(it => it.code),
-					area = this.addressData[p].children[c].children.map(it => it.code)
-				return [province[p], city[c] || 0, area[a] || 0];
+				if (this.type) {
+					let province = this.addressData.map(it => it.value),
+						city = this.addressData[p].children.map(it => it.value),
+						area = this.addressData[p].children[c].children.map(it => it.value)
+					return [province[p], city[c] || 0, area[a] || 0];
+				} else {
+					let province = this.addressData.map(it => it.code),
+						city = this.addressData[p].children.map(it => it.code),
+						area = this.addressData[p].children[c].children.map(it => it.code)
+					return [province[p], city[c] || 0, area[a] || 0];
+				}
+
 			},
 			columnchange(e) {
 				// wx.showLoading({ mask: true });

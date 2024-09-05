@@ -118,20 +118,14 @@
 			}
 		},
 		onLoad(options) {
-			// console.log(this.isLogin, 'this.isLogin');
 
-			// console.log(this.$store.commit('OPEN_LOGIN_POP'), 'this.this.$store');
-			// // if (this.isLogin) return this.$store.commit('OPEN_LOGIN_POP');
 			if (options) {
 				if (options.userId) {
-					// this.where.clientId = options.userId
 					this.getInfo(options.userId)
 				}
 				let scene = parseQuery(decodeURIComponent(options.scene)) || null
 				if (options.scene) {
 					this.clientId = scene.userId || ''
-					console.log(scene, "scene");
-					// this.where.clientId = this.clientId
 					this.getInfo(this.clientId)
 				}
 			}
@@ -149,6 +143,7 @@
 		},
 		onShow() {
 			if (this.isLogin) {
+				return
 				setTimeout(() => {
 					let id = storage.get('ClientId')
 					console.log(id, "this.userId");
@@ -183,6 +178,14 @@
 				})
 			},
 			addressHandle(e) {
+				let value = e.value
+				let region = e.value1
+				this.where.province = value[0] || '';
+				this.where.provinceCode = region[0] || '';
+				this.where.city = value[1] || '';
+				this.where.cityCode = region[1] || '';
+				this.where.county = value[2] || '';
+				this.where.countyCode = region[2] || '';
 				this.where.region = e.value1.toString().replace(/,/g, "/")
 			},
 			submit() {
