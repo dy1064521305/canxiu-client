@@ -41,8 +41,8 @@
 						<text @click='checkType(1)' :class="[type==1?'text-active':'']">维保</text>
 					</view> -->
 					<view style="width: 90%;">
-						<u-tabs :current='current' :list="list1" @click="statusClick" lineColor='#F3B23E' lineWidth="40"
-							lineHeight='3' :inactiveStyle="{ color: '#A5A7A7'}">
+						<u-tabs :current='current' :list="list1" @click="statusClick" lineColor='var(--back)'
+							lineWidth="40" lineHeight='3' :inactiveStyle="{ color: '#A5A7A7'}">
 						</u-tabs>
 					</view>
 					<view class="type-image" @click="screenShow=!screenShow">
@@ -430,7 +430,7 @@
 					this.queryParams.endTime = item.endTime || ''
 					this.queryParams.brandId = item.brandId || ''
 					this.queryParams.orderSource = item.orderSource || ''
-					this.queryParams.partnerrderlype = item.partnerrderlype || ''
+					this.queryParams.partnerOrderType = item.partnerOrderType || ''
 					this.queryParams.workerTypeldList = [...item.workerTypeldList]
 					this.$refs.paging.reload();
 				}
@@ -463,7 +463,6 @@
 				});
 			},
 			show() {
-				console.log(11111);
 				this.showScreen = true
 			},
 			checkType(num) {
@@ -471,7 +470,6 @@
 			},
 			//状态切换
 			statusClick(item, index) {
-				console.log(item, "item");
 				this.typeName = item.name
 				if (item.index) {
 					this.$refs.paging.reload();
@@ -482,14 +480,12 @@
 				} else {
 					this.current = 0
 					this.queryParams.orderStatus = ''
-					console.log(this.queryParams);
 				}
 				this.screenShow = false
 				this.getOrderlistHandle(1, 10)
 
 			},
 			getOrderlistHandle(pageNo, pageSize) {
-				console.log(pageNo, 'pageNopageNo');
 				this.showScreen = false
 				this.queryParams.pageNum = pageNo;
 				this.queryParams.pageSize = pageSize;
@@ -501,10 +497,8 @@
 						i.projectDataVoList && i.projectDataVoList.forEach((item, index) => {
 							let list = item.initialImg != null ? item.initialImg.split(',') : []
 							if (list.length) {
-								console.log(list, "list");
 								if (list.length > 1) {
 									const iterator = list[Symbol.iterator]();
-
 									for (const i of iterator) {
 										let data = checkMediaType(i)
 										if (data == 'video') {
@@ -527,7 +521,6 @@
 									.projectUrl.split(',')[0] : []) : (item.projectImg !=
 									null ?
 									item.projectImg.split(',')[0] : [])
-								console.log(item.img, "****************", index);
 							}
 
 							// item.img = i.repairId != null ? (item.projectUrl != null ? item
@@ -839,7 +832,7 @@
 					font-size: 24rpx;
 
 					&.on {
-						background: #F3B23E;
+						background: $back-color;
 						color: #FFFFFF;
 					}
 

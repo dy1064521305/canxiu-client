@@ -199,6 +199,9 @@
 	}
 
 	page {
+		--color:#{$pageColor};
+		--border:#{$pageBorder};
+		--back:#{$back-color};
 		background-color: #F2F2F2;
 	}
 </style>
