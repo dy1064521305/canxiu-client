@@ -75,8 +75,15 @@
 		},
 		methods: {
 			addressHandle(e) {
+				let value = e.value
+				let region = e.value1
+				this.where.province = value[0] || '';
+				this.where.provinceCode = region[0] || '';
+				this.where.city = value[1] || '';
+				this.where.cityCode = region[1] || '';
+				this.where.county = value[2] || '';
+				this.where.countyCode = region[2] || '';
 				this.where.region = e.value1.toString().replace(/,/g, "/")
-				console.log(e, "eee");
 			},
 			submit() {
 				if (!this.where.realName) return this.$toast('您的姓名不能为空')

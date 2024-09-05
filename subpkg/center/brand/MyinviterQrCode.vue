@@ -138,7 +138,8 @@
 						name: this.partnerInfo.realName,
 						avatar: this.partnerInfo.avatarUrl,
 						index: this.typeIndex,
-						id: this.partnerInfo.partnerId
+						id: this.partnerInfo.partnerId,
+						porter: this.code
 					}
 					this.$refs.share.open(this.code, this.paramsInfo);
 				} else {
@@ -147,7 +148,8 @@
 						name: this.partnerInfo.realName,
 						avatar: this.partnerInfo.avatarUrl,
 						index: this.typeIndex,
-						userId: this.userId
+						userId: this.userId,
+						porter: this.inviteCode
 					}
 					this.$refs.share.open(this.inviteCode, this.paramsInfo);
 				}
