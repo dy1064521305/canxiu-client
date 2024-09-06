@@ -92,7 +92,7 @@
 
 					<view style="text-align: center;margin-top: 28rpx;" v-if='loading'>正在加载...</view>
 					<swiper v-if="serviceSymptomsName.length>0"
-						:style="{minHeight:(serviceItemHeight*10)+'px',height:(serviceItemHeight*serviceSymptomsName[currentIndex].list.length)+'px'}"
+						:style="{minHeight:(serviceItemHeight*5)+'px',height:(serviceItemHeight*serviceSymptomsName[currentIndex].list.length)+'px'}"
 						:current="currentIndex" @change="swiper_change">
 						<swiper-item v-for="(item,index) in serviceSymptomsName" :key="index">
 							<view class="scroll-view" v-if="item.list">
@@ -443,13 +443,13 @@
 				if (!this.serviceSymptomsName[this.currentIndex].params.symptoms) this.serviceSymptomsName[this
 					.currentIndex].params.symptoms = this.serviceSymptomsName[this.currentIndex].name
 				console.log(this.serviceSymptomsName[this.currentIndex].list.length, this.serviceSymptomsName[this
-					.currentIndex].total);
-				if (this.serviceSymptomsName[this.currentIndex].list.length == this.serviceSymptomsName[this.currentIndex]
+					.currentIndex].total, '4533333333');
+
+				if (this.serviceSymptomsName[this.currentIndex].list.length >= this.serviceSymptomsName[this.currentIndex]
 					.total) return
 				this.getServiceSymptomsHandle()
 			},
 			refreshHandle() {
-				console.log('454444444444');
 				this.serviceSymptomsName.forEach(service => {
 					if (service.params) {
 						service.params.pageNum = 1
@@ -485,8 +485,9 @@
 			},
 
 			getServiceSymptomsHandle() {
-				//获取故障现象
-				this.loading = true
+			
+					//获取故障现象
+					this.loading = true
 				const params = this.serviceSymptomsName.length < 1 ? {
 					pageSize: 10,
 					pageNum: 1,
@@ -544,6 +545,7 @@
 				uni.createSelectorQuery().in(this).select('.service-item')
 					.boundingClientRect(data1 => {
 						this.serviceItemHeight = data1 != null ? data1.height + 13 : 100
+
 					}).exec();
 			},
 			// getServiceSymptoms() {
@@ -725,9 +727,17 @@
 			},
 			//tab栏点击
 			tabClick(item, num) {
+				this.serviceSymptomsName.forEach(service => {
+					if (service.params) {
+						service.params.pageNum = 1
+					}
+					service.list ? service.list.length = 0 : []
+				})
 				if (item.index === this.currentIndex) return
 				this.currentIndex = item.index
 				this.serviceSymptomsName[item.index].params.symptoms = item.name
+				console.log(this.serviceSymptomsName[this.currentIndex].list.length, this.serviceSymptomsName[this
+					.currentIndex].total);
 				this.getServiceSymptomsHandle()
 				num != 1 &&
 					uni.pageScrollTo({
@@ -738,6 +748,9 @@
 							}, 300)
 						}
 					});
+
+
+
 			},
 			//跳转服务页
 			goService(name) {
@@ -759,7 +772,6 @@
 
 			},
 			notPermissions() {
-				console.log('notPermissionsnotPermissionsnotPermissionsnotPermissions');
 				uni.getStorage({
 					key: `city${storage.get('ClientId')}`,
 					success: (res) => {
@@ -788,7 +800,6 @@
 
 					},
 					complete: () => {
-						console.log('77555555555555');
 						this.getList()
 						this.getServiceSymptomsHandle()
 

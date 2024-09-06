@@ -933,26 +933,26 @@
 						this.newProject = res.data
 
 					}),
-
+					
 					//新配件
-					order.getNewParts(this.id).then(res => {
-						let arr = []
-						arr = res.data
-						const map = new Map()
-						this.partsTotal = arr.reduce((pre, item) => {
-							return pre + Number(item.partsPrice) * Number(item.partsCount)
-						}, 0)
-						arr.forEach((item, index, arr) => {
-							if (!map.has(item.oneName)) {
-								map.set(
-									item.oneName,
-									arr.filter(a => a.oneName == item.oneName)
-								)
-							}
-						})
+					// order.getNewParts(this.id).then(res => {
+					// 	let arr = []
+					// 	arr = res.data
+					// 	const map = new Map()
+					// 	this.partsTotal = arr.reduce((pre, item) => {
+					// 		return pre + Number(item.partsPrice) * Number(item.partsCount)
+					// 	}, 0)
+					// 	arr.forEach((item, index, arr) => {
+					// 		if (!map.has(item.oneName)) {
+					// 			map.set(
+					// 				item.oneName,
+					// 				arr.filter(a => a.oneName == item.oneName)
+					// 			)
+					// 		}
+					// 	})
 
-						this.showPartsList = Array.from(map).map(item => [...item[1]])
-					}),
+					// 	this.showPartsList = Array.from(map).map(item => [...item[1]])
+					// }),
 
 					//新材料
 					order.getNewMaterial(this.id).then(res => {
