@@ -392,7 +392,7 @@
 						path: 'subpkg/center/brand/inviter?id=' + info.id,
 						// let url = '/subpkg/center/brand/inviter?id=' + this.partnerInfo.partnerId
 						// 分享的app体验版
-						type: 2
+						type: 0
 					}
 					appOpenWeixin(params);
 				} else {
@@ -402,7 +402,7 @@
 						path: 'subpkg/car/partner/new?userId=' + info.userId,
 						// let url = '/subpkg/center/brand/inviter?id=' + this.partnerInfo.partnerId
 						// 分享的app体验版
-						type: 2
+						type: 0
 					}
 					appOpenWeixin(params);
 				}
@@ -411,15 +411,6 @@
 			},
 			shareMoments() {
 				// #ifdef APP-PLUS
-				// let params = {
-				// 	imageUrl: 'https://img.reduxingke.com/2024/02/01/02bff202402011509146214.png',
-				// 	title: '餐修百万合伙人招募计划',
-				// 	path: 'pages/activity/luckyBag/luckybagOther?uid=' + this.userInfo.uid,
-				// 	// 分享的app体验版
-				// 	// type: 2
-				// }
-				// params.path = params.path + '&spread=' + uid + '&incode=' + incode + '&noAuth=1';
-				// appOpenWeixin(this.params);
 				uni.share({
 					provider: "weixin",
 					scene: "WXSceneTimeline",
@@ -436,12 +427,6 @@
 				// #ifndef APP-PLUS
 				this.show = false
 				this.$emit('hideMask_pyq');
-
-				// this.$refs.uToast.show({
-				// 	type: 'waring',
-				// 	message: '请点击右上角分享到朋友圈'
-				// });
-
 				// #endif
 
 
@@ -456,8 +441,6 @@
 				// 	})
 				// });
 				let img = $cache.get('shareParamsImg')
-				console.log(img, "22");
-				console.log(img, "this.tempFilePathimgimg");
 				uni.saveImageToPhotosAlbum({ // 保存本地
 					filePath: img,
 					success: (response) => {
