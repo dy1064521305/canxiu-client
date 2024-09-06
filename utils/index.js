@@ -118,7 +118,6 @@ export function jumpUrl(url) {
 		case 'redirectTo':
 		case 'reLaunch':
 		case 'switchTab':
-			console.log(url, "url22")
 			if (url.indexOf('pages/') == 0) {
 				url = '/' + url;
 			}

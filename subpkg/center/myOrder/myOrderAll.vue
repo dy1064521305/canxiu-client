@@ -424,6 +424,7 @@
 		onShow() {
 			uni.$once('selectAll', item => {
 				this.infoItem = item
+				console.log(item, "itemitemitemitemitemitem");
 				if (item) {
 					this.queryParams.addressRegion = item.addressRegion || ''
 					this.queryParams.beginTime = item.beginTime || ''

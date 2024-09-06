@@ -271,7 +271,7 @@
 		.banner {
 			height: 380rpx;
 			position: relative;
-			background: url('https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/09/63428c7066d641feba3d0d36e1069896.jpg') no-repeat;
+			background: url('https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/f1cb6382fb174cd7a551713e84769548.jpg') no-repeat;
 			background-size: 100% 100%;
 
 			.fix {

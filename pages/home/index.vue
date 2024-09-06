@@ -89,11 +89,11 @@
 							}" itemStyle="padding-left: 15px; padding-right: 15px; height: 45px;" @click="tabClick">
 						</u-tabs>
 					</view>
-					
-				<view style="text-align: center;margin-top: 28rpx;" v-if='loading'>正在加载...</view>
+
+					<view style="text-align: center;margin-top: 28rpx;" v-if='loading'>正在加载...</view>
 					<swiper v-if="serviceSymptomsName.length>0"
 						:style="{minHeight:(serviceItemHeight*10)+'px',height:(serviceItemHeight*serviceSymptomsName[currentIndex].list.length)+'px'}"
-						:current="currentIndex" @change="swiper_change" >
+						:current="currentIndex" @change="swiper_change">
 						<swiper-item v-for="(item,index) in serviceSymptomsName" :key="index">
 							<view class="scroll-view" v-if="item.list">
 								<view v-for="(item1,index1) in item.list" :key="index1" class="service-item">
@@ -110,7 +110,7 @@
 									icon="http://cdn.uviewui.com/uview/empty/list.png">
 								</u-empty>
 								<view class='btns'>
-									
+
 									<view v-if='item.list.length==item.total&&item.list.length!=0'>-已加载全部-</view>
 								</view>
 							</view>
@@ -376,7 +376,6 @@
 		},
 
 		onTabItemTap() {
-
 			if (uni.getStorageSync(`city${storage.get('ClientId')}`).addressDetailed == '杭州市拱墅区') {
 				// #ifdef APP-PLUS
 				this.$refs['authpup'].open()
@@ -396,17 +395,13 @@
 			uni.getStorage({
 				key: 'AccessToken',
 				complete: (res) => {
-
 					this.isShowMoney = Boolean(res.data)
 					if (this.isShowMoney) {
-
 						this.queryState();
 					}
 				}
 			})
-
 		},
-
 		methods: {
 			getServiceTypesList() {
 				getService().then(res => {
@@ -461,7 +456,7 @@
 					}
 					service.list ? service.list.length = 0 : []
 				})
-				this.serviceItemHeight=0
+				this.serviceItemHeight = 0
 				// uni.pageScrollTo({
 				// 	selector: '.flag',
 				// 	success: () => {
@@ -478,7 +473,7 @@
 					if (service.params) {
 						service.params.pageNum = 1
 					}
-					service.total=0
+					service.total = 0
 					service.list ? service.list.length = 0 : []
 				})
 
@@ -490,7 +485,6 @@
 			},
 
 			getServiceSymptomsHandle() {
-
 				//获取故障现象
 				this.loading = true
 				const params = this.serviceSymptomsName.length < 1 ? {
@@ -499,7 +493,8 @@
 					symptoms: '',
 					clientId: storage.get('ClientId') || ''
 				} : this.serviceSymptomsName[this.currentIndex].params
-				console.log(params);
+				console.log(params, "22222222");
+
 				getServiceSymptoms({
 					...params,
 					address: this.address,
@@ -537,6 +532,9 @@
 						list: arr
 					})
 					this.serviceItemHeight || this.$nextTick(this.getServiceHeight)
+					console.log(this.$nextTick(this.getServiceHeight), "  this.$nextTick(this.getServiceHeight)");
+					console.log(this.serviceItemHeight, " this.serviceItemHeight");
+					console.log(this.serviceSymptomsName, " this.serviceSymptomsName");
 				}).finally(() => {
 					this.loading = false
 					uni.stopPullDownRefresh()
