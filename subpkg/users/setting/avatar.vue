@@ -2,10 +2,11 @@
 	<common-page>
 		<view class="page">
 			<view class="avatar-box" @click="uploadAvatar">
-				<image v-if="avatar" class="avatar" :src="avatar" mode="aspectFill"></image>
+				<image v-if="avatar&&avatar!= 'null'" class="avatar" :src="avatar" mode="aspectFill"></image>
 				<image v-else class="avatar"
 					src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/09/6a266da84dbb4e9f8a4148ded10e2c3a.png"
-					mode="aspectFill"></image>
+					mode="aspectFill">
+				</image>
 				<text class="iconfont icon-xiangji"></text>
 				<image class="xiangji" src="https://img.reduxingke.com/2022/12/09/c82c3202212091544534968.png">
 				</image>
@@ -14,7 +15,6 @@
 					@click.stop="onChooseAvatar()"></button>
 				<!-- #endif -->
 			</view>
-			<!-- <view class="text-c color-gray font-small">点击修改头像</view> -->
 			<form @submit="submit" class="form">
 				<view class="row">
 					<input class="text-c font-x-large" type="nickname" name="nickname" placeholder="请输入昵称"
@@ -33,21 +33,12 @@
 
 <script>
 	import $cache from '@/utils/cache.js';
-	// import {
-	// 	mapState
-	// } from 'vuex';
-	// import {
-	// 	uploadImageHandler,
-	// 	checkPrivacy
-	// } from '@/utils/index.js'
-	// import {
-	// 	userEdit
-	// } from '@/api/user.js'
-	// // #ifdef APP-PLUS
-	// import {
-	// 	requestPermissions
-	// } from "@/libs/permission.js"
-	// #endif
+	import {
+		uploadImageHandler,
+	} from '@/utils/index.js'
+	import {
+		putEditInfo
+	} from '@/api/user.js'
 	export default {
 		data() {
 			return {
@@ -63,36 +54,45 @@
 		},
 		onLoad(options) {
 			if (options && options.avatar) {
-				this.toedit = options.avatar
+				this.avatar = options.avatar || ''
+				this.nickname = (options.nickname && options.nickname != 'null') ? options.nickname : ''
 			}
 		},
 		methods: {
-			async uploadAvatar() {
-				// #ifdef APP-PLUS
-				let has = await requestPermissions('chooseImage');
-				if (has != 1) return;
-				// #endif
+			uploadAvatar() {
 				uni.chooseImage({
 					success: (res) => {
+						console.log(res, "res");
 						const img = res.tempFilePaths[0];
 						uploadImageHandler(img, (res) => {
-							this.avatar = res.data.url;
+							this.avatar = res.data.url
+
 						})
 					}
 				});
 			},
-			async onChooseAvatar(e) {
-				if (!await checkPrivacy(1)) return;
+			onChooseAvatar(e) {
 				if (!e) return;
 				const img = e.detail.avatarUrl;
 				uploadImageHandler(img, (res) => {
 					this.avatar = res.data.url;
 				})
 			},
+			sureSet(e) {
+				console.log(e, "@---");
+				if (!this.nickname) return this.$toast('请先输入昵称');
+				putEditInfo({
+					avatarUrl: this.avatar,
+					clientName: this.nickname
+				}).then(res => {
+					this.$toast('保存成功！', 'success').then(res => {
+						this.$jump(-1)
+					})
+				})
+
+			},
 			submit(e) {
-				if (!this.avatar) {
-					return this.$toast('请先设置头像');
-				}
+				console.log(e, "@222");
 				let {
 					nickname
 				} = e.detail.value;
@@ -100,33 +100,9 @@
 					uni.hideLoading();
 					return this.$toast('请先输入昵称');
 				}
-				uni.showLoading({
-					title: '加载中...'
-				})
-				// userEdit({
-				// 	avatar: this.avatar,
-				// 	nickname: nickname
-				// }).then(res => {
-				// 	uni.hideLoading();
-				// 	console.log(this.toedit, "back_url11111");
-				// 	if (this.toedit == 1) {
-				// 		this.$toast('保存成功！', 'success').then(() => {
-				// 			this.$jump(-1);
-				// 		});
-				// 	} else {
-				// 		let back_url = $cache.get('authBackUrl') || '/pages/user/index';
-				// 		console.log(back_url, "back_url");
-				// 		this.$toast('保存成功！', 'success').then(() => {
-				// 			$cache.clear('authBackUrl');
-				// 			this.$jump('redirectTo:/' + back_url);
-				// 		});
-				// 	}
-
-				// }).catch(err => {
-				// 	uni.hideLoading();
-				// 	this.$alert(err);
-				// })
-			}
+				this.nickname = nickname
+				this.sureSet()
+			},
 		}
 
 	}

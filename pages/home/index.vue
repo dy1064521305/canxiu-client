@@ -91,8 +91,34 @@
 					</view>
 
 					<view style="text-align: center;margin-top: 28rpx;" v-if='loading'>正在加载...</view>
-					<swiper v-if="serviceSymptomsName.length>0"
+					<!-- 	<swiper v-if="serviceSymptomsName.length>0"
 						:style="{minHeight:(serviceItemHeight*10)+'px',height:(serviceItemHeight*serviceSymptomsName[currentIndex].list.length)+'px'}"
+						:current="currentIndex" @change="swiper_change">
+						<swiper-item v-for="(item,index) in serviceSymptomsName" :key="index">
+							<view class="scroll-view" v-if="item.list">
+								<view v-for="(item1,index1) in item.list" :key="index1" class="service-item">
+									<view v-if="item.list.length!=0">
+										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
+									</view>
+									
+									<view v-if="item.list.length!=0&&isShowMoney&&item1.servicePrice.indexOf('x')==-1">
+										<goodCard :item='item1' :isLogin='isShowMoney' type='pro' />
+									</view>
+
+								</view>
+
+								<u-empty marginTop="200rpx" v-if="item.list.length==0&&!loading" mode="list"
+									icon="http://cdn.uviewui.com/uview/empty/list.png">
+								</u-empty>
+								<view class='btns'>
+
+									<view v-if='item.list.length==item.total&&item.list.length!=0'>-已加载全部-</view>
+								</view>
+							</view>
+						</swiper-item>
+					</swiper> -->
+					<swiper v-if="serviceSymptomsName.length>0"
+						:style="{height:(serviceItemHeight*serviceSymptomsName[currentIndex].list.length)+'px'}"
 						:current="currentIndex" @change="swiper_change">
 						<swiper-item v-for="(item,index) in serviceSymptomsName" :key="index">
 							<view class="scroll-view" v-if="item.list">
@@ -444,13 +470,18 @@
 
 			//触底函数
 			onReachBottom() {
-				this.serviceSymptomsName[this.currentIndex].params.pageNum++
-				if (!this.serviceSymptomsName[this.currentIndex].params.symptoms) this.serviceSymptomsName[this
-					.currentIndex].params.symptoms = this.serviceSymptomsName[this.currentIndex].name
+				console.log(this.serviceSymptomsName[this.currentIndex], "	this.serviceSymptomsName[this.currentIndex]");
+				if (this.serviceSymptomsName[this.currentIndex]) {
+					this.serviceSymptomsName[this.currentIndex].params.pageNum++
+					if (!this.serviceSymptomsName[this.currentIndex].params.symptoms) this.serviceSymptomsName[this
+						.currentIndex].params.symptoms = this.serviceSymptomsName[this.currentIndex].name
 
-				if (this.serviceSymptomsName[this.currentIndex].list.length == this.serviceSymptomsName[this.currentIndex]
-					.total) return
-				this.getServiceSymptomsHandle()
+					if (this.serviceSymptomsName[this.currentIndex].list.length == this.serviceSymptomsName[this
+							.currentIndex]
+						.total) return
+					this.getServiceSymptomsHandle()
+				}
+
 			},
 			refreshHandle() {
 				this.serviceSymptomsName.forEach(service => {
@@ -506,7 +537,6 @@
 						...this.serviceSymptomsName[i],
 						total: d.total,
 						name: d.symptomsName,
-
 						params: this.serviceSymptomsName[i]?.params || {
 							pageSize: 10,
 							pageNum: 1,

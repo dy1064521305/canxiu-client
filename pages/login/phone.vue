@@ -36,6 +36,7 @@
 	import {
 		TABBAR_PATH
 	} from '@/config/environment.js'
+	import logger from '../../utils/logger';
 	const SECOND = 60
 	export default {
 		data() {
@@ -145,6 +146,7 @@
 					phonenumber: this.phone,
 					smsCode: this.codeVal,
 				}).then(result => {
+					console.log(result, "0000");
 					if (result.data.type == 'Error') {
 						uni.$u.toast(result.data.msg)
 						this.loading = false;
@@ -205,6 +207,9 @@
 						}
 					})
 					// #endif
+				}).catch(err => {
+					this.loading = false;
+					this.$toast(err.msg)
 				})
 			}
 		}
@@ -234,7 +239,7 @@
 			width: 100%;
 			background: #FFFFFF;
 			padding: 0 40rpx;
-			border-radius: 8rpx;
+			border-radius: 50rpx;
 			font-size: 30rpx;
 			box-sizing: border-box;
 			border: none !important;
@@ -273,10 +278,10 @@
 			width: 640rpx;
 			height: 92rpx;
 			line-height: 92rpx;
-			margin: 64rpx auto 20rpx;
+			margin: 84rpx auto 20rpx;
 			border-radius: 46rpx;
 			background: #F3B23E;
-			border-radius: 8rpx;
+			border-radius: 50rpx;
 
 		}
 

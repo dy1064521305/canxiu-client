@@ -762,10 +762,8 @@
 				}
 			},
 			goInfo() {
-				let data = this.userInfo || {}
 				uni.navigateTo({
-					url: '/subpkg/users/setting/my-setting?avatarUrl=' + data.avatarUrl + '&clientName=' +
-						data.clientName
+					url: '/subpkg/users/setting/my-setting'
 				})
 			},
 

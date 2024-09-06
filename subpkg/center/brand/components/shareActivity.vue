@@ -288,99 +288,7 @@
 						}, 500)
 					})());
 				}
-
 			},
-			// async mergeImages2(show) {
-			// 	// 创建画布 初始化canvas上下文
-			// 	const ctx = uni.createCanvasContext('myCanvas_two', this);
-			// 	// 加载第一张图片到canvas上
-			// 	const image1 = await this.loadImage(this.params.img);
-			// 	// 在(0,0)位置绘制图片1，图一宽高分别为345px和334px
-			// 	// 图片的x坐标
-			// 	let bg_x = 0
-			// 	// 图片的y坐标
-			// 	let bg_y = 0
-			// 	// 图片宽度
-			// 	let bg_w = 310 * this.powerW
-			// 	// 图片高度
-			// 	let bg_h = 460 * this.powerW
-			// 	// 图片圆角
-			// 	let bg_r = 20
-			// 	// 绘制海报背景图片圆角
-			// 	ctx.save()
-			// 	ctx.beginPath()
-			// 	ctx.arc(bg_x + bg_r, bg_y + bg_r, bg_r, Math.PI, Math.PI * 1.5)
-			// 	ctx.arc(bg_x + bg_w - bg_r, bg_y + bg_r, bg_r, Math.PI * 1.5, Math.PI * 2)
-			// 	ctx.arc(bg_x + bg_w - bg_r, bg_y + bg_h - bg_r, bg_r, 0, Math.PI * 0.5)
-			// 	ctx.arc(bg_x + bg_r, bg_y + bg_h - bg_r, bg_r, Math.PI * 0.5, Math.PI)
-			// 	ctx.clip()
-			// 	ctx.drawImage(image1, 0, 0, 310 * this.powerW, 460 * this.powerW);
-			// 	// const image2 = await this.loadImage(this.params.porter);
-			// 	const image2 = await this.getImageRectInfo(this.params.porter)
-			// 	ctx.drawImage(image2.tempFilePath, 118 * this.powerW, 266 * this.powerW, 70 * this.powerW, 70 * this
-			// 		.powerW);
-			// 	ctx.font = `${(14 * this.powerW).toFixed(0)}px Arial`;
-			// 	ctx.fillStyle = '#FFF2DF'; // 设置填充颜色
-			// 	// 在 Canvas 上绘制文字
-			// 	// 第二个和第三个参数是文字的 x 和 y 坐标
-			// 	ctx.fillText(this.params.name, 20 * this.powerW, 40 * this.powerW);
-			// 	// // 完成绘制并导出为图片（可选）
-			// 	// console.log(image2, "this.image2245");
-			// 	ctx.draw(true, (() => {
-			// 		// 这里可以处理合并后的图片，比如保存到相册或上传到服务器等操作。
-			// 		// 如果需要导出为文件或上传等操作，可以使用uni.canvasToTempFilePath等方法。	
-			// 		setTimeout(() => {
-			// 			uni.canvasToTempFilePath({ // res.tempFilePath临时路径
-			// 				canvasId: 'myCanvas_two',
-			// 				success: (res) => {
-			// 					$cache.set('shareParamsImg', res.tempFilePath)
-			// 					this.tempFilePath = res.tempFilePath
-			// 					console.log(this.tempFilePath,
-			// 						"this.tempFilePath45 ");
-			// 					if (show) return
-			// 					uni.saveImageToPhotosAlbum({ // 保存本地
-			// 						filePath: res.tempFilePath,
-			// 						success: (response) => {
-			// 							uni.showToast({
-			// 								title: '保存成功',
-			// 								icon: 'success'
-			// 							})
-			// 							console.log(response,
-			// 								'success');
-			// 						},
-			// 						fail: (response) => {
-			// 							console.log(response, 'error');
-			// 							uni.openSetting({ //打开权限
-			// 								success: (
-			// 									response
-			// 								) => {
-			// 									if (!
-			// 										response
-			// 										.authSetting[
-			// 											'scope.writePhotosAlbum'
-			// 										]) {
-			// 										uni.showToast({
-			// 											title: '获取权限成功, 再次点击即可保存',
-			// 											icon: none
-			// 										})
-			// 									} else {
-			// 										uni.showToast({
-			// 											title: '获取权限失败, 无法保存',
-			// 											icon: none
-			// 										})
-			// 									}
-			// 								}
-			// 							})
-			// 						}
-			// 					})
-			// 				},
-			// 				fail: (response) => {
-			// 					console.log(response, 'responseresponse');
-			// 				}
-			// 			}, this)
-			// 		}, 500)
-			// 	})());
-			// },
 			// 获取图片路径,并将图片链接下载为本地链接
 			getImageRectInfo(path) {
 				return new Promise((resolve, reject) => {
@@ -449,7 +357,6 @@
 				})
 			},
 			open(poster, params) {
-
 				this.params = params || {}
 				// if (checkAuth(1) !== 200) return;
 				if (poster && typeof poster == 'string') {
@@ -458,6 +365,7 @@
 					if (!this.type) return;
 				}
 				if (this.poster) {
+					this.mergeImages(1)
 					// #ifdef MP-WEIXIN
 					// this.sharePoster();
 					this.show = true;
@@ -465,7 +373,6 @@
 					// #ifndef MP-WEIXIN
 					this.show = true;
 					// #endif
-					this.mergeImages(1)
 					return;
 				}
 

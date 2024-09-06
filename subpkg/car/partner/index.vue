@@ -75,8 +75,8 @@
 		},
 		methods: {
 			addressHandle(e) {
-				let value = e.value
-				let region = e.value1
+				let value = e.value1
+				let region = e.value
 				this.where.province = value[0] || '';
 				this.where.provinceCode = region[0] || '';
 				this.where.city = value[1] || '';
