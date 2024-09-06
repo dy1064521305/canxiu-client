@@ -41,8 +41,8 @@
 						<text @click='checkType(1)' :class="[type==1?'text-active':'']">维保</text>
 					</view> -->
 					<view style="width: 90%;">
-						<u-tabs :current='current' :list="list1" @click="statusClick" lineColor='var(--back)'
-							lineWidth="40" lineHeight='3' :inactiveStyle="{ color: '#A5A7A7'}">
+						<u-tabs :current='current' :list="list1" @click="statusClick" lineColor='#F3B23E' lineWidth="40"
+							lineHeight='3' :inactiveStyle="{ color: '#A5A7A7'}">
 						</u-tabs>
 					</view>
 					<view class="type-image" @click="screenShow=!screenShow">
@@ -431,7 +431,7 @@
 					this.queryParams.brandId = item.brandId || ''
 					this.queryParams.orderSource = item.orderSource || ''
 					this.queryParams.partnerOrderType = item.partnerOrderType || ''
-					this.queryParams.workerTypeldList = [...item.workerTypeldList]
+					this.queryParams.workerTypeIdList = [...item.workerTypeIdList]
 					this.$refs.paging.reload();
 				}
 			})

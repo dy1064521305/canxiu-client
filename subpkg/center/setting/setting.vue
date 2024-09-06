@@ -1,11 +1,11 @@
 <template>
 	<view class="">
 		<view style="background-color: #fff;margin-top: 20rpx;">
-			<a @click='goInfo'>
+			<!-- 	<a @click='goInfo'>
 				<image src="../../../static/center/info.png"></image>
 				<text>个人信息</text>
 				<u-icon name="arrow-right" color="#e7e9e9"></u-icon>
-			</a>
+			</a> -->
 			<!-- 	<a @click='goAboutUs'>
 				<image src="../../../static/center/aboutUs.png"></image>
 				<text>关于我们</text>
@@ -58,9 +58,9 @@
 			</u-cell-group>
  -->
 
-			<view class="button" @click="showLoginOut=true">
+			<!-- <view class="button" @click="showLoginOut=true">
 				退出登录
-			</view>
+			</view> -->
 
 			<u-modal :show="showLoginOut" confirmColor='#A4D091' @cancel='cancel' @confirm="loginOut" title="提示"
 				showCancelButton>

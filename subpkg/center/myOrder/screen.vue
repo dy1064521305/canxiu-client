@@ -208,7 +208,7 @@
 				activeTypeName: [],
 				where: {
 					partnerOrderType: "",
-					workerTypeldList: [],
+					workerTypeIdList: [],
 					orderSource: "",
 					brandId: "",
 					brandName: "",
@@ -242,7 +242,7 @@
 				if (info) {
 					this.where = {
 						partnerOrderType: info.partnerOrderType,
-						workerTypeldList: [...info.workerTypeldList],
+						workerTypeIdList: [...info.workerTypeIdList],
 						workerTypeNameList: [...info.workerTypeNameList],
 						orderSource: info.orderSource,
 						brandId: info.brandId,
@@ -293,10 +293,10 @@
 				var i = this.activeTypeName.findIndex(c => c == item.typeName)
 				if (i == -1) {
 					this.activeTypeName.push(item.typeName)
-					this.where.workerTypeldList.push(item.hoursId)
+					this.where.workerTypeIdList.push(item.hoursId)
 				} else {
 					this.activeTypeName.splice(i, 1)
-					this.where.workerTypeldList.splice(i, 1)
+					this.where.workerTypeIdList.splice(i, 1)
 				}
 				console.log(this.activeTypeName);
 			},
@@ -307,7 +307,7 @@
 					this.where.workerTypeNameList = [...this.activeTypeName]
 					this.showWorkerType = false
 				} else if (t == 'noType') {
-					this.where.workerTypeldList = this.where.workerTypeNameList = []
+					this.where.workerTypeIdList = this.where.workerTypeNameList = []
 					this.activeTypeName = []
 					this.showWorkerType = false
 				} else if (t == 'brand') {
@@ -326,7 +326,7 @@
 				} else if (t == 'noAll') {
 					this.where = {
 						partnerOrderType: "",
-						workerTypeldList: [],
+						workerTypeIdList: [],
 						workerTypeNameList: [],
 						orderSource: "",
 						brandId: "",
