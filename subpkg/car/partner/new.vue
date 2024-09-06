@@ -243,7 +243,7 @@
 		.banner {
 			height: 376rpx;
 			background-color: bisque;
-			background: url('https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/09/63428c7066d641feba3d0d36e1069896.jpg') no-repeat;
+			background: url('https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/edbf78c856e0421b8c4444dc632d7b60.jpg') no-repeat;
 			background-size: 100% 100%;
 		}
 

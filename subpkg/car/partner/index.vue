@@ -2,7 +2,7 @@
 	<view class="pages" :style="{height:clientHeight+'px'}">
 		<view>
 			<view class="banner">
-				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/09/63428c7066d641feba3d0d36e1069896.jpg"
+				<image src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/edbf78c856e0421b8c4444dc632d7b60.jpg"
 					mode=""></image>
 			</view>
 			<view class="content">

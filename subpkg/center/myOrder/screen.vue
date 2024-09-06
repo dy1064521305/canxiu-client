@@ -236,26 +236,28 @@
 			}
 		},
 		onLoad(options) {
-			if (options) {
+			if (options && options.info) {
 				let info = JSON.parse(options.info)
-
-				if (info) {
+				if (JSON.stringify(info) != "{}") {
 					this.where = {
-						partnerOrderType: info.partnerOrderType,
-						workerTypeIdList: [...info.workerTypeIdList],
-						workerTypeNameList: [...info.workerTypeNameList],
-						orderSource: info.orderSource,
-						brandId: info.brandId,
-						addressRegion: info.addressRegion,
-						brandName: info.brandName,
-						beginTime: info.beginTime,
-						endTime: info.endTime,
+						partnerOrderType: info.partnerOrderType || '',
+						workerTypeIdList: info.workerTypeIdList && info.workerTypeIdList.length ? [...info
+							.workerTypeIdList
+						] : [],
+						workerTypeNameList: info.workerTypeNameList && info.workerTypeNameList.length ? [...info
+							.workerTypeNameList
+						] : [],
+						orderSource: info.orderSource || '',
+						brandId: info.brandId || '',
+						addressRegion: info.addressRegion || '',
+						brandName: info.brandName || '',
+						beginTime: info.beginTime || '',
+						endTime: info.endTime || '',
 					}
-					this.beginTime = formatter.formatDate(info.beginTime),
-						this.endTime = formatter.formatDate(info.endTime),
-						this.activeTypeName = [...info.workerTypeNameList]
+					this.beginTime = formatter.formatDate(info.beginTime) || '',
+						this.endTime = formatter.formatDate(info.endTime) || '',
+						this.activeTypeName = [...info.workerTypeNameList] || []
 				}
-				console.log(this.where, "this.where");
 			}
 
 		},
@@ -288,8 +290,6 @@
 			},
 			//工种选择
 			typeClick(item) {
-				console.log(item)
-
 				var i = this.activeTypeName.findIndex(c => c == item.typeName)
 				if (i == -1) {
 					this.activeTypeName.push(item.typeName)
@@ -298,7 +298,6 @@
 					this.activeTypeName.splice(i, 1)
 					this.where.workerTypeIdList.splice(i, 1)
 				}
-				console.log(this.activeTypeName);
 			},
 
 			//筛选确认
@@ -346,7 +345,6 @@
 				this.where.addressRegion = e.value1.toString().replace(/,/g, "/")
 			},
 			bindDateChangeBegin: function(e) {
-				console.log(e.detail.value);
 				this.activeTimes = ''
 				this.where.beginTime = e.detail.value + ' 00:00:00'
 				this.beginTime = e.detail.value
@@ -372,12 +370,9 @@
 				return `${year}-${month}-${day}`;
 			},
 			timeChange(time) {
-				console.log(time, "2");
 				this.activeTimes = time
 				var date = new Date()
 				var list = formatter.getDateByCode(time)
-
-				console.log(list);
 				this.where.beginTime = list.startTime + ' 00:00:00'
 				this.where.endTime = list.endTime + ' 23:59:59'
 				this.beginTime = ''
