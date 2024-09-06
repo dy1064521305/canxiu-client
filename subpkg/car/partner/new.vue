@@ -143,10 +143,8 @@
 		},
 		onShow() {
 			if (this.isLogin) {
-				return
 				setTimeout(() => {
 					let id = storage.get('ClientId')
-					console.log(id, "this.userId");
 					putImmediate(id).then(res => {
 						if (res.data) {
 							this.$toast('您已是合伙人!', 'success').then(() => {
@@ -154,9 +152,7 @@
 									url: '../../staging/team/index',
 								})
 							});
-						} else {
-							console.log(11, "不存在123");
-						}
+						} else {}
 					})
 				}, 500)
 
