@@ -77,3 +77,6 @@ export const refreshPrice = (params) => request.get('/client/service/refreshPric
 
 // 合伙人品牌订单管理列表
 export const getPartnerBrandOrderList = (params) => request.get('/terrace/order/partnerBrandOrderList', params)
+
+//师傅选择服务项目列表
+export const getListProject= (params) => request.get('/worker/order/listProject',params)

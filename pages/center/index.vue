@@ -122,7 +122,7 @@
 					</view>
 					<view class="setUp">
 						<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
-							v-for="(item) in typeList.slice(0,3)" :key="item.id">
+							v-for="(item) in typeListOne" :key="item.id">
 							<view class="setUp-list-left">
 								<image :src="item.img" :class="'img-'+item.id" mode=""></image>
 								<text>{{item.label}}</text>
@@ -134,7 +134,7 @@
 					</view>
 					<view class="setUp" v-if="partnerInfo==null">
 						<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)"
-							v-for="(item) in typeList.slice(3,4)" :key="item.id">
+							v-for="(item) in typeListTwo" :key="item.id">
 							<view class="setUp-list-left">
 								<image :src="item.img" :class="'img2-'+item.id" mode=""></image>
 								<text>{{item.label}}</text>
@@ -500,7 +500,9 @@
 					},
 
 				],
-				typeList: [{
+				typeListOne: [
+
+					{
 						id: 0,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/266f8fc9d00b4e67b40dd52f66a66ec5.png",
 						label: "帮助中心",
@@ -523,7 +525,15 @@
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
 						label: "关于我们",
 						url: "/subpkg/center/aboutUs/aboutUs"
-					},
+					}, {
+						id: 4,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/16/bc36c90670804e7fae1c865ccf174c43.png",
+						label: "修改服务项",
+						url: "/subpkg/car/choseProject"
+					}
+				],
+				typeListTwo: [
+
 					// {
 					// 	id: 4,
 					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/7320eca633d8472692bceca08d92aae4.png",
@@ -542,6 +552,7 @@
 						label: "申请成为合伙人",
 						url: "/subpkg/car/partner/index"
 					},
+
 				],
 				partnerInfo: {},
 				listAvatar: {}
