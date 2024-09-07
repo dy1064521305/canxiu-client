@@ -416,6 +416,11 @@
 	flex-direction: column;
 	justify-content: center;
 }
+.flex-colum-between{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
 
 /* 蓝湖common.scss */
 .flex-col {

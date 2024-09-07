@@ -68,7 +68,8 @@
 				</view>
 
 				<view class="counts-types acea-row">
-					<view class="counts-types-items acea-row " v-for="(item,index) in xiuList.slice(0,4)" :key="index">
+					<view class="counts-types-items acea-row " @click="toList(index)"
+						v-for="(item,index) in xiuList.slice(0,4)" :key="index">
 						<view class="counts-types-items-value">{{item.num||0}}</view>
 						<text>{{item.label}}</text>
 					</view>
@@ -117,7 +118,7 @@
 					</view>
 				</view>
 			</view>
-			<!-- <view class="setUp">
+			<view class="setUp">
 				<view class="setUp-list acea-row row-between-wrapper" @click="toUrl(item)" v-for="(item) in typeList"
 					:key="item.id">
 					<view class="setUp-list-left">
@@ -128,7 +129,7 @@
 						<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
 					</view>
 				</view>
-			</view> -->
+			</view>
 			<u-popup :show="noCardShow" mode="center" :round="10" @close="noCardShow=false">
 				<view class="pop_show flex-colum-center" @click="toCard">
 					<image
@@ -212,13 +213,24 @@
 						url: "/subpkg/center/myMoney/myMoney"
 					},
 				],
-				typeList: [
-					// {
-					// 	id: 0,
-					// 	img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/266f8fc9d00b4e67b40dd52f66a66ec5.png",
-					// 	label: "签约管理",
-					// 	url: "/subpkg/center/brand/Signing"
-					// },
+				typeList: [{
+						id: 0,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "订单详情",
+						url: "/subpkg/staging/order/detail"
+					},
+					{
+						id: 1,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "服务报价单",
+						url: "/subpkg/staging/order/quotation"
+					},
+					{
+						id: 10,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "代客报修",
+						url: "/subpkg/center/myOrder/repairOrder?name=全部订单"
+					},
 
 					// {
 					// 	id: 1,
@@ -238,37 +250,6 @@
 					// 	label: "师傅结算记录",
 					// 	url: "/subpkg/staging/workers/records"
 					// },
-					{
-						id: 4,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
-						label: "合作签约信息-测试",
-						url: "/subpkg/center/brand/cooperateSettings"
-					},
-					{
-						id: 5,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
-						label: "订单管理-测试",
-						url: "/subpkg/center/myOrder/myOrderAll?name=全部订单"
-					},
-					{
-						id: 6,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
-						label: "设置-测试",
-						url: "/subpkg/users/setting/my-setting"
-					},
-					{
-						id: 7,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
-						label: "邀请码-测试",
-						url: "/subpkg/center/brand/MyinviterQrCode"
-					},
-					{
-						id: 8,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
-						label: "申请成为合伙人-测试",
-						url: "/subpkg/car/partner/new"
-					},
-
 
 				],
 				xiuList: [{
@@ -453,6 +434,10 @@
 			},
 			closeWorkerAccount(e) {
 				this.workerAccountShow = false
+			},
+			toList(index) {
+				if (index != 3) return
+				this.$jump('/subpkg/center/myOrder/repairOrder?name=全部订单')
 			}
 		}
 	}
