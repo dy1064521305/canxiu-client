@@ -19,54 +19,8 @@
 		<u-empty marginTop='70' text='没有找到哦，换个关键词试一下吧' v-if="!loading&&isSearch&&typeSearch!=''&&searchList.length==0"
 			icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/04/cb8a19a85cd14c86ad85b72b97ea2d1e.png">
 		</u-empty>
-		<view v-if="!loading&&isSearch&&typeSearch!=''&&searchList.length!=0">
-			<scroll-view scroll-y="true" style="height:85vh">
-				<u-checkbox-group style="width:100%" v-model="checkss" placement="column">
-					<view v-for="(sea,seai) in searchList" :key="seai"
-						style="background-color: #fff;padding:5rpx 32rpx;">
-						<view style="width: 100%;display: flex;justify-content: space-between;margin-top: 20rpx;">
-							<u-checkbox shape="circle" :name="sea.projectId" activeColor='var(--difference)'
-								@change='(e)=>checkChange(e,sea)'>
-							</u-checkbox>
-							<u-image v-if="sea.img.length!=0&&sea.img[0]!=''" radius='10rpx' width="100rpx"
-								height="100rpx" :src="sea.img[0]">
-							</u-image>
-
-							<view v-else style="width:148rpx;height:100rpx;" class="img-text">
-								<image style="width:77rpx ;height:53rpx;"
-									src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/13/756075d778dd41a981915b602587e78b.png"
-									mode=""></image>
-								<text>暂无图片</text>
-							</view>
-
-
-							<view
-								style="height: 100rpx;display: flex;flex-direction: column;justify-content: space-between;width: 100%;margin-left: 20rpx;">
-								<view style="font-size: 25rpx;">
-									{{sea.serviceProductName}}
-								</view>
-								<view
-									style="display: flex;align-items: center;justify-content: space-between;width: 100%;">
-									<text style="color: #EC5722;font-weight: bold;">¥{{sea.laborCost}}</text>
-									<view @click='(val)=>questionHandle(val,sea)'>
-										<image
-											src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/06/2e2cbea7051247dcb6b565cb20c12e84.png"
-											style="width: 27rpx;height: 27rpx;"></image>
-									</view>
-
-									<u-number-box @change='(e)=>numChange(e,sea)' v-model="sea.projectNumber"
-										class='number' button-size="24" color="#ffffff" bgColor="var(--difference)"
-										iconStyle="color: #fff">
-									</u-number-box>
-								</view>
-							</view>
-						</view>
-					</view>
-				</u-checkbox-group>
-			</scroll-view>
-
-		</view>
-		<view v-if="!isSearch&&searchList.length==0" class="main">
+		
+		<view  class="main">
 			<view v-if="!loading" class="u-wrap">
 				<view class="u-menu-wrap">
 					<scroll-view style="background: #fff;" scroll-y scroll-with-animation
