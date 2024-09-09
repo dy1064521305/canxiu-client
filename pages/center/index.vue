@@ -528,8 +528,8 @@
 					}, {
 						id: 4,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/16/bc36c90670804e7fae1c865ccf174c43.png",
-						label: "修改服务项",
-						url: "/subpkg/car/choseProject"
+						label: "指派/更换师傅",
+						url: "/subpkg/car/choseWorker"
 					}
 				],
 				typeListTwo: [

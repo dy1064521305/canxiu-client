@@ -398,13 +398,13 @@
 
 				}
 
-			    ,{
-                    "path" : "choseProject",
+			 
+                ,{
+                    "path" : "choseWorker",
                     "style" :                                                                                    
                 {
-                    "navigationBarTitleText": "选择服务项",
-                    "enablePullDownRefresh": false,
-						"navigationStyle": "custom"
+                    "navigationBarTitleText": "指派/更换师傅",
+                    "enablePullDownRefresh": false
                 }
                 
                 }
