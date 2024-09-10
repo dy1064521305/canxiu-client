@@ -523,6 +523,63 @@
 						"navigationBarTitleText": "服务报价单",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "order/store",
+					"style": {
+						"navigationBarTitleText": "选择门店",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "order/serve/select",
+					"style": {
+						"navigationBarTitleText": "选择服务项",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "order/serve/repair",
+					"style": {
+						"navigationBarTitleText": "代客报修",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "order/serve/edit",
+					"style": {
+						"navigationBarTitleText": "编辑服务项",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "order/serve/billDetails",
+					"style": {
+						"navigationBarTitleText": "账单详情",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "order/serve/assignWorker",
+					"style": {
+						"navigationBarTitleText": "我的师傅",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "order/serve/addCost",
+					"style": {
+						"navigationBarTitleText": "添加费用项",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "order/serve/editCost",
+					"style": {
+						"navigationBarTitleText": "编辑费用项",
+						"enablePullDownRefresh": false
+					}
 				}
 
 

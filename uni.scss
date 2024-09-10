@@ -81,3 +81,11 @@ $uni-color-paragraph: #3F536E; // 文章段落颜色
 $uni-font-size-paragraph:15px;
 $color-theme:#FF7700;
 
+@mixin lines($value: 2) {
+	word-break: break-all;
+	display: -webkit-box;
+	-webkit-line-clamp: $value;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	white-space: pre-wrap;
+}

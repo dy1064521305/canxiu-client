@@ -658,3 +658,7 @@ function checkType(url) {
 	// 扩展名不在图片或视频数组中，返回null表示无法确定媒体类型
 	return null;
 }
+export function rpxToPx(num) {
+	const w = uni.getSystemInfoSync().windowWidth;
+	return w * num / 750;
+}
