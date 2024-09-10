@@ -7,10 +7,10 @@ const environment = {
 		// baseURL: 'http://121.41.107.68:8080',
 		//baseURL: 'http://192.168.124.12:8080',
 		// 后端永奇
-		baseURL: 'http://192.168.100.140:8080',
+		// baseURL: 'http://192.168.100.140:8080',
 		// 王攀
 		// baseURL: 'http://192.168.100.122:8080',
-		// baseURL: 'http://121.40.253.155:8080',
+		baseURL: 'http://121.40.253.155:8080',
 		// baseURL: 'https://www-test.canxiukeji.com/prod-api',
 		// baseURL: 'https://www.canxiukeji.com/prod-api',
 
