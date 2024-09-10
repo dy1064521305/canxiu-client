@@ -580,6 +580,34 @@
 						"navigationBarTitleText": "编辑费用项",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "order/other/mingXi",
+					"style": {
+						"navigationBarTitleText": "订单收支明细",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "order/other/pay",
+					"style": {
+						"navigationBarTitleText": "收银台",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "order/other/check",
+					"style": {
+						"navigationBarTitleText": "完工验收",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "order/other/call",
+					"style": {
+						"navigationBarTitleText": "联系门店",
+						"enablePullDownRefresh": false
+					}
 				}
 
 

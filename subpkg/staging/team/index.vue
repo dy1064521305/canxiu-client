@@ -256,22 +256,47 @@
 						url: "/subpkg/staging/order/serve/edit"
 					},
 					{
-						id: 6,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
-						label: "我的师傅",
-						url: "/subpkg/staging/order/serve/assignWorker"
-					},
-					{
 						id: 7,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
 						label: "添加费用项",
 						url: "/subpkg/staging/order/serve/addCost"
 					},
 					{
+						id: 8,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "我的师傅",
+						url: "/subpkg/staging/order/serve/assignWorker"
+					},
+
+					{
+						id: 9,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "订单收支明细",
+						url: "/subpkg/staging/order/other/mingXi"
+					},
+					{
 						id: 10,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
 						label: "代客报修列表",
 						url: "/subpkg/center/myOrder/repairOrder?name=全部订单"
+					},
+					{
+						id: 11,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "收银台",
+						url: "/subpkg/staging/order/other/pay"
+					},
+					{
+						id: 12,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "完工验收",
+						url: "/subpkg/staging/order/other/check"
+					},
+					{
+						id: 13,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
+						label: "联系门店",
+						url: "/subpkg/staging/order/other/call"
 					},
 
 					// {

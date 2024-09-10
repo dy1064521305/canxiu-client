@@ -222,10 +222,35 @@
 
 			</view>
 		</view>
-		<view class="button acea-row row-between-wrapper">
+		<!-- 	<view class="button acea-row row-between-wrapper">
 			<view class="btn">修改账单</view>
 			<view class="btn">生成收款码</view>
 			<view class="btn">邀客户确认</view>
+		</view> -->
+		<view class="bottom ">
+			<view class="agreement">
+				<view class="fonts acea-row row-middle" @click="checkedLogin = !checkedLogin">
+					<view style="margin:3rpx 10rpx 0 0;">
+						<view v-if="!checkedLogin" class="check"></view>
+						<view v-else>
+							<u-icon name="checkmark-circle-fill" color="#A4D091" size="27rpx"></u-icon>
+						</view>
+
+					</view>
+					我已知晓并确认以上配件及服务报价内容
+
+				</view>
+			</view>
+			<view class="button acea-row row-between-wrapper">
+				<view class="call acea-row row-middle row-center">
+					<image
+						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/10/6862825801b0410591bc3c1e1f29a5a4.png"
+						mode=""></image>
+				</view>
+				<view class="btn btn1">生成收款码</view>
+				<view class="btn btn2">邀客户确认</view>
+			</view>
+
 		</view>
 	</view>
 </template>
@@ -234,7 +259,7 @@
 	export default {
 		data() {
 			return {
-
+				checkedLogin: false,
 			}
 		},
 		onLoad() {
@@ -285,6 +310,7 @@
 			&-con {
 				padding: 24rpx;
 				background: rgba(243, 178, 62, 0.08);
+				background-color: rgba(164, 208, 145, 0.08);
 				border-radius: 12rpx;
 				color: #999999;
 
@@ -302,7 +328,7 @@
 			width: 720rpx;
 			height: 46rpx;
 			margin: 0 14rpx;
-			background: #F3B23E;
+			background: $pageColor;
 			border-radius: 23rpx;
 		}
 
@@ -323,7 +349,7 @@
 					.view {
 						width: 4rpx;
 						height: 36rpx;
-						background: #F3B23E;
+						background: $pageColor;
 						margin-right: 24rpx;
 					}
 
@@ -349,7 +375,8 @@
 
 					&-more {
 						padding: 24rpx;
-						background: rgba(243, 178, 62, 0.08);
+						// background: rgba(243, 178, 62, 0.08);
+						background-color: rgba(164, 208, 145, 0.08);
 						border-radius: 12rpx;
 						color: #999999;
 						margin: 20rpx 0;
@@ -436,17 +463,17 @@
 					.btn {
 						width: 48%;
 						height: 70rpx;
-						background: #FFFFFF;
 						border-radius: 16rpx;
-						border: 1rpx solid #CCCCCC;
-						color: #212121;
+						background-color: rgba(164, 208, 145, 0.08);
+						border: 1rpx solid $pageColor;
+						color: $pageColor ;
 						text-align: center;
 						line-height: 70rpx;
 					}
 
 					.btn:nth-last-child(1) {
-						background: #F3B23E;
-						border: 1rpx solid #F3B23E;
+						background: $pageColor;
+						border: 1rpx solid $pageColor;
 						color: #FFFFFF;
 					}
 				}
@@ -455,7 +482,6 @@
 
 		.button {
 			background-color: #fff;
-
 			padding: 24rpx 24rpx 40rpx;
 
 			.btn {
@@ -463,9 +489,9 @@
 				height: 80rpx;
 				text-align: center;
 				line-height: 80rpx;
-				background: #F3B23E;
+				background: $pageColor;
 				border-radius: 16rpx;
-				border: 1rpx solid #F3B23E;
+				border: 1rpx solid $pageColor;
 				color: #fff;
 			}
 
@@ -473,6 +499,56 @@
 				border: 1rpx solid #CCCCCC;
 				background: #FFFFFF;
 				color: #212121;
+			}
+
+			.btn2 {
+				width: 45%;
+			}
+
+			.btn1 {
+				width: 35%;
+				background-color: rgba(164, 208, 145, 0.08);
+				border: 1rpx solid $pageColor;
+				color: $pageColor ;
+			}
+
+			.call {
+				width: 12%;
+				height: 78rpx;
+				border: 1rpx solid $pageColor;
+				border-radius: 16rpx;
+
+				image {
+					width: 50rpx;
+					height: 50rpx;
+				}
+			}
+
+
+		}
+
+		.bottom {
+			background-color: #fff;
+
+			.agreement {
+				font-size: 24rpx;
+				color: #212121;
+
+				.fonts {
+					display: flex;
+					width: 686rpx;
+					font-size: 22rpx;
+					color: #212121;
+					padding-top: 20rpx;
+					margin-left: 24rpx;
+
+					.check {
+						width: 22rpx;
+						height: 22rpx;
+						border: 2rpx solid #A5A7A7;
+						border-radius: 50%;
+					}
+				}
 			}
 		}
 	}
