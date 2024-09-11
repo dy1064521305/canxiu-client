@@ -146,16 +146,43 @@
 				去设置
 			</view>
 		</view>
-
-
 		<view v-if="status" class="index" style="z-index: 999999999999;">
 			<wu-app-update></wu-app-update>
 		</view>
+		<Popup :show="popShow" @tap-mask="popShow=false">
+			<template #wrapper>
+				<view class="popShowBg">
+					<view class="popShowBg-top acea-row">
+						<image src="../../static/center/info.png" mode=""></image>
+						<view class="flex-colum-between" style="padding: 4rpx 0;">
+							<view class="line1">${合伙人账号昵称}</view>
+							<text>给你派单了</text>
+						</view>
+					</view>
+					<view class="popShowBg-con">
+						<view class="name ">
+							<text class="">服务内容</text>
+							<view style="margin-top: 4px;">摄像头网络故障</view>
+						</view>
+						<view class="type">
+							<view><text>合计</text>¥122.2</view>
+							<view><text>所需工种</text>¥122.2</view>
+							<view><text>上门时间</text>¥122.2</view>
+							<view><text>上门地址</text>¥122.2</view>
+						</view>
+					</view>
+					<view class="popShowBg-btn">
+						查看详情
+					</view>
+				</view>
+			</template>
+		</Popup>
 
 	</view>
 </template>
 
 <script>
+	import Popup from '@/components/popup/center.vue'
 	import homeList from './homeList.js'
 	import storage from '@/utils/storage'
 	import goodCard from '../../components/goodCard/goodCard.vue'
@@ -188,7 +215,8 @@
 	export default {
 		components: {
 			goodCard,
-			ykAuthpup
+			ykAuthpup,
+			Popup
 		},
 		data() {
 			return {
@@ -230,7 +258,8 @@
 				addressName: undefined,
 				statusHeight: 0,
 				statusBarHeight: 0,
-				address: undefined
+				address: undefined,
+				// popShow: true
 			}
 		},
 		onReady() {
@@ -386,7 +415,8 @@
 			}
 
 		},
-		onLoad() {
+		onLoad(options) {
+			// if()
 			this.notPermissions()
 			this.getServiceTypesList()
 			this.locationStatus = ''
@@ -485,9 +515,9 @@
 			},
 
 			getServiceSymptomsHandle() {
-			
-					//获取故障现象
-					this.loading = true
+
+				//获取故障现象
+				this.loading = true
 				const params = this.serviceSymptomsName.length < 1 ? {
 					pageSize: 10,
 					pageNum: 1,
@@ -1139,5 +1169,79 @@
 		border: 4rpx solid #A4D091;
 		color: #A4D091;
 		margin: 50rpx auto;
+	}
+
+	.popShowBg {
+		width: 500rpx;
+		background-color: #FFFFFF;
+		background: linear-gradient(to bottom, #edf3da, 20%, #FFFFFF);
+		border-radius: 20rpx;
+		position: relative;
+		padding: 34rpx 24rpx 24rpx;
+
+		&-top {
+
+			image {
+				width: 80rpx;
+				height: 80rpx;
+				border-radius: 10rpx;
+				margin-right: 10rpx;
+			}
+
+			view {
+				max-width: 400rpx;
+				font-size: 30rpx;
+			}
+
+			text {
+				font-size: 24rpx;
+
+			}
+		}
+
+		&-con {
+			margin-top: 30rpx;
+			font-size: 24rpx;
+			color: #212121;
+			padding: 24rpx;
+			border-radius: 16rpx;
+			background-color: #FFFFFF;
+
+			.name {
+				text {
+					color: #999999;
+				}
+			}
+
+			.type {
+				border-radius: 16rpx;
+				padding: 20rpx;
+				background-color: #f8f8f8;
+				margin-top: 24rpx;
+
+				view {
+					margin-bottom: 10rpx;
+					display: flex;
+				}
+
+				text {
+					display: block;
+					width: 120rpx;
+					text-align: left;
+					color: #999999;
+				}
+			}
+		}
+
+		&-btn {
+			margin: 20rpx 0 20rpx;
+			background-color: #A4D091;
+			background: linear-gradient(to right, #A4D091 30%, #edf3da, );
+			padding: 14rpx;
+			border-radius: 50rpx;
+			color: #FFFFFF;
+			text-align: center;
+			font-size: 24rpx;
+		}
 	}
 </style>
