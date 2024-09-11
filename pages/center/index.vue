@@ -525,10 +525,18 @@
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/01/123b55e3dda2476bbad24b537a24c185.png",
 						label: "关于我们",
 						url: "/subpkg/center/aboutUs/aboutUs"
-					}, {
-						id: 4,
+					},
+					
+					{
+						id: 5,
 						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/16/bc36c90670804e7fae1c865ccf174c43.png",
-						label: "指派订单",
+						label: "指派师傅/更换师傅",
+						url: "/subpkg/car/choseWorker"
+					},
+					{
+						id:6,
+						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/16/bc36c90670804e7fae1c865ccf174c43.png",
+						label: "师傅端指派订单详情",
 						url: "/subpkg/car/assignOrder"
 					}
 				],

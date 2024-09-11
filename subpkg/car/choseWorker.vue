@@ -14,16 +14,28 @@
 				<view class="name">订单合计工费</view>
 				<view class="money"> <text>¥</text>200.33</view>
 				<view class="bottom align-center">
-					<view class="btn-white">
+					<view class="btn-white" @click="getCodeShow=true">
 						<img src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/10/b950664504684bd887c3aacf3f63713e.png"
 							style="width: 28rpx;height: 28rpx;margin-right: 10rpx;">
 						当面扫码
 					</view>
-					<view class="btn-green">
+					<!-- #ifdef MP-WEIXIN -->
+					<button class="btn-green" open-type="share">
+						<img src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/10/388529faf0fe452580bf96f954c128f1.png"
+							style="width: 32rpx;height: 26rpx;margin-right: 10rpx;">
+						发送微信好友
+					</button>
+
+					<!-- #endif -->
+					<!-- #ifdef APP-PLUS -->
+					<view class="btn-green" @click='shareFriend'>
 						<img src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/10/388529faf0fe452580bf96f954c128f1.png"
 							style="width: 32rpx;height: 26rpx;margin-right: 10rpx;">
 						发送微信好友
 					</view>
+					<!-- #endif -->
+
+
 				</view>
 			</view>
 			<view class="font" style="margin-top:26rpx ;">
@@ -82,18 +94,322 @@
 				</view>
 			</view>
 		</view>
+
+		<u-popup :show="getCodeShow" @close="getCodeShow=false" closeable :round="10">
+			<view class="code_box">
+				<view class="title">当面扫码</view>
+				<view style="margin: 20rpx 0;">
+					<image :src="imgs" style="width:560rpx;height: 560rpx;"></image>
+
+				</view>
+				<view style="margin-bottom: 20rpx;">
+					请打开微信，用【扫一扫】功能进行扫码
+				</view>
+				<view class="btn" @click="saveCode">
+					二维码保存相册
+				</view>
+			</view>
+
+		</u-popup>
+
+
+
+		<view style="height: 30rpx;">
+
+		</view>
+
+		<view v-if="cardShow">
+			<!-- #ifdef H5 -->
+			<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position: relative;" height="1624rpx"
+				isCanvasToTempFilePath useCORS />
+			<!-- #endif -->
+			<!-- #ifdef MP-WEIXIN -->
+			<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position:relative;margin-left:1000rpx"
+				height="978rpx" isCanvasToTempFilePath />
+			<!-- #endif -->
+			<!-- #ifdef APP-PLUS -->
+			<l-painter ref="painter" :board="base" @success="hldsz" custom-style="position:relative;margin-left:1000rpx"
+				height="978rpx" isCanvasToTempFilePath />
+			<!-- #endif -->
+		</view>
 	</view>
 </template>
 
 <script>
+	import lPainter from '@/components/lime-painter/components/l-painter/l-painter.vue'
+	import {
+		saveImage,
+	} from '@/utils/index.js'
 	export default {
+		components: {
+			lPainter
+		},
 		data() {
 			return {
 				imgs: 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/10/388529faf0fe452580bf96f954c128f1.png',
 				phone: '',
-				search: ''
-
+				search: '',
+				getCodeShow: false,
+				cardShow: false,
+				url: '',
+				base: {},
+				info: {
+					title: '摄像头网络故障',
+					money: '122',
+					workerType: "油漆师傅",
+					time: "2021-08-30 16:30",
+					address: "绍兴市柯桥区"
+				},
+				type: '',
+				shareTitle:''
 			};
+		},
+		onShareAppMessage(res) {
+			return {
+				title: this.shareTitle,
+				imageUrl: this.url,
+				path: `/pages/home/index`,
+
+			}
+		},
+		onLoad() {
+			this.getCard()
+		},
+		methods: {
+			saveCode() {
+				saveImage(this.imgs, () => {
+					uni.showToast({
+						title: '成功保存到相册',
+						icon: 'none'
+					})
+				})
+			},
+			shareFriend() {
+				// #ifdef MP-WEIXIN
+				this.type = 'weixin'
+				// #endif
+				// #ifdef APP-PLUS
+				this.activityDataHandle()
+				uni.share({
+					provider: "weixin",
+					scene: "WXSceneSession",
+					type: 0,
+					//href:'http://uniapp.dcloud.io/',
+					// href: this.link,
+					title: '有人给你派单了，快来接单吧！',
+					imageUrl: this.url,
+					success: (res) => {
+						console.log("success:" + JSON.stringify(res));
+
+					},
+					fail: (err) => {
+						console.log("fail:" + JSON.stringify(err));
+						// err.errCode == '-8' && this.goUrl()
+					}
+				});
+				// #endif 
+			},
+			getCard() {
+				if (false) {
+					this.shareTitle='${服务名称}订单已结算，快来领取吧！'
+					this.base = {
+						width: '440rpx',
+						views: [{
+								type: 'view',
+								css: {
+									width: '440rpx',
+									height: '352rpx',
+									background: '#F5F5F5',
+									position: "relative"
+								}
+							},
+							{
+								type: 'text',
+								text: '订单收入',
+								css: {
+									fontSize: "32rpx",
+									position: 'absolute',
+									top: '98rpx',
+									left: '156rpx',
+									color: " #9B9B9B"
+								}
+							},
+							{
+								type: 'text',
+								text: '¥',
+								css: {
+									fontSize: "32rpx",
+									position: 'absolute',
+									top: '210rpx',
+									left: '88rpx',
+									color: "#212121"
+								}
+							},
+							{
+								type: 'text',
+								text: '1000.00',
+								css: {
+									fontSize: "64rpx",
+									position: 'absolute',
+									top: '176rpx',
+									left: '110rpx',
+									color: "#212121"
+								}
+							},
+						]
+					}
+				} else {
+					this.shareTitle='${合伙人账号昵称}给你派单了，快来接单吧！'
+					this.base = {
+						width: '440rpx',
+						views: [{
+								type: 'view',
+								css: {
+									width: '440rpx',
+									height: '352rpx',
+									background: '#F5F5F5',
+									position: "relative"
+								}
+							},
+							{
+								type: 'text',
+								text: '服务内容',
+								css: {
+									fontSize: "24rpx",
+									position: 'absolute',
+									top: '14rpx',
+									left: '20rpx',
+									color: "#999"
+								}
+							},
+							{
+								type: 'text',
+								text: this.info.title,
+								css: {
+									fontSize: "24rpx",
+									position: 'absolute',
+									top: '54rpx',
+									left: '20rpx',
+									color: '#212121'
+								}
+							},
+							{
+								type: 'view',
+								css: {
+									width: '392rpx',
+									height: '218rpx',
+									top: '100rpx',
+									left: '20rpx',
+									background: '#FFFFFF',
+									position: "absolute"
+								}
+							},
+
+							{
+								type: 'text',
+								text: '合计',
+								css: {
+									fontSize: "24rpx",
+									position: 'absolute',
+									top: '120rpx',
+									left: '36rpx',
+									color: '#999999'
+								}
+							},
+							{
+								type: 'text',
+								text: '¥' + this.info.money,
+								css: {
+									fontSize: "24rpx",
+									position: 'absolute',
+									top: '120rpx',
+									left: '151rpx',
+									color: '#212121'
+								}
+							},
+							{
+								type: 'text',
+								text: '所需工种',
+								css: {
+									fontSize: "24rpx",
+									position: 'absolute',
+									top: '168rpx',
+									left: '36rpx',
+									color: '#999999'
+								}
+							},
+							{
+								type: 'text',
+								text: this.info.workerType,
+								css: {
+									fontSize: "24rpx",
+									position: 'absolute',
+									top: '168rpx',
+									left: '151rpx',
+									color: '#212121'
+								}
+							},
+							{
+								type: 'text',
+								text: '上门时间',
+								css: {
+									fontSize: "24rpx",
+									position: 'absolute',
+									top: '215rpx',
+									left: '36rpx',
+									color: '#999999'
+								}
+							},
+							{
+								type: 'text',
+								text: this.info.time,
+								css: {
+									fontSize: "24rpx",
+									position: 'absolute',
+									top: '215rpx',
+									left: '151rpx',
+									color: '#212121'
+								}
+							},
+							{
+								type: 'text',
+								text: '上门地址',
+								css: {
+									fontSize: "24rpx",
+									position: 'absolute',
+									top: '260rpx',
+									left: '36rpx',
+									color: '#999999'
+								}
+							},
+							{
+								type: 'text',
+								text: this.info.address,
+								css: {
+									fontSize: "24rpx",
+									position: 'absolute',
+									top: '260rpx',
+									left: '151rpx',
+									color: '#212121'
+								}
+							},
+						]
+
+					}
+				}
+				this.cardShow = true
+			},
+			hldsz(e) {
+				uni.getImageInfo({
+					src: e,
+					success: (res) => {
+						this.url = res.path
+						console.log(res, 'res........');
+						this.cardShow = false
+
+					}
+				})
+			},
 		}
 	}
 </script>
@@ -105,6 +421,20 @@
 			border-radius: 16rpx;
 			padding: 28rpx;
 			margin: 20rpx;
+		}
+
+		.code_box {
+			height: 58vh;
+			text-align: center;
+			padding: 0 20rpx;
+			font-size: 32rpx;
+			color: #000000;
+
+			.title {
+				text-align: left;
+				padding: 20rpx;
+
+			}
 		}
 
 		.font {
@@ -179,6 +509,20 @@
 
 		}
 
+		.btn {
+			font-size: 32rpx;
+			background: $pageColor;
+			border-radius: 8rpx;
+			height: 88rpx;
+			font-family: PingFangSC, PingFang SC;
+			font-weight: 500;
+			font-size: 32rpx;
+			color: #FFFFFF;
+			line-height: 88rpx;
+			text-align: center;
+			font-style: normal;
+		}
+
 		.two {
 			.input-phone {
 				padding: 20rpx;
@@ -187,24 +531,12 @@
 				margin: 30rpx 0;
 			}
 
-			.btn {
-				font-size: 32rpx;
-				background: $pageColor;
-				border-radius: 8rpx;
-				height: 88rpx;
-				font-family: PingFangSC, PingFang SC;
-				font-weight: 500;
-				font-size: 32rpx;
-				color: #FFFFFF;
-				line-height: 88rpx;
-				text-align: center;
-				font-style: normal;
-			}
 		}
 
 		.three {
 			.top {
 				margin-bottom: 20rpx;
+
 				.title {
 					font-size: 32rpx;
 					color: #212121;
@@ -219,8 +551,10 @@
 				.box {
 					border-top: 2rpx solid #E5E5E5;
 					padding: 30rpx 0;
+
 					.left {
 						margin-left: 10rpx;
+
 						.title {
 							font-weight: 500;
 							font-size: 32rpx;
@@ -249,7 +583,7 @@
 						border-radius: 8rpx;
 						color: #fff;
 						background-color: $pageColor;
-						padding:8rpx 10rpx ;
+						padding: 8rpx 10rpx;
 						font-size: 28rpx
 					}
 
