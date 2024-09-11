@@ -533,12 +533,7 @@
 						label: "指派师傅/更换师傅",
 						url: "/subpkg/car/choseWorker"
 					},
-					{
-						id:6,
-						img: "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/16/bc36c90670804e7fae1c865ccf174c43.png",
-						label: "师傅端指派订单详情",
-						url: "/subpkg/car/assignOrder"
-					}
+				
 				],
 				typeListTwo: [
 

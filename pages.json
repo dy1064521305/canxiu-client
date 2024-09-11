@@ -408,16 +408,7 @@
                 }
                 
                 }
-                ,{
-                    "path" : "assignOrder",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "指派订单",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-              
+             
             
             ]
 		},
