@@ -5,8 +5,8 @@
 			<view v-for="(item, index) in previewList" @tap="clickSelectedFile(item, index)" class="file-list-row"
 				:style="[rowStyle]" :key="index">
 
-				<img   class="_image" v-if="fileUrlType(item) === 'image'" :src="item.path"
-					:style="[imgStyle]" mode="aspectFill">
+				<img class="_image" v-if="fileUrlType(item) === 'image'" :src="item.path" :style="[imgStyle]"
+					mode="aspectFill">
 				</img>
 
 				<view v-else class="_video" :style="[imgStyle]">
@@ -16,7 +16,7 @@
 						:src="item.path" :show-center-play-btn="false" :show-fullscreen-btn="false"
 						:show-play-btn="false" :show-loading="false" :enable-progress-gesture="false" :controls="false">
 						<view @tap="previewVideo(item, index)" class="play">
-							<img   style="width: 100%;" :src="playImg" mode="widthFix"></img>
+							<img style="width: 100%;" :src="playImg" mode="widthFix"></img>
 						</view>
 					</video>
 
@@ -50,14 +50,14 @@
 							:src="(item.poster || item.path)"></cl-image>
 
 						<view class="play" @tap="previewVideo(item, index)">
-							<img   class="play-img" :src="playImg"></img>
+							<img class="play-img" :src="playImg"></img>
 						</view>
 					</template>
 
 				</view>
 
 				<view class="remove" v-if="remove" @tap.stop="deleteSelectedFile(item, index)">
-					<img   class="image" :src="deleteImg" mode="widthFix"></img>
+					<img class="image" :src="deleteImg" mode="widthFix"></img>
 				</view>
 			</view>
 
@@ -68,7 +68,7 @@
 				</yk-authpup>
 				<slot name="addImg">
 					<div class="add-image">
-						<img   class="_image" :src="addImg" ></img>
+						<img class="_image" :src="addImg"></img>
 					</div>
 				</slot>
 			</view>
@@ -77,7 +77,7 @@
 
 
 		<view v-if="tempVideoUrl" class="mask">
-			<img   @tap="tempVideoUrl = ''" class="_root" :src="closeImg" mode="widthFix"></img>
+			<img @tap="tempVideoUrl = ''" class="_root" :src="closeImg" mode="widthFix"></img>
 
 			<view class="block" @tap.stop>
 				<video class="block_video" autoplay :src="tempVideoUrl"></video>

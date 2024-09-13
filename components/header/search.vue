@@ -91,6 +91,7 @@
 		},
 		watch: {
 			q(nVal) {
+				console.log(nVal, "nVal");
 				this.keyword = nVal;
 			},
 			keyword(nVal) {

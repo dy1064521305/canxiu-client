@@ -3,12 +3,13 @@
 		<u-checkbox-group v-model="checkboxValue1" placement="column">
 			<view v-for="(item, index) in dataList" :key="index">
 
-				<view class="check" >
+				<view class="check">
 					<view v-if="isCar" class="box">
 						<view class="top">
 							<view style="display: flex;">
-								<u-checkbox v-if="submit&&isCar&&item.projectStatus!='1'" shape="circle" :name="item.id?item.id:item.projectId"
-									activeColor='#A4D091' @change='val=>checkChange(val,item)'>
+								<u-checkbox v-if="submit&&isCar&&item.projectStatus!='1'" shape="circle"
+									:name="item.id?item.id:item.projectId" activeColor='#A4D091'
+									@change='val=>checkChange(val,item)'>
 								</u-checkbox>
 							</view>
 
@@ -85,8 +86,10 @@
 							<text>服务费用小计：</text>
 							<text>¥{{Number(item.projectNumber)*Number(item.discountPrice)}}</text>
 						</view>
-						<view @click="openHandle(item,index)" style="display: flex;justify-content: center;margin: 20rpx 0;cursor: pointer;">
-							{{!item.isOpen?'展开':'收起'}}报修详情<u-icon style="margin-left: 10rpx;" :name="!item.isOpen?'arrow-down':'arrow-up'" size="18"></u-icon>
+						<view @click="openHandle(item,index)"
+							style="display: flex;justify-content: center;margin: 20rpx 0;cursor: pointer;">
+							{{!item.isOpen?'展开':'收起'}}报修详情<u-icon style="margin-left: 10rpx;"
+								:name="!item.isOpen?'arrow-down':'arrow-up'" size="18"></u-icon>
 						</view>
 					</view>
 
@@ -150,7 +153,7 @@
 				</view>
 				<!--  ||!submit-->
 				<!-- v-if="checkboxValue1.includes(item.id?item.id:item.projectId)||isCar" -->
-				<view  v-if="item.isOpen" class="remark">
+				<view v-if="item.isOpen" class="remark">
 					<view>
 						<view class="">
 							<text style="color: red">*</text><text style="margin:0 30rpx 14rpx 10rpx;">上传视频/图片</text>
@@ -160,14 +163,14 @@
 						</view>
 						<view style="width: 100%;margin: 10.87rpx 0 28.99rpx 0;">
 							<cl-upload :listStyle="{
-							columnGap: '10rpx',
-							columns:'4',
-							rowGap:'10rpx'
-							}" :imageFormData="{
-								size:10
-							}" :videoFromData="{
-								size:10
-							}" :index='index' v-model="item.projectImg" :headers="headers" :action="action" @onSuccess="onSuccesss"
+						columnGap: '10rpx',
+						columns:'4',
+						rowGap:'10rpx'
+						}" :imageFormData="{
+							size:10
+						}" :videoFromData="{
+							size:10
+						}" :index='index' v-model="item.projectImg" :headers="headers" :action="action" @onSuccess="onSuccesss"
 								@input='onInput' :carId='item.id'></cl-upload>
 							<!-- <upLoadFile :fileListt='item.projectImg' :limit='9' types='image' @getUrl='getUrl'
 								:index='index' /> -->
@@ -301,7 +304,7 @@
 								0) ? 0 : item.projectNumber
 							//		console.log(1111);
 						}
-						item.isOpen=false
+						item.isOpen = false
 						//	console.log(item);
 						item.imgList = item.serviceProjectImg !== null && item.serviceProjectImg !== '' ? item
 							.serviceProjectImg.split(',') : [],
@@ -386,8 +389,6 @@
 					num: value,
 					flag: flag
 				})
-
-
 			},
 			// //预览图片
 			// previewImage(list) {
@@ -461,10 +462,10 @@
 			textareaInput() {
 				uni.$u.debounce(() => this.$emit('textareaInput', this.dataList), 200)
 			},
-			openHandle(item,i){
-				console.log(item,i);
+			openHandle(item, i) {
+				console.log(item, i);
 				// this.$set(this.dataList[i],'isOpen',true)
-				 item.isOpen=!item.isOpen
+				item.isOpen = !item.isOpen
 				this.$forceUpdate()
 			}
 

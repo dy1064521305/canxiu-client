@@ -564,7 +564,8 @@
 					"path": "order/serve/assignWorker",
 					"style": {
 						"navigationBarTitleText": "我的师傅",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
 					}
 				},
 				{

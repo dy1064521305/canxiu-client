@@ -2,7 +2,7 @@
 	<view class="page">
 		<view class="all">
 			<view @click="goWorkerList" class="designWorker acea-row row-between-wrapper">
-				<view class="designWorker-left acea-row">
+				<view class="designWorker-left acea-row row-middle">
 					<image
 						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/02/ac000216203a45638ea0841739325d41.png"
 						mode=""></image>
@@ -15,7 +15,7 @@
 					<view v-for="(item, index) in workerList.slice(0, 3)" :key="index">
 						<view v-if="!item.workerName" class="designWorker-right-people"></view>
 						<view v-if="item.workerName" class="designWorker-right-img">
-							<image v-if="item.avatarUrl" :src="item.avatarUrl" mode=""></image>
+							<image v-if="item.avatarUrl&&item.avatarUrl!=null" :src="item.avatarUrl" mode=""></image>
 							<image v-else
 								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
 								mode=""></image>
@@ -30,26 +30,26 @@
 				</view>
 			</view>
 		</view>
-		<view class="all" v-for="(item) in [1,2]">
+		<view class="all" v-for="(item,index) in selectList" :key="index">
 			<view class="all-top acea-row row-between-wrapper">
-				#1 服务项
-				<text>
+				#{{index+1}}服务项
+				<text @click="delItem(item,index)">
 					<text class="iconfont icon-shanchu"></text>
 					移除此项</text>
 			</view>
-			<view class="all-type">
+			<view class="all-type" v-if="item.serviceProjectVoListInfo">
 				<view class="all-type-price acea-row row-between-wrapper">
-					疏通3M内
-					<text>38元/个
+					{{item.serviceProjectVoListInfo.projectName }}
+					<text>{{item.serviceProjectVoListInfo.startingFreeDiscount}}元/个
 						<text class="iconfont icon-iconmore-copy"></text>
 					</text>
 				</view>
-				<text>分类：水龙头/排水管</text>
+				<text>分类：{{item.serviceProjectVoListInfo.serviceTypeName}}</text>
 			</view>
 			<view class="all-price  acea-row row-between-wrapper">
 				<view class="">服务数量 <text>（单位：个）</text> </view>
 				<view class="right">
-					<u-number-box min='1' v-model="projectNumber" class='number' button-size="26px" color="#ffffff"
+					<u-number-box min='1' v-model="item.projectNumber" class='number' button-size="26px" color="#ffffff"
 						bgColor="#A4D091" @change='val=>numChange(item,val,index)' iconStyle="color: #fff">
 					</u-number-box>
 				</view>
@@ -64,17 +64,17 @@
 					</view>
 					<view style="width: 100%;margin: 20rpx 0">
 						<cl-upload :listStyle="{columnGap: '10rpx',columns:'4',rowGap:'10rpx'}"
-							:imageFormData="{size:10}" :videoFromData="{size:10}" :index='1' v-model="projectImg"
-							:headers="headers" :action="action" @onSuccess="onSuccesss" @input='onInput'
-							:carId='carId'></cl-upload>
+							:imageFormData="{size:10}" :videoFromData="{size:10}" :index='index'
+							v-model="item.projectImg1" :headers="headers" :action="action"
+							@onSuccess="onSuccesss($event,index)" @input='onInput'></cl-upload>
 					</view>
 				</view>
 				<view style="align-items: center;">
 					<view style="margin-bottom: 10rpx;">故障描述</view>
 					<view style="font-size: 22rpx;color: #A5A7A7;">请简单描述故障或特殊需求备注信息</view>
 					<view style='width: 100%; border: 1rpx solid #f5f5f5;border-radius: 10rpx;margin-top: 20rpx;'>
-						<u--textarea height='72' border='none' maxlength='200' confirmType="done" v-model="remark"
-							placeholder="请输入内容" count @input='textareaInput'></u--textarea>
+						<u--textarea height='72' border='none' maxlength='200' confirmType="done" v-model="item.remark1"
+							placeholder="请输入内容" count></u--textarea>
 					</view>
 				</view>
 			</view>
@@ -118,36 +118,36 @@
 			<view class="mess-store">
 				<view class="acea-row row-between-wrapper">
 					<view class="acea-row">
-						<!-- <view class="" v-if="item.storeImg">
-													<image :src="item.storeImg">
-													</image>
-												</view> -->
-						<image src="@/static/logo.png"></image>
+						<view class="" v-if="storeInfo.storeImg">
+							<image :src="storeInfo.storeImg">
+							</image>
+						</view>
+						<image v-else src="@/static/logo.png"></image>
 						<view class="flex-colum-between" style="padding: 4rpx 0;">
 							<view class="">
-								222
+								{{storeInfo.adminName}}
 							</view>
 							<view class="acea-row row-middle" style="font-size: 24rpx;color: #A5A7A7">
-								222<text style="margin: 0 4rpx;">|
-								</text> 111
+								{{storeInfo.storeType}}<text style="margin: 0 4rpx;" v-if="storeInfo.businessDistrict">|
+								</text> {{storeInfo.businessDistrict}}
 							</view>
 						</view>
 					</view>
-					<view style="font-size: 24rpx;">
+					<view style="font-size: 24rpx;" @click="changeStore">
 						更换 <text class="iconfont icon-arrow-right" style="font-size: 32rpx;"> </text>
 					</view>
 				</view>
 				<view class="mess-store-mxi">
-					<view>所在城市：杭州市-拱墅区</view>
-					<view>详细地址：杭州拱墅区新天地商务中心14幢5楼</view>
-					<view>客户姓名：浙江万筑装饰…</view>
-					<view>客户手机：0571-87928688</view>
+					<view>所在城市：{{storeInfo.region}}</view>
+					<view>详细地址：{{storeInfo.detailAddress}}</view>
+					<view>客户姓名：{{storeInfo.adminName}}</view>
+					<view>客户手机：{{storeInfo.adminPhone}}</view>
 				</view>
 			</view>
 		</view>
 		<view class="button acea-row row-between-wrapper">
-			<view class="btn">+添加服务项</view>
-			<view class="btn">下一步</view>
+			<view class="btn" @click="$jump(-1)">+添加服务项</view>
+			<view class="btn" @click="submit">保存并创建订单</view>
 		</view>
 		<hTimeAlert title="选择你期望上门服务时间" rangeStartTime="00:00:00" rangeEndTime="23:59:59"
 			defaultTime="2020/3/29 18:00:00" rangeDay="7" :isShow="isShow" :maskHide="false" :isUrgentIndex='3'
@@ -162,6 +162,10 @@
 		environment
 	} = require('@/config/environment')
 	import hTimeAlert from "@/components/h-time-alert/h-time-alert.vue"
+	import {
+		getCustomerInfo,
+		postQuotation
+	} from '@/api/car.js'
 	export default {
 		components: {
 			hTimeAlert,
@@ -178,13 +182,142 @@
 				carId: ' 1',
 				remark: "",
 				isShow: false,
-				expectTime: ""
+				expectTime: "",
+				selectList: [],
+				customerId: "",
+				storeInfo: {},
+				info: {}
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			if (options && options.customerId) {
+				this.customerId = options.customerId
+			}
+			uni.$on('selectList', (list) => {
+				this.selectList = list
+				this.selectList.forEach(i => {
+					if (i.serviceProjectVoList.length) {
+						i.serviceProjectVoListInfo = i.serviceProjectVoList[0] || {}
+						i.projectImg1 = []
+						i.remark1 = ''
+						i.projectNumber = 1
+					}
+				})
+			})
 
+			this.getInfo()
+			console.log(this.selectList, "	this.selectList 	this.selectList ");
+		},
+		onHide() {
+			uni.$emit('selectHideList', this.selectList)
+			console.log('离开');
+		},
+		onShow() {
+			this.workerList = [{}, {}, {}]
+			let arr = storage.get('workerLists' + storage.get('ClientId')) || []
+			this.workerList = [...arr, ...this.workerList]
 		},
 		methods: {
+			getInfo() {
+				getCustomerInfo(this.customerId).then(res => {
+					this.storeInfo = res.data
+				})
+			},
+			submit() {
+				if (!this.expectTime) {
+					uni.showToast({
+						title: '请选择上门时间',
+						duration: 2000,
+						icon: 'none'
+					});
+					return
+				}
+				this.info.clientId = storage.get('ClientId')
+				let arr = JSON.parse(JSON.stringify(this.selectList))
+
+				let bool1 = arr.some(item => {
+					console.log(item, "itemitem");
+					return !item.projectImg1 || item.projectImg1
+						.length == 0
+				})
+				if (bool1) {
+					uni.showToast({
+						title: '每个项目都要上传图片或视频',
+						duration: 2000,
+						icon: 'error'
+					});
+					return
+				}
+				arr.forEach(it => {
+					let item = it.serviceProjectVoList[0]
+					it.projectImg = this.toStrings(it.projectImg1)
+					it.isUrgent = item.isUrgent
+					it.urgentPrice = item.isUrgent == 1 ? item.urgentPrice : 0
+					it.projectPrice = item.projectPrice
+					it.discountPrice = item.discountPrice
+					it.projectId = item.projectId
+					it.detectionAmount = item.detectionAmount
+					it.remark = it.remark1
+					it.workerType = item.workerType
+					it.productId = item.serviceId ? item.serviceId : item.productId
+				})
+				let timeObj = {}
+				let startingFree = {}
+				let beforeStartingFree = {}
+				let costStartingFreeMap = {}
+				this.selectList.forEach(item => {
+					let data = item.serviceProjectVoList[0]
+					timeObj[data.workerType] = this.expectTime + ':00'
+					startingFree[data.workerType] = data.startingFreeDiscount
+					beforeStartingFree[data.workerType] = data.serviceStartingFree
+					costStartingFreeMap[data.workerType] = data.workerStartingFree
+				})
+				this.info.orderProjectBoList = arr
+				this.info.startingFreeMap = startingFree
+				this.info.timeMap = timeObj
+				this.info.beforeStartingFreeMap = beforeStartingFree
+				this.info.costStartingFreeMap = costStartingFreeMap
+				this.info.customerId = this.customerId
+				this.workerList = this.trimSpace(this.workerList)
+				this.info.workerIds = this.workerList.map(item => item.workerId)
+
+				postQuotation(this.info).then(res => {
+					if (res.code == 200) {
+						storage.remove('workerLists' + storage.get('ClientId'))
+						let data = res.data
+						uni.redirectTo({
+							url: '/subpkg/staging/order/serve/detail?orderId=' + data.orderId
+						})
+					}
+				})
+			},
+			toStrings(item) {
+				return item != [] ? item.toString() : ''
+			},
+			trimSpace(array) {
+				for (var i = 0; i < array.length; i++) {
+					//这里为过滤的值
+					if (array[i] == " " || array[i] == null || typeof(array[i]) == "undefined" || array[i] ==
+						'  ' || JSON.stringify(array[i]) == '{}') {
+						array.splice(i, 1);
+						i = i - 1;
+					}
+				}
+				return array;
+			},
+			// 移除服务项
+			delItem(item, index) {
+				this.$alert('温馨提示', 1, {
+					content: '确定移除吗？',
+					confirmText: '确认移除',
+					cancelText: '我在想想',
+				}).then((res) => {
+					if (res.confirm) {
+						this.selectList.splice(index, 1)
+					}
+				})
+
+			},
 			timeShowHandle(i) {
 				this.isShow = true
 				// this.timeIndex = i
@@ -193,17 +326,45 @@
 			getWorkerlist(arr) {
 				this.workerList = [{}, {}, {}]
 				this.workerList = [...arr, ...this.workerList]
-				console.log(this.workerList);
+				console.log(this.workerList, "@");
 			},
-			onSuccesss(reslut) {
+			changeStore() {
+				uni.navigateBack({
+					delta: 2, //返回层数，2则上上页
+				})
+				storage.remove('workerLists' + storage.get('ClientId'))
+			},
+			numChange(item, value, i) {
+				console.log('207...', item, value, this.selectList);
+				// if (item.projectImg1.length == 0) {
+				// 	uni.showToast({
+				// 		title: '请先上传图片/视频',
+				// 		duration: 2000,
+				// 		icon: 'error'
+				// 	});
+
+				// 	return
+				// }
+				console.log(value.value, item.projectNumber);
+				let flag = value.value < item.projectNumber ? -1 : 1
+				item.projectNumber = value.value
+				let obj = item
+				console.log(item.projectNumber, "@22");
+				this.$set(this.selectList, i, obj)
+			},
+			onSuccesss(reslut, index) {
 				console.log(reslut);
-				let index = reslut.data.index
-				console.log(this.dataList[index].projectImg);
-				this.dataList[index].projectImg.push(reslut.data.url)
+				// let index = reslut.data.index
+				console.log(this.selectList, index, '==')
+				// console.log(this.selectList[index]);
+				this.selectList[index].projectImg1.push(reslut.data.url)
+				this.$set(this.selectList, index, {
+					...this.selectList[index]
+				})
 			},
 			onInput(data) {
-				console.log(data);
-				this.dataList[data.index].projectImg = data.list
+				console.log(data, '‘’');
+				this.selectList[data.index].projectImg1 = data.list
 			},
 			textareaInput() {
 
@@ -215,6 +376,16 @@
 				console.log(this.expectTime, "this.expectTime ");
 
 			},
+			goWorkerList() {
+				let info = {
+					workerList: this.workerList,
+					customerId: this.customerId
+				}
+				uni.navigateTo({
+					url: '/subpkg/staging/order/serve/assignWorker?info=' + JSON.stringify(info)
+				})
+			},
+
 		}
 	}
 </script>

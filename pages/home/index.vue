@@ -259,7 +259,7 @@
 				statusHeight: 0,
 				statusBarHeight: 0,
 				address: undefined,
-				// popShow: true
+				popShow: false
 			}
 		},
 		onReady() {

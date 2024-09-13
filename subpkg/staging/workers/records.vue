@@ -46,9 +46,10 @@
 				</view>
 			</view>
 			<view class="invite_list">
-				<view class="invite_list-item" v-for="(item,index) in dataList" :key="index">
+				<view class="invite_list-item" v-for="(item,index) in dataList" @click.stop="toDetail(item)"
+					:key="index">
 					<view class="invite_list-item-top acea-row row-middle row-between-wrapper">
-						<view class="invite_list-item-top-left acea-row row-middle" @click="workerDetailed(item)">
+						<view class="invite_list-item-top-left acea-row row-middle" @click.stop="workerDetailed(item)">
 							<image v-if="item.avatarUrl==null"
 								src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/11/10/38405b13b68b4ac3be692e812874e648.png">
 							</image>
@@ -94,7 +95,7 @@
 							<view class="acea-row row-middle">
 								<view @click="toDetail(item)">详情</view>
 								<text></text>
-								<view @click="$copy(item.orderNumber)">复制</view>
+								<view @click.stop="$copy(item.orderNumber)">复制</view>
 							</view>
 						</view>
 						<view class="bottom acea-row">
@@ -122,9 +123,9 @@
 					</view>
 					<view class="invite_list-item-time acea-row" v-if="item.status=='待结算'">
 						<view class="invite_list-item-time-btn acea-row">
-							<view @click="close(1,item)">关闭结算</view>
+							<view @click.stop="close(1,item)">关闭结算</view>
 							<!-- <view @click="close(2,item)">调整金额</view> -->
-							<view @click="close(3,item)">立即结算</view>
+							<view @click.stop="close(3,item)">立即结算</view>
 						</view>
 					</view>
 					<view class="invite_list-item-time acea-row" style="justify-content: flex-start; color: #646566;"
@@ -504,7 +505,7 @@
 				} else {
 					this.$jump('/subpkg/car/orderDetail/orderDetail?id=' + item.orderId)
 				}
-			}
+			},
 
 		}
 	}

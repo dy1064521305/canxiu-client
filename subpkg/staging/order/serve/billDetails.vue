@@ -297,13 +297,17 @@
 						name: '取消'
 					},
 				],
-				showAction: false
+				showAction: false,
 			}
 		},
-		onLoad() {
-
+		onLoad(options) {
+			// if (options && options.orderId) {
+			// 	this.orderId = options.orderId
+			// }
+			// this.getInfo()
 		},
 		methods: {
+
 			wenTip(value) {
 				console.log(value);
 				if (value) {

@@ -8,34 +8,37 @@
 				</view>
 				<view class="header">
 					<view class="input">
-						<u-search :showAction="false" placeholder="请输入门店名称" @clear='queryList' v-model="query.keyWord"
-							@search="queryList">
+						<u-search :showAction="false" placeholder="请输入门店名称" @clear='search' v-model="query.keyword"
+							@search="search">
 						</u-search>
 					</view>
 				</view>
-				<view class="last">
+				<view class="last" v-if="storeList.length">
 					<div class="last-tit">最近操作门店</div>
 					<div class="last-items">
 						<view class="product">
-							<view class="scroll-view_H" v-if="shops.length==1">
-								<view v-for="(item,index) in shops" :key="item.id" class="swiper-item">
-									<view class="pro_list" :class="{'pro':shops.length==1 }">
+							<view class="scroll-view_H" v-if="storeList.length==1">
+								<view v-for="(item,index) in storeList"
+									@click="$jump('/subpkg/staging/order/serve/select?id='+item.customerId)"
+									:key="item.id" class="swiper-item">
+									<view class="pro_list" :class="{'pro':storeList.length==1 }">
 										<view style="display: flex;">
 											<view style="display: flex;align-items:center">
-												<!-- <view class="" v-if="item.storeImg">
+												<view class="" v-if="item.storeImg">
 													<image :src="item.storeImg">
 													</image>
-												</view> -->
-												<image src="../../../static/logo.png"></image>
+												</view>
+												<image v-else src="../../../static/logo.png"></image>
 											</view>
 											<view class="flex-colum-between" style="padding: 4rpx 0;">
 												<view class="">
-													222
+													{{item.storeName||'暂无名称'}}
 												</view>
 												<view class="acea-row row-middle"
 													style="font-size: 25rpx;color: #A5A7A7;margin-top: 14rpx;">
-													222<text style="margin: 0 4rpx;" v-if="item.businessDistrict">|
-													</text> {{item.businessDistrict||'2223'}}
+													{{item.storeType}}<text style="margin: 0 4rpx;"
+														v-if="item.businessDistrict">|
+													</text> {{item.businessDistrict}}
 												</view>
 											</view>
 										</view>
@@ -43,27 +46,30 @@
 								</view>
 							</view>
 							<swiper class="scroll-view_H" v-else
-								:next-margin="!(shops.length==1 || currentIndex == shops.length - 1) ? '100rpx' : '0rpx'"
+								:next-margin="!(storeList.length==1 || currentIndex == storeList.length - 1) ? '100rpx' : '0rpx'"
 								@change="changeIndex">
-								<swiper-item v-for="(item,index) in shops" :key="item.id" class="swiper-item">
+								<swiper-item v-for="(item,index) in storeList" :key="item.id"
+									@click="$jump('/subpkg/staging/order/serve/select?id='+item.customerId)"
+									class="swiper-item">
 									<view class="pro_list"
-										:class="{'pro':shops.length==1 || index == shops.length - 1}">
+										:class="{'pro':storeList.length==1 || index == storeList.length - 1}">
 										<view style="display: flex;">
 											<view style="display: flex;align-items:center">
-												<!-- <view class="" v-if="item.storeImg">
+												<view class="" v-if="item.storeImg">
 													<image :src="item.storeImg">
 													</image>
-												</view> -->
-												<image src="../../../static/logo.png"></image>
+												</view>
+												<image v-else src="../../../static/logo.png"></image>
 											</view>
 											<view class="flex-colum-between" style="padding: 4rpx 0;">
 												<view class="">
-													222
+													{{item.storeName}}
 												</view>
 												<view class="acea-row row-middle"
 													style="font-size: 25rpx;color: #A5A7A7;margin-top: 14rpx;">
-													222<text style="margin: 0 4rpx;" v-if="item.businessDistrict">|
-													</text> {{item.businessDistrict||'2223'}}
+													{{item.storeType}}<text style="margin: 0 4rpx;"
+														v-if="item.businessDistrict">|
+													</text> {{item.businessDistrict}}
 												</view>
 											</view>
 										</view>
@@ -74,7 +80,8 @@
 					</div>
 				</view>
 			</view>
-			<view class="boxs" v-for="(item,i) in dataList" :key="i">
+			<view class="boxs" v-for="(item,i) in dataList" :key="i"
+				@click="$jump('/subpkg/staging/order/serve/select?id='+item.customerId)">
 				<view class="box_top">
 					<view style="display: flex;">
 						<view style="display: flex;align-items:center">
@@ -86,32 +93,37 @@
 						</view>
 						<view class="flex-colum-between" style="padding: 4rpx 0;">
 							<view class="">
-								{{item.name||'223'}}
+								{{item.storeName||'暂无门店名称'}}
 							</view>
 							<view class="acea-row row-middle"
 								style="font-size: 25rpx;color: #A5A7A7;margin-top: 14rpx;">
-								{{item.storeType||'444'}}<text style="margin: 0 4rpx;" v-if="item.businessDistrict">|
-								</text> {{item.businessDistrict||'2223'}}
+								{{item.storeType||'暂无类型'}}<text style="margin: 0 4rpx;"
+									v-if="item.businessDistrict&&item.businessDistrict!=null">|
+								</text> {{item.businessDistrict}}
 							</view>
 						</view>
 					</view>
 				</view>
 				<view class="box_main">
 					<view class="">
-						<view class="price">{{item.orderCount}}</view>
+						<view class="price">{{item.waitConfirmCount}}</view>
+						<view class="title">待确认</view>
+					</view>
+					<view class="">
+						<view class="price">{{item.grabOrderCount}}</view>
 						<view class="title">待接单</view>
 					</view>
 					<view class="">
-						<view class="price">{{item.unDistributeCount}}</view>
-						<view class="title">服务中</view>
+						<view class="price">{{item.waitAccCount}}</view>
+						<view class="title">待验收</view>
 					</view>
 					<view class="">
-						<view class="price">{{item.rewardAmount}}</view>
+						<view class="price">{{item.waitPayCount}}</view>
 						<view class="title">待付款</view>
 					</view>
 				</view>
 				<view class="box_bottom">
-					<text style="color: #A5A7A7;">注册时间：2024-12-12 12:1</text>
+					<text style="color: #A5A7A7;" v-if="item.createTime">注册时间：{{item.createTime}}</text>
 					<!-- <text style="color: #F40000;">*超过30日未登录</text> -->
 				</view>
 			</view>
@@ -122,48 +134,48 @@
 
 <script>
 	import {
-		inviteCustomerRecord,
-	} from '@/api/invite.js'
+		getStoreList,
+		getCustomerRecord
+	} from '@/api/car.js'
+	import $cache from '@/utils/cache.js';
 	export default {
 		data() {
 			return {
 				query: {
 					pageSize: 10,
 					pageNum: 1,
-					keyWord: '',
-					inviterId: '1718196157889806338',
-					// isAsc: 0,
-					// orderBy: 0
+					clientId: $cache.get('ClientId'),
+					keyword: '',
 				},
 				currentIndex: 0,
-				shops: [{
-						id: 1,
-						name: 22
-					},
-					{
-						id: 1,
-						name: 22
-					}
-				],
+				storeList: [],
 				dataList: [],
 				tipShow: true
 			}
 		},
 		onLoad() {
-
+			this.getLastList()
 		},
 		methods: {
 			getList(pageNo, pageSize) {
 				this.query.pageNum = pageNo
 				this.query.pageSize = pageSize
-				inviteCustomerRecord(this.query).then(res => {
-					this.$refs.paging.completeByTotal(res.data, res.total);
+				getStoreList(this.query).then(res => {
+					this.$refs.paging.completeByTotal(res.rows, res.total);
 
+				})
+			},
+			getLastList() {
+				getCustomerRecord($cache.get('ClientId')).then(res => {
+					this.storeList = res.data.slice(0, 3)
 				})
 			},
 			changeIndex(e) {
 				this.currentIndex = e.detail.current;
 			},
+			search() {
+				this.$refs.paging.reload();
+			}
 		}
 	}
 </script>

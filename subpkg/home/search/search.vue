@@ -174,8 +174,6 @@
 					_this.isSearch = false
 					_this.showHistory = true
 				}
-
-
 			},
 
 			searchHandle(name, type) {
@@ -190,7 +188,7 @@
 				search({
 					serviceName: name,
 					address: uni.getStorageSync(`address_refreash${storage.get('ClientId')}`),
-					clientId: storage.get('ClientId')?storage.get('ClientId'):''
+					clientId: storage.get('ClientId') ? storage.get('ClientId') : ''
 				}).then(res => {
 					console.log(this.serviceName);
 					this.searchList = res.data

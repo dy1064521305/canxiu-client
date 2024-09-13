@@ -1,122 +1,181 @@
 <template>
-	<view class="page">
-		<header-search :q="query.keyWord" placeholder="请输入门店名称" @clear="onSearch('')" @search="onSearch">
+	<view class="page" :class="{onColor:isSearch&&query.keyWord!=''&&searchList.length==0}">
+		<header-search :q="query.keyWord" placeholder="请输入保修项" @clear="onSearch('','clear')" @search="onSearch"
+			@input="onSearch($event,'change')">
 		</header-search>
-		<view class="store">
-			<view class="acea-row row-between-wrapper">
-				<view class="acea-row">
-					<!-- <view class="" v-if="item.storeImg">
-													<image :src="item.storeImg">
-													</image>
-												</view> -->
-					<image src="@/static/logo.png"></image>
-					<view class="flex-colum-between" style="padding: 4rpx 0;">
-						<view class="">
-							222
+		<view v-show="!query.keyWord">
+			<view class="store">
+				<view class="acea-row row-between-wrapper">
+					<view class="acea-row">
+						<view class="" v-if="storeInfo.storeImg">
+							<image :src="storeInfo.storeImg">
+							</image>
 						</view>
-						<view class="acea-row row-middle" style="font-size: 24rpx;color: #A5A7A7">
-							222<text style="margin: 0 4rpx;">|
-							</text> 111
-						</view>
-					</view>
-				</view>
-				<view style="font-size: 24rpx;">
-					更换 <text class="iconfont icon-arrow-right" style="font-size: 32rpx;"> </text>
-				</view>
-			</view>
-			<view class="store-content acea-row row-between-wrapper">
-				<view class="store-content-left acea-row">
-					<image src="@/static/logo.png"></image>
-					<view class="flex-colum-between" style="padding: 4rpx 0;">
-						222
-						<view class="acea-row row-middle" style="font-size: 24rpx;color: #A5A7A7">
-							000
+						<image v-else src="@/static/logo.png"></image>
+						<view class="flex-colum-between" style="padding: 4rpx 0;">
+							<view class="">
+								{{storeInfo.storeName||'暂无名称'}}
+							</view>
+							<view class="acea-row row-middle" style="font-size: 24rpx;color: #A5A7A7">
+								{{storeInfo.storeType||'暂无类型'}}<text style="margin: 0 4rpx;"
+									v-if="storeInfo.businessDistrict">|
+								</text> {{storeInfo.businessDistrict}}
+							</view>
 						</view>
 					</view>
-				</view>
-				<view class="store-content-left acea-row">
-					<image src="@/static/logo.png"></image>
-					<view class="flex-colum-between" style="padding: 4rpx 0;">
-						222
-						<view class="acea-row row-middle" style="font-size: 24rpx;color: #A5A7A7">
-							000
-						</view>
+					<view style="font-size: 24rpx;" @click="$jump(-1)">
+						更换 <text class="iconfont icon-arrow-right" style="font-size: 32rpx;"> </text>
 					</view>
 				</view>
-			</view>
+				<view class="store-content">
+					<scroll-view class="scroll-view_H acea-row" scroll-x="true" @scroll="scroll" scroll-left="300">
+						<view class="left scroll-view-item_H acea-row row-middle" v-for="(item,index) in storeTypeLast"
+							@click="toPlace(item.typeId)" :key="index">
+							<image v-if="item.projectImg" :src="item.projectImg" mode=""></image>
+							<image v-else src="@/static/logo.png"></image>
+							<view class="right flex-colum-between" style="padding: 4rpx 0;">
+								{{item.serviceProductName}}
+								<view class="acea-row row-middle"
+									style="font-size: 24rpx;color: #A5A7A7;margin-top: 10rpx;">
+									{{item.serviceTypeName}}
+								</view>
+							</view>
+						</view>
+					</scroll-view>
+				</view>
 
-		</view>
-		<view class="title acea-row">
-			请选择报修项
-			<view class="title-r">（*仅显示该门店可报修项目）</view>
-		</view>
-		<view class="venue_list">
-			<view class="venue_list_img">
-				<image src="https://img.reduxingke.com/2023/06/03/2bb6b202306031018201429.png" mode=""></image>
 			</view>
-			<view class="all acea-row">
-				<scroll-view class="nav" :class="{fixed: navFix}" :style="{top: navFix ? fixedTop+'px' : '0'}" scroll-y>
-					<view v-for="(item, index) in typelist" :key="index" class="nav-item"
-						:class="{on: navIndex === index}" @click="scrollTo(index)">
-						<text v-if="typelist.length>0"> {{item.title}}</text>
-					</view>
-				</scroll-view>
-				<view class="right">
-					<view class="content">
-						<view v-for="(item,index) in category" :key="index"
-							:style="category.length == index + 1 ? lastConStyle : ''">
-							<view class="items acea-row row-between-wrapper"
-								v-for="(i) in [1,2,3,4,5,6,7,8,10,1,2,3,4,5,6,7,8,101,2,3,4,5,6,7,8,10]">
-								<view>疏通3M内</view>
-								<!-- <text class="iconfont icon-yuanxingweixuanzhong"></text> -->
-								<text class="iconfont icon-selectfill" style="font-size: 36rpx;"></text>
+			<view class="title acea-row">
+				请选择报修项
+				<view class="title-r">（*仅显示该门店可报修项目）</view>
+			</view>
+			<view class="venue_list">
+				<view class="venue_list_img">
+					<image src="https://img.reduxingke.com/2023/06/03/2bb6b202306031018201429.png" mode=""></image>
+				</view>
+				<view class="all acea-row">
+					<scroll-view class="nav" :class="{fixed: navFix}" :style="{top: navFix ? fixedTop+'px' : '0'}"
+						scroll-y>
+						<view v-for="(item, index) in typelist" :key="index" class="nav-item"
+							:class="{on: navIndex === index}" @click="scrollTo(index)">
+							<text v-if="typelist.length>0"> {{item.typeName}}</text>
+						</view>
+					</scroll-view>
+					<view class="right">
+						<view class="content">
+							<view v-for="(item,index) in typelist" :key="index" class=""
+								:style="typelist.length == index + 1 ? lastConStyle : ''">
+								<view class="contentItems remen">
+									{{item.typeName}}
+								</view>
+								<view class="contentItem2">
+									<view v-for=" (i,n) in item.children" :key="n">
+										<text
+											style="margin: 20rpx 0;font-weight: bold; font-size: 28rpx;">{{i.typeName}}</text>
+										<view class="items acea-row row-between-wrapper" v-for="(m,c) in i.children"
+											:key="c" @click="onchange(m,item.typeId,i.typeId)">
+											<view>{{m.typeName}}</view>
+											<text v-if="m.checkShow" class="iconfont icon-selectfill"
+												style="font-size: 36rpx;"></text>
+											<text v-else class="iconfont icon-yuanxingweixuanzhong"></text>
+										</view>
+									</view>
+								</view>
+
 							</view>
 
-							<!-- 	<view class="remen">
-								222
-							</view> -->
 							<!-- <view class="contents" v-for="(item1,index1) in item.list" :key="index1"
-								@click="$jump(item1.url+'&guide_id='+item1.id)">
-								<view class="contents_bgimg">
-									<image :src="item1.bg_img" mode="scaleToFill"></image>
-								</view>
-								<view class="zhuanti acea-row ">
-									<image class="zhuanti_image acea-row" :src="item1.img" mode="scaleToFill">
-									</image>
-									<view class="zhuanti_title">
-										{{item1.title}}
+									@click="$jump(item1.url+'&guide_id='+item1.id)">
+									<view class="contents_bgimg">
+										<image :src="item1.bg_img" mode="scaleToFill"></image>
+									</view>
+									<view class="zhuanti acea-row ">
+										<image class="zhuanti_image acea-row" :src="item1.img" mode="scaleToFill">
+										</image>
+										<view class="zhuanti_title">
+											{{item1.title}}
+										</view>
+									</view>
+									<view class=" xianshi  acea-row row-between-wrapper">
+										<view>{{item1.subtitle}}</view>
+										<text class="gengduo acea-row row-center">更多<text
+												class="iconfont icon-iconmore-copy"></text></text>
+									</view>
+			
+									<view class="venues_number acea-row ">
+										<view class="venues_item" v-for="(items,indexs) in item1.item" :key="indexs">
+											<image :src="items.venue_img" mode=""></image>
+											<text>{{items.venue_title}}</text>
+										</view>
 									</view>
 								</view>
-								<view class=" xianshi  acea-row row-between-wrapper">
-									<view>{{item1.subtitle}}</view>
-									<text class="gengduo acea-row row-center">更多<text
-											class="iconfont icon-iconmore-copy"></text></text>
-								</view>
-
-								<view class="venues_number acea-row ">
-									<view class="venues_item" v-for="(items,indexs) in item1.item" :key="indexs">
-										<image :src="items.venue_img" mode=""></image>
-										<text>{{items.venue_title}}</text>
-									</view>
-								</view>
-							</view> -->
+							</view>
+							<empty-page v-if="!category.length" msg="暂无数据"></empty-page> -->
 						</view>
-						<empty-page v-if="!category.length" msg="暂无数据"></empty-page>
 					</view>
 				</view>
 			</view>
+
+		</view>
+		<view v-show="query.keyWord">
+			<view v-if="isSearch&&searchList.length!=0" style="padding: 0 20rpx 150rpx;">
+				<view class="page-list" v-for="(item,index) in searchList" :key="index">
+					<view class="page-list-item acea-row row-between-wrapper">
+						<view class="page-list-item-left acea-row">
+							<view class="image">
+								<image v-if="item.projectImg==null||item.projectImg==''||item.projectImg=='null'"
+									src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/02/23d8137225a440f3a4e19e43d527cc32.png">
+								</image>
+								<image v-else :src="item.projectImg" mode=""></image>
+							</view>
+							<view class="page-list-item-left-name flex-colum">
+								<view class="acea-row row-middle">
+									<view class="name line1">
+										{{item.projectName}}
+									</view>
+								</view>
+								<text style="color: red;"> <text
+										style="font-size: 20rpx;">￥</text>{{item.discountPrice}}</text>
+							</view>
+						</view>
+						<view class="page-list-item-right acea-row row-middle" @click="toSelect(item.typeId,index)">
+							<image v-if="item.checkShow"
+								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/26/0533ff643a9b40acaa0fb32980d58842.png"
+								mode=""></image>
+							<image v-else
+								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/26/73f7603eb003465fa5198a7fb04cd22e.png"
+								mode=""></image>
+						</view>
+
+					</view>
+				</view>
+			</view>
+			<!-- 	<view v-if="serviceName==''&&searchList.length==0" class="">
+
+		</view> -->
+			<u-empty marginTop='30' text='没有找到哦，换个关键词试一下吧' v-if="isSearch&&query.keyWord!=''&&searchList.length==0"
+				icon="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/03/04/cb8a19a85cd14c86ad85b72b97ea2d1e.png">
+			</u-empty>
 		</view>
 		<view class="bottom">
-			<view class="btn">确认入驻</view>
+			<view class="btn" @click="sureRuzhu()">确认入驻</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import $cache from '@/utils/cache.js';
 	import HeaderSearch from '@/components/header/search.vue'
 	import {
 		rpxToPx
 	} from '@/utils/index.js'
+	import {
+		getCustomerInfo,
+		getProjectRecord,
+		getStoreList,
+		getListServiceQuery
+	} from '@/api/car.js'
+	import * as service from '@/api/service.js'
 	export default {
 		components: {
 			HeaderSearch,
@@ -148,21 +207,32 @@
 				}],
 				scrollTop: 0,
 				fixedTop: 44,
-				lastConStyle: ''
+				lastConStyle: '',
+				customerId: "",
+				storeInfo: {},
+				storeTypeLast: [],
+				id: $cache.get('ClientId') || '',
+				selectedList: [],
+				searchList: [],
+				isSearch: false,
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			if (options && options.id) {
+				this.customerId = options.id || ''
+			}
+
+			this.getStore()
+		},
+		onShow() {
 			let {
 				safeAreaInsets,
 				windowHeight
 			} = uni.getSystemInfoSync()
 			let h = rpxToPx(88);
-			this.fixedTop = h + safeAreaInsets.top + 12;
-
-			let contentH = windowHeight - this.fixedTop;
+			this.fixedTop = h + safeAreaInsets.top + 10;
+			let contentH = windowHeight - this.fixedTop - 88;
 			this.lastConStyle = 'min-height: ' + contentH + 'px';
-			console.log(h, "this.h  ");
-			console.log(safeAreaInsets.top, "this.lastConStyle ");
 			this.getList()
 		},
 		onPageScroll(e) {
@@ -173,6 +243,7 @@
 			if (top >= this.offsetHList[0]) {
 				this.navFix = true
 			} else {
+
 				this.navFix = false
 			}
 			if (this.offsetHList.length < 2) return;
@@ -183,34 +254,290 @@
 			let arr = [...this.offsetHList, top].sort((a, b) => {
 				return a - b;
 			});
+
 			this.navIndex = arr.indexOf(top) - 1;
 		},
 		methods: {
-			getList() {
-				setTimeout(() => {
-					let navH = 40;
-					const query = uni.createSelectorQuery().in(this);
-					query.selectAll('.items').boundingClientRect(data => {
-						this.offsetHList = data.map(item => {
-							return item.top + this.scrollTop - this.fixedTop
-						})
-						console.log(this.offsetHList, "this.offsetHList")
+			getStore() {
+				getCustomerInfo(this.customerId).then(res => {
+					this.storeInfo = res.data
+				})
+				getProjectRecord(this.customerId, {
+					clientId: this.id
+				}).then(res => {
+					this.storeTypeLast = res.data
+				})
 
-						// if (this.option) {
-						// 	for (let i = 0, count = category.length; i < count; i++) {
-						// 		let list = category[i]?.list;
-						// 		if (list) {
-						// 			for (let j = 0; j < list.length; j++) {
-						// 				if (list[j].id == this.option) {
-						// 					this.scrollTo(i);
-						// 					return;
-						// 				}
-						// 			}
-						// 		}
-						// 	}
-						// }
-					}).exec();
-				}, 300)
+				// getStoreList({
+				// 	pageSize: 10,
+				// 	pageNum: 1,
+				// 	clientId: this.id,
+				// 	keyword: '',
+				// }).then(res => {
+				// 	this.storeTypeLast = res.rows
+
+				// })
+
+			},
+			getList() {
+				service.getService({
+					name: this.query.keyWord,
+					clientId: this.id,
+				}).then(res => {
+					this.typelist = res.data.filter((item) => {
+						if (item.children && item.children.length) {
+							return item.children = item.children.filter(i => {
+								if (i.children && i.children.length) {
+									return i.children = i.children.filter(m => {
+										return m.serviceProjectVoList && m
+											.serviceProjectVoList.length
+									})
+								}
+							})
+						}
+					})
+					this.typelist = this.typelist.filter((item) => {
+						if (item.children && item.children.length) {
+							return item.children = item.children.filter(i => {
+								return i.children && i.children.length
+							})
+						}
+					})
+
+					this.typelist = this.typelist.filter((item) => {
+						return item.children && item.children.length
+					})
+					uni.$once('selectHideList', (list) => {
+						this.selectedList = [...list]
+						console.log(this.selectedList, "this.selectedList----------- ");
+					})
+					this.typelist.forEach((item) => {
+						if (item.children && item.children.length) {
+							item.children.forEach(i => {
+								if (i.children && i.children.length) {
+									i.children.forEach(m => {
+										m.checkShow = false
+										if (this.selectedList.length) {
+											this.selectedList.forEach(k => {
+												if (k.typeId == m.typeId) {
+													m.checkShow = k.checkShow
+												}
+											})
+										}
+									})
+
+								}
+
+							})
+
+						}
+					})
+					setTimeout(() => {
+						let navH = 40;
+						const query = uni.createSelectorQuery().in(this);
+						query.selectAll('.remen').boundingClientRect(data => {
+							console.log(data, "@22");
+							this.offsetHList = data.map(item => {
+								return item.top + this.scrollTop - this.fixedTop
+							})
+						}).exec();
+					}, 300)
+				})
+			},
+			// onSearch(e) {
+			// 	this.getList();
+			// },
+			onSearch(e, type) {
+				let _this = this;
+				_this.query.keyWord = e;
+				_this.isSearch = true
+				console.log(type);
+				if (_this.query.keyWord != '') {
+					if (type == 'clear') {
+						console.log(1111);
+						_this.searchList = []
+						_this.query.keyWord = ''
+						_this.isSearch = false
+						//clearTimeout(this.timer)
+					} else if (type == 'change') {
+						// 清除 timer 对应的延时器
+						clearTimeout(_this.timer)
+						// 重新启动一个延时器，并把 timerId 赋值给 this.timer
+						_this.timer = setTimeout(() => {
+							// 如果 500 毫秒内，没有触发新的输入事件，则为搜索关键词赋值
+							let name = _this.query.keyWord
+							if (name == '') {
+								_this.searchList = []
+							} else {
+								_this.searchHandle()
+							}
+
+						}, 400)
+						console.log(_this);
+					}
+				} else {
+					_this.isSearch = false
+				}
+			},
+			searchHandle() {
+				this.isSearch = true
+				this.searchList = []
+				getListServiceQuery({
+					name: this.query.keyWord,
+					clientId: this.id,
+				}).then(res => {
+					this.searchList = res.data
+					if (this.selectedList.length) {
+						this.selectedList.forEach(item => {
+							this.searchList.forEach(it => {
+								if (item.typeId == it.typeId) {
+									it.checkShow = true
+								} else {
+									it.checkShow = false
+								}
+							})
+						})
+					}
+				})
+			},
+			toSelect(id, index) {
+				if (this.selectedList.length) {
+					let bool = this.selectedList.findIndex(it => {
+						return it.typeId == id
+					})
+					console.log(bool, '===');
+					if (bool != -1) {
+						console.log('打印1');
+						this.searchList[index].checkShow = false
+						this.$set(this.searchList, index, {
+							...this.searchList[index]
+						})
+						this.selectedList[bool].checkShow = false
+						this.selectedList.splice(bool, 1)
+					} else {
+						console.log('打印2');
+						this.typelist.forEach((item) => {
+							if (item.children && item.children.length) {
+								item.children.forEach(i => {
+									if (i.children && i.children.length) {
+										i.children.forEach((m, s) => {
+											if (m.typeId == id) {
+												m.checkShow = true
+												this.searchList[index].checkShow = true
+												this.$set(this.searchList, index, {
+													...this.searchList[index]
+												})
+												this.selectedList.push(m)
+											}
+										})
+									}
+
+								})
+
+							}
+						})
+					}
+				} else {
+					console.log('打印3');
+					this.typelist.forEach((item) => {
+						if (item.children && item.children.length) {
+							item.children.forEach(i => {
+								if (i.children && i.children.length) {
+									i.children.forEach((m, s) => {
+										if (m.typeId == id) {
+											m.checkShow = true
+											this.searchList[index].checkShow = true
+											this.$set(this.searchList, index, {
+												...this.searchList[index]
+											})
+											this.selectedList.push(m)
+										}
+
+									})
+								}
+
+							})
+
+						}
+					})
+				}
+				console.log(this.searchList, "this.searchListsearchListsearchList");
+				console.log(this.selectedList, "this.selectedList");
+
+			},
+			onchange(item, item1, item2) {
+				this.typelist.forEach((it, its) => {
+					if (it.typeId && it.typeId == item1) {
+						it.children.forEach((m, ms) => {
+							if (m.typeId && m.typeId == item2) {
+								m.children.forEach((n, ns) => {
+									if (n.typeId && n.typeId == item.typeId) {
+										this.$set(this.typelist[its].children[ms].children, ns, {
+											...m.children[ns],
+											checkShow: !n.checkShow
+										});
+										console.log(n.checkShow, "checkShowcheckShow");
+										if (!n.checkShow) {
+											let data = {
+												...m.children[ns],
+												checkShow: true
+											}
+											this.selectedList.push(data)
+										} else {
+											let data = {
+												...m.children[ns],
+												checkShow: false
+											}
+											this.selectedList.splice(data, 1)
+										}
+
+										console.log(this.selectedList, "this.selectedList1234");
+									}
+
+								})
+							}
+						})
+					}
+				})
+			},
+			// 确定入驻
+			sureRuzhu() {
+				if (this.selectedList.length <= 0) return this.$toast('选择服务项')
+				this.$jump('/subpkg/staging/order/serve/repair?customerId=' + this.customerId)
+				setTimeout(() => {
+					uni.$emit('selectList', this.selectedList)
+				}, 500)
+			},
+			// 左边滑动type
+			scrollTo(index) {
+				setTimeout(() => {
+					this.navIndex = index;
+				}, 500)
+				uni.pageScrollTo({
+					scrollTop: this.offsetHList[index] + 2
+				})
+			},
+			// 选择最近操作服务项
+			toPlace(id) {
+				this.typelist.forEach((item) => {
+					if (item.children && item.children.length) {
+						item.children.forEach(i => {
+							if (i.children && i.children.length) {
+								i.children.forEach(m => {
+									if (m.typeId == id) {
+										m.checkShow = true
+										this.selectedList = []
+										this.selectedList.push(m)
+									}
+								})
+
+							}
+
+						})
+
+					}
+				})
+				this.sureRuzhu()
 			}
 		}
 	}
@@ -220,6 +547,70 @@
 	.page {
 		height: 100%;
 		background-color: #f9f9f9;
+
+		&.onColor {
+			min-height: 100vh;
+			background-color: #fff;
+		}
+
+		&-list {
+			background-color: #fff;
+			padding: 24rpx 30rpx 24rpx 22rpx;
+			margin: 20rpx;
+			box-sizing: border-box;
+			border-radius: 18rpx;
+
+			&-item {
+				&-left {
+					.image {
+						width: 80rpx;
+						height: 80rpx;
+
+						image {
+							width: 100%;
+							height: 100%;
+							border-radius: 10rpx;
+						}
+					}
+
+					&-name {
+						font-size: 24rpx;
+						color: #999999;
+						margin-left: 20rpx;
+						justify-content: space-between;
+						padding: 4rpx 0;
+
+						view {
+							font-size: 28rpx;
+							color: #212121;
+
+							.name {
+								max-width: 380rpx;
+							}
+
+							.color {
+								display: inline-block;
+								background: $pageColor;
+								font-size: 20rpx;
+								padding: 2rpx 8rpx;
+								color: #fff;
+								border-radius: 6rpx;
+								margin-left: 10rpx;
+							}
+						}
+					}
+				}
+
+				&-right {
+					image {
+						width: 32rpx;
+						height: 32rpx;
+					}
+				}
+
+
+			}
+		}
 
 		.store {
 			margin: 20rpx;
@@ -236,12 +627,33 @@
 
 			&-content {
 				margin-top: 20rpx;
+				// height: 144rpx;
 
-				&-left {
-					width: 45%;
+				.scroll-view_H {
+					white-space: nowrap;
+					width: 100%;
+				}
+
+				.scroll-view-item_H {
+					display: inline-block;
+					width: 100%;
+					padding: 28rpx 14rpx;
+					box-sizing: border-box;
+				}
+
+				.left {
+					// width: 46%;
+					width: 308rpx;
 					padding: 28rpx 14rpx;
 					background: rgba(243, 178, 62, 0.08);
 					border-radius: 8rpx;
+					margin-right: 28rpx;
+					box-sizing: border-box;
+
+					.right {
+						display: inherit;
+						padding: 4rpx 0;
+					}
 				}
 			}
 		}
@@ -289,13 +701,12 @@
 			}
 
 			.all {
-				// height: 1230rpx;
 				padding: 0rpx 20rpx 0rpx 190rpx;
 				position: relative;
 				box-sizing: border-box;
 
 				.nav {
-					width: 170rpx;
+					width: 190rpx;
 					height: 100%;
 					background: #fff;
 					margin-right: 26rpx;
@@ -303,6 +714,11 @@
 					border-radius: 0 20rpx 0 0;
 					top: 0;
 					left: 0;
+					padding-bottom: 250rpx;
+					/* #ifdef APP */
+					padding-bottom: 350rpx;
+					/* #endif */
+					box-sizing: border-box;
 
 					&.fixed {
 						position: fixed;
@@ -325,11 +741,10 @@
 				}
 
 				.remen {
-					margin-bottom: 15rpx;
-					font-size: 30rpx;
+					margin-bottom: 20rpx;
+					font-size: 28rpx;
 					font-family: PingFangSC-Semibold, PingFang SC;
-					font-weight: 600;
-					color: #333333;
+					font-weight: bold;
 				}
 
 				.renmenTop {
@@ -355,6 +770,8 @@
 					padding: 20rpx;
 					border-radius: 14rpx;
 					background-color: #fff;
+					margin-left: 20rpx;
+					color: #666;
 
 					.remenActivy {
 						width: 100%;
@@ -364,7 +781,7 @@
 							font-size: 32rpx;
 							font-family: PingFangSC-Semibold, PingFang SC;
 							font-weight: 600;
-							color: #333333;
+
 						}
 
 						.renmenComtent {
@@ -386,7 +803,7 @@
 
 								text {
 									font-size: 24rpx;
-									color: #333333;
+									// color: #333333;
 								}
 							}
 
@@ -401,9 +818,9 @@
 
 						// margin-top: -24rpx;
 						.items {
-							padding: 16rpx;
-							color: #212121;
-							font-size: 28rpx;
+							padding: 18rpx 16rpx;
+
+							font-size: 26rpx;
 
 							text {
 								color: #F3B23E;
@@ -413,10 +830,15 @@
 
 						.remen {
 							padding: 14rpx 0 0;
-							font-size: 32rpx;
+							font-size: 30rpx;
 							font-family: PingFangSC-Semibold, PingFang SC;
-							font-weight: 600;
-							color: #333333;
+							font-weight: bold;
+						}
+
+						.contentItem2 {
+							padding: 20rpx;
+							background-color: #f8f8f8;
+							border-radius: 20rpx;
 						}
 
 						.contents {
@@ -556,7 +978,7 @@
 
 
 			.btn {
-				background: #F3B23E;
+				background: $pageColor;
 				padding: 20rpx 0;
 				text-align: center;
 				font-family: PingFangSC, PingFang SC;

@@ -22,28 +22,28 @@
 						<image
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/8e4a60068dfd46f0954fa7b1eeb8ea44.png"
 							mode=""></image>
-						<text>李店长｜139****0961</text>
+						<text>{{info.orderPerson}}｜{{info.orderPersonPhone}}</text>
 					</view>
 					<view class="page-all-con-mess-name acea-row">
 						<image
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/34e349ea77104880b7c917b0ec5d86d8.png"
 							mode=""></image>
 						<view>
-							<view>门店名称</view>
-							<text style="font-size: 24rpx;">浙江省杭州市拱墅区东新路543路</text>
+							<view>{{info.customerName}}</view>
+							<text style="font-size: 24rpx;">{{info.addressDetailed}}</text>
 						</view>
 					</view>
 					<view class="page-all-con-mess-name acea-row row-middle">
 						<image
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/e8245f10edc24e888686333e943e7acd.png"
 							mode=""></image>
-						<text>期望上门时间：2024-12-12 12：12（周日）</text>
+						<text>期望上门时间：{{info.expectTime}}</text>
 					</view>
 				</view>
 			</view>
 		</view>
 		<!-- 订单指派师傅 -->
-		<view class="page-all">
+		<view class="page-all" v-if="info.appointWorkers">
 			<view class="page-all-overImg">
 				<view class="acea-row row-bottom" style="font-size: 32rpx; margin-bottom: 10rpx;">
 					<image style="width: 50rpx; height: 50rpx; margin-right: 10rpx;"
@@ -52,8 +52,16 @@
 				</view>
 				<view class="page-all-overImg-type">如指派师傅超30分钟未响应，订单将由其他师傅接单服务</view>
 				<view class="page-all-overImg-img acea-row" style="padding: 24rpx 0;">
-					<view class="page-all-overImg-img-items" v-for="item in [1,2,3,4]">
+					<!-- <view class="page-all-overImg-img-items" v-for="(item) in info.appointWorkers" :key="item.id">
 						{{item}}
+					</view> -->
+					<view class="flex-colum-center" v-for="(item) in info.appointWorkers" :key="item.id"
+						style="width: 20%;margin: 20rpx 0;">
+						<image v-if="item.avatarUrl" :src="item.avatarUrl" mode=""></image>
+						<image v-else
+							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
+							mode=""></image>
+						<text>{{item.userName}}</text>
 					</view>
 				</view>
 			</view>
@@ -105,30 +113,32 @@
 			</view> -->
 		</view>
 		<view class="page-all">
-			<view class="page-all-pro">
-				<view class="page-all-pro-name acea-row  row-between-wrapper">
-					<text>服务信息</text>
-					<view class="page-all-pro-name-icon">有新方案待审核</view>
-				</view>
+			<view class="page-all-name acea-row  row-between-wrapper">
+				<text>服务信息</text>
+				<!-- <view class="page-all-pro-name-icon">有新方案待审核</view> -->
+			</view>
+			<view class="page-all-pro" v-for="(item,index) in info.projectDataVoList" :key="item.orderId">
 				<view class="page-all-pro-list acea-row">
 					<view class="page-all-pro-list-img">
-						<image src="" mode=""></image>
+						<image :src="item.projectImg" mode=""></image>
 					</view>
 					<view class="page-all-pro-list-right flex-colum-between">
 						<view class="page-all-pro-list-righ-title acea-row row-between-wrapper">
-							<view style="color: #212121; font-size: 32rpx;">打胶</view>
-							<text><text style="font-size: 22rpx;">¥</text> 151</text>
+							<view style="color: #212121; font-size: 32rpx;">{{item.typeName}}</view>
+							<text><text style="font-size: 22rpx;">¥</text> {{item.orderPrice}}</text>
 						</view>
 						<view class="page-all-pro-list-righ-title acea-row row-between-wrapper">
-							<text>装修维修/打胶/打胶</text>
-							<text><text style="font-size: 22rpx;">¥</text>151</text>
+							<text>{{item.workerType}}</text>
+							<text><text style="font-size: 22rpx;">x</text>{{item.projectNumber}}</text>
+						</view>
+						<view class="acea-row row-right"><text><text style="font-size: 22rpx;">¥</text> 151</text>
 						</view>
 					</view>
-					<view class="page-all-pro-list-mark">
-						订单备注
-						<view class="page-all-pro-list-mark-m">
-							周TE2408250015门店这种缝隙没有玻璃胶，需要打玻璃胶，避免蟑螂和异味
-						</view>
+				</view>
+				<view class="page-all-pro-list-mark" v-if="item.remark">
+					订单备注
+					<view class="page-all-pro-list-mark-m">
+						{{item.remark}}
 					</view>
 				</view>
 				<view class="page-all-pro-price">
@@ -146,48 +156,48 @@
 				<view class="page-all-pro-priceMxi">
 					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
 						服务起步价
-						<view> <text style="font-size: 22rpx;">¥</text>90</view>
+						<view> <text style="font-size: 22rpx;">¥</text>{{item.startingFree}}</view>
 					</view>
 					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
 						维修服务费
-						<view> <text style="font-size: 22rpx;">¥</text>90</view>
+						<view> <text style="font-size: 22rpx;">¥</text>{{item.preferentialPrice}}</view>
 					</view>
 					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper"
 						@click="$jump('/subpkg/staging/order/other/cailiao')">
 						材料费
 						<view class="acea-row row-middle" style="margin-right: -8rpx;">
-							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> 90
-							<text style="margin-bottom: 4rpx;">｜</text> 共3件<u-icon name="arrow-right" color="#959595"
-								size="13"></u-icon>
+							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{item.materialPrice}}
+							<text style="margin-bottom: 4rpx;">｜</text> 共{{item.startingFree}}件<u-icon
+								name="arrow-right" color="#959595" size="13"></u-icon>
 						</view>
 					</view>
 					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper"
 						@click="$jump('/subpkg/staging/order/other/peiliao')">
 						配件费
 						<view class="acea-row row-middle" style="margin-right: -8rpx;">
-							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> 90
-							<text style="margin-bottom: 4rpx;">｜</text> 共3件<u-icon name="arrow-right" color="#959595"
-								size="13"></u-icon>
+							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{item.startingFree}}
+							<text style="margin-bottom: 4rpx;">｜</text> 共{{item.startingFree}}件<u-icon
+								name="arrow-right" color="#959595" size="13"></u-icon>
 						</view>
 					</view>
 					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper"
 						@click="$jump('/subpkg/staging/order/other/otherPrice')">
 						其他费用
 						<view class=" acea-row row-middle" style="margin-right: -8rpx;">
-							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> 90
-							<text style="margin-bottom: 4rpx;">｜</text> 共3件<u-icon name="arrow-right" color="#959595"
-								size="13"></u-icon>
+							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{item.startingFree}}
+							<text style="margin-bottom: 4rpx;">｜</text> 共{{item.startingFree}}件<u-icon
+								name="arrow-right" color="#959595" size="13"></u-icon>
 						</view>
 					</view>
 					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
 						优惠券
-						<view> -<text style="font-size: 22rpx;">¥</text>90</view>
+						<view> -<text style="font-size: 22rpx;">¥</text>{{item.startingFree}}</view>
 					</view>
 					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
 						品牌折扣
 						<view class="acea-row row-middle" style="margin-right: -8rpx;">
-							-<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> 90
-							<text style="margin-bottom: 4rpx;">｜</text>折扣:10%
+							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{item.startingFree}}
+							<text style="margin-bottom: 4rpx;">｜</text>折扣:{{item.startingFree}}%
 						</view>
 					</view>
 				</view>
@@ -315,23 +325,23 @@
 				<view class="page-all-orderMess-top">订单信息</view>
 				<view class="page-all-orderMess-center acea-row row-between-wrapper">
 					订单编号
-					<view>WX44030624082401 丨 复制</view>
+					<view @click="$copy(info.orderNumber)">{{info.orderNumber}} 丨 复制</view>
 				</view>
 				<view class="page-all-orderMess-center acea-row row-between-wrapper">
 					下单时间
-					<view>2023/12/12 12:12:12</view>
+					<view>{{info.orderTime}}</view>
 				</view>
 				<view class="page-all-orderMess-center acea-row row-between-wrapper">
 					期望上门时间
-					<view>2023/12/12 12:12:12</view>
+					<view>{{info.expectTime}}</view>
 				</view>
 				<view class="page-all-orderMess-center acea-row row-between-wrapper">
 					是否加急单
-					<view>不加急</view>
+					<view>{{info.isUrgent==0?'不加急':'加急'}}</view>
 				</view>
 				<view class="page-all-orderMess-center acea-row row-between-wrapper">
 					服务类型
-					<view>维修服务</view>
+					<view>{{info.orderType=='1'?'维保':'维修'}}服务</view>
 				</view>
 			</view>
 		</view>
@@ -350,6 +360,9 @@
 	import
 	Table
 	from '@/components/table.vue'
+	import {
+		getOrderIdDetail
+	} from '@/api/car.js'
 	export default {
 		components: {
 			Table
@@ -359,31 +372,13 @@
 				value: false,
 				peopleList: [{
 						id: 1,
-						label: "区域运营人",
+						label: "品牌合伙人",
 						name: "周维",
 						phone: "15705622318",
 					},
 					{
 						id: 1,
-						label: "品牌签约人",
-						name: "周维",
-						phone: "15705622318",
-					},
-					{
-						id: 1,
-						label: "品牌业务负责人",
-						name: "周维",
-						phone: "15705622318",
-					},
-					{
-						id: 1,
-						label: "维修班长",
-						name: "周维",
-						phone: "15705622318",
-					},
-					{
-						id: 1,
-						label: "品牌负责人",
+						label: "下单人",
 						name: "周维",
 						phone: "15705622318",
 					}
@@ -413,7 +408,22 @@
 
 					]
 				},
+				orderId: '1834549231493259266',
+				info: {}
 			}
+		},
+		onLoad(options) {
+			if (options && options.orderId) {
+				this.orderId = options.orderId
+			}
+			this.getInfo()
+		},
+		methods: {
+			getInfo() {
+				getOrderIdDetail(this.orderId).then(res => {
+					this.info = res.data
+				})
+			},
 		}
 	}
 </script>
@@ -552,23 +562,25 @@
 				}
 			}
 
+			&-name {
+				font-size: 32rpx;
+				padding: 24rpx 0 14rpx 24rpx;
+
+				// &-icon {
+				// 	height: 40rpx;
+				// 	background: #F3B23E;
+				// 	border-radius: 24rpx 0rpx 24rpx 0rpx;
+				// 	font-size: 20rpx;
+				// 	color: #FFFFFF;
+				// 	line-height: 40rpx;
+				// 	padding: 0 30rpx;
+				// }
+			}
+
 			&-pro {
 				padding: 24rpx;
 
-				&-name {
-					font-size: 32rpx;
-					margin-bottom: 30rpx;
 
-					&-icon {
-						height: 40rpx;
-						background: #F3B23E;
-						border-radius: 24rpx 0rpx 24rpx 0rpx;
-						font-size: 20rpx;
-						color: #FFFFFF;
-						line-height: 40rpx;
-						padding: 0 30rpx;
-					}
-				}
 
 				&-list {
 					margin-bottom: 20rpx;
@@ -590,7 +602,6 @@
 					&-right {
 						color: #999999;
 						flex: 1;
-						padding: 6rpx 0 10rpx 0;
 
 						&-title {
 							font-size: 28rpx;
@@ -647,6 +658,7 @@
 				&-name {
 					font-size: 32rpx;
 					padding-top: 26rpx;
+					padding-bottom: 10rpx;
 				}
 
 				&-people {
@@ -673,7 +685,7 @@
 					}
 
 					&-con {
-						padding-bottom: 20rpx;
+						padding-bottom: 30rpx;
 
 						&-left {
 							view {

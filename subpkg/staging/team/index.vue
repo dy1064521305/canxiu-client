@@ -501,6 +501,7 @@
 			},
 			closeWorkerAccount(e) {
 				this.workerAccountShow = false
+
 			},
 			toList(index) {
 				if (index != 3) return

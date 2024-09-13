@@ -1,11 +1,15 @@
 <template>
 	<view class="page">
+
 		<z-paging ref="paging" v-model="dataList" @query="getList" @onRefresh="refresh">
 			<view slot='top'>
+				<u-navbar safeAreaInsetTop placeholder @leftClick='leftClick' title="选择师傅">
+
+				</u-navbar>
 				<view class="header">
 					<view class="input">
-						<u-search :showAction="false" placeholder="请输入师傅姓名或手机号" @clear='queryList'
-							v-model="where.searchValue" @search="queryList">
+						<u-search :showAction="false" placeholder="请输入师傅姓名或手机号" @clear='onchange'
+							v-model="where.keyword" @search="onchange">
 						</u-search>
 					</view>
 					<view class="header-type">
@@ -36,73 +40,76 @@
 					<view class="invite_list-item-top acea-row row-between-wrapper">
 						<view class="invite_list-item-top-left acea-row  ">
 							<view class="image">
-								<image v-if="item.brandLogo==null||item.brandLogo==''||item.brandLogo=='null'"
+								<image v-if="item.avatarUrl==null||item.avatarUrl==''||item.avatarUrl=='null'"
 									src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/02/23d8137225a440f3a4e19e43d527cc32.png"
 									mode=""></image>
-								<image v-else="item.brandLogo" :src="item.brandLogo" mode=""></image>
-								<view class="mark acea-row row-center-wrapper">
+								<image v-else :src="item.avatarUrl" mode=""></image>
+								<view class="mark acea-row row-center-wrapper" v-if="item.isOnline=='N'">
 									离线
 								</view>
 							</view>
 
 							<view class="invite_list-item-top-left-title flex-colum-between">
 								<view class="invite_list-item-top-left-title-name  acea-row row-middle">
-									<view class="view line1">{{item.brandName||'暂无名称'}}</view>
-									<!-- 	<view class="ping acea-row row-center row-middle" v-if="item.isGroup=='y'">集团品牌
-									</view> -->
+									<view class="view line1">{{item.workerName||'暂无名称'}}</view>
 									<view class="ping">
 										<image
 											src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/219172487b87402eb433e4f022f1f196.png"
 											mode=""></image>
 									</view>
 								</view>
-								<text>{{item.region||'暂无区域信息'}}</text>
-								<text>工种信息：张</text>
+								<text>{{item.serviceAddress||'暂无'}}</text>
+								<text style="max-width:400rpx; display:block;"
+									class="line1">工种信息：{{item.workerTypes||'暂无'}}</text>
 							</view>
 						</view>
-						<view class="invite_list-item-top-right acea-row">
-							<!-- <text class="iconfont icon-yuanxingweixuanzhong"></text> -->
-							<text class="iconfont icon-selectfill" style="font-size: 36rpx;"></text>
+						<view class="invite_list-item-top-right acea-row row-middle">
+							<view class="yuan acea-row" :class="{on:item.isOnline=='Y'}">
+							</view>{{item.isOnline=='Y'?'在线':'离线'}}
+
 						</view>
 					</view>
 					<view class="invite_list-item-middle acea-row row-between-wrapper">
 						<view class="invite_list-item-middle-item flex-colum-center">
 							<view class="invite_list-item-middle-item-num">
-								{{item.orderNum||0}}
+								{{item.orderCount||0}}
 							</view>
-							<text>订单数</text>
+							<text>服务次数</text>
 						</view>
 						<view class="invite_list-item-middle-item flex-colum-center">
 							<view class="invite_list-item-middle-item-num">
-								{{item.totalCost||0}}
+								{{item.repairCount||0}}
 							</view>
-							<text>总成本</text>
+							<text>返修次数</text>
 						</view>
 						<view class="invite_list-item-middle-item flex-colum-center">
 							<view class="invite_list-item-middle-item-num">
-								{{item.totalProfit||0}}
+								{{item.technicalScore||0}}
 							</view>
-							<text>总利润</text>
+							<text>技能评分</text>
 						</view>
 						<view class="invite_list-item-middle-item flex-colum-center">
 							<view class="invite_list-item-middle-item-num">
-								{{item.averageProfit||0}}%
+								{{item.attitudeScore||0}}
 							</view>
-							<text>平均利润率</text>
+							<text>态度评分</text>
 						</view>
 					</view>
 
-					<view class="invite_list-item-time acea-row">{{item.relationTime}}加入
-						<view class="invite_list-item-time-btn acea-row">
-							<view @click="showPhoneHandle(item.personPhone)">联系ta</view>
-							<view>服务记录</view>
+					<view class="invite_list-item-time acea-row">{{item.createTime}}加入
+						<view class="invite_list-item-time-btn acea-row" @click="toSelect(item.workerId)">
+
+							<view :class="{on:iszhiList.includes(item.workerId)}">
+								{{iszhiList.includes(item.workerId)?'已选择':'选择'}}
+							</view>
 						</view>
 					</view>
 				</view>
 			</view>
 			<view slot='bottom' class="bottom acea-row row-between-wrapper">
 				仅显示自己所邀请注册的师傅信息
-				<u-switch space="2" v-model="value" size="26" activeColor="#f9ae3d" inactiveColor="rgb(230, 230, 230)">
+				<u-switch space="2" v-model="where.type" size="26" :activeValue="1" @change="onchange"
+					:inactiveValue="0" activeColor="#f9ae3d" inactiveColor="rgb(230, 230, 230)">
 				</u-switch>
 			</view>
 		</z-paging>
@@ -111,8 +118,8 @@
 
 <script>
 	import {
-		putBrandManageList
-	} from "@/api/brand.js"
+		getWorkerList
+	} from "@/api/car.js"
 	import storage from '@/utils/storage'
 	const img0 = "https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/d7c54d6facf1417f85c6fd7f2153e498.png"
 	const sortImg = 'https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/07/13/72eb9cbdf6ba47a2bd0c40c22cd579ef.png'
@@ -121,8 +128,8 @@
 			return {
 				value: true,
 				searchTypes: [{
-						label: '完成服务',
-						value: "orderNum",
+						label: '服务次数',
+						value: "orderCount",
 						sort_by: 1,
 						order_by: 0,
 						auto: true,
@@ -131,8 +138,8 @@
 						img_bottom: sortImg,
 					},
 					{
-						label: '履约率',
-						value: "totalCost",
+						label: '技能评分',
+						value: "technicalScore",
 						sort_by: 2,
 						order_by: 0,
 						auto: true,
@@ -141,8 +148,8 @@
 						img_bottom: sortImg,
 					},
 					{
-						label: '返修率',
-						value: "totalProfit",
+						label: '态度评分',
+						value: "attitudeScore",
 						sort_by: 3,
 						order_by: 0,
 						auto: true,
@@ -153,19 +160,39 @@
 
 				],
 				where: {
-					searchValue: "",
+					keyword: "",
 					pageNum: 1,
 					pageSize: 10,
-					userId: storage.get('ClientId'),
-					queryType: 0,
+					clientId: storage.get('ClientId'),
+					type: 0,
 					orderByColumn: "",
-					isAsc: ""
+					isAsc: "",
+					customerId: ""
 				},
-				dataList: []
+				dataList: [],
+				iszhiList: []
 			}
 		},
-		onLoad() {
 
+		onLoad(options) {
+			let info = JSON.parse(options.info)
+			if (info.workerList) {
+				this.iszhiList = info.workerList.map(item => item.workerId)
+			}
+			if (info.customerId) {
+				this.where.customerId = info.customerId || ''
+			}
+		},
+		onHide() {
+			let arr = []
+			this.dataList.forEach(item => {
+				if (this.iszhiList.includes(item.workerId)) {
+					arr.push(item)
+				}
+			})
+			this.iszhiList = []
+			storage.set('workerLists' + storage.get('ClientId'), arr)
+			console.log("999离开了了11");
 		},
 		methods: {
 			getList(pageNo, pageSize) {
@@ -174,12 +201,64 @@
 				uni.showLoading({
 					mask: true
 				});
-				putBrandManageList(this.where).then(res => {
+				getWorkerList(this.where).then(res => {
 					uni.hideLoading();
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				}).finally(i => {
 					uni.hideLoading();
 				})
+			},
+			toSelect(id) {
+				let bool = this.iszhiList.includes(id)
+				if (bool) {
+					console.log(id, this.iszhiList);
+					let index = this.iszhiList.findIndex(item => {
+						return item == id
+					})
+					this.iszhiList.splice(index, 1)
+					console.log(index);
+				} else {
+					this.iszhiList.push(id)
+				}
+				console.log(this.iszhiList, "this.iszhiList");
+				// this.$set(this.dataList, index, {
+				// 	...this.dataList[index],
+				// 	changeShow: !item.changeShow
+				// })
+				// // this.dataList[index].changeShow = !item.changeShow
+				// console.log(this.dataList);
+				// this.dataList.forEach(item => {
+				// 	if (item.changeShow) {
+				// 		this.selectWorker.push(item.)
+				// 	}
+				// })
+			},
+			leftClick() {
+				console.log('hidehiade');
+				// let arr = []
+				// this.dataList.forEach(item => {
+				// 	if (this.iszhiList.includes(item.workerId)) {
+				// 		arr.push(item)
+				// 	}
+				// })
+				let arr = []
+				this.dataList.forEach(item => {
+					if (this.iszhiList.includes(item.workerId)) {
+						arr.push(item)
+					}
+				})
+
+				this.iszhiList = []
+				storage.set('workerLists' + storage.get('ClientId'), arr)
+				this.$jump(-1)
+				// this.iszhiList = []
+				// const pages = uni.$u.pages()
+				// pages[pages.length - 2].$vm.getWorkerlist(arr)
+				// uni.navigateBack()
+			},
+			onchange(value) {
+				console.log(value, '22');
+				this.$refs.paging.reload()
 			},
 			productSort(item, index) {
 				console.log(item);
@@ -192,7 +271,7 @@
 				}
 				this.where.orderByColumn = item.value;
 				this.where.isAsc = item.order_by
-
+				this.$refs.paging.reload()
 			},
 		}
 	}
@@ -342,8 +421,24 @@
 					}
 
 					&-right {
-						font-size: 28rpx;
-						color: $pageBorder;
+						font-size: 22rpx;
+						color: #999999;
+
+						.yuan {
+							width: 18rpx;
+							height: 18rpx;
+							background-color: #999999;
+							border-radius: 50%;
+							color: #999999;
+							margin-right: 10rpx;
+
+							&.on {
+								background-color: #A4D091;
+								color: #A4D091;
+							}
+						}
+
+
 					}
 				}
 
@@ -392,15 +487,12 @@
 							display: flex;
 							justify-content: center;
 							align-items: center;
+
+							&.on {
+								background: #A4D091;
+								color: #FFFFFF;
+							}
 						}
-
-
-						view:nth-last-child(1) {
-							background: #A4D091;
-							color: #FFFFFF;
-							margin-left: 14rpx;
-						}
-
 					}
 				}
 			}

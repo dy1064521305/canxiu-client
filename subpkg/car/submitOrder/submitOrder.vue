@@ -62,9 +62,7 @@
 				<view v-for="(item, index) in workerList.slice(0, 3)" :key="index">
 					<view v-if="!item.workerName" class="designWorker-right-people"></view>
 					<view v-if="item.workerName" class="designWorker-right-img">
-						<image v-if="item.avatarUrl"
-							:src="item.avatarUrl"
-							mode=""></image>
+						<image v-if="item.avatarUrl" :src="item.avatarUrl" mode=""></image>
 						<image v-else
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
 							mode=""></image>
@@ -227,7 +225,7 @@
 			choseCoupon.couponAmount }}</text>
 				<text style="color: #A5A7A7;">合计</text>
 				<view style="font-size: 43rpx;color: #EC5722;">
-					{{  (info.orderPrice + Number(urgentPriceTotal)) <0?0:(info.orderPrice + Number(urgentPriceTotal)) }}元
+					{{ (info.orderPrice + Number(urgentPriceTotal)) <0?0:(info.orderPrice + Number(urgentPriceTotal)) }}元
 				</view>
 			</view>
 
@@ -362,7 +360,7 @@
 				workerList: [{}, {}, {}],
 				choseCoupon: {
 					type: 'order',
-				
+
 				}
 			};
 		},
@@ -404,9 +402,9 @@
 				this.choseCoupon = {
 					...item,
 					type: 'order',
-					orderPrice:this.info.oldOrderPrice + Number(this.urgentPriceTotal)
+					orderPrice: this.info.oldOrderPrice + Number(this.urgentPriceTotal)
 				}
-				console.log(this.choseCoupon,'4077777777');
+				console.log(this.choseCoupon, '4077777777');
 			},
 			//获取指派师傅
 			getWorkerlist(arr) {
@@ -518,7 +516,8 @@
 				}
 				address = arr.join('-')
 				refreshPrice({
-					customerId:this.addressInfo.customerId||this.addressInfo.customerId!=null?this.addressInfo.customerId:'',
+					customerId: this.addressInfo.customerId || this.addressInfo.customerId != null ? this
+						.addressInfo.customerId : '',
 					address: address,
 					serviceIds: this.serviceIds
 				}).then(res => {
@@ -534,13 +533,13 @@
 									projectNumber: oldPro.projectNumber,
 									projectImg: oldPro.projectImg,
 									remark: oldPro.remark,
-									clientId :storage.get('ClientId'),
-									projectPrice:newPro.discountPrice
+									clientId: storage.get('ClientId'),
+									projectPrice: newPro.discountPrice
 								}
 							}
 						})
 					})
-					if (this.info.isUrgent&& this.submitList[0].isUrgent != 'N') {
+					if (this.info.isUrgent && this.submitList[0].isUrgent != 'N') {
 						this.urgentPriceTotal = Number(this.submitList[0].urgentPrice)
 					} else {
 						this.urgentPriceTotal = 0
@@ -563,10 +562,11 @@
 						.startingFreeDiscount) : all
 				})
 				this.info.orderPrice = this.info.oldOrderPrice = this.showListByType.reduce((p, c) => p + c.allMoney, 0)
-				console.log(this.choseCoupon.couponId,'5666666666');
+				console.log(this.choseCoupon.couponId, '5666666666');
 				if (this.choseCoupon) {
-					this.info.orderPrice = Number(this.choseCoupon.couponAmount) ? Number(this.info.oldOrderPrice) - Number(this.choseCoupon
-						.couponAmount) : this.info.oldOrderPrice
+					this.info.orderPrice = Number(this.choseCoupon.couponAmount) ? Number(this.info.oldOrderPrice) -
+						Number(this.choseCoupon
+							.couponAmount) : this.info.oldOrderPrice
 				}
 				// +
 				// 	this.urgentPriceTotal
@@ -621,7 +621,7 @@
 					// this.urgentPriceTotal = this.submitList.reduce((pre, item) => {
 					// 	return pre + Number(item.urgentPrice)
 					// }, 0)
-				
+
 					this.urgentPriceTotal = Number(this.submitList[0].urgentPrice)
 					// this.info.orderPrice = this.info.orderPrice + this.urgentPriceTotal
 				} else {
@@ -748,12 +748,12 @@
 					this.info.beforeStartingFreeMap = beforeStartingFree
 					this.info.costStartingFreeMap = costStartingFreeMap
 					//this.info.expectTime = this.info.expectTime + ':00'
-					
+
 					this.info.customerId = this.addressInfo.customerId
 					this.workerList = this.trimSpace(this.workerList)
 					this.info.workerIds = this.workerList.map(item => item.workerId)
 					this.info.clientCouponId = this.choseCoupon.id
-					
+
 					postOrder(this.info).then(res => {
 						if (res.code == 200) {
 							orderSend(res.data).then(res => {})
