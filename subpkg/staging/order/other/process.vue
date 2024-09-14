@@ -34,10 +34,14 @@
 	export default {
 		data() {
 			return {
-				step: []
+				step: [],
+				orderId: ""
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			if (options && options.orderId) {
+				this.orderId = options.orderId
+			}
 			this.getMess()
 		},
 		methods: {

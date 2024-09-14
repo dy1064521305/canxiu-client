@@ -1,9 +1,9 @@
 <template>
 	<view class="appraise">
 		<view v-for="(item,index) in projectData" :key='index' class="box">
-			
+
 			<view class="no-imgs">
-				<image v-if="item.projectUrl.length!=0" style="width: 130rpx;height: 130rpx;margin: 20rpx;
+				<image v-if="item.projectUrl.length" style="width: 130rpx;height: 130rpx;margin: 20rpx;
 				border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 				<view v-else style="width:100%;height:100%;" class="img-text">
 					<image style="width:113rpx ;height:83rpx;"
@@ -12,8 +12,8 @@
 					<text>暂无图片</text>
 				</view>
 			</view>
-			
-			
+
+
 			<view style="display: flex;flex-direction: column;margin-top:41rpx;height: 100%;width: 72%;">
 				<view style="display: flex;justify-content: space-between;">
 					<view style="color: #3D3F3E;font-weight: 600;">
@@ -87,17 +87,32 @@
 				this.query.orderId = this.info.orderId
 				this.query.clientId = this.info.clientId
 				this.query.workerId = this.info.workerId
-				this.projectData = this.info.newProject.length != 0 ? this.info.newProject : this.info.projectDataVoList
-				this.query.productIdList = this.projectData.map(item => {
-					return item.productId
-				})
-				this.projectData.forEach(item => {
-					item.name = this.info.newProject.length != 0 ? item.serviceProductName : item.productName
-					item.projectUrl = this.info.newProject.length != 0 ? (item.projectImg != '' ? item.projectImg
-						.split(
-							',') : []) : item.img
-				})
-				console.log(this.projectData);
+				if (!this.info.dkDetail) {
+					this.projectData = this.info.newProject.length != 0 ? this.info.newProject : this.info
+						.projectDataVoList
+					this.query.productIdList = this.projectData.map(item => {
+						return item.productId
+					})
+					this.projectData.forEach(item => {
+						item.name = this.info.newProject.length != 0 ? item.serviceProductName : item.productName
+						item.projectUrl = this.info.newProject.length != 0 ? (item.projectImg != '' ? item
+							.projectImg
+							.split(
+								',') : []) : item.img
+					})
+				} else {
+					this.projectData = JSON.parse(JSON.stringify(this.info.projectDataVoList))
+					this.query.productIdList = this.projectData.map(item => {
+						return item.productId
+					})
+					this.projectData.forEach(item => {
+						item.name = item.productName
+						item.projectUrl = item.img || (item.projectImg != '' ? item
+							.projectImg
+							.split(
+								',') : [])
+					})
+				}
 				// order.getOrderInfo(this.id).then(res => {
 				// 	console.log(res);
 				// 	this.info= res.data
@@ -118,9 +133,6 @@
 				this.query.appraiseImg = val.urls.toString()
 			},
 			fabu() {
-				console.log(this.query);
-
-
 				order.appraise(this.query).then(res => {
 					console.log(res);
 					if (res.code == 200) {
@@ -143,10 +155,10 @@
 <style lang="scss" scoped>
 	.appraise {
 		.no-imgs {
-			    width: 160rpx;
-			    height: 86%;
-			    margin: 0 10rpx;
-		
+			width: 160rpx;
+			height: 86%;
+			margin: 0 10rpx;
+
 			.img-text {
 				display: flex;
 				flex-direction: column;
@@ -155,15 +167,16 @@
 				height: 100%;
 				background: #F4F4F4;
 				border-radius: 11rpx;
-		
+
 				text {
 					font-size: 23rpx;
 					color: #A4D091;
 				}
 			}
-		
-		
+
+
 		}
+
 		.box,
 		.main {
 			width: 707rpx;

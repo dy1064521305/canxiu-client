@@ -1,63 +1,29 @@
 <template>
 	<view class="page">
 		<view class="tip">当前利润 <text> 223.6</text>元，在用户支付前可修改报价信息！</view>
-		<!-- 	<view class="store">
-			<view class="store-top acea-row">
-				<image src="@/static/img/mess.png" mode=""></image>
-				<view class="store-top-name flex-colum-between">
-					<view class="line1">门店名称</view>
-					<text>门店类型 ｜所属商圈</text>
-				</view>
-			</view>
-			<view class="store-con">
-				<view class="acea-row row-between-wrapper">
-					<text>期望上门时间</text>
-					<text>2023/12/12 12:12</text>
-				</view>
-				<view class="acea-row row-between-wrapper">
-					<text>期望上门时间</text>
-					<text>2023/12/12 12:12</text>
-				</view>
-				<view class="acea-row row-between-wrapper">
-					<text>期望上门时间</text>
-					<text>2023/12/12 12:12</text>
-				</view>
-			</view>
-		</view> -->
 		<view class="bill bill2">
 			<view class="bill-con">
 				<view class="bill-con-name acea-row row-middle row-between-wrapper">
 					<view class="acea-row row-middle">
 						<view class="view"></view>
-						服务项（2）
+						服务项（{{info.projectDataVoList.length}}）
 					</view>
 					<view class="acea-row row-middle">合计：<view class="price"><text style="font-size: 22rpx;">¥</text>
-							210</view>
+							{{info.preferentialPrice}}
+						</view>
 					</view>
 				</view>
 				<view class="bill-con-list">
-					<view class="bill-con-list-items acea-row">
-						<image src="@/static/img/mess.png" mode=""></image>
+					<view class="bill-con-list-items acea-row" v-for="(item,index) in info.projectDataVoList"
+						:key="index">
+						<image :src="item.projectImg" mode=""></image>
 						<view class="bill-con-list-items-right flex-colum-between">
-							<view class="name">服务产品名称</view>
-							<view class="hui line2">服务说明：服务说明服务说明服务说明服务说明服务说明服务说明服务说明服务说明服务说明服务说明服务说明</view>
+							<view class="name">{{item.projectName}}</view>
+							<view class="hui line2">服务说明：{{item.illustrate}}</view>
 							<view class="acea-row row-between-wrapper">
-								维修服务费x1
+								维修服务费x{{item.projectNumber}}
 								<view>小计：<text class="red"><text style="font-size: 22rpx;">¥</text>
-										210</text> 金额
-								</view>
-							</view>
-						</view>
-					</view>
-					<view class="bill-con-list-items acea-row">
-						<image src="@/static/img/mess.png" mode=""></image>
-						<view class="bill-con-list-items-right flex-colum-between">
-							<view class="name">服务产品名称</view>
-							<view class="hui line2">服务说明：</view>
-							<view class="acea-row row-between-wrapper">
-								维修服务费x1
-								<view>小计：<text class="red"><text style="font-size: 22rpx;">¥</text>
-										210</text>
+										{{Number(item.discountPrice)*Number(item.projectNumber)}}</text>
 								</view>
 							</view>
 						</view>
@@ -68,35 +34,24 @@
 				<view class="bill-con-name acea-row row-middle row-between-wrapper">
 					<view class="acea-row row-middle">
 						<view class="view"></view>
-						配件材料（2）
+						配件材料（{{info.partsCount}}）
 					</view>
 					<view class="acea-row row-middle">合计：<view class="price"><text style="font-size: 22rpx;">¥</text>
-							210</view>
+							{{info.partsPrice}}
+						</view>
 					</view>
 				</view>
 				<view class="bill-con-list">
-					<view class="bill-con-list-items acea-row">
-						<image src="@/static/img/mess.png" mode=""></image>
+					<view class="bill-con-list-items acea-row" v-for="(item,index) in info.workerPartsVoList"
+						:key="index">
+						<image :src="item.partsImg" mode=""></image>
 						<view class="bill-con-list-items-right flex-colum-between">
-							<view class="name">服务产品名称</view>
-							<view class="hui line2">服务说明：服务说明服务说明服务说明服务说明服务说明服务说明服务说明服务说明服务说明服务说明服务说明</view>
+							<view class="name">{{item.partsName}}</view>
+							<view class="hui line2">{{item.partsSpecs}}</view>
 							<view class="acea-row row-between-wrapper">
-								维修服务费x1
+								维修服务费x{{item.partsCount}}
 								<view>小计：<text class="red"><text style="font-size: 22rpx;">¥</text>
-										210</text> 金额
-								</view>
-							</view>
-						</view>
-					</view>
-					<view class="bill-con-list-items acea-row">
-						<image src="@/static/img/mess.png" mode=""></image>
-						<view class="bill-con-list-items-right flex-colum-between">
-							<view class="name">服务产品名称</view>
-							<view class="hui line2">服务说明：</view>
-							<view class="acea-row row-between-wrapper">
-								维修服务费x1
-								<view>小计：<text class="red"><text style="font-size: 22rpx;">¥</text>
-										210</text>
+										{{item.partsPrice}}</text> 金额
 								</view>
 							</view>
 						</view>
@@ -111,46 +66,33 @@
 				<view class="bill-con-name acea-row row-middle row-between-wrapper">
 					<view class="acea-row row-middle">
 						<view class="view"></view>
-						其他费用（2）
+						其他费用（{{info.standardCount}}）
 					</view>
 					<view class="acea-row row-middle">合计：<view class="price"><text style="font-size: 22rpx;">¥</text>
-							210</view>
+							{{info.standardPrice}}
+						</view>
 					</view>
 				</view>
 				<view class="bill-con-list">
-					<view class="bill-con-list-items acea-row">
+					<view class="bill-con-list-items acea-row" v-for="(item,index) in info.standardVoList" :key="index">
 						<view class="bill-con-list-items-right flex-colum-between">
 							<view class="name name2 acea-row row-between-wrapper">
-								服务产品名称
-								<view style="color: #999;"><text style="font-size: 22rpx;">¥</text>100x1
+								{{item.serviceName}}
+								<view style="color: #999;"><text
+										style="font-size: 22rpx;">¥</text>{{item.standardPrice}}x{{item.serviceCount}}
 								</view>
 							</view>
 							<view class="name name2 acea-row row-between-wrapper">
-								<text style="color: #999;">师傅夜间（22:00以后）上门维修</text>
+								<text style="color: #999;">{{item.remark}}</text>
 								<view style="color: #999;"><text class="red"><text style="font-size: 22rpx;">¥</text>
-										210</text> 金额
-								</view>
-							</view>
-						</view>
-					</view>
-					<view class="bill-con-list-items acea-row">
-						<view class="bill-con-list-items-right flex-colum-between">
-							<view class="name name2 acea-row row-between-wrapper">
-								服务产品名称
-								<view style="color: #999;"><text style="font-size: 22rpx;">¥</text>100x1
-								</view>
-							</view>
-							<view class="name name2 acea-row row-between-wrapper">
-								<text style="color: #999;">师傅夜间（22:00以后）上门维修</text>
-								<view style="color: #999;"><text class="red"><text style="font-size: 22rpx;">¥</text>
-										210</text> 金额
+										{{Number(item.standardPrice)*Number(item.serviceCount)}}</text>
 								</view>
 							</view>
 						</view>
 					</view>
 					<view class="bill-con-bottom acea-row row-between-wrapper">
 						<view class="btn" @click="wenTip()">全部移除</view>
-						<view class="btn">添加费用项</view>
+						<view class="btn" @click="$jump('/subpkg/staging/order/serve/addCost')">添加费用项</view>
 					</view>
 				</view>
 			</view>
@@ -160,108 +102,91 @@
 			<view class="bill-con">
 				<view class="bill-con-name acea-row row-middle">
 					<view class="acea-row row-middle">
-						<view class="view"></view>账单信息
-					</view>
-				</view>
-				<view class="bill-con-tent">
-					<view class="bill-con-tent-type acea-row row-between-wrapper">
-						<view>维修服务项 <text>（共2项）</text></view>
-						<text class="red"> <text class="red" style="font-size: 20rpx;">¥</text>120</text>
-					</view>
-					<view class="bill-con-tent-more">
-						<view class="acea-row row-between-wrapper">
-							<text>服务项名称</text><text>服务起步价</text>
-						</view>
-						<view class="acea-row row-between-wrapper">
-							<text>奶茶机换温控传感器</text><text>200元</text>
-						</view>
-						<view class="acea-row row-between-wrapper">
-							<text>疏通3M内</text><text>200元</text>
-						</view>
-					</view>
-					<view class="bill-con-tent-type acea-row row-between-wrapper">
-						<view>材料费 <text>（共3件）</text></view>
-						<text class="red"> <text class="red" style="font-size: 20rpx;">¥</text>120</text>
-					</view>
-					<view class="bill-con-tent-type acea-row row-between-wrapper">
-						<view>配件费 <text>（共2项）</text></view>
-						<text> <text style="font-size: 20rpx;">¥</text>120</text>
-					</view>
-					<view class="bill-con-tent-type acea-row row-between-wrapper">
-						<view>其他费用 <text>（共3件）</text></view>
-						<text class="red"> <text class="red" style="font-size: 20rpx;">¥</text>120</text>
-					</view>
-					<view class="bill-con-tent-type acea-row row-between-wrapper">
-						<view>优惠券 <text>（共3件）</text></view>
-						<text class="red"> <text class="red" style="font-size: 20rpx;">¥</text>120</text>
-					</view>
-					<view class="bill-con-tent-type acea-row row-between-wrapper">
-						<view>品牌折扣 <text>（当前折扣：10%）</text></view>
-						<text class="red"> <text class="red" style="font-size: 20rpx;">¥</text>120</text>
-					</view>
-				</view>
-				<view class="bill-con-price ">
-					<view class="bill-con-price-all acea-row row-right row-bottom">费用合计：<view
-							class="acea-row row-bottom">
-							<view style="font-size: 24rpx; color: #FD5834;">¥</view>
-							<text>396.4</text>
-						</view>
-					</view>
-					<view class="bill-con-price-jian ">
-						优惠减免：-<text style="font-size: 22rpx;">¥</text> 210
-					</view>
-				</view>
-			</view>
-			<view class="bill-con">
-				<view class="bill-con-name acea-row row-middle">
-					<view class="acea-row row-middle">
 						<view class="view"></view>订单费用
 					</view>
 				</view>
 				<view class="bill-con-tent">
 					<view class="bill-con-tent-type acea-row row-between-wrapper">
 						<view>维修服务项 <text>（共2项）</text></view>
-						<text class="red"> <text class="red" style="font-size: 20rpx;">¥</text>120 <text
-								class="iconfont icon-yiwen-copy" @click="wenTip(1)"
-								style="color: #FD5834;margin-left: 10rpx;"></text>
-						</text>
-					</view>
-					<view class="bill-con-tent-more">
-						<view class="acea-row row-between-wrapper">
-							<text>服务项名称</text><text>服务起步价</text>
-						</view>
-						<view class="acea-row row-between-wrapper">
-							<text>奶茶机换温控传感器</text><text>200元</text>
-						</view>
-						<view class="acea-row row-between-wrapper">
-							<text>疏通3M内</text><text>200元</text>
-						</view>
-					</view>
-					<view class="bill-con-tent-type acea-row row-between-wrapper">
-						<view>维修服务项 <text>（共2项）</text></view>
 						<text class="red"> <text class="red" style="font-size: 20rpx;">¥</text>120</text>
 					</view>
 					<view class="bill-con-tent-more">
 						<view class="acea-row row-between-wrapper">
 							<text>服务项名称</text><text>服务起步价</text>
 						</view>
-						<view class="acea-row row-between-wrapper">
-							<text>奶茶机换温控传感器</text><text>200元</text>
+						<view class="acea-row row-between-wrapper" v-for="(item) in info.projectDataVoList">
+							<text>{{item.projectName}}</text><text>200元</text>
 						</view>
-						<view class="acea-row row-between-wrapper">
-							<text>疏通3M内</text><text>200元</text>
+					</view>
+					<view class="bill-con-tent-type acea-row row-between-wrapper">
+						<view>材料费 <text>（共{{info.materialCount}}件）</text></view>
+						<text class="red"> <text class="red"
+								style="font-size: 20rpx;">¥</text>{{info.materialPrice}}</text>
+					</view>
+					<view class="bill-con-tent-type acea-row row-between-wrapper">
+						<view>配件费 <text>（共{{info.partsCount}}项）</text></view>
+						<text> <text style="font-size: 20rpx;">¥</text>{{info.partsPrice}}</text>
+					</view>
+					<view class="bill-con-tent-type acea-row row-between-wrapper">
+						<view>其他费用 <text>（共{{info.standardCount}}件）</text></view>
+						<text class="red"> <text class="red"
+								style="font-size: 20rpx;">¥</text>{{info.standardPrice}}</text>
+					</view>
+					<view class="bill-con-tent-type acea-row row-between-wrapper">
+						<view>优惠券 <text>（共0件）</text></view>
+						<text class="red"> <text class="red"
+								style="font-size: 20rpx;">¥</text>{{info.couponDiscountPrice||0}}</text>
+					</view>
+					<view class="bill-con-tent-type acea-row row-between-wrapper">
+						<view>品牌折扣 <text>（当前折扣：{{info.favorableDiscount||0}}%）</text></view>
+						<text class="red"> <text class="red"
+								style="font-size: 20rpx;">¥</text>{{info.favorablePrice||0}}</text>
+					</view>
+				</view>
+				<view class="bill-con-price ">
+					<view class="bill-con-price-all acea-row row-right row-bottom">费用合计：<view
+							class="acea-row row-bottom">
+							<view style="font-size: 36rpx; color: #FD5834;">¥</view>
+							<text>{{info.orderPrice}}</text>
 						</view>
+					</view>
+					<view class="bill-con-price-jian ">
+						优惠减免：-<text style="font-size: 22rpx;">¥</text> {{info.couponDiscountPrice||0}}
+					</view>
+				</view>
+			</view>
+			<view class="bill-con">
+				<view class="bill-con-name acea-row row-middle">
+					<view class="acea-row row-middle">
+						<view class="view"></view>订单成本
+					</view>
+				</view>
+				<view class="bill-con-tent">
+					<view class="bill-con-tent-type acea-row row-between-wrapper">
+						<view>师傅工费 <text></text></view>
+						<text class="red"> <text class="red" style="font-size: 20rpx;">¥</text>
+							<!-- 少加字段 -->
+							{{info.orderCost||0}}
+							<text class="iconfont icon-yiwen-copy" @click="wenTip(1)"
+								style="color: #FD5834;margin-left: 10rpx;"></text>
+						</text>
+					</view>
+					<view class="bill-con-tent-type acea-row row-between-wrapper">
+						<view>师傅补贴 <text></text></view>
+						<text class="red"> <text class="red" style="font-size: 20rpx;">¥</text>{{info.subsidyPrice}}
+						</text>
 					</view>
 				</view>
 				<view class="bill-con-price ">
 					<view class="bill-con-price-all acea-row row-right row-bottom">成本合计：<view
 							class="acea-row row-bottom">
 							<view style="font-size: 24rpx; color: #FD5834;">¥</view>
-							<text>396.4</text>
+							<!-- 少加字段 -->
+							<text>{{Number(info.subsidyPrice)+Number(info.orderCost)}}</text>
 						</view>
 					</view>
 					<view class="bill-con-price-jian ">
-						优惠减免：-<text style="font-size: 22rpx;">¥</text> 210
+						含补贴：<text style="font-size: 22rpx;">¥</text> {{info.subsidyPrice}}
 					</view>
 				</view>
 			</view>
@@ -270,7 +195,7 @@
 		</view>
 		<view class="button acea-row row-between-wrapper">
 			<view class="btn" @click="showAction=true">修改方案</view>
-			<view class="btn">生成报价单</view>
+			<view class="btn" @click="$jump(-1)">生成报价单</view>
 		</view>
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="activityList" :show="showAction"></u-action-sheet>
@@ -278,6 +203,10 @@
 </template>
 
 <script>
+	import {
+		getServiceQuotation
+	} from '@/api/car.js'
+
 	export default {
 		data() {
 			return {
@@ -298,16 +227,22 @@
 					},
 				],
 				showAction: false,
+				orderId: "",
+				info: {}
 			}
 		},
 		onLoad(options) {
-			// if (options && options.orderId) {
-			// 	this.orderId = options.orderId
-			// }
-			// this.getInfo()
+			if (options && options.orderId) {
+				this.orderId = options.orderId
+			}
+			this.getInfo()
 		},
 		methods: {
-
+			getInfo() {
+				getServiceQuotation(this.orderId).then(res => {
+					this.info = res.data
+				})
+			},
 			wenTip(value) {
 				console.log(value);
 				if (value) {
@@ -344,17 +279,19 @@
 				} else {
 					switch (e.id) {
 						case 1:
+							this.showAction = false
 							break;
 						case 2:
+							this.$jump('/subpkg/staging/order/serve/addCost')
+							this.showAction = false
 							break;
 						case 3:
-							this.jump('/subpkg/staging/order/serve/select')
+							this.$jump('/subpkg/staging/order/serve/select?type=' + 'add' + '&id=' + this.info.customerId)
+							this.showAction = false
 							break;
-
 						default:
 							break;
 					}
-					console.log(e, "type///");
 				}
 			}
 		}

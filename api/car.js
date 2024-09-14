@@ -54,3 +54,6 @@ export const getOrderIdDetail = (orderId) => request.get('/partner/valet/create/
 // 搜索服务分类
 
 export const getListServiceQuery = (params) => request.get('/client/service/listService/query', params)
+
+// 服务报价单（代客下单人视角）
+export const getServiceQuotation = (orderId) => request.get('/partner/valet/create/serviceQuotation/' + orderId)

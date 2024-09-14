@@ -1,25 +1,25 @@
 <template>
 	<view class="page">
-		<view class="all" v-for="(item) in [1,2]">
+		<view class="all" v-for="(item,index) in selectList" :key="index">
 			<view class="all-top acea-row row-between-wrapper">
-				#1 服务项
-				<text>
+				#{{index+1}}服务项
+				<text @click="delItem(item,index)">
 					<text class="iconfont icon-shanchu"></text>
 					移除此项</text>
 			</view>
-			<view class="all-type">
+			<view class="all-type" @click="$jump(-1)" v-if="item.serviceProjectVoList[0]">
 				<view class="all-type-price acea-row row-between-wrapper">
-					疏通3M内
-					<text>38元/个
+					{{item.serviceProjectVoList[0].projectName }}
+					<text>{{item.serviceProjectVoList[0].startingFreeDiscount}}元/个
 						<text class="iconfont icon-iconmore-copy"></text>
 					</text>
 				</view>
-				<text>分类：水龙头/排水管</text>
+				<text>分类：{{item.serviceProjectVoList[0].serviceTypeName}}</text>
 			</view>
 			<view class="all-price  acea-row row-between-wrapper">
 				<view class="">服务数量 <text>（单位：个）</text> </view>
 				<view class="right">
-					<u-number-box min='1' v-model="projectNumber" class='number' button-size="26px" color="#ffffff"
+					<u-number-box min='1' v-model="item.projectNumber" class='number' button-size="26px" color="#ffffff"
 						bgColor="#A4D091" @change='val=>numChange(item,val,index)' iconStyle="color: #fff">
 					</u-number-box>
 				</view>
@@ -33,34 +33,27 @@
 						请上传1-9张现场环境或设备故障视频/图片信息
 					</view>
 					<view style="width: 100%;margin: 20rpx 0">
-						<cl-upload :listStyle="{
-						columnGap: '10rpx',
-						columns:'4',
-						rowGap:'10rpx'
-						}" :imageFormData="{
-							size:10
-						}" :videoFromData="{
-							size:10
-						}" :index='1' v-model="projectImg" :headers="headers" :action="action" @onSuccess="onSuccesss" @input='onInput'
-							:carId='carId'></cl-upload>
+						<cl-upload :listStyle="{columnGap: '10rpx',columns:'4',rowGap:'10rpx'}"
+							:imageFormData="{size:10}" :videoFromData="{size:10}" :index='index'
+							v-model="item.projectImg1" :headers="headers" :action="action"
+							@onSuccess="onSuccesss($event,index)" @input='onInput'></cl-upload>
 					</view>
 				</view>
 				<view style="align-items: center;">
 					<view style="margin-bottom: 10rpx;">故障描述</view>
 					<view style="font-size: 22rpx;color: #A5A7A7;">请简单描述故障或特殊需求备注信息</view>
 					<view style='width: 100%; border: 1rpx solid #f5f5f5;border-radius: 10rpx;margin-top: 20rpx;'>
-						<u--textarea height='72' border='none' maxlength='200' confirmType="done" v-model="remark"
-							placeholder="请输入内容" count @input='textareaInput'></u--textarea>
+						<u--textarea height='72' border='none' maxlength='200' confirmType="done" v-model="item.remark1"
+							placeholder="请输入内容" count></u--textarea>
 					</view>
 				</view>
 			</view>
 		</view>
 
-
 		<view class="button acea-row row-between-wrapper">
 			<view class="left">
-				<view class=""> <text style="font-size: 22rpx;">￥</text>15.8 </view>
-				<view style="font-size: 24rpx;">共3项</view>
+				<view class=""> <text style="font-size: 22rpx;">￥</text>{{totalScore}} </view>
+				<view style="font-size: 24rpx;">共{{this.selectList.length}}项</view>
 			</view>
 			<view class="btn">保存并提交审核</view>
 		</view>
@@ -79,34 +72,63 @@
 				headers: {
 					token: storage.get('AccessToken')
 				},
-				workerList: [{}, {}, {}],
-				projectNumber: 1,
-				projectImg: [],
-				carId: ' 1',
-				remark: ""
+				customerId: "",
+				selectList: [],
+				totalScore: 0
 			}
 		},
-		onLoad() {
-
+		onLoad(options) {
+			if (options && options.customerId) {
+				this.customerId = options.customerId
+			}
+			uni.$on('selectList2', (list) => {
+				this.selectList = list
+				this.selectList.forEach(i => {
+					i.projectImg1 = []
+					i.remark1 = ''
+					i.projectNumber = 1
+					i.startingFreeDiscount = i.serviceProjectVoList[0].startingFreeDiscount
+					i.allPrices = Number(i.projectNumber) * Number(i.serviceProjectVoList[0]
+						.startingFreeDiscount)
+				})
+				this.totalScore = this.selectList.reduce((pre, cur) => {
+					return pre + cur.allPrices
+				}, 0)
+			})
+			console.log(this.selectList, "this.selectList ");
 		},
 		methods: {
-			//获取指派师傅
-			getWorkerlist(arr) {
-				this.workerList = [{}, {}, {}]
-				this.workerList = [...arr, ...this.workerList]
-				console.log(this.workerList);
+			numChange(item, value, i) {
+				let flag = value.value < item.projectNumber ? -1 : 1
+				item.projectNumber = value.value
+				let obj = item
+				this.$set(this.selectList, i, obj)
+				this.selectList.forEach(item => {
+					item.allPrices = Number(item.projectNumber) * Number(item.startingFreeDiscount)
+				})
+				this.totalScore = this.selectList.reduce((pre, cur) => {
+					return pre + cur.allPrices
+				}, 0)
+
 			},
-			onSuccesss(reslut) {
-				console.log(reslut);
-				let index = reslut.data.index
-				console.log(this.dataList[index].projectImg);
-				this.dataList[index].projectImg.push(reslut.data.url)
-			},
-			onInput(data) {
-				console.log(data);
-				this.dataList[data.index].projectImg = data.list
-			},
-			textareaInput() {
+			// 移除服务项
+			delItem(item, index) {
+				this.$alert('温馨提示', 1, {
+					content: '确定移除吗？',
+					confirmText: '确认移除',
+					cancelText: '我在想想',
+				}).then((res) => {
+					if (res.confirm) {
+						this.selectList.splice(index, 1)
+						if (this.selectList.length <= 0) {
+							return this.totalScore = 0
+						} else {
+							this.totalScore = this.selectList.reduce((pre, cur) => {
+								return pre + cur.allPrices
+							}, 0)
+						}
+					}
+				})
 
 			},
 		}

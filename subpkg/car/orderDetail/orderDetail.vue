@@ -187,7 +187,7 @@
 			<view v-if="showMelList.length!=0" class="info">
 				<view class="mel-title">
 					<text>维修材料</text>
-			<!-- 		<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text> -->
+					<!-- 		<text style="font-size: 33rpx;color: #EC5722;">¥{{melTotal}}</text> -->
 				</view>
 				<view v-for="(mfel,fmi) in showMelList" :key="fmi">
 					<view style="font-weight: bold;margin-top: 20rpx;">
@@ -239,7 +239,7 @@
 			<view v-if="showPartsList.length!=0" class="info">
 				<view class="mel-title">
 					<text>维修材料</text>
-			<!-- 		<text style="font-size: 33rpx;color: #EC5722;">¥{{partsTotal}}</text> -->
+					<!-- 		<text style="font-size: 33rpx;color: #EC5722;">¥{{partsTotal}}</text> -->
 				</view>
 				<view v-for="(mfel,fmi) in showPartsList" :key="fmi">
 					<view style="font-weight: bold;margin-top: 20rpx;">
@@ -277,7 +277,7 @@
 				</view>
 
 			</view>
-		
+
 		</view>
 		<view v-if="info.priceFlag == 0" class="bg info" style="margin-top: -20rpx;">
 			<view class="title" style="display: flex;justify-content: space-between;align-items: center;">
@@ -933,7 +933,7 @@
 						this.newProject = res.data
 
 					}),
-					
+
 					//新配件
 					// order.getNewParts(this.id).then(res => {
 					// 	let arr = []
@@ -1027,7 +1027,7 @@
 						title: '取消成功',
 						duration: 2000
 					});
-					
+
 					this.dateDiff = 0
 					this.pipeiStatus = true
 					this.show = false
@@ -1071,7 +1071,7 @@
 					id: this.info.orderId,
 					info: this.info,
 					newProject: this.newProject,
-					showMelList: this.showPartsList.length!=0?this.showPartsList:this.showMelList.length,
+					showMelList: this.showPartsList.length != 0 ? this.showPartsList : this.showMelList.length,
 					isGet: this.isGet
 				}
 				uni.navigateTo({
@@ -1135,7 +1135,7 @@
 						title: '驳回成功',
 						duration: 1000
 					});
-					
+
 					uni.navigateBack()
 				})
 			},

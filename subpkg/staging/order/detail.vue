@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<view class="page-all page-allTop" @click="$jump('/subpkg/staging/order/other/process')">
+		<view class="page-all page-allTop" @click="$jump('/subpkg/staging/order/other/process?id='+info.orderId)">
 			<view class="page-all-top acea-row row-between-wrapper">温馨提示：如发现师傅无故加价，请联系我们核对信息！<view
 					class="acea-row row-middle row-center">联系ta</view>
 			</view>
@@ -8,10 +8,10 @@
 			</view> -->
 			<view class="page-all-top-status">
 				<view class="acea-row row-middle">
-					<view>待接单</view> <u-icon name="arrow-right" color="#212121" size="16"></u-icon>
+					<view>{{info.orderStatus}}</view> <u-icon name="arrow-right" color="#212121" size="16"></u-icon>
 				</view>
-				<!-- <text>正在为匹配合适的师傅，请耐心等待</text> -->
-				<text>请尽快确认报价方案，如有疑问可联系业务员！</text>
+				<text v-if="info.orderStatus=='待确认'">请尽快确认报价方案，如有疑问可联系业务员！</text>
+				<text v-else>正在为匹配合适的师傅，请耐心等待</text>
 			</view>
 		</view>
 		<view class="page-all">
@@ -52,86 +52,88 @@
 				</view>
 				<view class="page-all-overImg-type">如指派师傅超30分钟未响应，订单将由其他师傅接单服务</view>
 				<view class="page-all-overImg-img acea-row" style="padding: 24rpx 0;">
-					<!-- <view class="page-all-overImg-img-items" v-for="(item) in info.appointWorkers" :key="item.id">
-						{{item}}
-					</view> -->
-					<view class="flex-colum-center" v-for="(item) in info.appointWorkers" :key="item.id"
-						style="width: 20%;margin: 20rpx 0;">
+					<view class="page-all-overImg-img-items flex-colum row-center" v-for="(item) in info.appointWorkers"
+						:key="item.id">
 						<image v-if="item.avatarUrl" :src="item.avatarUrl" mode=""></image>
 						<image v-else
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/06/19/fea1dd65eb384dcf92ca712b4e5463ee.png"
 							mode=""></image>
-						<text>{{item.userName}}</text>
+						<view>{{item.userName}}</view>
 					</view>
 				</view>
 			</view>
 		</view>
+		<!-- <view class="page-all" v-if="info.completeTime||info.workerId"> -->
 		<view class="page-all">
 			<view class="page-all-worder acea-row row-between-wrapper">
 				<view class="page-all-worder-left">
-					<view class="page-all-worder-left-top">
-						李师傅<text style="font-size: 24rpx; color: #A0A0A0;"> /水电师傅</text>
+					<view class="page-all-worder-left-top" style="margin-bottom: 6rpx;">
+						{{info.workerName||'暂无名称'}}<text style="font-size: 24rpx;margin-left: 6rpx; color: #A0A0A0;">
+							{{info.workType||'暂无工种'}}</text>
 					</view>
-					<image
-						src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/219172487b87402eb433e4f022f1f196.png"
-						mode=""></image>
+					<u-rate active-color="#FD5834" readonly v-model="info.levelIdValue" allowHalf
+						inactive-color="#b2b2b2" gutter="2"></u-rate>
 				</view>
 				<view class="page-all-worder-right acea-row">
-					<image src="../../../static/img/wechat.png" mode=""></image>
+					<image :src="info.avatarUrl" mode=""></image>
 					<u-icon name="arrow-right" color="#959595" size="18"></u-icon>
 				</view>
 			</view>
 
 			<!-- 接单且已完工 -->
-			<!-- <view class="page-all-overImg">
+			<view class="page-all-overImg" v-if="info.completeTime">
 				<view class="">服务完工图片</view>
 				<view class="page-all-overImg-type">装修维修/打胶/打胶</view>
-				<view class="page-all-overImg-img acea-row">
-					<view class="page-all-overImg-img-items" v-for="item in [1,2,3,4,5,6,7]">
-						{{item}}
+				<view class="page-all-overImg-img acea-row" v-if="info.deliveryVo&&info.deliveryVo.deliveryImg">
+					<view class="page-all-overImg-img-items" v-for="i in info.deliveryVo.deliveryImg.split(
+						',')">
+						{{i}}
 					</view>
 				</view>
 				<view class="page-all-overImg-call acea-row">
-					<view class="acea-row row-middle row-center" style="border-right: 1rpx solid #D8D8D8;">
+					<view class="acea-row row-middle row-center" style="border-right: 1rpx solid #D8D8D8;"
+						@click="complaint">
 						<image
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/11c66bd5416c4410a7880f801ea804d2.png"
 							mode=""></image>投诉师傅
 					</view>
-					<view class="acea-row row-middle row-center">
+					<view class="acea-row row-middle row-center" @click="appraiseHandle">
 						<image
 							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/11c66bd5416c4410a7880f801ea804d2.png"
 							mode=""></image>评价师傅
 					</view>
 				</view>
-			</view> -->
+			</view>
 			<!-- 接单当前未完工 -->
-			<!-- 	<view class="acea-row row-middle row-center" style="height: 100rpx; border-top: 1rpx solid #f5f5f5;">
+			<view v-if="info.workerId" class="acea-row row-middle row-center" @click="callPhones(info.workerPhone)"
+				style="height: 100rpx; border-top: 1rpx solid #f5f5f5;">
 				<image style="width: 36rpx; height: 36rpx;margin-right: 10rpx;"
 					src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/06/59c4d5c484fb42379d34ad25c9aed048.png"
 					mode="">
 				</image>联系师傅
-			</view> -->
+			</view>
 		</view>
 		<view class="page-all">
 			<view class="page-all-name acea-row  row-between-wrapper">
 				<text>服务信息</text>
 				<!-- <view class="page-all-pro-name-icon">有新方案待审核</view> -->
 			</view>
-			<view class="page-all-pro" v-for="(item,index) in info.projectDataVoList" :key="item.orderId">
+			<view class="page-all-pro" v-for="(item,index) in info.projectDataVoList" :key="index">
 				<view class="page-all-pro-list acea-row">
 					<view class="page-all-pro-list-img">
 						<image :src="item.projectImg" mode=""></image>
 					</view>
 					<view class="page-all-pro-list-right flex-colum-between">
 						<view class="page-all-pro-list-righ-title acea-row row-between-wrapper">
-							<view style="color: #212121; font-size: 32rpx;">{{item.typeName}}</view>
-							<text><text style="font-size: 22rpx;">¥</text> {{item.orderPrice}}</text>
+							<view style="color: #212121; font-size: 32rpx;">{{item.projectName}}</view>
+							<text><text style="font-size: 22rpx;">¥</text> {{item.discountPrice}}</text>
 						</view>
 						<view class="page-all-pro-list-righ-title acea-row row-between-wrapper">
-							<text>{{item.workerType}}</text>
+							<text>{{item.typeName}}</text>
 							<text><text style="font-size: 22rpx;">x</text>{{item.projectNumber}}</text>
 						</view>
-						<view class="acea-row row-right"><text><text style="font-size: 22rpx;">¥</text> 151</text>
+						<view class="acea-row row-right"><text><text style="font-size: 22rpx;">服务费 ¥</text>
+								{{Number(item.discountPrice)*Number(item.projectNumber)}}</text>
 						</view>
 					</view>
 				</view>
@@ -141,64 +143,64 @@
 						{{item.remark}}
 					</view>
 				</view>
-				<view class="page-all-pro-price">
-					<view class="acea-row row-right row-bottom">
-						订单费用：
-						<view class="color">
-							<text style="font-size: 30rpx;">¥</text> 396.4
-						</view>
-					</view>
-					<view class="page-all-pro-price-k acea-row row-right row-middle">
-						<text style="margin-right: 10rpx;">展开详情</text> <u-icon name="arrow-down" color="#959595"
-							size="15"></u-icon>
+			</view>
+			<view class="page-all-pro-price">
+				<view class="acea-row row-right row-bottom">
+					订单费用：
+					<view class="color">
+						<text style="font-size: 30rpx;">¥</text> {{info.orderPrice}}
 					</view>
 				</view>
-				<view class="page-all-pro-priceMxi">
-					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
-						服务起步价
-						<view> <text style="font-size: 22rpx;">¥</text>{{item.startingFree}}</view>
+				<view class="page-all-pro-price-k acea-row row-right row-middle" @click="openFeiShow=!openFeiShow">
+					<text style="margin-right: 10rpx;"> {{!openFeiShow?'展开':'收起'}}详情</text> <u-icon name="arrow-down"
+						color="#959595" size="15"></u-icon>
+				</view>
+			</view>
+			<view class="page-all-pro-priceMxi" v-if="openFeiShow">
+				<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
+					服务起步价
+					<view> <text style="font-size: 22rpx;">¥</text>{{info.startingFree}}</view>
+				</view>
+				<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
+					维修服务费
+					<view> <text style="font-size: 22rpx;">¥</text>{{info.preferentialPrice}}</view>
+				</view>
+				<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper"
+					@click="$jump('/subpkg/staging/order/other/cailiao')">
+					材料费
+					<view class="acea-row row-middle" style="margin-right: -8rpx;">
+						<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{info.materialPrice}}
+						<text style="margin-bottom: 4rpx;">｜</text> 共{{info.materialCount}}件<u-icon name="arrow-right"
+							color="#959595" size="13"></u-icon>
 					</view>
-					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
-						维修服务费
-						<view> <text style="font-size: 22rpx;">¥</text>{{item.preferentialPrice}}</view>
+				</view>
+				<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper"
+					@click="$jump('/subpkg/staging/order/other/peiliao')">
+					配件费
+					<view class="acea-row row-middle" style="margin-right: -8rpx;">
+						<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{info.partsPrice}}
+						<text style="margin-bottom: 4rpx;">｜</text> 共{{info.partsCount}}件<u-icon name="arrow-right"
+							color="#959595" size="13"></u-icon>
 					</view>
-					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper"
-						@click="$jump('/subpkg/staging/order/other/cailiao')">
-						材料费
-						<view class="acea-row row-middle" style="margin-right: -8rpx;">
-							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{item.materialPrice}}
-							<text style="margin-bottom: 4rpx;">｜</text> 共{{item.startingFree}}件<u-icon
-								name="arrow-right" color="#959595" size="13"></u-icon>
-						</view>
+				</view>
+				<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper"
+					@click="$jump('/subpkg/staging/order/other/otherPrice')">
+					其他费用
+					<view class=" acea-row row-middle" style="margin-right: -8rpx;">
+						<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{info.standardPrice}}
+						<text style="margin-bottom: 4rpx;">｜</text> 共{{info.standardCount}}件<u-icon name="arrow-right"
+							color="#959595" size="13"></u-icon>
 					</view>
-					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper"
-						@click="$jump('/subpkg/staging/order/other/peiliao')">
-						配件费
-						<view class="acea-row row-middle" style="margin-right: -8rpx;">
-							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{item.startingFree}}
-							<text style="margin-bottom: 4rpx;">｜</text> 共{{item.startingFree}}件<u-icon
-								name="arrow-right" color="#959595" size="13"></u-icon>
-						</view>
-					</view>
-					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper"
-						@click="$jump('/subpkg/staging/order/other/otherPrice')">
-						其他费用
-						<view class=" acea-row row-middle" style="margin-right: -8rpx;">
-							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{item.startingFree}}
-							<text style="margin-bottom: 4rpx;">｜</text> 共{{item.startingFree}}件<u-icon
-								name="arrow-right" color="#959595" size="13"></u-icon>
-						</view>
-					</view>
-					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
-						优惠券
-						<view> -<text style="font-size: 22rpx;">¥</text>{{item.startingFree}}</view>
-					</view>
-					<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
-						品牌折扣
-						<view class="acea-row row-middle" style="margin-right: -8rpx;">
-							<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{item.startingFree}}
-							<text style="margin-bottom: 4rpx;">｜</text>折扣:{{item.startingFree}}%
-						</view>
+				</view>
+				<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
+					优惠券
+					<view><text style="font-size: 22rpx;">¥</text>{{info.couponDiscountPrice||0}}</view>
+				</view>
+				<view class="page-all-pro-priceMxi-item acea-row row-between-wrapper">
+					品牌折扣
+					<view class="acea-row row-middle" style="margin-right: -8rpx;">
+						<text style="font-size: 22rpx; margin-top: 4rpx;">¥ </text> {{info.favorablePrice}}
+						<text style="margin-bottom: 4rpx;">｜</text>折扣:{{info.favorableDiscount}}%
 					</view>
 				</view>
 			</view>
@@ -206,15 +208,21 @@
 		<view class="page-all">
 			<view class="page-all-weihu">
 				<view class="page-all-weihu-name">品牌维护信息</view>
-				<view class="page-all-weihu-people acea-row row-between-wrapper" v-for="(item,index) in peopleList"
-					:key="index">
-					<view>{{item.label}}</view>
-					<view class="acea-row">{{item.naame}}（ID:{{item.id}}） <view
-							class="call acea-row row-center-wrapper">
+				<view class="page-all-weihu-people acea-row row-between-wrapper" style="padding-bottom: 10rpx;">
+					<view>品牌合伙人</view>
+					<view class="acea-row">{{info.brandPartnerName}}（ID:{{info.brandPartnerId||'-'}}） <view
+							class="call acea-row row-center-wrapper" @click="callPhones(info.brandPartnerPhone)">
 							联系TA</view>
 					</view>
 				</view>
-				<view class="page-all-weihu-mark">
+				<view class="page-all-weihu-people acea-row row-between-wrapper">
+					<view>下单人</view>
+					<view class="acea-row">{{info.orderPerson}}（ID:{{info.orderPersonId||'-'}})
+						<view class="call acea-row row-center-wrapper" @click="callPhones(info.orderPersonPhone)">
+							联系TA</view>
+					</view>
+				</view>
+				<view class="page-all-weihu-mark" v-if="info.orderRemarkVos&&info.orderRemarkVos.remarkId">
 					<view class="page-all-weihu-mark-mess acea-row row-between-wrapper">
 						<text>备注信息</text>
 						<view class="acea-row row-middle">全部信息<u-icon name="arrow-right" color="#232323"
@@ -223,8 +231,8 @@
 					</view>
 					<view class="page-all-weihu-mark-con acea-row row-between-wrapper">
 						<view class="page-all-weihu-mark-con-left">
-							<text>这里显示备注内容 </text>
-							<view class="">周微 ｜2023-12-12 12:12:12</view>
+							<text>{{info.orderRemarkVos.remarkContent}} </text>
+							<view class="">{{info.orderRemarkVos.createBy}} ｜{{info.orderRemarkVos.createTime}}</view>
 						</view>
 						<image src="../../../static/img/tabbar/index-unactive.png" mode=""></image>
 					</view>
@@ -235,7 +243,17 @@
 			<view class="page-all-table">
 				<view class="page-all-table-top acea-row row-between-wrapper">
 					<text>费用明细</text>
-					<view class="">
+					<!-- 	<view class="">
+						<text class="iconfont icon-tongyi" style="color:#A4D091; margin: 2rpx 10rpx 0 0;"></text>
+						已达到起步价
+					</view> -->
+					<view class="acea-row row-middle" v-if="!isGet">
+						<image style="width: 28rpx;height: 28rpx;margin-right: 10rpx;"
+							src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/02/21/a5a0b58c2d674bacb335cb758d4fca3d.png">
+						</image>
+						未达标按起步价收取
+					</view>
+					<view v-else>
 						<text class="iconfont icon-tongyi" style="color:#A4D091; margin: 2rpx 10rpx 0 0;"></text>
 						已达到起步价
 					</view>
@@ -249,73 +267,77 @@
 						</tr>
 						<tr class="list-tr">
 							<td class="td">起步价</td>
-							<td class="td"> <text>¥</text>90 </td>
-							<td class="td"> <text>¥</text>90 </td>
+							<td class="td"> <text>¥</text>{{info.startingFree}} </td>
+							<td class="td"> <text>¥</text>{{info.startingCostPrice}} </td>
 						</tr>
 						<tr class="list-tr">
 							<td class="td">服务费</td>
-							<td class="td"> <text>¥</text>90 </td>
-							<td class="td"> <text>¥</text>90 </td>
+							<td class="td"> <text>¥</text>{{info.preferentialPrice}}</td>
+							<td class="td"> <text>¥</text>{{info.divisionPrice}} </td>
 						</tr>
 						<tr class="list-tr ">
 							<td class="td">材料费</td>
-							<td class="td acea-row row-center row-middle"> <text style="padding-top: 2rpx;">¥</text>90
+							<td class="td acea-row row-center row-middle"> <text
+									style="padding-top: 2rpx;">¥</text>{{info.materialPrice}}
 								<view class="acea-row row-middle" style="margin-left: 4rpx;">
 									详情<u-icon name="arrow-right" color="#3882F1" size="12"></u-icon>
 								</view>
 							</td>
-							<td class="td"> <text>¥</text>90 </td>
+							<td class="td"> <text>¥</text>{{info.materialCostPrice}} </td>
 						</tr>
 						<tr class="list-tr ">
 							<td class="td">配件费</td>
-							<td class="td acea-row row-center row-middle"> <text style="padding-top: 2rpx;">¥</text>90
+							<td class="td acea-row row-center row-middle"> <text
+									style="padding-top: 2rpx;">¥</text>{{info.partsPrice}}
 								<view class="acea-row row-middle" style="margin-left: 4rpx;">
 									详情<u-icon name="arrow-right" color="#3882F1" size="12"></u-icon>
 								</view>
 							</td>
-							<td class="td"> <text>¥</text>90 </td>
+							<td class="td"> <text>¥</text>{{info.partsCostPrice}} </td>
 						</tr>
 						<tr class="list-tr ">
 							<td class="td">其他费用</td>
-							<td class="td acea-row row-center row-middle"> <text style="padding-top: 2rpx;">¥</text>90
+							<td class="td acea-row row-center row-middle"> <text
+									style="padding-top: 2rpx;">¥</text>{{info.materialPrice}}
 								<view class="acea-row row-middle" style="margin-left: 4rpx;">
 									详情<u-icon name="arrow-right" color="#3882F1" size="12"></u-icon>
 								</view>
 							</td>
-							<td class="td"> <text>¥</text>90 </td>
+							<td class="td"> <text>¥</text>{{info.standardPrice}} </td>
 						</tr>
 						<tr class="list-tr">
 							<td class="td">优惠金额</td>
-							<td class="td"> <text>¥</text>90 </td>
-							<td class="td"> <text>¥</text>90 </td>
+							<td class="td"> <text>¥</text>0 </td>
+							<td class="td"> <text>¥</text>0</td>
 						</tr>
 						<tr class="list-tr">
 							<td class="td">合计</td>
-							<td class="td"> <text>¥</text>90 </td>
-							<td class="td"> <text>¥</text>90 </td>
+							<td class="td"> <text>¥</text>{{info.startingFree}} </td>
+							<td class="td"> <text>¥</text>{{info.startingFree}} </td>
 						</tr>
 					</table>
 				</view>
 			</view>
 		</view>
-		<view class="page-all">
+		<view class="page-all" v-if="info.appraiseVo&&info.appraiseVo.appraiseId">
 			<view class="page-all-pj">
 				<view class="page-all-pj-top acea-row row-between-wrapper">
 					<text>客户评价</text>
-					<view class="acea-row row-middle">
+					<!-- 后期 -->
+					<!-- <view class="acea-row row-middle">
 						显示评论 <text style="margin-right: 10rpx;"></text>
-						<u-switch space="2" v-model="value" size="15" activeColor="#f9ae3d"
+						<u-switch space="2" v-model="pjShow" size="15" activeColor="#f9ae3d"
 							inactiveColor="rgb(230, 230, 230)">
 						</u-switch>
-					</view>
+					</view> -->
 				</view>
 				<view class="page-all-pj-con">
-					<view class="page-all-pj-con-mess">平台工作负责，师傅处理高效，用心，值得推荐</view>
-					<image src="../../../static/center/zc.png" mode=""></image>
-					<view class="page-all-pj-con-fen acea-row row-between-wrapper">
-						<view class="">维修技术: <text>4.5 </text> 分</view>
-						<view class="">维修速度: <text>4.5 </text> 分</view>
-						<view class="">服务速度: <text>4.5 </text> 分</view>
+					<view class="page-all-pj-con-mess">{{info.appraiseVo.appraiseContent}}</view>
+					<image :src="info.appraiseVo.appraiseImg.split(',')" mode=""></image>
+					<view class="page-all-pj-con-fen acea-row row-between-wrapper">22
+						<view class="">维修技术: <text>{{info.appraiseVo.technicalScore}} </text> 分</view>
+						<view class="">维修速度: <text>{{info.appraiseVo.velocityScore}}</text> 分</view>
+						<view class="">服务态度: <text>{{info.appraiseVo.attitudeScore}}</text> 分</view>
 					</view>
 				</view>
 			</view>
@@ -353,6 +375,9 @@
 				<view class="btn">主操作</view>
 			</view>
 		</view>
+		<!-- 拨打电话 -->
+		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
+			:actions="actionList" :show="showPhone"></u-action-sheet>
 	</view>
 </template>
 
@@ -363,12 +388,29 @@
 	import {
 		getOrderIdDetail
 	} from '@/api/car.js'
+	import * as order from '@/api/order.js'
+	import {
+		callPhone
+	} from '@/utils/phone.js'
 	export default {
 		components: {
 			Table
 		},
 		data() {
 			return {
+				pjShow: false,
+				showPhone: false,
+				actionList: [{
+						name: ''
+					},
+					{
+						name: '呼叫'
+					},
+					{
+						name: '取消'
+					},
+				], //拨打电话
+				openFeiShow: false,
 				value: false,
 				peopleList: [{
 						id: 1,
@@ -408,8 +450,11 @@
 
 					]
 				},
-				orderId: '1834549231493259266',
-				info: {}
+				orderId: '1834830447568150529',
+				info: {},
+				isGet: false
+
+
 			}
 		},
 		onLoad(options) {
@@ -422,7 +467,78 @@
 			getInfo() {
 				getOrderIdDetail(this.orderId).then(res => {
 					this.info = res.data
+					//师傅信息
+					switch (this.info.levelName) {
+						case '一星匠人':
+							this.info.levelIdValue = 1
+							break;
+						case '二星匠人':
+							this.info.levelIdValue = 2
+							break;
+						case '三星匠人':
+							this.info.levelIdValue = 3
+							break;
+						case '四星匠人':
+							this.info.levelIdValue = 4
+							break;
+						case '五星匠人':
+							this.info.levelIdValue = 5
+							break;
+					}
+					this.isGet = Number(this.info.startingFree) > Number(this.info.preferentialPrice)
+					// if (this.info.orderStatus == '已完成') {
+					// 	//获取评论
+					// 	order.appraiseList({
+					// 		orderId: this.id,
+					// 		pageNum: 1,
+					// 		pageSize: 10,
+					// 		appraiseStatus: 1
+					// 	}).then(res => {
+					// 		if (res.rows.length != 0) {
+					// 			res.rows[0].imgs = res.rows[0].appraiseImg != null ? res.rows[0]
+					// 				.appraiseImg
+					// 				.split(
+					// 					',') : []
+					// 			this.appraise = res.rows[0]
+					// 		}
+					// 	})
+					// }
 				})
+			},
+			//评价
+			appraiseHandle() {
+				// this.info.newProject = []
+				this.info.dkDetail = 1
+				uni.navigateTo({
+					url: '/subpkg/car/appraise/appraise?info=' + encodeURIComponent(JSON.stringify(this.info))
+					// url: '@/
+				})
+			},
+			//投诉
+			complaint() {
+				this.info.dkDetail = 1
+				// this.info.newProject = []
+				uni.navigateTo({
+					url: '/subpkg/car/complaint/complaint?item=' + encodeURIComponent(JSON.stringify(this.info))
+				})
+			},
+			callPhones(phone) {
+				this.showPhone = true
+				this.actionList[0].name = phone
+			},
+			actionSelect(e) {
+				console.log(e);
+				if (e.name == '取消') {
+					this.showPhone = false
+				} else {
+					// #ifdef APP-PLUS
+					callPhone(this.actionList[0].name, 'app')
+					// #endif
+					// #ifdef MP-WEIXIN
+					callPhone(this.actionList[0].name, 'wx')
+					// #endif
+					this.showPhone = false
+				}
 			},
 		}
 	}
@@ -531,15 +647,17 @@
 
 				&-img {
 					&-items {
-						width: 112rpx;
-						height: 112rpx;
 						margin: 0 20rpx 10rpx 0;
-						background-color: #FBF3E3;
 
 						image {
-							width: 100%;
-							height: 100%;
+							width: 112rpx;
+							height: 112rpx;
 							border-radius: 8rpx;
+						}
+
+						view {
+							text-align: center;
+							margin-top: 10rpx;
 						}
 					}
 				}
@@ -578,7 +696,7 @@
 			}
 
 			&-pro {
-				padding: 24rpx;
+				padding: 24rpx 24rpx 0rpx;
 
 
 
@@ -622,32 +740,39 @@
 					}
 				}
 
-				&-price {
-					margin: 24rpx 0 20rpx;
 
-					.color {
-						color: #FD5834;
-						font-size: 40rpx;
-						position: relative;
-						top: 6rpx;
-					}
 
-					&-k {
-						color: #999999;
-						margin-top: 10rpx;
-					}
+
+			}
+
+			&-pro-price {
+				margin: 18rpx 24rpx 4rpx;
+				padding-bottom: 24rpx;
+
+				.color {
+					color: #FD5834;
+					font-size: 40rpx;
+					position: relative;
+					top: 6rpx;
+					font-weight: bold;
 				}
 
-				&-priceMxi {
-					border-top: 1rpx solid #f5f5f5;
-					padding: 30rpx 10rpx 0rpx;
+				&-k {
+					color: #999999;
+					margin-top: 10rpx;
+				}
+			}
 
-					&-item {
-						margin-bottom: 14rpx;
+			&-pro-priceMxi {
+				border-top: 1rpx solid #f5f5f5;
+				padding: 30rpx 10rpx 24rpx 0rpx;
+				margin: 0 24rpx;
 
-						view {
-							color: #A4A4A4;
-						}
+				&-item {
+					margin-bottom: 14rpx;
+
+					view {
+						color: #A4A4A4;
 					}
 				}
 			}
@@ -662,7 +787,7 @@
 				}
 
 				&-people {
-					padding: 24rpx 0;
+					padding: 24rpx 0 34rpx;
 
 					.call {
 						background-color: $pageColor;
@@ -670,8 +795,10 @@
 						border-radius: 10rpx;
 						font-size: 24rpx;
 						color: #FFFFFF;
+						margin-left: 6rpx;
 					}
 				}
+
 
 				&-mark {
 					border-top: 1rpx solid #f5f5f5;
@@ -793,13 +920,14 @@
 						height: 112rpx;
 						border-radius: 10rpx;
 						background: #FD5834;
-						margin: 20rpx 0;
+						margin: 20rpx 4rpx 0rpx;
 					}
 
 					&-fen {
 						background: rgba(243, 178, 62, 0.08);
 						border-radius: 10rpx;
 						padding: 16rpx;
+						margin-top: 20rpx;
 
 						text {
 							color: #F3B23E;

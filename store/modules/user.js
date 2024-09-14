@@ -5,6 +5,9 @@ import {
 import storage from '@/utils/storage'
 import * as LoginApi from '@/api/login'
 import * as UserApi from '@/api/user'
+import {
+	putImmediate
+} from "@/api/brand.js"
 import $cache from '@/utils/cache.js';
 import {
 	Toast
@@ -55,6 +58,10 @@ export const mutations = {
 		$cache.clear('AccessToken');
 		state.userInfo = null;
 		$cache.clear('userInfo');
+	},
+	UPDATE_USERPARTNER(state, userInfo) {
+		state.userInfo = userInfo;
+		$cache.set('userPartner', userInfo);
 	},
 }
 
@@ -118,6 +125,28 @@ export const actions = {
 				commit('SET_USER', result)
 				resolve(response)
 			}).catch(reject)
+		})
+	},
+
+	/**
+	 * 获取合伙人信息
+	 * @param {Number} force 默认 使用本地缓存 1 强制重新获取
+	 */
+	USERPARTNER({
+		commit
+	}, force) {
+		return new Promise((resolve, reject) => {
+			let cacheUser = $cache.get('userPartner', true);
+			if (force !== 1 && cacheUser && cacheUser.clientId) {
+				return resolve(cacheUser);
+			}
+			putImmediate($cache.get('ClientId')).then(res => {
+				commit('UPDATE_USERPARTNER', res.data);
+				resolve(res);
+			}).catch(err => {
+				Toast(err);
+				reject(err);
+			})
 		})
 	},
 

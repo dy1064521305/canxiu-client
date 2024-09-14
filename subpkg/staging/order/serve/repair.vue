@@ -37,14 +37,14 @@
 					<text class="iconfont icon-shanchu"></text>
 					移除此项</text>
 			</view>
-			<view class="all-type" v-if="item.serviceProjectVoListInfo">
+			<view class="all-type" @click="$jump(-1)" v-if="item.serviceProjectVoList[0]">
 				<view class="all-type-price acea-row row-between-wrapper">
-					{{item.serviceProjectVoListInfo.projectName }}
-					<text>{{item.serviceProjectVoListInfo.startingFreeDiscount}}元/个
+					{{item.serviceProjectVoList[0].projectName }}
+					<text>{{item.serviceProjectVoList[0].startingFreeDiscount}}元/个
 						<text class="iconfont icon-iconmore-copy"></text>
 					</text>
 				</view>
-				<text>分类：{{item.serviceProjectVoListInfo.serviceTypeName}}</text>
+				<text>分类：{{item.serviceProjectVoList[0].serviceTypeName}}</text>
 			</view>
 			<view class="all-price  acea-row row-between-wrapper">
 				<view class="">服务数量 <text>（单位：个）</text> </view>
@@ -100,7 +100,7 @@
 							mode=""></image>
 						<view>订单联系人</view>
 					</view>
-					<view class="">显示代客下单账号昵称</view>
+					<view class="">{{partnerInfo.clientName}}</view>
 				</view>
 				<view class="mess-type-name acea-row row-between-wrapper">
 					<view class="acea-row row-middle">
@@ -109,7 +109,7 @@
 							mode=""></image>
 						<text>订单联系电话</text>
 					</view>
-					<view class="">显示代客下单账号联系电话</view>
+					<view class="">{{partnerInfo.cellPhone}}</view>
 				</view>
 			</view>
 		</view>
@@ -186,7 +186,8 @@
 				selectList: [],
 				customerId: "",
 				storeInfo: {},
-				info: {}
+				info: {},
+				partnerInfo: {}
 			}
 		},
 		onLoad(options) {
@@ -196,17 +197,14 @@
 			uni.$on('selectList', (list) => {
 				this.selectList = list
 				this.selectList.forEach(i => {
-					if (i.serviceProjectVoList.length) {
-						i.serviceProjectVoListInfo = i.serviceProjectVoList[0] || {}
-						i.projectImg1 = []
-						i.remark1 = ''
-						i.projectNumber = 1
-					}
+					i.projectImg1 = []
+					i.remark1 = ''
+					i.projectNumber = 1
 				})
 			})
 
 			this.getInfo()
-			console.log(this.selectList, "	this.selectList 	this.selectList ");
+			console.log(this.selectList, "this.selectList ");
 		},
 		onHide() {
 			uni.$emit('selectHideList', this.selectList)
@@ -222,6 +220,10 @@
 				getCustomerInfo(this.customerId).then(res => {
 					this.storeInfo = res.data
 				})
+				this.$store.dispatch('USERPARTNER', 1).then(user => {
+					this.partnerInfo = user.data
+				})
+
 			},
 			submit() {
 				if (!this.expectTime) {
@@ -244,8 +246,9 @@
 					uni.showToast({
 						title: '每个项目都要上传图片或视频',
 						duration: 2000,
-						icon: 'error'
+						icon: 'none'
 					});
+					// this.$toast('请上传图片/视频')
 					return
 				}
 				arr.forEach(it => {
@@ -260,6 +263,7 @@
 					it.remark = it.remark1
 					it.workerType = item.workerType
 					it.productId = item.serviceId ? item.serviceId : item.productId
+					it.orderType = item.projectType
 				})
 				let timeObj = {}
 				let startingFree = {}
@@ -286,7 +290,7 @@
 						storage.remove('workerLists' + storage.get('ClientId'))
 						let data = res.data
 						uni.redirectTo({
-							url: '/subpkg/staging/order/serve/detail?orderId=' + data.orderId
+							url: '/subpkg/staging/order/serve/billDetails?orderId=' + data.orderId
 						})
 					}
 				})

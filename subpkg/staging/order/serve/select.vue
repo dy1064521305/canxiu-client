@@ -1,10 +1,10 @@
 <template>
 	<view class="page" :class="{onColor:isSearch&&query.keyWord!=''&&searchList.length==0}">
-		<header-search :q="query.keyWord" placeholder="请输入保修项" @clear="onSearch('','clear')" @search="onSearch"
-			@input="onSearch($event,'change')">
+		<header-search :q="query.keyWord" placeholder="请输入保修项" @clear="onSearch('','clear')"
+			@search="onSearch($event,'change')" @input="onSearch($event,'change')">
 		</header-search>
 		<view v-show="!query.keyWord">
-			<view class="store">
+			<view class="store" v-if="!this.addServes">
 				<view class="acea-row row-between-wrapper">
 					<view class="acea-row">
 						<view class="" v-if="storeInfo.storeImg">
@@ -215,24 +215,30 @@
 				selectedList: [],
 				searchList: [],
 				isSearch: false,
+				addServes: false
 			}
 		},
 		onLoad(options) {
 			if (options && options.id) {
 				this.customerId = options.id || ''
+				// type :add表示专门添加服务项
+				if (options.type) {
+					this.addServes = true
+				}
 			}
 
-			this.getStore()
-		},
-		onShow() {
 			let {
 				safeAreaInsets,
 				windowHeight
 			} = uni.getSystemInfoSync()
 			let h = rpxToPx(88);
-			this.fixedTop = h + safeAreaInsets.top + 10;
+			this.fixedTop = h + safeAreaInsets.top;
 			let contentH = windowHeight - this.fixedTop - 88;
 			this.lastConStyle = 'min-height: ' + contentH + 'px';
+			this.getStore()
+		},
+		onShow() {
+
 			this.getList()
 		},
 		onPageScroll(e) {
@@ -503,10 +509,17 @@
 			// 确定入驻
 			sureRuzhu() {
 				if (this.selectedList.length <= 0) return this.$toast('选择服务项')
-				this.$jump('/subpkg/staging/order/serve/repair?customerId=' + this.customerId)
-				setTimeout(() => {
-					uni.$emit('selectList', this.selectedList)
-				}, 500)
+				if (this.addServes) {
+					this.$jump('/subpkg/staging/order/serve/edit?customerId=' + this.customerId)
+					setTimeout(() => {
+						uni.$emit('selectList2', this.selectedList)
+					}, 500)
+				} else {
+					this.$jump('/subpkg/staging/order/serve/repair?customerId=' + this.customerId)
+					setTimeout(() => {
+						uni.$emit('selectList', this.selectedList)
+					}, 500)
+				}
 			},
 			// 左边滑动type
 			scrollTo(index) {
@@ -714,9 +727,12 @@
 					border-radius: 0 20rpx 0 0;
 					top: 0;
 					left: 0;
-					padding-bottom: 250rpx;
-					/* #ifdef APP */
-					padding-bottom: 350rpx;
+					/* #ifdef APP-PLUS ||MP-WEIXIN */
+					padding-bottom: calc(constant(safe-area-inset-bottom) + 250rpx);
+					/* 兼容 iOS 设备 */
+					padding-bottom: calc(env(safe-area-inset-bottom) + 2 50rpx);
+
+					/* 兼容 iPhone X 及以上设备 */
 					/* #endif */
 					box-sizing: border-box;
 

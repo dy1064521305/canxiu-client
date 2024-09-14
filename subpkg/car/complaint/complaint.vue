@@ -1,7 +1,7 @@
 <template>
-	<view class="complaint">
+	<view class="complaint" v-if="projectData.length">
 		<view v-for="(item,index) in projectData" :key="index" class="box">
-			<view class="">
+			<view class="" v-if="item.projectUrl">
 				<image style="width: 130rpx;height: 130rpx;margin: 20rpx;
 border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 			</view>
@@ -63,12 +63,22 @@ border-radius: 14rpx;" :src="item.projectUrl[0]"></image>
 		onLoad(option) {
 			this.info = JSON.parse(option.item)
 			this.query.orderId = this.info.orderId
-			this.projectData = this.info.newProject.length != 0 ? this.info.newProject : this.info.projectDataVoList
-			this.projectData.forEach(item => {
-				item.name = this.info.newProject.length != 0 ? item.serviceProductName : item.productName
-				item.projectUrl = this.info.newProject.length != 0 ? item.projectImg.split(
-					',') : item.img
-			})
+			if (!this.info.dkDetail) {
+				this.projectData = this.info.newProject.length != 0 ? this.info.newProject : this.info.projectDataVoList
+				this.projectData.forEach(item => {
+					item.name = this.info.newProject.length != 0 ? item.serviceProductName : item.productName
+					item.projectUrl = this.info.newProject.length != 0 ? item.projectImg.split(
+						',') : item.img
+				})
+			} else {
+				this.projectData = JSON.parse(JSON.stringify(this.info.projectDataVoList))
+				this.projectData.forEach(item => {
+					item.name = item.productName
+					item.projectUrl = item.img || item.projectImg.split(
+						',')
+				})
+			}
+
 		},
 		methods: {
 			getUrl(val) {
