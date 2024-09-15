@@ -48,7 +48,7 @@
 			getMess() {
 				//获取追踪列表
 				order.orderTrackList({
-					orderId: '1828720678350249985',
+					orderId: this.orderId,
 					requester: 'c'
 				}).then(res => {
 					//	console.log(res);
@@ -76,7 +76,7 @@
 
 <style lang="scss" scoped>
 	.page {
-		height: 100%;
+		min-height: 100vh;
 		background-color: #fff;
 
 		.step {

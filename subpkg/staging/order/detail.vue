@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<view class="page-all page-allTop" @click="$jump('/subpkg/staging/order/other/process?id='+info.orderId)">
+		<view class="page-all page-allTop" @click="$jump('/subpkg/staging/order/other/process?orderId='+info.orderId)">
 			<view class="page-all-top acea-row row-between-wrapper">温馨提示：如发现师傅无故加价，请联系我们核对信息！<view
 					class="acea-row row-middle row-center">联系ta</view>
 			</view>

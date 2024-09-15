@@ -80,56 +80,74 @@
 						</view>
 					</view>
 				</view>
-				<view class="orderItems-worker acea-row flex-center" v-if="item.workerId&&item.workerId!=null">
-					<view class="orderItems-worker-img">
-						<image v-if="item.avatarUrl&&item.avatarUrl!=null" :src="item.avatarUrl" mode=""></image>
-						<image v-else
-							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/ea32e75cab3b4381954c83e34b151278.png"
-							mode=""></image>
+				<view v-if="cssTypeShow">
+					<view class="orderItems-worker acea-row flex-center" v-if="item.workerId&&item.workerId!=null">
+						<view class="orderItems-worker-img">
+							<image v-if="item.avatarUrl&&item.avatarUrl!=null" :src="item.avatarUrl" mode=""></image>
+							<image v-else
+								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/ea32e75cab3b4381954c83e34b151278.png"
+								mode=""></image>
 
+						</view>
+						<view class="orderItems-worker-mess">
+							<view class="acea-row row-middle ">
+								<text style="margin-right: 10rpx;">{{item.workerName}}</text>
+								<view class="acea-row">
+									<u-rate active-color="#FD5834" readonly v-model="item.levelIdValue" allowHalf
+										inactive-color="#b2b2b2" gutter="2"></u-rate>
+								</view>
+							</view>
+							<text class="type line1">工种：<text v-for="(i,index) in item.typeNameList">{{i}}</text></text>
+							<!-- <text class="type">工种：{{item.workerType}}</text> -->
+						</view>
+						<view class="orderItems-worker-phone" @click.stop="showPhoneHandle(item)">
+							<image
+								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/5beeb82b9a3f4952889976a3f009c7d8.png"
+								mode=""></image>
+						</view>
 					</view>
-					<view class="orderItems-worker-mess">
-						<view class="acea-row row-middle ">
-							<text style="margin-right: 10rpx;">{{item.workerName}}</text>
-							<view class="acea-row">
-								<u-rate active-color="#FD5834" readonly v-model="item.levelIdValue" allowHalf
-									inactive-color="#b2b2b2" gutter="2"></u-rate>
+					<view class="orderItems-article acea-row"
+						v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
+						v-for="(pro,i) in item.projectDataVoList" :key="i">
+						<view class="orderItems-article-left" @click.stop="previewImage(pro.img)">
+							<image v-if="pro.img&&Object.prototype.toString.call(pro.img) !== '[object Array]'"
+								:src="pro.img" mode=""></image>
+							<image v-else
+								src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/02/23d8137225a440f3a4e19e43d527cc32.png"
+								mode=""></image>
+						</view>
+						<view class="orderItems-article-right">
+							<text>{{pro.projectName}}</text>
+							<view class="" style="margin: 4rpx 0;">{{pro.typeName}}</view>
+							<view class="acea-row row-middle  row-between-wrapper">
+								<view>{{pro.discountPrice}}元/个</view>
+								<view>x{{pro.projectNumber}}</view>
 							</view>
 						</view>
-						<text class="type line1">工种：<text v-for="(i,index) in item.typeNameList">{{i}}</text></text>
-						<!-- <text class="type">工种：{{item.workerType}}</text> -->
 					</view>
-					<view class="orderItems-worker-phone" @click.stop="showPhoneHandle(item)">
-						<image
-							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/08/12/5beeb82b9a3f4952889976a3f009c7d8.png"
-							mode=""></image>
+
+					<view class="orderItems-time flex-colum">
+						<view> <text>上门时间：</text>{{item.workerSignTime||'暂无'}}</view>
+						<view v-if="item.orderAddress"> <text>
+								报修地址：</text>{{item.orderAddress}}</view>
+						<view> <text>所属品牌：</text>{{item.brandName||'暂无'}}品牌</view>
 					</view>
 				</view>
-				<view class="orderItems-article acea-row"
-					v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
-					v-for="(pro,i) in item.projectDataVoList" :key="i">
-					<view class="orderItems-article-left" @click.stop="previewImage(pro.img)">
-						<image v-if="pro.img&&Object.prototype.toString.call(pro.img) !== '[object Array]'"
-							:src="pro.img" mode=""></image>
-						<image v-else
-							src="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/02/23d8137225a440f3a4e19e43d527cc32.png"
-							mode=""></image>
-					</view>
-					<view class="orderItems-article-right">
-						<text>{{pro.projectName}}</text>
-						<view class="" style="margin: 4rpx 0;">{{pro.typeName}}</view>
-						<view class="acea-row row-middle  row-between-wrapper">
-							<view>{{pro.discountPrice}}元/个</view>
-							<view>x{{pro.projectNumber}}</view>
+				<view v-else>
+					<view class="orderItems-time flex-colum">
+						<view class="acea-row" v-if="item.projectDataVoList&&item.projectDataVoList.length">
+							<text>服务内容：</text>{{item.projectDataVoList[0].projectName}}
+							<view v-if="item.projectDataVoList.length>1">
+								等<text>{{item.projectDataVoList.length-1}}</text>项</view>
+						</view>
+						<view> <text>上门时间：</text>{{item.workerSignTime||'暂无'}}</view>
+						<view> <text>门店名称：</text>{{item.customerName||'暂无'}}</view>
+						<view v-if="item.orderAddress"> <text>
+								报修地址：</text>{{item.orderAddress}}</view>
+						<view> <text>下单人：</text>{{item.orderPerson||'暂无'}}</view>
+						<view v-if="item.workerId&&item.workerId!=null"> <text>接单师傅：</text>{{item.workerName||'暂无'}}
 						</view>
 					</view>
-				</view>
-
-				<view class="orderItems-time flex-colum">
-					<view> <text>上门时间：</text>{{item.workerSignTime||'暂无'}}</view>
-					<view style="margin: 8rpx 0;" v-if="item.orderAddress"> <text>
-							报修地址：</text>{{item.orderAddress}}</view>
-					<view> <text>所属品牌：</text>{{item.brandName||'暂无'}}品牌</view>
 				</view>
 				<view class="orderItems-money acea-row row-between-wrapper">
 					<view class="orderItems-money-left acea-row row-between-wrapper">
@@ -148,68 +166,6 @@
 					</view> -->
 				</view>
 			</view>
-			<!-- <view class=" orders" @click="orderDetail(item)" v-for='(item,index) in orderList' :key='index'>
-				<view class="main">
-					<view class="title">
-						<view class="top">
-							<view
-								style="font-size: 35rpx;display: flex; align-items: center;justify-content: space-between;font-weight: bold;">
-								<view style="display: flex;align-items: center;">
-									<text v-if="item.warrantyStore!=null"
-										style="margin-right: 15rpx;">{{item.warrantyStore}}</text>
-									<text v-if="item.isClientAppoint==1" class="appoint">门店指派</text>
-								</view>
-								<img style="width: 83rpx;height: 36rpx;" v-if="item.isUrgent==1||item.isUrgent==2"
-									src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/29/eeb5bc2c7ec840c89dfd9e73d7457775.png">
-							</view>
-							<view style="display: flex;margin: 7rpx 0;">
-								{{item.repairId!=null&&statusType!='all'?'返修单号':'订单号'}}：{{item.repairId!=null&&statusType!='all'?item.repairNumber:item.orderNumber}}
-								<view @click.stop="copy(item.repairId!=null?item.repairNumber:item.orderNumber)">
-									<image
-										src="http://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2023/12/21/57de362ad312499d93634d2ae9021099.png"
-										style="width: 29rpx;height: 29rpx;margin-left: 10rpx;"></image>
-								</view>
-							</view>
-
-						</view>
-						<view class="bottom">
-							<view>下单时间：{{item.orderTime}}</view>
-							<view :style="{'color':item.orderStatus=='待接单'||item.orderStatus=='售后中'||item.orderStatus=='待评价'?'#F3B133':
-								item.orderStatus=='待上门'?'#3398F3':
-								item.orderStatus=='已完成'?'#A5A7A7':'#A4D091'}">
-								{{item.orderStatus=='师傅取消'?'师傅已取消,重新指派中':item.repairId!=null&&statusType!='all'?item.repairStatus:item.orderStatus}}
-							</view>
-						</view>
-					</view>
-					<view class="">
-
-					</view>
-					<view v-if="item.projectDataVoList!=null&&item.projectDataVoList.length!=0"
-						v-for="(pro,i) in item.projectDataVoList" :key="i" style="margin: 20rpx 0;">
-
-						<project-card :pro='pro' type='myOrder' />
-					</view>
-					<view style="color: #EC5722;text-align: end;font-weight: bold;margin-bottom: 21rpx;">
-						应付款：￥{{item.orderPrice}}
-					</view>
-					<view class="time">
-						<text>预约上门时间：{{item.expectTime}}</text>
-						<text>由{{item.workerType!=null&&item.workerType}}维修</text>
-					</view>
-					<view class="btns" v-if="!item.repairId">
-						<view @click.stop='orderDetail(item)' class="btn-white"
-							v-if="item.orderStatus=='待评价'||item.orderStatus=='已完成'">
-							返修</view>
-						<view @click.stop='orderDetail(item)' class="btn-green" v-if="item.orderStatus=='待评价'">
-							去评价</view>
-						<view @click.stop='pay(item)' class="btn-green" v-if="item.orderStatus=='待支付'">去支付
-						</view>
-						<view @click.stop='orderDetail(item)' class="btn-green" v-if="item.orderStatus=='服务中【审核通过】'">
-							确认方案</view>
-					</view>
-				</view>
-			</view> -->
-
 		</z-paging>
 
 
@@ -295,15 +251,23 @@
 		<!-- 拨打电话 -->
 		<u-action-sheet round='20' :closeOnClickAction='false' @select='actionSelect' :closeOnClickOverlay='false'
 			:actions="actionList" :show="showPhone"></u-action-sheet>
+		<view class="fixedRight acea-row" @click="changeCss">
+			<text class="iconfont icon-paixu"></text> 切换
+		</view>
+
+		<PopupImage showStyleTop='22%' :show="cssPopShow" @tap-img="closeCssPopShow"
+			img="https://hzcxkj.oss-cn-hangzhou.aliyuncs.com/2024/09/15/9ea074ca2d494b17bbfdd5b41818761a.png"
+			width="750rpx" @close="closeCssPopShow">
+		</PopupImage>
 	</view>
 </template>
 
 
 <script>
 	import {
-		getOrderList,
+		getQueryOrderList,
 		repairOrder,
-		queryAllOrderCount
+		valetAllOrderCount
 	} from '@/api/order.js'
 	import storage from '@/utils/storage'
 	import {
@@ -314,9 +278,11 @@
 	import {
 		callPhone
 	} from '@/utils/phone.js'
+	import PopupImage from '@/components/popup/image.vue'
 	export default {
 		components: {
-			projectCard
+			projectCard,
+			PopupImage
 		},
 		data() {
 
@@ -410,7 +376,9 @@
 				statusType: 'all',
 				title: '',
 				typeName: "全部",
-				infoItem: {}
+				infoItem: {},
+				cssTypeShow: false,
+				cssPopShow: false
 			};
 		},
 		computed: {
@@ -446,6 +414,10 @@
 		},
 		onLoad(option) {
 			console.log(option.name);
+			this.cssTypeShow = storage.get('listCssType') || false
+			if (!this.cssTypeShow) {
+				this.cssPopShow = true
+			}
 			this.queryParams.clientId = storage.get('ClientId')
 			// this.queryParams.clientId = '1801434770530971650'
 			this.statusType = option.name == '待服务' || option.name == '服务中' || option.name == '待付款' || option.name == '返修' ?
@@ -459,9 +431,8 @@
 					name: '全部'
 				})
 			}
-
-
 		},
+
 		methods: {
 			handleRoute(item) {
 				let id = 'C2C' + item.workerId
@@ -500,7 +471,7 @@
 				uni.showLoading({
 					mask: true
 				});
-				getOrderList(this.queryParams).then(res => {
+				getQueryOrderList(this.queryParams).then(res => {
 					res.rows.forEach(i => {
 						i.projectDataVoList && i.projectDataVoList.forEach((item, index) => {
 							let list = item.initialImg != null ? item.initialImg.split(',') : []
@@ -562,7 +533,7 @@
 
 					this.$refs.paging.completeByTotal(res.rows, res.total);
 				})
-				queryAllOrderCount({
+				valetAllOrderCount({
 					clientId: storage.get('ClientId'),
 					projectName: this.queryParams.projectName,
 					beginTime: this.queryParams.beginTime,
@@ -735,8 +706,15 @@
 					current: 0,
 					urls: [img]
 				});
-			}
+			},
+			changeCss() {
+				this.cssTypeShow = !this.cssTypeShow
+			},
+			closeCssPopShow() {
 
+				this.cssPopShow = false
+				storage.set('listCssType', true)
+			}
 		}
 	}
 </script>
@@ -971,8 +949,12 @@
 			&-time {
 				box-sizing: border-box;
 				border-top: 1rpx solid #EBEDF0;
-				padding: 28rpx 26rpx;
+				padding: 28rpx 26rpx 20rpx;
 				color: #212121;
+
+				view {
+					margin-bottom: 8rpx;
+				}
 
 				text {
 					color: #999999;
@@ -1101,15 +1083,15 @@
 			.btn-white {
 				height: 55rpx;
 				background: #FFFFFF;
-				border: 4rpx solid #A4D091;
-				color: #A4D091;
+				border: 4rpx solid$pageColor;
+				color: $pageColor;
 				line-height: 55rpx;
 			}
 
 			.btn-green {
 				line-height: 60rpx;
 				height: 60rpx;
-				background: #A4D091;
+				background: $pageColor;
 				color: #fff;
 			}
 		}
@@ -1151,7 +1133,7 @@
 
 			.time-active {
 				background: #f0fbf5;
-				border: 2rpx solid #A4D091;
+				border: 2rpx solid $pageColor;
 			}
 
 			.time {
@@ -1175,6 +1157,23 @@
 		.u-fade-enter-to,
 		.u-fade-enter-active {
 			z-index: 99 !important;
+		}
+	}
+
+	.fixedRight {
+		position: fixed;
+		bottom: 200rpx;
+		right: 0;
+		padding: 10rpx 14rpx;
+		border-radius: 10rpx 0 0 10rpx;
+		background-color: $pageColor;
+		color: #fff;
+		font-size: 24rpx;
+
+		.iconfont {
+			-moz-transform: rotate(-90deg);
+			-webkit-transform: rotate(-90deg);
+			display: block;
 		}
 	}
 </style>

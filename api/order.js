@@ -77,3 +77,9 @@ export const refreshPrice = (params) => request.get('/client/service/refreshPric
 
 // 合伙人品牌订单管理列表
 export const getPartnerBrandOrderList = (params) => request.get('/terrace/order/partnerBrandOrderList', params)
+
+// 查询代客报修订单列表
+export const getQueryOrderList = (params) => request.get('/partner/valet/queryOrderList', params)
+
+//查询代客报修订单各状态数量
+export const valetAllOrderCount = (params) => request.get('/client/valet/queryAllOrderCount', params)
