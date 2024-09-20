@@ -1,0 +1,29 @@
+{
+    "id": "yk-authpup",
+    "name": "解决软件在运行时，未见向用户告知权限申请的目的，华为等上架被拒问题",
+    "displayName": "解决软件在运行时，未见向用户告知权限申请的目的，华为等上架被拒问题",
+    "version": "1.0.5",
+    "description": "解决软件在运行时，未见向用户告知权限申请的目的，华为等上架被拒问题",
+    "keywords": [
+        "uniapp",
+        "华为上架",
+        "权限",
+        "权限申请",
+        "权限判断"
+    ],
+    "dcloudext": {
+        "category": [
+            "前端组件",
+            "通用组件"
+        ]
+    },
+    "dependencies": {
+        "cos-wx-sdk-v5": "^1.4.10",
+        "html2canvas": "^1.4.1",
+        "pinyin-pro": "^3.23.0",
+        "tim-js-sdk": "^2.27.2",
+        "tim-upload-plugin": "^1.2.0",
+        "tim-wx-sdk": "^2.27.2",
+        "vue-jsonp": "^2.0.0"
+    }
+}
